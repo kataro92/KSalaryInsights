@@ -1,0 +1,7 @@
+node_modules/
+.expo/
+dist/
+*.log
+.DS_Store
+# Keep .cursor/skills from spec-kit tracked; ignore other local Cursor state if any
+.cursor/*.log
