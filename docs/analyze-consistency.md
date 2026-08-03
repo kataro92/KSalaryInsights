@@ -86,6 +86,13 @@ Báo cáo chi tiết: `docs/legal-originals/_verify_A.md` (BHXH/thai sản), `_v
 
 `luat113-2025.pdf` (text layer, đọc toàn văn): Đ.14 k.1a xác nhận **7 tháng** cho lao động nữ sinh con thứ hai + nam 10 ngày LV; Đ.29 k.1 **sửa thẳng Đ.139 k.1 BLLĐ** (6/7 tháng, trước sinh ≤2 tháng, sinh đôi +1 tháng/con); Đ.29 k.2 sửa Đ.53 k.2c Luật BHXH (nam 10 ngày LV khi vợ sinh đôi **hoặc** con thứ hai, sinh ba +3 ngày/con); Đ.30: hiệu lực 01/07/2026 (điểm c–d k.1 Đ.14 hỗ trợ tài chính: 01/01/2027). TC-MAT-02 hết ⚠ — **toàn bộ tham số specs 001–008 đạt Tầng 1**.
 
+## Vòng bổ sung file pháp lý (2026-08-03) — `253-2026-ND-CP.pdf`
+
+Xác minh file `253-2026-ND-CP.pdf` (`docs/legal-originals/253-2026-ND-CP.pdf` — bản gốc Nghị định 253/2026/NĐ-CP):
+- Đã đồng bộ `253-2026-ND-CP.pdf` cùng bản ký điện tử `253m-ndcp.signed.pdf`.
+- Đã đăng ký và dẫn chiếu chính thức trong `docs/domain/legal-sources.md`, `docs/domain/legal-changelog.md`, `docs/domain/thu-nhap-khac.md`, `docs/domain/thue-tncn.md` và `specs/004-quyet-toan-thue/spec.md`.
+- Toàn bộ các điều khoản cốt lõi của NĐ 253 (Đ.50 k2 vãng lai $\ge$ 5tr, Đ.50 k3a ESOP, Đ.51 k1b miễn quyết toán $\le$ 15tr, Đ.54 CK 0,1%, Đ.69.1.a áp cả kỳ 2026, Đ.70.2 xử lý giao thời 2026) đã đạt **Tầng 1** hoàn toàn.
+
 ## Nợ còn lại
 
 1. Mức trần giảm trừ y tế/giáo dục (Đ.11 k2 Luật 109/2025) chờ nghị định hướng dẫn.
@@ -95,3 +102,4 @@ Báo cáo chi tiết: `docs/legal-originals/_verify_A.md` (BHXH/thai sản), `_v
 
 1. `/speckit-plan` cho `001-tinh-luong-gross-net` — không còn văn bản chặn; toàn bộ 8 specs đủ Tầng 1.
 2. Khi luật mới: cập nhật `legal-changelog.md` → domain → analyze lại.
+

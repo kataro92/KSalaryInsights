@@ -79,7 +79,7 @@ Doanh thu 1.000.000.000 → thuế = 0 (từ 1 tỷ trở xuống là miễn).
 | Sản xuất, vận tải, dịch vụ gắn hàng hóa, xây dựng bao thầu NVL | 3% | 1,5% |
 | Hoạt động kinh doanh khác | 2% | 1% |
 
-**ĐÃ CHỐT theo bản gốc — điểm a khoản 3 Điều 7 Luật 109/2025**: doanh thu tính thuế TNCN theo tỷ lệ = **phần doanh thu VƯỢT ngưỡng** miễn thuế (không phải toàn bộ). GTGT vẫn tính trên toàn bộ doanh thu chịu thuế (theo Luật GTGT/NĐ 68). Cách xác định doanh thu từng ngành (đại lý = hoa hồng, vận tải = toàn bộ cước, xây dựng ±NVL…) theo Điều 4 NĐ 68/2026 — đưa nguyên văn vào ruleset khi implement.
+**ĐÃ CHỐT theo bản gốc — điểm a khoản 3 Điều 7 Luật 109/2025**: doanh thu tính thuế TNCN theo tỷ lệ = **phần doanh thu VƯỢT ngưỡng** miễn thuế (không phải toàn bộ). GTGT vẫn tính trên toàn bộ doanh thu chịu thuế (theo Luật GTGT/NĐ 68). Cách xác định doanh thu từng ngành (đại lý = hoa hồng, vận tải = toàn bộ cước, xây dựng ±NVL…) theo **Điều 5** NĐ 68/2026 — đưa nguyên văn vào ruleset khi implement.
 
 ```
 if revenue_year <= threshold: tax = 0                     # vẫn thông báo doanh thu
