@@ -9,7 +9,7 @@ Mọi công thức tính toán thuế TNCN, bảo hiểm (BHXH, BHYT, BHTN) và 
 
 ## 2. Định danh và Phạm vi hiệu lực (Versioning & Scope)
 
-Mỗi file ruleset đại diện cho một bộ tham số pháp lý trong khoảng thời gian `effective_from` $\to$ `effective_to`.
+Mỗi file ruleset đại diện cho một bộ tham số pháp lý trong khoảng thời gian `effective_from` → `effective_to`.
 
 - **Ruleset `2025`** (`2025.json`):
   - `effective_from`: `"2025-01-01"`
@@ -22,7 +22,7 @@ Mỗi file ruleset đại diện cho một bộ tham số pháp lý trong khoả
 - **Ruleset `2026-H2`** (`2026-h2.json`):
   - `effective_from`: `"2026-07-01"`
   - `effective_to`: `"2026-12-31"`
-  - Đặc điểm: Giữ nguyên GTGC & Biểu 5 bậc 2026; **Lương cơ sở 2,53tr** (NĐ 161/2026 $\to$ trần BHXH/BHYT 50,6tr); Ngưỡng vãng lai 5tr (NĐ 253/2026).
+  - Đặc điểm: Giữ nguyên GTGC & Biểu 5 bậc 2026; **Lương cơ sở 2,53tr** (NĐ 161/2026 → trần BHXH/BHYT 50,6tr); Ngưỡng vãng lai 5tr (NĐ 253/2026).
 
 ## 3. Cấu trúc dữ liệu Ruleset Schema
 
@@ -83,7 +83,19 @@ Mỗi file ruleset đại diện cho một bộ tham số pháp lý trong khoả
 }
 ```
 
-## 4. Tự động lựa chọn Ruleset trong Engine
+## 4. Trường tùy chọn `casual_income`
+
+`casual_income` **không** nằm trong `required` của schema vì MVP (specs 001–003) chỉ cần lương/công + BH + GTGC. Khi thiếu:
+
+| Trường | Fallback engine | Ghi chú |
+|--------|-----------------|--------|
+| `withholding_threshold` | 2_000_000 (trước kỳ 2026) / 5_000_000 (kỳ 2026, NĐ 253 Đ.69.1.a) | Spec 004/008 |
+| `withholding_rate` | 0.10 | Khấu trừ tại nguồn |
+| `exemption_settlement_monthly_avg` | 15_000_000 | Miễn quyết toán phần vãng lai đã khấu trừ |
+
+Ruleset dùng cho quyết toán / thu nhập khác (004, 008) MUST khai đủ `casual_income` — không dựa fallback khi ship.
+
+## 5. Tự động lựa chọn Ruleset trong Engine
 
 Calculation engine sử dụng hàm `getRuleset(taxYear: number, asOfDate?: string)`:
 1. Nếu `asOfDate` được truyền (ví dụ `"2026-08-15"`): Engine lọc các ruleset thỏa mãn `tax_year === taxYear` và `effective_from <= asOfDate <= effective_to`.

@@ -8,18 +8,22 @@
 
 ## 1. Khái niệm
 
-Luồng tính thuế tháng (khấu trừ tại nguồn điển hình):
+Luồng tính thuế tháng (khấu trừ tại nguồn điển hình) — **đúng thuật ngữ pháp lý** (Luật TNCN Đ.7–11; khớp [glossary.md](./glossary.md)):
 
 ```
 Gross
-  − BH bắt buộc phần NLĐ (BHXH + BHYT + BHTN, có trần)
-  = Thu nhập chịu thuế (đơn giản hóa — chưa liệt kê hết khoản miễn)
-  − GTGC bản thân − GTGC người phụ thuộc
+  − Phụ cấp / trợ cấp được miễn thuế (nếu có)
+  = Thu nhập chịu thuế
+  − Khoản giảm trừ: BH bắt buộc phần NLĐ (BHXH + BHYT + BHTN, có trần)
+                 + GTGC bản thân + GTGC người phụ thuộc
+                 (+ từ thiện / nhân thọ / … nếu có)
   = Thu nhập tính thuế (TNTT)
   → Áp dụng biểu lũy tiến từng phần
   = Thuế TNCN tháng
 Net ≈ Gross − BH_NLĐ − Thuế TNCN (− đoàn phí nếu có)
 ```
+
+> **Chú thích MVP / test case**: Khi không có phụ cấp miễn thuế, các TC bên dưới gọi tắt cột "TN chịu thuế" = Gross − BH_NLĐ (tức thu nhập chịu thuế sau khi đã trừ BH — bước trung gian trước GTGC). Đây là **nhãn bảng tính đơn giản hóa** để khớp số học; khi implement breakdown UI MUST tách đúng: chịu thuế (sau miễn) → giảm trừ BH + GTGC → TNTT.
 
 ## 2. Tham số theo giai đoạn
 

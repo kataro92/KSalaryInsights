@@ -109,4 +109,12 @@ Input: mức đóng = 60.000.000; vùng I; tháng 08/2026 (lương cơ sở 2.53
 
 ---
 
-**Ghi chú triển khai**: Tách `insurance.employee_rates`, `caps`, `region_min_wages` trong ruleset JSON.
+**Ghi chú triển khai**: Tách `insurance_rates.employee`, `insurance_caps`, `regional_minimum_wages` trong ruleset JSON (khớp [ruleset-spec.md](../product/ruleset-spec.md)).
+
+## Liên kết
+
+- [glossary.md](./glossary.md) — thuật ngữ BHXH / BHYT / BHTN / lương cơ sở / LTTV
+- [thue-tncn.md](./thue-tncn.md) — dùng BH_NLĐ trong luồng tính thuế tháng
+- [quyen-loi-lao-dong.md](./quyen-loi-lao-dong.md) — quyền lợi gắn mức đóng / lương hưu
+- [legal-sources.md](./legal-sources.md) · [legal-changelog.md](./legal-changelog.md)
+- Specs: [001-tinh-luong-gross-net](../../specs/001-tinh-luong-gross-net/spec.md)

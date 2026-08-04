@@ -6,7 +6,7 @@
 
 ## Summary
 
-Tính năng cho phép người lao động nhập Gross hoặc Net, tự động tính toán hai chiều (Gross $\to$ Net và Net $\to$ Gross), áp dụng chính xác bộ tham số pháp lý theo năm kỳ tính thuế và `as_of_date` (2025, 2026-H1, 2026-H2) với sai số làm tròn $\le 1$ VNĐ, hiển thị chi tiết breakdown từng khoản đóng bảo hiểm và thuế TNCN kèm theo disclaimer và nguồn pháp lý minh bạch.
+Tính năng cho phép người lao động nhập Gross hoặc Net, tự động tính toán hai chiều (Gross → Net và Net → Gross), áp dụng chính xác bộ tham số pháp lý theo năm kỳ tính thuế và `as_of_date` (2025, 2026-H1, 2026-H2) với sai số làm tròn ≤ 1 VNĐ, hiển thị chi tiết breakdown từng khoản đóng bảo hiểm và thuế TNCN kèm theo disclaimer và nguồn pháp lý minh bạch.
 
 ## Technical Context
 
@@ -17,7 +17,7 @@ Tính năng cho phép người lao động nhập Gross hoặc Net, tự động
 **Testing**: Jest (unit & contract testing cho calculation engine), React Native Testing Library  
 **Target Platform**: iOS, Android, Web (Expo Cross-Platform)  
 **Project Type**: Mobile App / Web Application  
-**Performance Goals**: Thời gian tính toán Gross $\leftrightarrow$ Net $< 10$ms; Render UI 60 fps.  
+**Performance Goals**: Thời gian tính toán Gross ↔ Net < 10ms; Render UI 60 fps.  
 **Constraints**: 
 - **Offline 100%**: Zero backend API dependency. Toàn bộ ruleset bundle trực tiếp trong app assets.
 - **Privacy First** (Constitution V): Không thu thập, không gửi dữ liệu lương/thuế ra ngoài.
@@ -80,36 +80,36 @@ src/
 
 ## Calculation Logic & Precision Strategy
 
-### 1. Gross $\to$ Net
+### 1. Gross → Net
 1. **Bảo hiểm NLĐ**:
-   - $\text{Lương đóng BH} = \text{input.custom\_insurance\_salary} \mathbin{??} \text{input.gross}$
-   - $\text{Trần BHXH/BHYT} = 20 \times \text{ruleset.reference\_salary}$ (2,34tr cho H1/2026 $\to$ 46,8tr; 2,53tr cho H2/2026 $\to$ 50,6tr)
-   - $\text{Trần BHTN} = 20 \times \text{ruleset.regional\_minimum\_wage}[region]$
-   - $\text{BHXH} = \text{round}(\min(\text{Lương đóng BH}, \text{Trần BHXH/BHYT}) \times 8\%)$
-   - $\text{BHYT} = \text{round}(\min(\text{Lương đóng BH}, \text{Trần BHXH/BHYT}) \times 1.5\%)$
-   - $\text{BHTN} = \text{round}(\min(\text{Lương đóng BH}, \text{Trần BHTN}) \times 1\%)$
-   - $\text{Tổng BH} = \text{BHXH} + \text{BHYT} + \text{BHTN}$
-2. **Thu nhập chịu thuế (TNTT)**:
-   - $\text{TN chịu thuế} = \text{gross} - \text{Tổng BH}$
-   - $\text{Tổng giảm trừ} = \text{ruleset.personal\_relief} + (\text{num\_dependents} \times \text{ruleset.dependent\_relief})$
-   - $\text{TNTT} = \max(0, \text{TN chịu thuế} - \text{Tổng giảm trừ})$
+   - Lương đóng BH = `input.custom_insurance_salary ?? input.gross`
+   - Trần BHXH/BHYT = 20 × `ruleset.reference_salary` (2,34tr cho H1/2026 → 46,8tr; 2,53tr cho H2/2026 → 50,6tr)
+   - Trần BHTN = 20 × `ruleset.regional_minimum_wages[region]`
+   - BHXH = round(min(Lương đóng BH, Trần BHXH/BHYT) × 8%)
+   - BHYT = round(min(Lương đóng BH, Trần BHXH/BHYT) × 1.5%)
+   - BHTN = round(min(Lương đóng BH, Trần BHTN) × 1%)
+   - Tổng BH = BHXH + BHYT + BHTN
+2. **TNTT** (giả định không có phụ cấp miễn thuế — xem chú thích thuật ngữ trong `docs/domain/thue-tncn.md`):
+   - TN chịu thuế (nhãn TC) = gross − Tổng BH
+   - Tổng giảm trừ = `ruleset.personal_relief` + (`num_dependents` × `ruleset.dependent_relief`)
+   - TNTT = max(0, TN chịu thuế − Tổng giảm trừ)
 3. **Thuế TNCN**:
    - Áp dụng biểu thuế lũy tiến tương ứng của `ruleset.pit_brackets` (7 bậc đối với 2025; 5 bậc đối với 2026).
-   - $\text{Thuế} = \sum \text{round}(\text{phần thu nhập bậc } i \times \text{thuế suất bậc } i)$
+   - Thuế = Σ round(phần thu nhập bậc i × thuế suất bậc i)
 4. **Net**:
-   - $\text{Net} = \text{gross} - \text{Tổng BH} - \text{Thuế}$
+   - Net = gross − Tổng BH − Thuế
 
-### 2. Net $\to$ Gross
-- Sử dụng thuật toán Tìm kiếm Nhị phân (Binary Search) trên khoảng $\text{gross} \in [\text{Net}, \text{Net} \times 2]$ đến khi $\text{calculateGrossToNet}(\text{gross candidate}).\text{net}$ trùng khớp với target Net với sai số $\le 1$ VNĐ.
+### 2. Net → Gross
+- Sử dụng thuật toán Tìm kiếm Nhị phân (Binary Search) trên khoảng gross ∈ [Net, Net × 2] đến khi `calculateGrossToNet(grossCandidate).net` trùng khớp với target Net với sai số ≤ 1 VNĐ.
 - Không dùng công thức quy đổi ngược cồng kềnh giúp dễ bảo trì khi luật thay đổi.
 
 ## Test Plan & Verification Matrix
 
 - **Unit Tests**:
-  - `TC-TNCN-2025-01`: Gross 30tr, 2025, Vùng I $\to$ Net 25.222.500 VNĐ.
-  - `TC-TNCN-2026-01`: Gross 30tr, 2026, Vùng I $\to$ Net 26.065.000 VNĐ.
-  - `TC-BH-2026-01`: Gross 30tr, Vùng I, Tháng 03/2026 $\to$ BH 3.150.000 VNĐ.
-  - `TC-BH-2026-02`: Gross 60tr, Vùng I, Tháng 03/2026 $\to$ BH 5.046.000 VNĐ (dưới trần 46,8tr).
-  - `TC-BH-2026H2-01`: Gross 60tr, Vùng I, Tháng 08/2026 $\to$ BH 5.407.000 VNĐ (trần mới 50,6tr theo NĐ 161/2026).
+  - `TC-TNCN-2025-01`: Gross 30tr, 2025, Vùng I → Net 25.222.500 VNĐ.
+  - `TC-TNCN-2026-01`: Gross 30tr, 2026, Vùng I → Net 26.065.000 VNĐ.
+  - `TC-BH-2026-01`: Gross 30tr, Vùng I, Tháng 03/2026 → BH 3.150.000 VNĐ.
+  - `TC-BH-2026-02`: Gross 60tr, Vùng I, Tháng 03/2026 → BH 5.046.000 VNĐ (dưới trần 46,8tr).
+  - `TC-BH-2026H2-01`: Gross 60tr, Vùng I, Tháng 08/2026 → BH 5.407.000 VNĐ (trần mới 50,6tr theo NĐ 161/2026).
 - **Roundtrip Tests**:
-  - Kiểm tra Net $\to$ Gross $\to$ Net trên 50 mức lương ngẫu nhiên từ 5 triệu đến 200 triệu VNĐ, đảm bảo tái tạo Net ban đầu với sai số 0 đồng.
+  - Kiểm tra Net → Gross → Net trên 50 mức lương ngẫu nhiên từ 5 triệu đến 200 triệu VNĐ, đảm bảo tái tạo Net ban đầu với sai số 0 đồng.

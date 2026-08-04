@@ -38,11 +38,11 @@
 **Independent Test**: Unit test `TC-TNCN-2025-01` và `TC-TNCN-2026-01` pass với sai số 0 đồng.
 
 ### Tests for User Story 1
-- [ ] T007 [P] [US1] Viết unit test cho Gross $\to$ Net 2025 (`TC-TNCN-2025-01`) trong `src/__tests__/unit/grossToNet2025.test.ts`.
-- [ ] T008 [P] [US1] Viết unit test cho Gross $\to$ Net 2026 (`TC-TNCN-2026-01`) trong `src/__tests__/unit/grossToNet2026.test.ts`.
+- [ ] T007 [P] [US1] Viết unit test cho Gross → Net 2025 (`TC-TNCN-2025-01`) trong `src/__tests__/unit/grossToNet2025.test.ts`.
+- [ ] T008 [P] [US1] Viết unit test cho Gross → Net 2026 (`TC-TNCN-2026-01`) trong `src/__tests__/unit/grossToNet2026.test.ts`.
 
 ### Implementation for User Story 1
-- [ ] T009 [US1] Implement `grossToNet.ts` lắp ráp tính toán bảo hiểm + TNTT + thuế TNCN $\to$ trả về `SalaryBreakdown` trong `src/engine/grossToNet.ts`.
+- [ ] T009 [US1] Implement `grossToNet.ts` lắp ráp tính toán bảo hiểm + TNTT + thuế TNCN → trả về `SalaryBreakdown` trong `src/engine/grossToNet.ts`.
 - [ ] T010 [P] [US1] Tạo component `SalaryBreakdownCard` hiển thị bảng chi tiết Gross, BHXH, BHYT, BHTN, TNTT, Thuế từng bậc, Net trong `src/components/breakdown/SalaryBreakdownCard.tsx`.
 - [ ] T011 [P] [US1] Tạo component `DisclaimerFooter` hiển thị nguồn pháp lý và disclaimer ước tính trong `src/components/disclaimer/DisclaimerFooter.tsx`.
 - [ ] T012 [US1] Tích hợp màn hình `CalculatorScreen` cho phép nhập Gross, chọn vùng (I–IV), năm thuế, công tắc chỉnh mức đóng BH riêng trong `src/screens/CalculatorScreen.tsx`.
@@ -53,14 +53,14 @@
 
 **Goal**: Cho phép người dùng nhập Net mong muốn, tìm ra số tiền Gross tương ứng.
 
-**Independent Test**: Roundtrip test: Net nhập $\to$ Gross đề xuất $\to$ GrossToNet $\to$ Net khớp sai số $\le 1$ đồng.
+**Independent Test**: Roundtrip test: Net nhập → Gross đề xuất → GrossToNet → Net khớp sai số ≤ 1 đồng.
 
 ### Tests for User Story 2
-- [ ] T013 [P] [US2] Viết unit test cho Net $\to$ Gross và test khép kín Net $\to$ Gross $\to$ Net trong `src/__tests__/unit/netToGross.test.ts`.
+- [ ] T013 [P] [US2] Viết unit test cho Net → Gross và test khép kín Net → Gross → Net trong `src/__tests__/unit/netToGross.test.ts`.
 
 ### Implementation for User Story 2
 - [ ] T014 [US2] Implement `netToGross.ts` bằng thuật toán Binary Search trên `grossToNet` trong `src/engine/netToGross.ts`.
-- [ ] T015 [US2] Thêm nút chuyển đổi chế độ "Gross $\to$ Net" / "Net $\to$ Gross" và xử lý validate không khả thi (Net < Net tối thiểu vùng) trong `src/screens/CalculatorScreen.tsx`.
+- [ ] T015 [US2] Thêm nút chuyển đổi chế độ "Gross → Net" / "Net → Gross" và xử lý validate không khả thi (Net < Net tối thiểu vùng) trong `src/screens/CalculatorScreen.tsx`.
 
 ---
 

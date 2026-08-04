@@ -1,12 +1,13 @@
-<!--
-Sync Impact Report
-- Version change: 1.0.0 → 1.1.0
-- Modified principles: I — bổ sung phân tầng xác minh nguồn (văn bản gốc vs thứ cấp) và nghĩa vụ yêu cầu product owner cung cấp văn bản không tự tìm được
-- Added sections: không (mở rộng nguyên tắc I)
-- Added docs: docs/domain/legal-sources.md (sổ đăng ký văn bản pháp lý + trạng thái xác minh)
-- Follow-up TODOs: thu thập văn bản gốc theo danh sách trong legal-sources.md trước khi ship tính năng tương ứng
--->
 # KVSalaryTools Constitution
+
+## Sync Impact Report
+
+- **Version change**: 1.0.0 → 1.1.0
+- **Modified principles**: I — bổ sung phân tầng xác minh nguồn (văn bản gốc vs thứ cấp) và nghĩa vụ yêu cầu product owner cung cấp văn bản không tự tìm được
+- **Added sections**: không (mở rộng nguyên tắc I)
+- **Added docs**: `docs/domain/legal-sources.md` (sổ đăng ký văn bản pháp lý + trạng thái xác minh)
+- **Follow-up TODOs**: thu thập văn bản gốc theo danh sách trong `legal-sources.md` trước khi ship tính năng tương ứng
+
 
 ## Core Principles
 

@@ -29,4 +29,4 @@
 
 ## Notes
 
-Checklist sinh kèm Phase 4 tài liệu. MVP (001–003) đã clarify trong spec. 004–008 giữ default và marker cần rà luật trước khi plan kỹ thuật.
+Spec nền tảng MVP: acceptance khóa theo TC-TNCN-2025/2026 và TC-BH-2026 trong domain. Đã có `plan.md` + `tasks.md` — sẵn sàng `/speckit-implement`.

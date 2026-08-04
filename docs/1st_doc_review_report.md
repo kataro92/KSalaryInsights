@@ -1,7 +1,8 @@
 # 📋 Báo cáo Review Toàn bộ Tài liệu Dự án KVSalaryTools
 
-> **Ngày review**: 2026-08-03
-> **Phạm vi**: Toàn bộ ~45 file tài liệu trong `docs/`, `specs/`, `.specify/`, `README.md`
+> **Ngày review**: 2026-08-03  
+> **Remediation**: 2026-08-05 — **Đợt 1–3 đã đóng** (xem mục trạng thái cuối báo cáo)  
+> **Phạm vi**: Toàn bộ ~45 file tài liệu trong `docs/`, `specs/`, `.specify/`, `README.md`  
 > **Phương pháp**: 4 subagent song song review độc lập + tổng hợp chéo
 
 ---
@@ -135,8 +136,8 @@
 graph LR
     subgraph MVP["MVP (Foundation)"]
         S001["001 Gross↔Net<br/>✅ Sẵn sàng code"]
-        S002["002 NPT/GTGC<br/>⚠️ Thiếu plan/tasks"]
-        S003["003 So sánh biểu thuế<br/>⚠️ Thiếu plan/tasks"]
+        S002["002 NPT/GTGC<br/>✅ Sẵn sàng code"]
+        S003["003 So sánh biểu thuế<br/>✅ Sẵn sàng code"]
     end
     subgraph V1["V1 (Mở rộng)"]
         S004["004 Quyết toán"]
@@ -148,20 +149,21 @@ graph LR
         S008["008 Thu nhập khác"]
     end
     S001 -->|spec+plan+tasks| S002
-    S002 --> S003
+    S001 --> S003
+    S002 -.->|song song sau 001| S003
     S003 --> S004
 ```
 
 | Spec | Giai đoạn | spec.md | plan.md | tasks.md | Trạng thái |
 |:---:|:---:|:---:|:---:|:---:|---|
 | 001 | MVP | ✅ | ✅ | ✅ | 🟢 **Sẵn sàng `/speckit-implement`** |
-| 002 | MVP | ✅ | ❌ | ❌ | 🟡 Cần lập plan & tasks |
-| 003 | MVP | ✅ | ❌ | ❌ | 🟡 Cần lập plan & tasks |
-| 004 | V1 | ✅ | ❌ | ❌ | ⬜ Chờ sang V1 |
-| 005 | V1 | ✅ | ❌ | ❌ | ⬜ Chờ sang V1 |
-| 006 | V1 | ✅ | ❌ | ❌ | ⬜ Chờ sang V1 |
-| 007 | V2 | ✅ | ❌ | ❌ | ⬜ Chờ sang V2 |
-| 008 | V2 | ✅ | ❌ | ❌ | ⬜ Chờ sang V2 |
+| 002 | MVP | ✅ | ✅ | ✅ | 🟢 Sẵn sàng (sau 001) |
+| 003 | MVP | ✅ | ✅ | ✅ | 🟢 Sẵn sàng (sau 001) |
+| 004 | V1 | ✅ | ✅ | ✅ | 🟢 Planned (sau MVP) |
+| 005 | V1 | ✅ | ✅ | ✅ | 🟢 Planned (sau MVP) |
+| 006 | V1 | ✅ | ✅ | ✅ | 🟢 Planned (sau MVP) |
+| 007 | V2 | ✅ | ✅ | ✅ | 🟢 Planned (sau V1) |
+| 008 | V2 | ✅ | ✅ | ✅ | 🟢 Planned (sau V1 / có thể V1.1 HKD) |
 
 ---
 
@@ -178,23 +180,28 @@ graph LR
 
 ## 🎯 Thứ tự Ưu tiên Hành động
 
-### Đợt 1 — Sửa lỗi nghiêm trọng (3 lỗi 🔴)
-1. Sửa `glossary.md` — chỉnh thuật ngữ "Thu nhập chịu thuế" / "TNTT"
-2. Sửa `thu-nhap-khac.md` dòng 82 — "Điều 4" → "Điều 5"
-3. Refactor JSON mẫu trong `rules-versioning.md` cho khớp với schema
+### Đợt 1 — Sửa lỗi nghiêm trọng (3 lỗi 🔴) — ✅ Đóng 2026-08-04/05
+1. ✅ Sửa `glossary.md` — chỉnh thuật ngữ "Thu nhập chịu thuế" / "TNTT"
+2. ✅ Sửa `thu-nhap-khac.md` — hết mâu thuẫn Đ.4 vs Đ.5 NĐ 68
+3. ✅ Refactor JSON mẫu trong `rules-versioning.md` cho khớp với schema
 
-### Đợt 2 — Sửa lỗi quan trọng (7 lỗi 🟠)
-4. Thêm Disclaimer vào `README.md`
-5. Bổ sung "Ngài Miu" vào `design_prompt.xml`
-6. Cập nhật `analyze-consistency.md` (tiến độ + ngày)
-7. Lập `plan.md` + `tasks.md` cho Spec 002 & 003
-8. Bổ sung `Alternatives rejected` cho ADR 0002 & 0003
-9. Đồng bộ lộ trình V1.1 vào `user-needs.md` & `personas.md`
-10. Bổ sung ràng buộc validation cho `ruleset-schema.json`
+### Đợt 2 — Sửa lỗi quan trọng (7 lỗi 🟠) — ✅ Đóng 2026-08-04/05
+4. ✅ Thêm Disclaimer vào `README.md`
+5. ✅ Bổ sung "Ngài Miu" vào `design_prompt.xml`
+6. ✅ Cập nhật `analyze-consistency.md` (tiến độ + ngày)
+7. ✅ Lập `plan.md` + `tasks.md` cho Spec 002 & 003
+8. ✅ Bổ sung `Alternatives rejected` cho ADR 0002 & 0003
+9. ✅ Đồng bộ lộ trình V1.1 vào `user-needs.md` & `personas.md`
+10. ✅ Bổ sung ràng buộc validation cho `ruleset-schema.json` + fallback `casual_income` trong `ruleset-spec.md`
 
-### Đợt 3 — Cải thiện chất lượng (12 lỗi 🟡)
-11–22. Cập nhật index READMEs, bổ sung hyperlinks, viết lại Notes checklist, thêm footer links...
+### Đợt 3 — Cải thiện chất lượng (12 lỗi 🟡) — ✅ Đóng 2026-08-05
+11–22. ✅ Index READMEs, Sync Impact Report hiển thị, chuyển tiếp NĐ 253, chú thích thuật ngữ TNCN, footer BH, UTF-8 thay LaTeX, Notes checklist riêng từng spec, bảng ánh xạ F-ID ↔ thư mục spec, DoR scope checked.
+
+### Bước tiếp theo (không còn trong backlog review)
+- `/speckit-implement` spec **001** (engine nền tảng).
+- Nợ luật ngoài tài liệu: mức trần giảm trừ y tế/giáo dục (Đ.11 k2 Luật 109) chờ NĐ hướng dẫn.
+- **2026-08-05**: đã lập `plan.md` + `tasks.md` cho **004–008** — toàn bộ 8 feature docs hoàn tất trước khi code.
 
 ---
 
-*Báo cáo được tổng hợp từ 4 subagent review song song, bao phủ toàn bộ ~45 file tài liệu dự án.*
+*Báo cáo được tổng hợp từ 4 subagent review song song, bao phủ toàn bộ ~45 file tài liệu dự án. Remediat Đợt 1–3 hoàn tất 2026-08-05.*

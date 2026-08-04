@@ -29,4 +29,4 @@
 
 ## Notes
 
-Checklist sinh kèm Phase 4 tài liệu. MVP (001–003) đã clarify trong spec. 004–008 giữ default và marker cần rà luật trước khi plan kỹ thuật.
+Spec V1: quyết toán năm + đa nguồn + wizard. Acceptance khóa TC-QT-2025-01 / TC-QT-2026-01/02. NĐ 253 Đ.69.1.a áp cả kỳ 2026. Đã có `plan.md` + `tasks.md` (18 tasks).

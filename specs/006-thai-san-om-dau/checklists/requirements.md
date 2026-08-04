@@ -29,4 +29,4 @@
 
 ## Notes
 
-Checklist sinh kèm Phase 4 tài liệu. MVP (001–003) đã clarify trong spec. 004–008 giữ default và marker cần rà luật trước khi plan kỹ thuật.
+Spec V1: thai sản / ốm đau. Số liệu khóa Tầng 1. TC-MAT-01/02/03 + TC-SICK-01. Đã có `plan.md` + `tasks.md` (16 tasks).
