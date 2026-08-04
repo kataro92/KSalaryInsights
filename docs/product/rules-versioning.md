@@ -5,7 +5,7 @@
 
 ## Vấn đề
 
-Công thức (cách tính) ít đổi; **tham số** (GTGC, bậc thuế, LTTV, trần BH, tỷ lệ…) đổi theo năm hoặc theo ngày hiệu lực. Quyết toán giao thời dễ sai nếu chọn ruleset theo “ngày hôm nay”.
+Công thức (cách tính) ít đổi; **tham số** (GTGC, bậc thuế, LTTV, trần BH, tỷ lệ…) đổi theo năm hoặc theo ngày hiệu lực. Quyết toán giao thời dễ sai nếu ch[...]
 
 ## Nguyên tắc
 
@@ -77,7 +77,7 @@ Công thức (cách tính) ít đổi; **tham số** (GTGC, bậc thuế, LTTV, 
 > [!WARNING]
 > Khi tính lương khấu trừ hàng tháng, **bắt buộc** phải truyền `asOfDate` để tránh lấy nhầm tham số H2 áp cho H1 (ví dụ: trần BHXH đổi tại 01/07/2026).
 
-**Thuật toán**: chọn ruleset có `effective_from <= date` và (`effective_to` null hoặc `date <= effective_to`); nếu nhiều khớp, ưu tiên `tax_year` đúng hoặc ruleset cụ thể hơn (ADR bổ sung nếu cần).
+**Thuật toán**: chọn ruleset có `effective_from <= date` và (`effective_to` null hoặc `date <= effective_to`); nếu nhiều khớp, ưu tiên `tax_year` đúng hoặc ruleset cụ thể [...]
 
 ## Phân phối cập nhật
 
@@ -102,10 +102,10 @@ Công thức (cách tính) ít đổi; **tham số** (GTGC, bậc thuế, LTTV, 
 
 ### Ruleset đổi GIỮA năm (bài học vòng xác minh #2)
 
-Năm 2026 có ít nhất 3 tham số đổi tại **01/07/2026** (lương cơ sở/trần BHXH, ngưỡng vãng lai, cơ chế CK/ESOP) trong khi biểu thuế + GTGC áp từ 01/01/2026. Hệ quả thiết kế:
+Năm 2026 có ít nhất 3 tham số đổi tại **01/07/2026** (lương cơ sở/trần BHXH, ngưỡng vãng lai, cơ chế CK/ESOP) trong khi biểu thuế + GTGC áp từ 01/01/2026. Hệ quả:
 
 - `tax_year` không đủ làm khóa duy nhất — tham số bảo hiểm và thu nhập khác MUST chọn theo `as_of_date` (tháng phát sinh).
-- Một năm có thể gồm nhiều ruleset con (2026-H1, 2026-H2) chung `tax_year: 2026`; quyết toán năm dùng biểu thuế theo `tax_year`, còn khấu trừ tháng dùng ruleset con theo tháng.
+- Một năm có thể gồm nhiều ruleset con (2026-H1, 2026-H2) chung `tax_year: 2026`; quyết toán năm dùng biểu thuế theo `tax_year`, còn khấu trừ tháng dùng ruleset con theo[...]
 - Test bắt buộc: TC-BH-2026-02 (tháng 3) vs TC-BH-2026H2-01 (tháng 8) cho ra tổng BH khác nhau trên cùng input.
 
 ## Kiểm thử
@@ -118,4 +118,3 @@ Năm 2026 có ít nhất 3 tham số đổi tại **01/07/2026** (lương cơ s�
 
 - Chữ ký số / CDN cụ thể (kỹ thuật — để plan React/Expo).  
 - i18n keys.
-
