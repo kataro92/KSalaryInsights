@@ -38,6 +38,8 @@ Thang 1–5. **Điểm = Tần suất × Mức đau**.
 | N18 | Lưu kịch bản cục bộ / chia sẻ kết quả | 3 | 2 | 6 | V1 |
 | N19 | Disclaimer + nguồn pháp lý trong UI | 5 | 3 | 15 | MVP (bắt buộc) |
 
+**Ghi chú (2026-08-04)**: N14/N15 xếp V2 theo điểm số Tần suất × Đau tại thời điểm nghiên cứu (2026-07-31). [ADR 0003](../decisions/0003-ho-kd-priority.md) sau đó cân nhắc đưa **bản đơn giản** của hai nhu cầu này (F016′ trong [scope.md](../product/scope.md)) sớm hơn — có thể V1.1 — do cửa sổ thị trường sau khi bỏ thuế khoán 2026. Bảng điểm số ở đây giữ nguyên làm căn cứ ưu tiên gốc; bản đầy đủ (F016/F017) vẫn ở V2+ như research đề xuất — xem `scope.md` mục V1 để biết quyết định cập nhật.
+
 ## 3. Nhu cầu theo mùa
 
 Xem thêm [market-analysis.md](./market-analysis.md) mục seasonality.
@@ -69,7 +71,7 @@ Xem thêm [market-analysis.md](./market-analysis.md) mục seasonality.
 - N07, N08, N09, N06, N10, N11, N12, N18
 
 ### V2+
-- N13–N16 và làm sâu theo feedback
+- N13–N16 và làm sâu theo feedback (N14/N15 bản đơn giản có thể lên sớm hơn — xem ghi chú mục 2 và [ADR 0003](../decisions/0003-ho-kd-priority.md))
 
 ## 6. Tiêu chí thành công nghiên cứu (Phase 1)
 

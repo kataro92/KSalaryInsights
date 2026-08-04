@@ -1,6 +1,6 @@
 # Báo cáo nhất quán tài liệu (Analyze thủ công)
 
-**Ngày**: 2026-07-31 (cập nhật sau 3 vòng xác minh pháp lý)  
+**Ngày**: 2026-08-03 (cập nhật lần cuối — vòng bổ sung file pháp lý NĐ 253/2026)  
 **Phạm vi**: constitution ↔ research ↔ domain ↔ product ↔ specs 001–008
 
 ## Kết quả
@@ -13,7 +13,7 @@
 | Test case domain được dẫn trong success criteria 001–008 | OK |
 | Ruleset versioning có ADR + rules-versioning.md (đã bổ sung mô hình ruleset con giữa năm 2026-H1/H2) | OK |
 | Spec 005–008: NEEDS CLARIFICATION | **Đã giải quyết hết** — số liệu khóa với nguồn VB trong Clarifications từng spec |
-| Tech stack React/Expo chưa vào plan (đúng giai đoạn) | OK — cố ý trì hoãn `/speckit-plan` |
+| Tech stack React/Expo đã vào plan | OK — `/speckit-plan` đã chạy cho 001; `plan.md` + `tasks.md` (19 tasks) đã tồn tại trong `specs/001-tinh-luong-gross-net/` |
 | Test case tính tay được kiểm lại số học (2025-01, 2026-01, BH-2026-01/02/H2-01, OT-01, UE-01, MAT-01/02, LUMPSUM-01, RENT-01/02, SEC-01) | OK — TC-RENT-01 cũ sai luật 2026, đã thay |
 
 ## Số liệu đã khóa trong 3 vòng xác minh (2026-07-31)
@@ -54,7 +54,7 @@
 
 ## Vòng speckit-analyze (2026-07-31) — phân tích chéo có cấu trúc + remediation
 
-Chạy theo detection pass của `/speckit-analyze` (chưa có plan.md/tasks.md — thay task coverage bằng test-case coverage theo Constitution IV). Kết quả: **1 CRITICAL, 3 HIGH, 5 MEDIUM, 7 LOW** — đã remediate ngay trong phiên:
+Chạy theo detection pass của `/speckit-analyze` (tại thời điểm đó chưa có plan.md/tasks.md — thay task coverage bằng test-case coverage theo Constitution IV; *cập nhật 2026-08-03: `plan.md`/`tasks.md` cho 001 đã được lập sau vòng này*). Kết quả: **1 CRITICAL, 3 HIGH, 5 MEDIUM, 7 LOW** — đã remediate ngay trong phiên:
 
 | Finding | Mức | Sửa |
 |---------|-----|-----|
@@ -96,10 +96,10 @@ Xác minh file `253-2026-ND-CP.pdf` (`docs/legal-originals/253-2026-ND-CP.pdf` �
 ## Nợ còn lại
 
 1. Mức trần giảm trừ y tế/giáo dục (Đ.11 k2 Luật 109/2025) chờ nghị định hướng dẫn.
-2. Chưa có JSON Schema ruleset chính thức — thuộc `/speckit-plan` 001.
+2. JSON Schema ruleset chính thức — **đã hoàn thành**: `docs/product/ruleset-schema.json` được lập trong `/speckit-plan` 001.
 
 ## Khuyến nghị phiên sau
 
-1. `/speckit-plan` cho `001-tinh-luong-gross-net` — không còn văn bản chặn; toàn bộ 8 specs đủ Tầng 1.
+1. `/speckit-plan` cho `001-tinh-luong-gross-net` — **đã hoàn thành** (`plan.md` + `tasks.md`, 19 tasks). Bước tiếp theo: `/speckit-implement` cho 001, và lập `plan.md`/`tasks.md` cho 002/003 (MVP, hiện còn thiếu — xem `1st_doc_review_report.md` lỗi #7).
 2. Khi luật mới: cập nhật `legal-changelog.md` → domain → analyze lại.
 
