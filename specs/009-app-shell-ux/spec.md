@@ -1,10 +1,6 @@
 # Feature Specification: App Shell — Splash, Loading, Settings, Layout & UI/UX NFR
 
-**Feature Branch**: `009-app-shell-ux`
-
-**Created**: 2026-08-05
-
-**Status**: Draft
+**Status**: Implemented
 
 **Input**: User description: "implement the specification for splash screen, loading screen, settings, application layout, … UI/UX, non functional requirement"
 

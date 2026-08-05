@@ -1,22 +1,21 @@
-# Specs tính năng
+# Spec tính năng
 
-Thứ tự theo [docs/product/scope.md](../docs/product/scope.md). **Ánh xạ F-ID**: mã thư mục `00N` gộp một hoặc nhiều F-ID trong scope (không 1:1) — xem bảng ánh xạ trong `scope.md`.
+**Cập nhật**: 2026-08-05 — toàn bộ spec dưới đây **đã triển khai** trên `master`.
 
-| # | Thư mục | F-ID | Giai đoạn | Trạng thái spec |
-|---|---------|------|-----------|-----------------|
-| 001 | [tinh-luong-gross-net](./001-tinh-luong-gross-net/spec.md) | F001, F002, F005, F006′ | MVP | Implemented ([plan.md](./001-tinh-luong-gross-net/plan.md), [tasks.md](./001-tinh-luong-gross-net/tasks.md)) |
-| 002 | [nguoi-phu-thuoc-gtgc](./002-nguoi-phu-thuoc-gtgc/spec.md) | F003 | MVP | Implemented ([plan.md](./002-nguoi-phu-thuoc-gtgc/plan.md), [tasks.md](./002-nguoi-phu-thuoc-gtgc/tasks.md)) |
-| 003 | [so-sanh-bieu-thue](./003-so-sanh-bieu-thue/spec.md) | F004 | MVP | Implemented ([plan.md](./003-so-sanh-bieu-thue/plan.md), [tasks.md](./003-so-sanh-bieu-thue/tasks.md)) |
-| 004 | [quyet-toan-thue](./004-quyet-toan-thue/spec.md) | F007, F008, F007b | V1 | Implemented ([plan.md](./004-quyet-toan-thue/plan.md), [tasks.md](./004-quyet-toan-thue/tasks.md)) |
-| 005 | [quyen-loi-nghi-viec](./005-quyen-loi-nghi-viec/spec.md) | F011, F012 | V1 | Planned ([plan.md](./005-quyen-loi-nghi-viec/plan.md), [tasks.md](./005-quyen-loi-nghi-viec/tasks.md)) |
-| 006 | [thai-san-om-dau](./006-thai-san-om-dau/spec.md) | F013 | V1 | Planned ([plan.md](./006-thai-san-om-dau/plan.md), [tasks.md](./006-thai-san-om-dau/tasks.md)) |
-| 007 | [huu-tri-bhxh-mot-lan](./007-huu-tri-bhxh-mot-lan/spec.md) | F015 | V2 | Planned ([plan.md](./007-huu-tri-bhxh-mot-lan/plan.md), [tasks.md](./007-huu-tri-bhxh-mot-lan/tasks.md)) |
-| 008 | [thu-nhap-khac](./008-thu-nhap-khac/spec.md) | F016–F018 | V2 | Planned ([plan.md](./008-thu-nhap-khac/plan.md), [tasks.md](./008-thu-nhap-khac/tasks.md)) |
-| 009 | [app-shell-ux](./009-app-shell-ux/spec.md) | App shell (splash, loading, settings, layout, UI/UX NFR) | Foundation | Implemented ([plan.md](./009-app-shell-ux/plan.md), [tasks.md](./009-app-shell-ux/tasks.md)) |
+Phạm vi & trạng thái F-ID: [docs/product/scope.md](../docs/product/scope.md).
 
-Active feature (Spec Kit): xem `.specify/feature.json` (hiện tại `009-app-shell-ux`).
+UI/UX MUST tuân [docs/product/design-system.md](../docs/product/design-system.md).
 
-**UI/UX**: mọi `/speckit-plan` MUST tuân theo [docs/product/design-system.md](../docs/product/design-system.md) (Flat Design + linh vật "Ngài Miu" — mèo tuxedo trung niên đeo kính, phong thái bá tước).
+| # | Thư mục | Nội dung | Spec |
+|---|---------|----------|------|
+| 001 | tinh-luong-gross-net | Gross↔Net, vùng, trần BH, thưởng, OT | [spec.md](./001-tinh-luong-gross-net/spec.md) |
+| 002 | nguoi-phu-thuoc-gtgc | NPT & GTGC | [spec.md](./002-nguoi-phu-thuoc-gtgc/spec.md) |
+| 003 | so-sanh-bieu-thue | So sánh 2025 vs 2026 | [spec.md](./003-so-sanh-bieu-thue/spec.md) |
+| 004 | quyet-toan-thue | QT năm, đa nguồn, wizard | [spec.md](./004-quyet-toan-thue/spec.md) |
+| 005 | quyen-loi-nghi-viec | Thôi việc, BHTN | [spec.md](./005-quyen-loi-nghi-viec/spec.md) |
+| 006 | thai-san-om-dau | Thai sản, ốm đau | [spec.md](./006-thai-san-om-dau/spec.md) |
+| 007 | huu-tri-bhxh-mot-lan | Hưu vs BHXH một lần | [spec.md](./007-huu-tri-bhxh-mot-lan/spec.md) |
+| 008 | thu-nhap-khac | Cho thuê, HKD, CK, ESOP, vãng lai | [spec.md](./008-thu-nhap-khac/spec.md) |
+| 009 | app-shell-ux | Splash, tabs, settings, preferences | [spec.md](./009-app-shell-ux/spec.md) |
 
-**Trạng thái tài liệu (2026-08-05)**: cả 8 spec đã có `spec.md` (clarified) + `plan.md` + `tasks.md` + checklist. Sẵn sàng `/speckit-implement` theo thứ tự phụ thuộc: **001 → (002 ∥ 003) → 004+**.
-
+**Contract (009)**: [preferences-schema.json](./009-app-shell-ux/contracts/preferences-schema.json)

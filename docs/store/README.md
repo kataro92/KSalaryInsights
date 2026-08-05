@@ -31,7 +31,7 @@ KVSalaryTools giúp bạn xem rõ từng khoản trừ lương và thuế theo r
 
 ## Assets
 
-- App icon / splash: `assets/images/` (see also mascot pack when merged)
+- App icon / splash: `assets/images/` · Mascot: `assets/mascot/`
 - Design QA: [`../product/design-qa-checklist.md`](../product/design-qa-checklist.md)
 
 ## Review captures

@@ -161,7 +161,7 @@ Mức/ngày = 12e6 × 75% / 24 = 375.000 → tổng = **1.875.000**.
 
 #### Bảng hệ số điều chỉnh tiền lương đã đóng BHXH — năm 2026 (✅ Tầng 1)
 
-Nguồn: **CV 340/BHXH-CSXH ngày 03/02/2026** (bản gốc: `docs/legal-originals/BHXHVN_340-BHXH-CSXH_03022026.pdf`); căn cứ NĐ 158/2025/NĐ-CP Đ.16 k1a, NĐ 159/2025/NĐ-CP Đ.10 k2. Áp cho BHXH bắt buộc (cột thu nhập tự nguyện giống từ 2008).
+Nguồn: **CV 340/BHXH-CSXH ngày 03/02/2026**; căn cứ NĐ 158/2025/NĐ-CP Đ.16 k1a, NĐ 159/2025/NĐ-CP Đ.10 k2. Áp cho BHXH bắt buộc (cột thu nhập tự nguyện giống từ 2008).
 
 | Năm | Hệ số | Năm | Hệ số | Năm | Hệ số | Năm | Hệ số |
 |-----|------|-----|------|-----|------|-----|------|

@@ -1,26 +1,17 @@
 # Feature Specification: Quyền lợi khi nghỉ việc
 
-**Feature Branch**: `005-quyen-loi-nghi-viec`
-
-**Created**: 2026-07-31
-
-**Status**: Draft (clarified — số liệu luật đã khóa)
+**Status**: Implemented
 
 **Input**: Ước trợ cấp thôi việc/mất việc và trợ cấp thất nghiệp dựa trên thâm niên, lương căn cứ, quá trình đóng BHTN.
 
 **Tham chiếu**: F011, F012; `quyen-loi-lao-dong.md`
 
-## Clarifications
+## Locked decisions
 
-### Session 2026-07-31 (vòng xác minh #2)
-
-- Q: Hệ số thôi việc/mất việc? → A: **Đã khóa** — thôi việc ½ tháng/năm (Đ.46 BLLĐ 2019); mất việc 1 tháng/năm, sàn 2 tháng (Đ.47). Thời gian tính = tổng thời gian − thời gian đã đóng BHTN − thời gian đã được chi trả; lẻ 1–<6 tháng = ½ năm, ≥6 tháng = 1 năm.
-- Q: Trợ cấp thất nghiệp? → A: **Đã khóa** — 60% bình quân 6 tháng đóng BHTN gần nhất, trần **duy nhất** 5× LTTV tháng cuối đóng (bỏ nhánh 5× lương cơ sở khu vực NN); 12–36 tháng đóng → 3 tháng hưởng, +12 tháng → +1, tối đa 12 (Đ.38–39 Luật Việc làm 74/2025/QH15). Chờ việc = **10 ngày làm việc** (không phải 15); thời điểm hưởng = ngày LV thứ 11. Nhóm 12/36 áp mọi HĐ từ đủ 1 tháng (bỏ "mùa vụ").
-- Q: Người đóng BHTN đầy đủ thì trợ cấp thôi việc = 0? → A: Đúng luật; UI MUST giải thích thay vì chỉ hiện 0.
-
-### Session 2026-07-31 (đối chiếu bản gốc đợt 2 — `_verify_D`)
-
-- Q: Checklist còn ghi "15 ngày"? → A: **Sửa** thành 10 ngày làm việc + ngày hưởng thứ 11 (Đ.38 k.1.d, Đ.39 k.3).
+- **Đã khóa** — thôi việc ½ tháng/năm (Đ.46 BLLĐ 2019); mất việc 1 tháng/năm, sàn 2 tháng (Đ.47). Thời gian tính = tổng thời gian − thời gian đã đóng BHTN − thời gian đã được chi trả; lẻ 1–<6 tháng = ½ năm, ≥6 tháng = 1 năm.
+- **Đã khóa** — 60% bình quân 6 tháng đóng BHTN gần nhất, trần **duy nhất** 5× LTTV tháng cuối đóng (bỏ nhánh 5× lương cơ sở khu vực NN); 12–36 tháng đóng → 3 tháng hưởng, +12 tháng → +1, tối đa 12 (Đ.38–39 Luật Việc làm 74/2025/QH15). Chờ việc = **10 ngày làm việc** (không phải 15); thời điểm hưởng = ngày LV thứ 11. Nhóm 12/36 áp mọi HĐ từ đủ 1 tháng (bỏ "mùa vụ").
+- Đúng luật; UI MUST giải thích thay vì chỉ hiện 0.
+- **Sửa** thành 10 ngày làm việc + ngày hưởng thứ 11 (Đ.38 k.1.d, Đ.39 k.3).
 
 ## User Scenarios & Testing *(mandatory)*
 

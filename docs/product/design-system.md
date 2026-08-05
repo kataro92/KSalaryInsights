@@ -1,8 +1,7 @@
 # Design System — KVSalaryTools
 
-**Cập nhật**: 2026-07-31  
-**Nguồn**: [`docs/design_prompt.xml`](../design_prompt.xml) (design system "Flat Design" gốc, viết cho web/Tailwind) — tài liệu này là bản chuyển thể chính thức cho **React Native / Expo**, có bổ sung **linh vật (mascot)**.  
-**Phạm vi**: Toàn bộ UI của app. Mọi spec tính năng (001–008) khi sang giai đoạn `/speckit-plan` MUST tham chiếu tài liệu này.
+**Cập nhật**: 2026-08-05  
+**Phạm vi**: Toàn bộ UI React Native / Expo. Mọi spec tính năng tham chiếu tài liệu này.
 
 ## 1. Triết lý thiết kế
 
@@ -177,9 +176,8 @@ Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal tex
 - Không dùng mascot để làm mềm thông tin pháp lý sai lệch hoặc thay thế trích dẫn nguồn.
 - Không đổi màu lông theo theme/mùa (giữ nhận diện đen–trắng).
 
-## 9. Việc tiếp theo (khi vào `/speckit-plan`)
+## 9. Ship checklist
 
-1. Chốt tên chính thức cho mascot (ADR nhỏ nếu đổi "Ngài Miu") — đang dùng "Ngài Miu".
-2. ~~Sinh bộ asset pose SVG~~ → **đã chuyển PNG/WebP** (ADR 0006).
-3. Map token vào theme code — một nguồn token duy nhất (`src/theme/tokens.ts`).
-4. Kiểm tra contrast AA cho CTA pastel trên nền sky.
+Trước submit store: [design-qa-checklist.md](./design-qa-checklist.md) + [store/README.md](../store/README.md).
+
+Token code: `src/theme/tokens.ts` · Copy voice: `src/copy/miu.ts` · Assets: `assets/mascot/`, `assets/images/`.
