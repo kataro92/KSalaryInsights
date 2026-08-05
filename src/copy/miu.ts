@@ -41,6 +41,8 @@ export const miuTips = {
   esop: 'TLTC khấu trừ và thuế chuyển nhượng tách dòng — đọc ghi chú quyết toán nếu có.',
   casual:
     'Thực nhận nằm trong breakdown — miễn QT chỉ áp khi đủ điều kiện ở Quyết toán.',
+  scenarios:
+    'Kịch bản lưu trên máy bạn — không gửi lên server. Tải lại khi cần so sánh hoặc chuẩn bị quyết toán.',
 } as const;
 
 export const emptyCopy = {

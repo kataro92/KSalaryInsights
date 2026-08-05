@@ -1,7 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  Share,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 
+import { ScenarioPanel } from '@/src/components/calculator/ScenarioPanel';
 import { Button } from '@/src/components/common/Button';
 import { ChipRow } from '@/src/components/common/ChipRow';
 import { ChoiceChip } from '@/src/components/common/ChoiceChip';
@@ -20,7 +31,7 @@ import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { DependentCountInput } from '@/src/components/inputs/DependentCountInput';
 import { MonthPicker } from '@/src/components/inputs/MonthPicker';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { emptyCopy, miuTips } from '@/src/copy/miu';
+import { brand, emptyCopy, miuTips } from '@/src/copy/miu';
 import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type {
   CalculationMode,
@@ -39,8 +50,15 @@ import {
   type OtDayType,
 } from '@/src/engine/overtime';
 import { usePreferences } from '@/src/hooks/usePreferences';
+import { useScenarios } from '@/src/hooks/useScenarios';
+import {
+  defaultScenarioName,
+  formatScenarioShareText,
+  type CalculatorScenarioInputs,
+  type SavedScenario,
+} from '@/src/store/scenarios';
 import { successHaptic } from '@/src/theme/haptics';
-import { formatVnd, parseMoney } from '@/src/theme/money';
+import { formatMoneyInput, formatVnd, parseMoney } from '@/src/theme/money';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 function asOfFromMonth(taxYear: number, month: number): string {
@@ -58,6 +76,7 @@ const OT_TYPES: OtDayType[] = ['weekday', 'weekend', 'holiday'];
 export function CalculatorScreen() {
   const router = useRouter();
   const { preferences } = usePreferences();
+  const { scenarios, save, remove } = useScenarios();
   const scrollRef = useRef<ScrollView>(null);
 
   const [mode, setMode] = useState<CalculationMode>('gross-to-net');
@@ -78,6 +97,18 @@ export function CalculatorScreen() {
   const [error, setError] = useState<string | null>(null);
   const [breakdown, setBreakdown] = useState<SalaryBreakdown | null>(null);
   const [bonusMonth, setBonusMonth] = useState<BonusMonthResult | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveName, setSaveName] = useState('');
+  const [scenariosOpen, setScenariosOpen] = useState(false);
+  const scenariosBootstrapped = useRef(false);
+
+  useEffect(() => {
+    if (scenariosBootstrapped.current) return;
+    if (scenarios.length > 0) {
+      setScenariosOpen(true);
+      scenariosBootstrapped.current = true;
+    }
+  }, [scenarios.length]);
 
   const asOfDate = useMemo(() => asOfFromMonth(taxYear, month), [taxYear, month]);
   const seasonalHint = month === 12 || month === 1;
@@ -86,6 +117,86 @@ export function CalculatorScreen() {
     setBreakdown(null);
     setBonusMonth(null);
     setError(null);
+  };
+
+  const collectInputs = (): CalculatorScenarioInputs | null => {
+    const amount = parseMoney(amountText);
+    if (amount == null || amount <= 0) return null;
+    const bhAmount = customBh ? parseMoney(bhText) : null;
+    if (customBh && (bhAmount == null || bhAmount < 0)) return null;
+    return {
+      mode,
+      amount,
+      region,
+      taxYear,
+      month,
+      numDependents,
+      customBh,
+      bhAmount: customBh ? bhAmount : null,
+      bonus: parseMoney(bonusText) ?? 0,
+      otHours: Number(otHoursText.replace(/[^\d.]/g, '') || '0') || 0,
+      otDayType,
+    };
+  };
+
+  const applyScenario = (s: SavedScenario) => {
+    const i = s.inputs;
+    setMode(i.mode);
+    setAmountText(formatMoneyInput(i.amount));
+    setRegion(i.region);
+    setTaxYear(i.taxYear);
+    setMonth(i.month);
+    setNumDependents(i.numDependents);
+    setCustomBh(i.customBh);
+    setBhText(formatMoneyInput(i.bhAmount ?? i.amount));
+    setBonusText(formatMoneyInput(i.bonus) || '0');
+    setOtHoursText(i.otHours > 0 ? String(i.otHours) : '0');
+    setOtDayType(i.otDayType);
+    clearResult();
+    void successHaptic();
+  };
+
+  const beginSave = () => {
+    const inputs = collectInputs();
+    if (!inputs || !breakdown) {
+      setError('Tính kết quả trước khi lưu kịch bản.');
+      return;
+    }
+    setSaveName(defaultScenarioName(inputs));
+    setSaving(true);
+    setScenariosOpen(true);
+  };
+
+  const confirmSave = async () => {
+    const inputs = collectInputs();
+    if (!inputs || !breakdown) return;
+    try {
+      await save({
+        name: saveName,
+        inputs,
+        lastNet: breakdown.net,
+      });
+      setSaving(false);
+      void successHaptic();
+    } catch {
+      Alert.alert('Không lưu được', 'Vui lòng thử lại.');
+    }
+  };
+
+  const onShare = async () => {
+    const inputs = collectInputs();
+    if (!inputs || !breakdown) return;
+    const message = formatScenarioShareText({
+      name: saveName || defaultScenarioName(inputs),
+      inputs,
+      net: breakdown.net,
+      brand: brand.name,
+    });
+    try {
+      await Share.share({ message });
+    } catch {
+      /* user dismissed */
+    }
   };
 
   const onCalculate = () => {
@@ -215,6 +326,35 @@ export function CalculatorScreen() {
         />
 
         <SeasonalBanner />
+
+        <CollapseSection
+          title={
+            scenarios.length > 0
+              ? `Kịch bản đã lưu (${scenarios.length})`
+              : 'Kịch bản đã lưu'
+          }
+          open={scenariosOpen}
+          onOpenChange={(next) => {
+            setScenariosOpen(next);
+            if (!next) setSaving(false);
+          }}
+        >
+          <ScenarioPanel
+            scenarios={scenarios}
+            saving={saving}
+            saveName={saveName}
+            onSaveNameChange={setSaveName}
+            onConfirmSave={() => {
+              void confirmSave();
+            }}
+            onCancelSave={() => setSaving(false)}
+            onLoad={applyScenario}
+            onDelete={(id) => {
+              void remove(id);
+            }}
+          />
+          <NgaiMiuTip tip={miuTips.scenarios} />
+        </CollapseSection>
 
         <Section title="Chế độ tính">
           <ChipRow equal>
@@ -432,6 +572,20 @@ export function CalculatorScreen() {
               }
             />
             <SalaryBreakdownCard breakdown={breakdown} hideNet />
+            <View style={styles.resultActions}>
+              <View style={styles.resultActionBtn}>
+                <Button label="Lưu kịch bản" variant="secondary" onPress={beginSave} />
+              </View>
+              <View style={styles.resultActionBtn}>
+                <Button
+                  label="Chia sẻ"
+                  variant="outline"
+                  onPress={() => {
+                    void onShare();
+                  }}
+                />
+              </View>
+            </View>
             <DisclaimerFooter legalSources={breakdown.legalSources} collapseSources />
             {mode === 'gross-to-net' ? (
               <Pressable
@@ -507,6 +661,13 @@ const styles = StyleSheet.create({
   },
   resultBlock: {
     gap: space[4],
+  },
+  resultActions: {
+    flexDirection: 'row',
+    gap: space[2],
+  },
+  resultActionBtn: {
+    flex: 1,
   },
   compareTitle: {
     fontFamily: typography.fontFamily.bold,
