@@ -15,6 +15,21 @@
 ## Spec-Driven Development
 Dự án dùng [GitHub Spec Kit](https://github.com/github/spec-kit). Trong Cursor: `/speckit-constitution`, `/speckit-specify`, `/speckit-clarify`, `/speckit-plan`, `/speckit-tasks`, `/speckit-implement`.
 
+## Đã triển khai (MVP)
+- Shell UX (splash, tabs, settings, loading)
+- Tính lương Gross↔Net, NPT/GTGC, so sánh biểu thuế 2025/2026
+- Quyết toán thuế năm + wizard nộp
+- Quyền lợi nghỉ việc: thôi việc / mất việc / BHTN
+- Thai sản & ốm đau (TC-MAT-01/02/03, TC-SICK-01)
+- Hưu / BHXH một lần (TC-LUMPSUM-01, TC-PENSION-01/02 + disclaimer gate)
+- Thu nhập khác: cho thuê / HKD / CK / ESOP / vãng lai — `npm test` = engine smoke
+
+## Chạy local
+```bash
+npm test
+npx expo start
+```
+
 ## ⚠️ Disclaimer pháp lý
 
 KVSalaryTools là công cụ **hỗ trợ ước tính** thuế TNCN, bảo hiểm xã hội và các quyền lợi tài chính cho người lao động Việt Nam. 

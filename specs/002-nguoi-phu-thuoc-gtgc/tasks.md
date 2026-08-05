@@ -15,7 +15,7 @@
 
 **Purpose**: Xác nhận contract đầu vào đã có từ 001, chuẩn bị field mới cho breakdown.
 
-- [ ] T001 [P] Xác nhận `SalaryInput.num_dependents` đã tồn tại trong `src/domain/types/salary.ts` (kế thừa từ 001); nếu type hiện tại chưa ràng buộc phạm vi, ghi chú `0 ≤ num_dependents ≤ 20` trong docstring.
+- [x] T001 [P] Xác nhận `SalaryInput.num_dependents` đã tồn tại trong `src/domain/types/salary.ts` (kế thừa từ 001); nếu type hiện tại chưa ràng buộc phạm vi, ghi chú `0 ≤ num_dependents ≤ 20` trong docstring.
 
 ---
 
@@ -25,8 +25,8 @@
 
 **⚠️ CRITICAL**: Phase 3 (US1) phụ thuộc phase này.
 
-- [ ] T002 Thêm `relief_breakdown: { personal: number; dependent: number; total: number }` vào `SalaryBreakdown` trong `src/domain/types/salary.ts`.
-- [ ] T003 Cập nhật `src/engine/grossToNet.ts` để trả `relief_breakdown` theo T002 — **không đổi** công thức GTGC đã có từ 001, chỉ tách giá trị trung gian ra output thay vì gộp ẩn trong bước tính TNTT.
+- [x] T002 Thêm `relief_breakdown: { personal: number; dependent: number; total: number }` vào `SalaryBreakdown` trong `src/domain/types/salary.ts`.
+- [x] T003 Cập nhật `src/engine/grossToNet.ts` để trả `relief_breakdown` theo T002 — **không đổi** công thức GTGC đã có từ 001, chỉ tách giá trị trung gian ra output thay vì gộp ẩn trong bước tính TNTT.
 
 **Checkpoint**: `SalaryBreakdown` có đủ dữ liệu để UI hiển thị dòng GTGC riêng — US1 có thể bắt đầu.
 
@@ -40,15 +40,15 @@
 
 ### Tests for User Story 1
 
-- [ ] T004 [P] [US1] Viết unit test `TC-TNCN-2026-02` (Gross 30tr, ruleset 2026, NPT=2 → GTGC 27.900.000, thuế 0, net 26.850.000) trong `src/__tests__/unit/dependents.test.ts`.
-- [ ] T005 [P] [US1] Viết unit test NPT=0 → GTGC chỉ gồm `personal_relief` theo ruleset trong `src/__tests__/unit/dependents.test.ts`.
-- [ ] T006 [P] [US1] Viết unit test validate: NPT âm bị reject; NPT > 20 bị chặn kèm thông báo giới hạn app trong `src/__tests__/unit/dependentsValidation.test.ts`.
+- [x] T004 [P] [US1] Viết unit test `TC-TNCN-2026-02` (Gross 30tr, ruleset 2026, NPT=2 → GTGC 27.900.000, thuế 0, net 26.850.000) trong `src/__tests__/unit/dependents.test.ts`.
+- [x] T005 [P] [US1] Viết unit test NPT=0 → GTGC chỉ gồm `personal_relief` theo ruleset trong `src/__tests__/unit/dependents.test.ts`.
+- [x] T006 [P] [US1] Viết unit test validate: NPT âm bị reject; NPT > 20 bị chặn kèm thông báo giới hạn app trong `src/__tests__/unit/dependentsValidation.test.ts`.
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Tạo component `DependentCountInput` — stepper nhập số nguyên NPT (0–20) kèm tooltip "điều kiện NPT theo luật, mỗi NPT chỉ giảm trừ một lần" trong `src/components/inputs/DependentCountInput.tsx`.
-- [ ] T008 [US1] Tích hợp `DependentCountInput` vào `CalculatorScreen`, truyền `num_dependents` vào `SalaryInput` trong `src/screens/CalculatorScreen.tsx`.
-- [ ] T009 [US1] Thêm dòng "Giảm trừ gia cảnh (GTGC)" riêng biệt (dùng `relief_breakdown` từ Phase 2) vào `SalaryBreakdownCard` trong `src/components/breakdown/SalaryBreakdownCard.tsx`.
+- [x] T007 [US1] Tạo component `DependentCountInput` — stepper nhập số nguyên NPT (0–20) kèm tooltip "điều kiện NPT theo luật, mỗi NPT chỉ giảm trừ một lần" trong `src/components/inputs/DependentCountInput.tsx`.
+- [x] T008 [US1] Tích hợp `DependentCountInput` vào `CalculatorScreen`, truyền `num_dependents` vào `SalaryInput` trong `src/screens/CalculatorScreen.tsx`.
+- [x] T009 [US1] Thêm dòng "Giảm trừ gia cảnh (GTGC)" riêng biệt (dùng `relief_breakdown` từ Phase 2) vào `SalaryBreakdownCard` trong `src/components/breakdown/SalaryBreakdownCard.tsx`.
 
 **Checkpoint**: US1 hoạt động độc lập — nhập NPT, xem GTGC + thuế đúng.
 
@@ -62,11 +62,11 @@
 
 ### Tests for User Story 2
 
-- [ ] T010 [P] [US2] Viết test đổi ruleset 2025→2026 với NPT=1, kiểm `relief_breakdown` cập nhật đúng (không cache giá trị cũ) trong `src/__tests__/integration/dependentsRulesetSwitch.test.ts`.
+- [x] T010 [P] [US2] Viết test đổi ruleset 2025→2026 với NPT=1, kiểm `relief_breakdown` cập nhật đúng (không cache giá trị cũ) trong `src/__tests__/integration/dependentsRulesetSwitch.test.ts`.
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Đảm bảo `CalculatorScreen` re-tính toàn bộ `SalaryBreakdown` (bao gồm `relief_breakdown`) mỗi khi `tax_year`/`as_of_date` đổi — kiểm tra state không giữ breakdown của ruleset trước trong `src/screens/CalculatorScreen.tsx`.
+- [x] T011 [US2] Đảm bảo `CalculatorScreen` re-tính toàn bộ `SalaryBreakdown` (bao gồm `relief_breakdown`) mỗi khi `tax_year`/`as_of_date` đổi — kiểm tra state không giữ breakdown của ruleset trước trong `src/screens/CalculatorScreen.tsx`.
 
 **Checkpoint**: US1 và US2 cùng hoạt động độc lập.
 
@@ -74,4 +74,4 @@
 
 ## Phase 5: Polish & UI Alignment
 
-- [ ] T012 [P] Kiểm tra `DependentCountInput` + dòng GTGC theo Flat Design trong `docs/product/design-system.md` (kể cả tooltip "Ngài Miu" nếu áp dụng theo hệ thống mascot).
+- [x] T012 [P] Kiểm tra `DependentCountInput` + dòng GTGC theo Flat Design trong `docs/product/design-system.md` (kể cả tooltip "Ngài Miu" nếu áp dụng theo hệ thống mascot).

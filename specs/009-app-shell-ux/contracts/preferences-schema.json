@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kvsalarytools.local/schemas/preferences-v1.json",
+  "title": "AppPreferences",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "defaultRegion", "defaultTaxYear"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "defaultRegion": {
+      "type": "string",
+      "enum": ["I", "II", "III", "IV"]
+    },
+    "defaultTaxYear": {
+      "type": "integer",
+      "minimum": 2000,
+      "maximum": 2100
+    }
+  }
+}
