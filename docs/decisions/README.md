@@ -8,3 +8,4 @@ Mỗi quyết định nghiệp vụ lớn = 1 file. Đặt tên: `NNNN-tieu-de-n
 | 0002 | [0002-mvp-scope.md](./0002-mvp-scope.md) | MVP = F001–F006 (gross⇄net, NPT, so sánh luật, vùng/trần BH) | Accepted |
 | 0003 | [0003-ho-kd-priority.md](./0003-ho-kd-priority.md) | Hộ KD / wizard quyết toán lên đầu V1 (có thể V1.1) | Accepted |
 | 0004 | [0004-offline-calculation-engine.md](./0004-offline-calculation-engine.md) | Engine thuần TS offline; làm tròn từng bước; Net→Gross bằng binary search | Accepted |
+| 0005 | [0005-palette-v2-ink-cobalt-mint.md](./0005-palette-v2-ink-cobalt-mint.md) | Palette v2 Ink·Cobalt·Mint cho AAA visual identity | Accepted |

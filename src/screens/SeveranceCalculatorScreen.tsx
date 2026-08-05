@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -10,30 +9,22 @@ import {
 
 import { BenefitBreakdownCard } from '@/src/components/benefits/BenefitBreakdownCard';
 import { Button } from '@/src/components/common/Button';
+import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { MoneyField } from '@/src/components/common/MoneyField';
 import { Section } from '@/src/components/common/Section';
+import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { SeveranceBreakdown, SeveranceMode } from '@/src/domain/types/benefits';
 import { calcSeverancePay } from '@/src/engine/severance';
 import { usePreferences } from '@/src/hooks/usePreferences';
+import { parseMoney } from '@/src/theme/money';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 function parseIntSafe(raw: string): number {
   const digits = raw.replace(/[^\d]/g, '');
   if (!digits) return 0;
   return Number(digits);
-}
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return '';
-  return n.toLocaleString('vi-VN');
 }
 
 export function SeveranceCalculatorScreen() {
@@ -91,13 +82,13 @@ export function SeveranceCalculatorScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
+    <ToolScreen
+      nested
+      title="Thôi việc / mất việc"
+      subtitle="BLLĐ Đ.46–47 · trừ thời gian BHTN đã đóng — ước tính offline."
       accessibilityLabel="Máy tính trợ cấp thôi việc mất việc"
+      sticky={<Button label="Tính trợ cấp" onPress={onCalculate} />}
     >
-      <View style={styles.inner}>
         <Section
           title="Loại trợ cấp"
           subtitle="Thôi việc (Đ.46) và mất việc (Đ.47) là hai công thức riêng."
@@ -212,31 +203,29 @@ export function SeveranceCalculatorScreen() {
         </Section>
 
         <Section title="Lương căn cứ" subtitle="Bình quân tiền lương 6 tháng liền kề.">
-          <TextInput
+          <MoneyField
             accessibilityLabel="Lương bình quân 6 tháng"
-            keyboardType="number-pad"
             value={salaryText}
-            onChangeText={(t) => {
-              const n = parseMoney(t);
-              setSalaryText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+            onValueChange={(formatted) => {
+              setSalaryText(formatted);
               setResult(null);
             }}
-            style={styles.input}
           />
         </Section>
 
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        <Button label="Tính trợ cấp" onPress={onCalculate} />
+        {error ? (
+          <ColorBlock tone="primarySoft">
+            <Text style={styles.error}>{error}</Text>
+          </ColorBlock>
+        ) : null}
 
         {result ? (
           <>
             <BenefitBreakdownCard result={result} />
-            <DisclaimerFooter legalSources={result.legalSources} />
+            <DisclaimerFooter legalSources={result.legalSources} collapseSources />
           </>
         ) : null}
-      </View>
-    </ScrollView>
+    </ToolScreen>
   );
 }
 
@@ -264,16 +253,6 @@ function Field({
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: space[10] },
-  inner: {
-    paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[4],
-    gap: space[5],
-    maxWidth: layout.maxContentWidth,
-    width: '100%',
-    alignSelf: 'center',
-  },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2] },
   pair: { flexDirection: 'row', gap: space[3], marginBottom: space[3] },
   field: { flex: 1, gap: space[1] },
@@ -312,6 +291,6 @@ const styles = StyleSheet.create({
   error: {
     fontFamily: typography.fontFamily.medium,
     fontSize: 14,
-    color: '#DC2626',
+    color: colors.danger,
   },
 });

@@ -6,9 +6,12 @@ import { Button } from '@/src/components/common/Button';
 import { ChipRow } from '@/src/components/common/ChipRow';
 import { ChoiceChip } from '@/src/components/common/ChoiceChip';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { MoneyField } from '@/src/components/common/MoneyField';
 import { PageHero } from '@/src/components/common/PageHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
+import { SeasonalBanner } from '@/src/components/common/SeasonalBanner';
 import { Section } from '@/src/components/common/Section';
+import { StickyActionBar } from '@/src/components/common/StickyActionBar';
 import { TextField } from '@/src/components/common/TextField';
 import { AnnualBreakdownCard } from '@/src/components/breakdown/AnnualBreakdownCard';
 import { SettlementDisclaimer } from '@/src/components/disclaimer/SettlementDisclaimer';
@@ -21,18 +24,7 @@ import type { RegionCode } from '@/src/domain/types/salary';
 import { calculateAnnualSettlement } from '@/src/engine/annualSettlement';
 import { usePreferences } from '@/src/hooks/usePreferences';
 import { colors, layout, space, typography } from '@/src/theme/tokens';
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return '';
-  return n.toLocaleString('vi-VN');
-}
+import { parseMoney } from '@/src/theme/money';
 
 export function SettlementScreen() {
   const router = useRouter();
@@ -94,11 +86,18 @@ export function SettlementScreen() {
   };
 
   return (
-    <ScreenShell accessibilityLabel="Màn hình quyết toán thuế" decorated>
+    <View style={styles.root}>
+      <ScreenShell
+        accessibilityLabel="Màn hình quyết toán thuế"
+        decorated
+        contentContainerStyle={styles.scrollContent}
+      >
       <PageHero
         title="Quyết toán"
         subtitle="Ước tính quyết toán thuế năm — đối chiếu với bảng lương trước khi nộp."
       />
+
+      <SeasonalBanner />
 
       <Section
         title="Năm quyết toán"
@@ -148,15 +147,13 @@ export function SettlementScreen() {
       </Section>
 
       <Section title="Lương tháng (trung bình)" subtitle="× số tháng có lương trong năm.">
-        <TextField
+        <MoneyField
           accessibilityLabel="Lương gross tháng"
-          keyboardType="number-pad"
           value={monthlyText}
-          onChangeText={(t) => {
-            setMonthlyText(formatInput(parseMoney(t)));
+          onValueChange={(formatted) => {
+            setMonthlyText(formatted);
             clearResult();
           }}
-          style={styles.amountInput}
         />
         <TextField
           label="Số tháng làm việc"
@@ -171,15 +168,13 @@ export function SettlementScreen() {
       </Section>
 
       <Section title="Thuế đã khấu trừ (lương)">
-        <TextField
+        <MoneyField
           accessibilityLabel="Thuế đã khấu trừ"
-          keyboardType="number-pad"
           value={withheldText}
-          onChangeText={(t) => {
-            setWithheldText(formatInput(parseMoney(t)));
+          onValueChange={(formatted) => {
+            setWithheldText(formatted);
             clearResult();
           }}
-          style={styles.amountInput}
         />
       </Section>
 
@@ -201,41 +196,25 @@ export function SettlementScreen() {
         </View>
         {includeCasual ? (
           <View style={styles.casualFields}>
-            <TextField
+            <MoneyField
               label="Tổng vãng lai năm"
-              keyboardType="number-pad"
               value={casualGrossText}
-              onChangeText={(t) => {
-                setCasualGrossText(formatInput(parseMoney(t)));
+              onValueChange={(formatted) => {
+                setCasualGrossText(formatted);
                 clearResult();
               }}
             />
-            <TextField
+            <MoneyField
               label="Thuế đã khấu trừ vãng lai (10%)"
-              keyboardType="number-pad"
               value={casualWithheldText}
-              onChangeText={(t) => {
-                setCasualWithheldText(formatInput(parseMoney(t)));
+              onValueChange={(formatted) => {
+                setCasualWithheldText(formatted);
                 clearResult();
               }}
             />
           </View>
         ) : null}
       </ColorBlock>
-
-      <View style={styles.actions}>
-        <Button label="Ước quyết toán" onPress={onCalculate} />
-        <Button
-          label="Wizard ủy quyền / tự QT"
-          variant="outline"
-          onPress={() =>
-            router.push({
-              pathname: '/filing-wizard',
-              params: { year: String(taxYear) },
-            })
-          }
-        />
-      </View>
 
       {error ? (
         <ColorBlock tone="primarySoft">
@@ -259,15 +238,29 @@ export function SettlementScreen() {
           <SettlementDisclaimer legalSources={result.primary.breakdown.legalSources} />
         </>
       ) : null}
-    </ScreenShell>
+      </ScreenShell>
+
+      <StickyActionBar>
+        <Button label="Ước quyết toán" onPress={onCalculate} />
+        <Button
+          label="Wizard ủy quyền / tự QT"
+          variant="secondary"
+          onPress={() =>
+            router.push({
+              pathname: '/filing-wizard',
+              params: { year: String(taxYear) },
+            })
+          }
+        />
+      </StickyActionBar>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  amountInput: {
-    minHeight: 56,
-    fontFamily: typography.fontFamily.semiBold,
-    fontSize: 22,
+  root: { flex: 1, backgroundColor: colors.background },
+  scrollContent: {
+    paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
   },
   switchRow: {
     flexDirection: 'row',
@@ -289,9 +282,6 @@ const styles = StyleSheet.create({
   },
   casualFields: {
     marginTop: space[4],
-    gap: space[3],
-  },
-  actions: {
     gap: space[3],
   },
   error: {

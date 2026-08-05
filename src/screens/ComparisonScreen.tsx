@@ -1,13 +1,14 @@
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { ComparisonView } from '@/src/components/comparison/ComparisonView';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import type { RegionCode } from '@/src/domain/types/salary';
 import { compareRulesets } from '@/src/engine/compareRulesets';
-import { colors, layout, space, typography } from '@/src/theme/tokens';
+import { colors, space, typography } from '@/src/theme/tokens';
 
 function paramString(v: string | string[] | undefined): string {
   if (Array.isArray(v)) return v[0] ?? '';
@@ -41,51 +42,39 @@ export function ComparisonScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'So sánh 2025 vs 2026', headerShown: true }} />
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
+      <ToolScreen
+      nested
+        title="So sánh biểu thuế"
+        subtitle="Gross giữ nguyên — đối chiếu Net / thuế giữa 2025 và 2026."
+        showBrand={false}
         accessibilityLabel="Màn hình so sánh biểu thuế"
+        aboveTabBar={false}
       >
-        <View style={styles.inner}>
-          {!outcome.ok ? (
-            <ColorBlock tone="primarySoft">
-              <Text style={styles.error}>{outcome.message}</Text>
-              <Text style={styles.hint}>Không so sánh được với tham số hiện tại.</Text>
-            </ColorBlock>
-          ) : (
-            <>
-              <ComparisonView result={outcome.result} />
-              <DisclaimerFooter
-                legalSources={[
-                  ...new Set([
-                    ...outcome.result.year1.legalSources,
-                    ...outcome.result.year2.legalSources,
-                  ]),
-                ]}
-              />
-            </>
-          )}
-        </View>
-      </ScrollView>
+        {!outcome.ok ? (
+          <ColorBlock tone="primarySoft">
+            <Text style={styles.error}>{outcome.message}</Text>
+            <Text style={styles.hint}>Không so sánh được với tham số hiện tại.</Text>
+          </ColorBlock>
+        ) : (
+          <>
+            <ComparisonView result={outcome.result} />
+            <DisclaimerFooter
+              collapseSources
+              legalSources={[
+                ...new Set([
+                  ...outcome.result.year1.legalSources,
+                  ...outcome.result.year2.legalSources,
+                ]),
+              ]}
+            />
+          </>
+        )}
+      </ToolScreen>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    paddingVertical: space[6],
-    paddingHorizontal: layout.pagePaddingX,
-    alignItems: 'center',
-  },
-  inner: {
-    width: '100%',
-    maxWidth: layout.maxContentWidth,
-    gap: space[5],
-  },
   error: {
     fontFamily: typography.fontFamily.semiBold,
     fontSize: 15,
@@ -95,7 +84,6 @@ const styles = StyleSheet.create({
     marginTop: space[2],
     fontFamily: typography.fontFamily.regular,
     fontSize: 13,
-    color: colors.foreground,
-    opacity: 0.7,
+    color: colors.foregroundMuted,
   },
 });

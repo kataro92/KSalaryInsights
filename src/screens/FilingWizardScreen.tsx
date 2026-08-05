@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 
 import { Button } from '@/src/components/common/Button';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
 import { Section } from '@/src/components/common/Section';
-import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { ToolScreen } from '@/src/components/common/ToolScreen';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import type { FilingWizardAnswers } from '@/src/domain/types/settlement';
 import { evaluateFilingWizard } from '@/src/engine/filingWizard';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
@@ -38,86 +39,69 @@ export function FilingWizardScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'Wizard quyết toán', headerShown: true }} />
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-        <View style={styles.inner}>
-          <View style={styles.hero}>
-            <NgaiMiuPlaceholder size={72} pose="wave" accessibilityLabel="Ngài Miu mùa quyết toán" />
-            <Text style={styles.heroText}>
-              Trả lời nhanh để biết nên ủy quyền qua công ty hay tự quyết toán — không thu thập giấy
-              tờ trong app.
+      <ToolScreen
+      nested
+        title="Wizard quyết toán"
+        subtitle={`Năm ${year} — trả lời nhanh để chọn ủy quyền hay tự QT.`}
+        showBrand={false}
+        accessibilityLabel="Wizard quyết toán thuế"
+        sticky={<Button label="Xem kết luận" onPress={() => setSubmitted(true)} />}
+        aboveTabBar={false}
+      >
+        <NgaiMiuTip tip="Không thu thập giấy tờ trong app — chỉ gợi ý hướng nộp." />
+
+        <Section title="Điều kiện">
+          {(
+            [
+              ['hasSingleEmployerFullYear', 'Chỉ một NSDLĐ trong cả năm?'],
+              ['hasOtherIncome', 'Có thu nhập khác ngoài lương (vãng lai…)?'],
+              ['employerOffersAuthorization', 'Công ty hỗ trợ ủy quyền quyết toán?'],
+            ] as const
+          ).map(([key, label]) => {
+            const on = answers[key];
+            return (
+              <Pressable
+                key={key}
+                onPress={() => toggle(key)}
+                style={[styles.q, on && styles.qOn]}
+                accessibilityRole="switch"
+                accessibilityState={{ checked: on }}
+              >
+                <Text style={[styles.qText, on && styles.qTextOn]}>{label}</Text>
+                <Text style={[styles.qAns, on && styles.qTextOn]}>{on ? 'Có' : 'Không'}</Text>
+              </Pressable>
+            );
+          })}
+        </Section>
+
+        {result ? (
+          <ColorBlock tone={result.conclusion === 'authorize' ? 'secondarySoft' : 'primarySoft'}>
+            <Text style={styles.conclusion}>
+              {result.conclusion === 'authorize'
+                ? 'Hướng: ủy quyền qua tổ chức'
+                : 'Hướng: tự quyết toán'}
             </Text>
-          </View>
-
-          <Section title="Điều kiện">
-            {(
-              [
-                ['hasSingleEmployerFullYear', 'Chỉ một NSDLĐ trong cả năm?'],
-                ['hasOtherIncome', 'Có thu nhập khác ngoài lương (vãng lai…)?'],
-                ['employerOffersAuthorization', 'Công ty hỗ trợ ủy quyền quyết toán?'],
-              ] as const
-            ).map(([key, label]) => {
-              const on = answers[key];
-              return (
-                <Pressable
-                  key={key}
-                  onPress={() => toggle(key)}
-                  style={[styles.q, on && styles.qOn]}
-                  accessibilityRole="switch"
-                  accessibilityState={{ checked: on }}
-                >
-                  <Text style={[styles.qText, on && styles.qTextOn]}>{label}</Text>
-                  <Text style={[styles.qAns, on && styles.qTextOn]}>{on ? 'Có' : 'Không'}</Text>
-                </Pressable>
-              );
-            })}
-          </Section>
-
-          <Button label="Xem kết luận" onPress={() => setSubmitted(true)} />
-
-          {result ? (
-            <ColorBlock tone={result.conclusion === 'authorize' ? 'secondarySoft' : 'primarySoft'}>
-              <Text style={styles.conclusion}>
-                {result.conclusion === 'authorize'
-                  ? 'Hướng: ủy quyền qua tổ chức'
-                  : 'Hướng: tự quyết toán'}
+            <Text style={styles.deadline}>Hạn tổ chức: {result.orgDeadlineLabel}</Text>
+            <Text style={styles.deadline}>Hạn cá nhân: {result.individualDeadlineLabel}</Text>
+            <Text style={styles.checkTitle}>Checklist</Text>
+            {result.checklist.map((c) => (
+              <Text key={c} style={styles.checkItem}>
+                • {c}
               </Text>
-              <Text style={styles.deadline}>Hạn tổ chức: {result.orgDeadlineLabel}</Text>
-              <Text style={styles.deadline}>Hạn cá nhân: {result.individualDeadlineLabel}</Text>
-              <Text style={styles.checkTitle}>Checklist</Text>
-              {result.checklist.map((c) => (
-                <Text key={c} style={styles.checkItem}>
-                  • {c}
-                </Text>
-              ))}
-              {result.notes.map((n) => (
-                <Text key={n} style={styles.note}>
-                  {n}
-                </Text>
-              ))}
-            </ColorBlock>
-          ) : null}
-        </View>
-      </ScrollView>
+            ))}
+            {result.notes.map((n) => (
+              <Text key={n} style={styles.note}>
+                {n}
+              </Text>
+            ))}
+          </ColorBlock>
+        ) : null}
+      </ToolScreen>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  content: {
-    paddingVertical: space[6],
-    paddingHorizontal: layout.pagePaddingX,
-    alignItems: 'center',
-  },
-  inner: { width: '100%', maxWidth: layout.maxContentWidth, gap: space[5] },
-  hero: { flexDirection: 'row', gap: space[4], alignItems: 'center' },
-  heroText: {
-    flex: 1,
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.foreground,
-  },
   q: {
     minHeight: layout.minTouch,
     paddingHorizontal: space[4],
@@ -171,7 +155,6 @@ const styles = StyleSheet.create({
     marginTop: space[3],
     fontFamily: typography.fontFamily.regular,
     fontSize: 12,
-    color: colors.foreground,
-    opacity: 0.7,
+    color: colors.foregroundMuted,
   },
 });

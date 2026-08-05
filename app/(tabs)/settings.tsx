@@ -10,6 +10,7 @@ import { ScreenShell } from '@/src/components/common/ScreenShell';
 import { Section } from '@/src/components/common/Section';
 import { usePreferences } from '@/src/hooks/usePreferences';
 import type { RegionCode } from '@/src/store/preferences';
+import { requestOnboardingReplay } from '@/src/store/onboarding';
 import { colors, space, typography } from '@/src/theme/tokens';
 
 const REGIONS: RegionCode[] = ['I', 'II', 'III', 'IV'];
@@ -95,6 +96,11 @@ export default function SettingsScreen() {
           label="Đặt lại về mặc định"
           variant="outline"
           onPress={() => void resetToDefaults()}
+        />
+        <Button
+          label="Xem lại giới thiệu"
+          variant="secondary"
+          onPress={() => void requestOnboardingReplay()}
         />
       </Section>
     </ScreenShell>

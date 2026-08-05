@@ -11,11 +11,14 @@ import {
   useFonts,
 } from '@expo-google-fonts/outfit';
 import { View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { LoadingOverlay } from '@/src/components/loading/LoadingOverlay';
+import { OnboardingScreen } from '@/src/components/onboarding/OnboardingScreen';
 import { SplashView } from '@/src/components/splash/SplashView';
 import { LoadingProvider, useLoading } from '@/src/hooks/useLoading';
 import { PreferencesProvider, usePreferences } from '@/src/hooks/usePreferences';
+import { loadOnboardingCompleted, subscribeOnboardingReplay } from '@/src/store/onboarding';
 import { colors, motion } from '@/src/theme/tokens';
 
 export { ErrorBoundary } from 'expo-router';
@@ -38,13 +41,21 @@ function RootGate({ children }: { children: ReactNode }) {
 
   const showBrandedSplash = !coldStartSplashConsumed;
   const [splashVisible, setSplashVisible] = useState(showBrandedSplash);
+  const [onboarding, setOnboarding] = useState<'loading' | 'show' | 'done'>('loading');
   const startedAt = useRef(Date.now());
   const finished = useRef(false);
 
   useEffect(() => {
+    void loadOnboardingCompleted().then((done) => {
+      setOnboarding(done ? 'done' : 'show');
+    });
+    return subscribeOnboardingReplay(() => setOnboarding('show'));
+  }, []);
+
+  useEffect(() => {
     if (finished.current) return;
 
-    const assetsReady = fontsLoaded && ready;
+    const assetsReady = fontsLoaded && ready && onboarding !== 'loading';
     const elapsed = Date.now() - startedAt.current;
     const minBrand = showBrandedSplash ? motion.splashBrandMs : 0;
 
@@ -71,13 +82,16 @@ function RootGate({ children }: { children: ReactNode }) {
 
     const cap = setTimeout(() => void finish(), hardCapLeft);
     return () => clearTimeout(cap);
-  }, [fontsLoaded, ready, showBrandedSplash]);
+  }, [fontsLoaded, ready, showBrandedSplash, onboarding]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar style="dark" />
       {children}
       <SplashView visible={splashVisible} />
+      {!splashVisible && onboarding === 'show' ? (
+        <OnboardingScreen onDone={() => setOnboarding('done')} />
+      ) : null}
       <LoadingOverlay visible={visible} message={message} />
     </View>
   );
@@ -85,46 +99,48 @@ function RootGate({ children }: { children: ReactNode }) {
 
 export default function RootLayout() {
   return (
-    <PreferencesProvider>
-      <LoadingProvider>
-        <RootGate>
-          <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen
-              name="comparison"
-              options={{ headerShown: true, title: 'So sánh 2025 vs 2026' }}
-            />
-            <Stack.Screen
-              name="filing-wizard"
-              options={{ headerShown: true, title: 'Wizard quyết toán' }}
-            />
-            <Stack.Screen
-              name="severance"
-              options={{ headerShown: true, title: 'Thôi việc / mất việc' }}
-            />
-            <Stack.Screen
-              name="unemployment"
-              options={{ headerShown: true, title: 'Trợ cấp thất nghiệp' }}
-            />
-            <Stack.Screen
-              name="maternity"
-              options={{ headerShown: true, title: 'Thai sản' }}
-            />
-            <Stack.Screen
-              name="sick-leave"
-              options={{ headerShown: true, title: 'Ốm đau' }}
-            />
-            <Stack.Screen
-              name="retirement"
-              options={{ headerShown: true, title: 'Hưu / BHXH một lần' }}
-            />
-            <Stack.Screen
-              name="other-income"
-              options={{ headerShown: true, title: 'Thu nhập khác' }}
-            />
-          </Stack>
-        </RootGate>
-      </LoadingProvider>
-    </PreferencesProvider>
+    <SafeAreaProvider>
+      <PreferencesProvider>
+        <LoadingProvider>
+          <RootGate>
+            <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen
+                name="comparison"
+                options={{ headerShown: true, title: 'So sánh 2025 vs 2026' }}
+              />
+              <Stack.Screen
+                name="filing-wizard"
+                options={{ headerShown: true, title: 'Wizard quyết toán' }}
+              />
+              <Stack.Screen
+                name="severance"
+                options={{ headerShown: true, title: 'Thôi việc / mất việc' }}
+              />
+              <Stack.Screen
+                name="unemployment"
+                options={{ headerShown: true, title: 'Trợ cấp thất nghiệp' }}
+              />
+              <Stack.Screen
+                name="maternity"
+                options={{ headerShown: true, title: 'Thai sản' }}
+              />
+              <Stack.Screen
+                name="sick-leave"
+                options={{ headerShown: true, title: 'Ốm đau' }}
+              />
+              <Stack.Screen
+                name="retirement"
+                options={{ headerShown: true, title: 'Hưu / BHXH một lần' }}
+              />
+              <Stack.Screen
+                name="other-income"
+                options={{ headerShown: true, title: 'Thu nhập khác' }}
+              />
+            </Stack>
+          </RootGate>
+        </LoadingProvider>
+      </PreferencesProvider>
+    </SafeAreaProvider>
   );
 }

@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -10,7 +9,10 @@ import {
 
 import { LumpSumEligibilityChecklist } from '@/src/components/checklist/LumpSumEligibilityChecklist';
 import { Button } from '@/src/components/common/Button';
+import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { MoneyField } from '@/src/components/common/MoneyField';
 import { Section } from '@/src/components/common/Section';
+import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { RetirementComparisonView } from '@/src/components/comparison/RetirementComparisonView';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import {
@@ -29,19 +31,8 @@ import {
   getInflationAdjustment,
   listInflationAdjustmentYears,
 } from '@/src/engine/rulesetLoader';
+import { parseMoney } from '@/src/theme/money';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return '';
-  return n.toLocaleString('vi-VN');
-}
 
 function parseIntSafe(raw: string): number {
   const digits = raw.replace(/[^\d]/g, '');
@@ -108,13 +99,13 @@ export function RetirementComparisonScreen() {
   ];
 
   return (
-    <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
+    <ToolScreen
+      nested
+      title="Hưu / BHXH một lần"
+      subtitle="So sánh hai kịch bản · bắt buộc đọc cảnh báo trước khi xem số."
       accessibilityLabel="So sánh hưu trí và BHXH một lần"
+      sticky={<Button label="Tính so sánh" onPress={onCalculate} />}
     >
-      <View style={styles.inner}>
         <LumpSumDisclaimerGate
           acknowledged={ack.acknowledged}
           onAcknowledge={() =>
@@ -185,17 +176,14 @@ export function RetirementComparisonScreen() {
           title="MBQTL đã trượt giá"
           subtitle={`Nhập thủ công hoặc tham chiếu bảng CV ${inflation.table_year}.`}
         >
-          <TextInput
+          <MoneyField
             accessibilityLabel="MBQTL đã trượt giá"
-            keyboardType="number-pad"
             value={mbqtlText}
-            onChangeText={(t) => {
-              const n = parseMoney(t);
-              setMbqtlText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+            onValueChange={(formatted) => {
+              setMbqtlText(formatted);
               setLumpSum(null);
               setPension(null);
             }}
-            style={styles.input}
           />
           <Text style={styles.hint}>
             Bảng hệ số {inflation.table_year}: ví dụ 2014 = {inflation.coefficients_by_year['2014']},
@@ -240,9 +228,11 @@ export function RetirementComparisonScreen() {
           />
         </Section>
 
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        <Button label="Tính so sánh" onPress={onCalculate} />
+        {error ? (
+          <ColorBlock tone="primarySoft">
+            <Text style={styles.error}>{error}</Text>
+          </ColorBlock>
+        ) : null}
 
         <RetirementComparisonView
           lumpSum={lumpSum}
@@ -258,10 +248,9 @@ export function RetirementComparisonScreen() {
         ) : null}
 
         {showAmounts && lumpSum && pension ? (
-          <DisclaimerFooter legalSources={[...new Set(legalSources)]} />
+          <DisclaimerFooter legalSources={[...new Set(legalSources)]} collapseSources />
         ) : null}
-      </View>
-    </ScrollView>
+    </ToolScreen>
   );
 }
 
@@ -294,16 +283,6 @@ function Field({
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: space[10] },
-  inner: {
-    paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[4],
-    gap: space[5],
-    maxWidth: layout.maxContentWidth,
-    width: '100%',
-    alignSelf: 'center',
-  },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2] },
   pair: { flexDirection: 'row', gap: space[3], marginBottom: space[3] },
   field: { flex: 1, gap: space[1] },
@@ -351,6 +330,6 @@ const styles = StyleSheet.create({
   error: {
     fontFamily: typography.fontFamily.medium,
     fontSize: 14,
-    color: '#DC2626',
+    color: colors.danger,
   },
 });

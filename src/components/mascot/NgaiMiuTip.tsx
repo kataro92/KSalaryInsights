@@ -1,17 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { NgaiMiuPlaceholder, type MascotPose } from '@/src/components/mascot/NgaiMiuPlaceholder';
 import { colors, space, typography } from '@/src/theme/tokens';
 
 type Props = {
   tip: string;
+  pose?: MascotPose;
 };
 
 /** Tip beside results — small mascot, never overlays numeric rows. */
-export function NgaiMiuTip({ tip }: Props) {
+export function NgaiMiuTip({ tip, pose = 'tip' }: Props) {
   return (
     <View style={styles.row} accessibilityLabel={`Gợi ý từ Ngài Miu: ${tip}`}>
-      <NgaiMiuPlaceholder size={48} pose="wave" accessibilityLabel="Ngài Miu" />
+      <NgaiMiuPlaceholder size={48} pose={pose} accessibilityLabel="Ngài Miu" />
       <Text style={styles.tip}>{tip}</Text>
     </View>
   );
