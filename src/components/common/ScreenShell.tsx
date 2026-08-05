@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet, View, type ViewProps } from 'react-native';
 import type { ReactNode } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, layout, space } from '@/src/theme/tokens';
 
@@ -20,10 +21,13 @@ export function ScreenShell({
   style,
   ...rest
 }: Props) {
+  const insets = useSafeAreaInsets();
+  const topPad = Math.max(insets.top, space[3]);
+
   return (
     <ScrollView
       style={styles.scroll}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: topPad }]}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
       accessibilityLabel={accessibilityLabel}
@@ -50,7 +54,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[5],
+    paddingTop: space[4],
     gap: space[5],
     maxWidth: layout.maxContentWidth,
     width: '100%',
