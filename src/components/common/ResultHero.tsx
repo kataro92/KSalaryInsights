@@ -10,6 +10,8 @@ import Animated, {
 import { formatVnd, moneyAccessibilityLabel } from '@/src/theme/money';
 import { colors, motion, radii, space, typography } from '@/src/theme/tokens';
 
+type Tone = 'positive' | 'primary' | 'muted';
+
 type Props = {
   label?: string;
   eyebrow?: string;
@@ -17,6 +19,29 @@ type Props = {
   /** Animate amount on mount / amount change (≤ countUpMs). */
   animate?: boolean;
   accessibilityLabel?: string;
+  /** positive = mint Net; primary = cobalt pay-more; muted = soft surface. */
+  tone?: Tone;
+};
+
+const toneStyles: Record<
+  Tone,
+  { root: { backgroundColor: string }; text: { color: string }; eyebrowOpacity: number }
+> = {
+  positive: {
+    root: { backgroundColor: colors.resultPositive },
+    text: { color: colors.white },
+    eyebrowOpacity: 0.88,
+  },
+  primary: {
+    root: { backgroundColor: colors.primary },
+    text: { color: colors.white },
+    eyebrowOpacity: 0.88,
+  },
+  muted: {
+    root: { backgroundColor: colors.muted },
+    text: { color: colors.foreground },
+    eyebrowOpacity: 0.75,
+  },
 };
 
 /**
@@ -28,10 +53,12 @@ export function ResultHero({
   amount,
   animate = true,
   accessibilityLabel,
+  tone = 'positive',
 }: Props) {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(8);
   const [display, setDisplay] = useState(animate ? 0 : amount);
+  const palette = toneStyles[tone];
 
   useEffect(() => {
     opacity.value = 0;
@@ -74,15 +101,17 @@ export function ResultHero({
 
   return (
     <Animated.View
-      style={[styles.root, animStyle]}
+      style={[styles.root, palette.root, animStyle]}
       accessibilityLabel={
         accessibilityLabel ?? moneyAccessibilityLabel(amount, `${eyebrow} ${label}`)
       }
     >
-      <Text style={styles.eyebrow}>{eyebrow}</Text>
+      <Text style={[styles.eyebrow, palette.text, { opacity: palette.eyebrowOpacity }]}>
+        {eyebrow}
+      </Text>
       <View style={styles.row}>
-        <Text style={styles.label}>{label}</Text>
-        <Text style={styles.amount}>{formatVnd(display)}</Text>
+        <Text style={[styles.label, palette.text]}>{label}</Text>
+        <Text style={[styles.amount, palette.text]}>{formatVnd(display)}</Text>
       </View>
     </Animated.View>
   );
@@ -90,7 +119,6 @@ export function ResultHero({
 
 const styles = StyleSheet.create({
   root: {
-    backgroundColor: colors.resultPositive,
     borderRadius: radii.lg,
     paddingVertical: space[5],
     paddingHorizontal: space[5],
@@ -100,8 +128,6 @@ const styles = StyleSheet.create({
     fontSize: typography.scale.caption.fontSize,
     letterSpacing: typography.letterSpacingLabel,
     textTransform: 'uppercase',
-    color: colors.white,
-    opacity: 0.88,
     marginBottom: space[2],
   },
   row: {
@@ -113,14 +139,12 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: typography.fontFamily.bold,
     fontSize: typography.scale.subtitle.fontSize,
-    color: colors.white,
   },
   amount: {
     flexShrink: 1,
     fontFamily: typography.fontFamily.extraBold,
     fontSize: typography.scale.moneyLg.fontSize,
     lineHeight: typography.scale.moneyLg.lineHeight,
-    color: colors.white,
     fontVariant: ['tabular-nums'],
     textAlign: 'right',
   },

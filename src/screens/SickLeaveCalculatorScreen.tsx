@@ -1,21 +1,22 @@
 import { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
 
 import { SickLeaveBreakdownCard } from '@/src/components/breakdown/SickLeaveBreakdownCard';
 import { Button } from '@/src/components/common/Button';
-import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import {
   SickLeaveInputs,
   type SickLeaveInputsValue,
 } from '@/src/components/inputs/SickLeaveInputs';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { SickLeaveBreakdown } from '@/src/domain/types/benefits';
 import { calculateSickLeave } from '@/src/engine/sickLeave';
 import { usePreferences } from '@/src/hooks/usePreferences';
+import { successHaptic } from '@/src/theme/haptics';
 import { parseMoney } from '@/src/theme/money';
-import { colors, typography } from '@/src/theme/tokens';
 
 export function SickLeaveCalculatorScreen() {
   const { preferences } = usePreferences();
@@ -58,6 +59,7 @@ export function SickLeaveCalculatorScreen() {
         taxYear,
       });
       setResult(next);
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -80,24 +82,21 @@ export function SickLeaveCalculatorScreen() {
         }}
       />
       {error ? (
-        <ColorBlock tone="primarySoft">
-          <Text style={styles.error}>{error}</Text>
-        </ColorBlock>
+        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
       {result ? (
         <>
-          <SickLeaveBreakdownCard result={result} />
+          <ResultHero eyebrow="Ước ốm đau" label="Trợ cấp" amount={result.amount} />
+          <NgaiMiuTip tip="Trần năm theo năm đóng — nếu bị cắt, công thức ghi rõ bên dưới." />
+          <SickLeaveBreakdownCard result={result} hideTotal />
           <DisclaimerFooter legalSources={result.legalSources} collapseSources />
         </>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có ước ốm đau"
+          body="Nhập lương liền kề và số ngày nghỉ, rồi bấm Tính ốm đau."
+        />
       ) : null}
     </ToolScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: colors.danger,
-  },
-});

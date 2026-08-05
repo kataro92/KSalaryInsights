@@ -1,6 +1,12 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, type PressableProps } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { colors, layout, motion, radii, space, typography } from '@/src/theme/tokens';
 
 type Props = PressableProps & {
   label: string;
@@ -17,9 +23,17 @@ export function ChoiceChip({
   tone = 'primary',
   flex = false,
   disabled,
+  onPressIn,
+  onPressOut,
   ...rest
 }: Props) {
   const selectedBg = tone === 'secondary' ? colors.secondary : colors.primary;
+  const scale = useSharedValue(1);
+  const [pressed, setPressed] = useState(false);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
     <Pressable
@@ -27,18 +41,32 @@ export function ChoiceChip({
       accessibilityState={{ selected, disabled: !!disabled }}
       accessibilityLabel={label}
       disabled={disabled}
-      style={({ pressed }) => [
-        styles.chip,
-        flex && styles.flex,
-        selected && { backgroundColor: selectedBg },
-        pressed && !disabled && styles.pressed,
-        disabled && styles.disabled,
-      ]}
+      onPressIn={(e) => {
+        setPressed(true);
+        scale.value = withTiming(0.97, { duration: motion.interactionMs });
+        onPressIn?.(e);
+      }}
+      onPressOut={(e) => {
+        setPressed(false);
+        scale.value = withTiming(1, { duration: motion.interactionMs });
+        onPressOut?.(e);
+      }}
       {...rest}
     >
-      <Text style={[styles.label, selected && styles.labelSelected]} numberOfLines={1}>
-        {label}
-      </Text>
+      <Animated.View
+        style={[
+          styles.chip,
+          flex && styles.flex,
+          selected && { backgroundColor: selectedBg },
+          pressed && !disabled && styles.pressedOpacity,
+          disabled && styles.disabled,
+          animatedStyle,
+        ]}
+      >
+        <Text style={[styles.label, selected && styles.labelSelected]} numberOfLines={1}>
+          {label}
+        </Text>
+      </Animated.View>
     </Pressable>
   );
 }
@@ -55,8 +83,9 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
     minWidth: 0,
+    width: '100%',
   },
-  pressed: { transform: [{ scale: 0.97 }] },
+  pressedOpacity: { opacity: 0.92 },
   disabled: { opacity: 0.5 },
   label: {
     fontFamily: typography.fontFamily.medium,

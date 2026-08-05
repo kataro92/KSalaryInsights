@@ -7,6 +7,7 @@ import { ChipRow } from '@/src/components/common/ChipRow';
 import { ChoiceChip } from '@/src/components/common/ChoiceChip';
 import { CollapseSection } from '@/src/components/common/CollapseSection';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
 import { MoneyField } from '@/src/components/common/MoneyField';
 import { PageHero } from '@/src/components/common/PageHero';
 import { ResultHero } from '@/src/components/common/ResultHero';
@@ -28,6 +29,7 @@ import type {
 import { grossToNet } from '@/src/engine/grossToNet';
 import { netToGross } from '@/src/engine/netToGross';
 import { usePreferences } from '@/src/hooks/usePreferences';
+import { successHaptic } from '@/src/theme/haptics';
 import { parseMoney } from '@/src/theme/money';
 import { colors, layout, space, typography } from '@/src/theme/tokens';
 
@@ -95,6 +97,7 @@ export function CalculatorScreen() {
           insuranceSalary,
         });
         setBreakdown(result);
+        void successHaptic();
       } else {
         const result = netToGross({
           net: amount,
@@ -113,6 +116,7 @@ export function CalculatorScreen() {
           return;
         }
         setBreakdown(result.breakdown);
+        void successHaptic();
       }
     } catch (e) {
       setBreakdown(null);
@@ -291,9 +295,7 @@ export function CalculatorScreen() {
         </CollapseSection>
 
       {error ? (
-        <ColorBlock tone="primarySoft">
-          <Text style={styles.error}>{error}</Text>
-        </ColorBlock>
+        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
 
         {breakdown ? (
@@ -313,6 +315,11 @@ export function CalculatorScreen() {
               </Pressable>
             ) : null}
           </View>
+        ) : !error ? (
+          <EmptyErrorState
+            title="Chưa có kết quả"
+            body="Nhập Gross hoặc Net, rồi bấm Tính — Ngài Miu sẽ hiện Net và breakdown."
+          />
         ) : null}
       </ScreenShell>
 
@@ -358,11 +365,6 @@ const styles = StyleSheet.create({
   },
   actions: {
     gap: space[3],
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: typography.scale.body.fontSize,
-    color: colors.foreground,
   },
   resultBlock: {
     gap: space[4],

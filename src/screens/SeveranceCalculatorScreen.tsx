@@ -9,15 +9,18 @@ import {
 
 import { BenefitBreakdownCard } from '@/src/components/benefits/BenefitBreakdownCard';
 import { Button } from '@/src/components/common/Button';
-import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
 import { MoneyField } from '@/src/components/common/MoneyField';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { Section } from '@/src/components/common/Section';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { SeveranceBreakdown, SeveranceMode } from '@/src/domain/types/benefits';
 import { calcSeverancePay } from '@/src/engine/severance';
 import { usePreferences } from '@/src/hooks/usePreferences';
+import { successHaptic } from '@/src/theme/haptics';
 import { parseMoney } from '@/src/theme/money';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
@@ -75,6 +78,7 @@ export function SeveranceCalculatorScreen() {
         taxYear,
       });
       setResult(next);
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -214,16 +218,21 @@ export function SeveranceCalculatorScreen() {
         </Section>
 
         {error ? (
-          <ColorBlock tone="primarySoft">
-            <Text style={styles.error}>{error}</Text>
-          </ColorBlock>
+          <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
         ) : null}
 
         {result ? (
           <>
+            <ResultHero eyebrow="Ước trợ cấp" label="Tổng" amount={result.amount} />
+            <NgaiMiuTip tip="Đã trừ thời gian BHTN / đã chi trả trong công thức — xem breakdown bên dưới." />
             <BenefitBreakdownCard result={result} />
             <DisclaimerFooter legalSources={result.legalSources} collapseSources />
           </>
+        ) : !error ? (
+          <EmptyErrorState
+            title="Chưa có ước trợ cấp"
+            body="Chọn loại thôi việc / mất việc, điền thời gian và lương, rồi bấm Tính trợ cấp."
+          />
         ) : null}
     </ToolScreen>
   );
@@ -287,10 +296,5 @@ const styles = StyleSheet.create({
     color: colors.foreground,
     fontVariant: ['tabular-nums'],
     backgroundColor: colors.white,
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: colors.danger,
   },
 });

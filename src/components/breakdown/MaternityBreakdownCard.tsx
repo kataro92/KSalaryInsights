@@ -6,13 +6,21 @@ import { colors, space, typography } from '@/src/theme/tokens';
 
 type Props = {
   result: MaternityBreakdown;
+  /** When ResultHero already shows the peak total. */
+  hideTotal?: boolean;
 };
 
-export function MaternityBreakdownCard({ result }: Props) {
+export function MaternityBreakdownCard({ result, hideTotal = false }: Props) {
   return (
     <ColorBlock tone="secondarySoft" accessibilityLabel="Kết quả thai sản">
-      <Text style={styles.eyebrow}>Ước thai sản</Text>
-      <Text style={styles.amount}>{result.total.toLocaleString('vi-VN')} ₫</Text>
+      {!hideTotal ? (
+        <>
+          <Text style={styles.eyebrow}>Ước thai sản</Text>
+          <Text style={styles.amount}>{result.total.toLocaleString('vi-VN')} ₫</Text>
+        </>
+      ) : (
+        <Text style={styles.eyebrow}>Chi tiết thai sản</Text>
+      )}
       <Text style={styles.formula}>{result.formula}</Text>
 
       <View style={styles.rows}>

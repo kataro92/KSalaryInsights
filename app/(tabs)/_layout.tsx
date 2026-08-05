@@ -3,6 +3,7 @@ import { Briefcase, Calculator, FileText, Settings } from 'lucide-react-native';
 import { Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { TabBarIcon } from '@/src/components/common/TabBarIcon';
 import { colors, layout, typography } from '@/src/theme/tokens';
 
 export default function TabsLayout() {
@@ -44,7 +45,11 @@ export default function TabsLayout() {
           title: 'Tính lương',
           tabBarLabel: 'Lương',
           tabBarAccessibilityLabel: 'Tab tính lương',
-          tabBarIcon: ({ color, size }) => <Calculator color={color} size={size} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <Calculator color={color} size={size} />
+            </TabBarIcon>
+          ),
         }}
       />
       <Tabs.Screen
@@ -53,7 +58,11 @@ export default function TabsLayout() {
           title: 'Quyết toán',
           tabBarLabel: 'Quyết toán',
           tabBarAccessibilityLabel: 'Tab quyết toán thuế',
-          tabBarIcon: ({ color, size }) => <FileText color={color} size={size} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <FileText color={color} size={size} />
+            </TabBarIcon>
+          ),
         }}
       />
       <Tabs.Screen
@@ -62,7 +71,11 @@ export default function TabsLayout() {
           title: 'Quyền lợi',
           tabBarLabel: 'Quyền lợi',
           tabBarAccessibilityLabel: 'Tab quyền lợi',
-          tabBarIcon: ({ color, size }) => <Briefcase color={color} size={size} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <Briefcase color={color} size={size} />
+            </TabBarIcon>
+          ),
         }}
       />
       <Tabs.Screen
@@ -71,7 +84,11 @@ export default function TabsLayout() {
           title: 'Cài đặt',
           tabBarLabel: 'Cài đặt',
           tabBarAccessibilityLabel: 'Tab cài đặt',
-          tabBarIcon: ({ color, size }) => <Settings color={color} size={size} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <Settings color={color} size={size} />
+            </TabBarIcon>
+          ),
         }}
       />
     </Tabs>
