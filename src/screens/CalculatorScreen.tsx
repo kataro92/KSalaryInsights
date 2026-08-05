@@ -290,11 +290,11 @@ export function CalculatorScreen() {
           </ColorBlock>
         </CollapseSection>
 
-        {error ? (
-          <ColorBlock tone="primarySoft">
-            <Text style={styles.error}>{error}</Text>
-          </ColorBlock>
-        ) : null}
+      {error ? (
+        <ColorBlock tone="primarySoft">
+          <Text style={styles.error}>{error}</Text>
+        </ColorBlock>
+      ) : null}
 
         {breakdown ? (
           <View style={styles.resultBlock}>
@@ -350,6 +350,14 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.regular,
     fontSize: typography.scale.caption.fontSize,
     color: colors.foregroundMuted,
+  },
+  meta: {
+    fontFamily: typography.fontFamily.regular,
+    fontSize: 13,
+    color: colors.foregroundMuted,
+  },
+  actions: {
+    gap: space[3],
   },
   error: {
     fontFamily: typography.fontFamily.medium,
