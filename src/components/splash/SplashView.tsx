@@ -19,11 +19,12 @@ export function SplashView({ visible }: Props) {
       <View style={styles.decorCircle} />
       <View style={styles.decorSquare} />
       <NgaiMiuPlaceholder
-        size={140}
-        pose="wave"
+        size={200}
+        pose="splash"
         accessibilityLabel="Ngài Miu chào bạn"
       />
       <Text style={styles.brand}>KVSalaryTools</Text>
+      <Text style={styles.guide}>Ngài Miu sẵn sàng hướng dẫn bạn</Text>
       <Text style={styles.tagline}>Ước tính lương · thuế · bảo hiểm</Text>
     </View>
   );
@@ -44,36 +45,41 @@ const styles = StyleSheet.create({
   },
   decorCircle: {
     position: 'absolute',
-    width: 220,
-    height: 220,
-    borderRadius: 110,
+    width: 240,
+    height: 240,
+    borderRadius: 120,
     backgroundColor: colors.primary,
-    opacity: 0.08,
-    top: 80,
-    right: -60,
+    opacity: 0.1,
+    top: 64,
+    right: -72,
   },
   decorSquare: {
     position: 'absolute',
-    width: 160,
-    height: 160,
+    width: 180,
+    height: 180,
     backgroundColor: colors.secondary,
-    opacity: 0.08,
-    bottom: 100,
-    left: -40,
+    opacity: 0.1,
+    bottom: 88,
+    left: -48,
     transform: [{ rotate: '18deg' }],
   },
   brand: {
-    marginTop: space[6],
+    marginTop: space[5],
     fontFamily: typography.fontFamily.extraBold,
     fontSize: 32,
     color: colors.foreground,
     letterSpacing: typography.letterSpacingTight,
   },
-  tagline: {
+  guide: {
     marginTop: space[2],
-    fontFamily: typography.fontFamily.regular,
+    fontFamily: typography.fontFamily.semiBold,
     fontSize: 15,
-    color: colors.foreground,
-    opacity: 0.7,
+    color: colors.primary,
+  },
+  tagline: {
+    marginTop: space[1],
+    fontFamily: typography.fontFamily.regular,
+    fontSize: 14,
+    color: colors.foregroundMuted,
   },
 });

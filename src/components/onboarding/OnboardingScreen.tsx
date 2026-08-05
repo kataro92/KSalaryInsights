@@ -10,19 +10,24 @@ import { colors, layout, space, typography } from '@/src/theme/tokens';
 type Step = {
   title: string;
   body: string;
-  pose: 'wave' | 'point' | 'tip';
+  pose: 'wave' | 'point' | 'tip' | 'docs';
 };
 
 const STEPS: Step[] = [
   {
+    title: 'Xin chào, tôi là Ngài Miu',
+    body: 'Trợ lý của bạn trong KVSalaryTools — tôi sẽ chỉ đường qua từng bước tính lương, thuế và quyền lợi BHXH.',
+    pose: 'wave',
+  },
+  {
     title: 'Tính Gross ↔ Net',
     body: 'Ước tính lương offline theo ruleset 2025/2026. Breakdown từng khoản trừ — không che số.',
-    pose: 'wave',
+    pose: 'point',
   },
   {
     title: 'Quyết toán thuế năm',
     body: 'Đối chiếu đã khấu trừ với nghĩa vụ ước tính. Có wizard gợi ý ủy quyền hay tự QT.',
-    pose: 'point',
+    pose: 'docs',
   },
   {
     title: 'Quyền lợi BHXH',
@@ -60,7 +65,7 @@ export function OnboardingScreen({ onDone }: Props) {
       </Pressable>
 
       <View style={styles.center}>
-        <NgaiMiuPlaceholder size={140} pose={step.pose} accessibilityLabel="Ngài Miu chào bạn" />
+        <NgaiMiuPlaceholder size={168} pose={step.pose} accessibilityLabel="Ngài Miu hướng dẫn" />
         <Text style={styles.brand}>KVSalaryTools</Text>
         <Text style={styles.title}>{step.title}</Text>
         <Text style={styles.body}>{step.body}</Text>
@@ -74,7 +79,7 @@ export function OnboardingScreen({ onDone }: Props) {
 
       <View style={styles.actions}>
         {last ? (
-          <Button label="Bắt đầu" onPress={() => void finish()} />
+          <Button label="Bắt đầu cùng Ngài Miu" onPress={() => void finish()} />
         ) : (
           <Button label="Tiếp" onPress={() => setIndex((i) => i + 1)} />
         )}
@@ -97,13 +102,13 @@ const styles = StyleSheet.create({
   },
   decor: {
     position: 'absolute',
-    width: 240,
-    height: 240,
-    borderRadius: 120,
+    width: 260,
+    height: 260,
+    borderRadius: 130,
     backgroundColor: colors.primary,
-    opacity: 0.07,
-    top: -40,
-    right: -80,
+    opacity: 0.08,
+    top: -48,
+    right: -88,
   },
   skip: {
     alignSelf: 'flex-end',
@@ -122,7 +127,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: space[2],
   },
   brand: {
-    marginTop: space[4],
+    marginTop: space[3],
     fontFamily: typography.fontFamily.extraBold,
     fontSize: 12,
     letterSpacing: 1.4,

@@ -299,7 +299,7 @@ export function CalculatorScreen() {
         {breakdown ? (
           <View style={styles.resultBlock}>
             <ResultHero amount={breakdown.net} />
-            <NgaiMiuTip tip="Tôi tách từng khoản trừ để bạn thấy rõ — số liệu không bị che." />
+            <NgaiMiuTip tip="Tôi tách từng khoản trừ để bạn thấy rõ — số liệu không bị che. Vuốt xuống để đọc breakdown." />
             <SalaryBreakdownCard breakdown={breakdown} hideNet />
             <DisclaimerFooter legalSources={breakdown.legalSources} collapseSources />
             {mode === 'gross-to-net' ? (
@@ -349,11 +349,6 @@ const styles = StyleSheet.create({
   switchHint: {
     fontFamily: typography.fontFamily.regular,
     fontSize: typography.scale.caption.fontSize,
-    color: colors.foregroundMuted,
-  },
-  meta: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 13,
     color: colors.foregroundMuted,
   },
   actions: {

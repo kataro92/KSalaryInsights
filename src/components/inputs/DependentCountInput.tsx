@@ -48,7 +48,7 @@ export function DependentCountInput({ value, onChange }: Props) {
         </Pressable>
       </View>
       <View style={styles.tipRow}>
-        <NgaiMiuPlaceholder size={36} pose="confused" accessibilityLabel="Ngài Miu" />
+        <NgaiMiuPlaceholder size={48} pose="confused" accessibilityLabel="Ngài Miu" />
         <Text style={styles.tip}>
           Điều kiện NPT theo luật; mỗi NPT chỉ giảm trừ một lần. App giới hạn {MAX_DEPENDENTS}{' '}
           người (không lưu tên/ngày sinh).

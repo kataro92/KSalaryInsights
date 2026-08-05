@@ -10,7 +10,7 @@ export function SettlementDisclaimer({ legalSources }: Props) {
   return (
     <ColorBlock tone="muted" accessibilityLabel="Disclaimer quyết toán">
       <View style={styles.row}>
-        <NgaiMiuPlaceholder size={48} pose="confused" accessibilityLabel="Ngài Miu" />
+        <NgaiMiuPlaceholder size={56} pose="docs" accessibilityLabel="Ngài Miu nhắc nhở" />
         <View style={styles.textCol}>
           <Text style={styles.title}>Ước tính mạnh — không nộp tờ khai thay bạn</Text>
           <Text style={styles.body}>

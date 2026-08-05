@@ -48,7 +48,7 @@ export function FilingWizardScreen() {
         sticky={<Button label="Xem kết luận" onPress={() => setSubmitted(true)} />}
         aboveTabBar={false}
       >
-        <NgaiMiuTip tip="Không thu thập giấy tờ trong app — chỉ gợi ý hướng nộp." />
+        <NgaiMiuTip pose="docs" tip="Không thu thập giấy tờ trong app — tôi chỉ gợi ý hướng nộp để bạn tự chuẩn bị." />
 
         <Section title="Điều kiện">
           {(

@@ -9,7 +9,7 @@ type Props = ViewProps & {
 };
 
 const toneBg: Record<Tone, string> = {
-  default: colors.background,
+  default: colors.white,
   primarySoft: colors.primarySoft,
   secondarySoft: colors.secondarySoft,
   muted: colors.muted,

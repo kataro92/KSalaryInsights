@@ -166,7 +166,7 @@ Shared patterns: validate → calculate → `ResultHero` → breakdown → discl
 
 ### Phase E — Brand finish (ship bar)
 1. App icon, splash, store screenshots aligned to palette v2  
-2. Mascot asset pack in repo (`assets/mascot/*.svg`) replacing placeholder  
+2. Mascot asset pack in repo (`assets/mascot/*.png` + `.webp`) replacing SVG placeholder  
 3. Microcopy pass (tone: Ngài Miu voice guide)  
 4. Design QA checklist signed off against design-system.md §1–8  
 
