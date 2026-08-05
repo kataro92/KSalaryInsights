@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { loadScenarios } from '@/src/store/scenarios';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 type Props = {
@@ -12,26 +13,45 @@ type Props = {
 
 /**
  * Soft amber seasonal cue — quyết toán T3–T4 (and mild Tết reminder in T12).
+ * F014: mentions local saved scenarios when present.
  * Flat Design: solid soft fill, no shadow.
  */
 export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
   const router = useRouter();
+  const [scenarioCount, setScenarioCount] = useState(0);
   const month = now.getMonth() + 1; // 1–12
   const filingSeason = month >= 3 && month <= 4;
   const tetCue = month === 12;
   const visible = forceShow ?? (filingSeason || tetCue);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { store } = await loadScenarios();
+      if (!cancelled) setScenarioCount(store.scenarios.length);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   if (!visible) return null;
+
+  const scenarioHint =
+    scenarioCount > 0
+      ? ` Bạn có ${scenarioCount} kịch bản lương đã lưu — mở Tính lương để tải lại.`
+      : '';
 
   const copy = filingSeason
     ? {
         title: 'Mùa quyết toán',
-        body: 'T3–T4 thường là kỳ QT thuế năm trước. Ước tính trước, đối chiếu bảng lương.',
-        cta: 'Mở quyết toán',
-        href: '/settlement' as const,
+        body: `T3–T4 thường là kỳ QT thuế năm trước. Ước tính trước, đối chiếu bảng lương.${scenarioHint}`,
+        cta: scenarioCount > 0 ? 'Mở Tính lương' : 'Mở quyết toán',
+        href: (scenarioCount > 0 ? '/' : '/settlement') as '/' | '/settlement',
       }
     : {
         title: 'Cuối năm · thưởng & QT',
-        body: 'Chuẩn bị số liệu lương/thưởng trước khi sang năm thuế mới.',
+        body: `Chuẩn bị số liệu lương/thưởng trước khi sang năm thuế mới.${scenarioHint}`,
         cta: 'Tính lương',
         href: '/' as const,
       };

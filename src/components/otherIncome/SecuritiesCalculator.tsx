@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Button } from '@/src/components/common/Button';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { Section } from '@/src/components/common/Section';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
 import type { SecuritiesBreakdown } from '@/src/domain/types/otherIncome';
 import { calculateSecuritiesTransfer } from '@/src/engine/otherIncome/securities';
+import { successHaptic } from '@/src/theme/haptics';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 function parseMoney(raw: string): number | null {
@@ -44,6 +48,7 @@ export function SecuritiesCalculator({ taxYear }: Props) {
     }
     try {
       setResult(calculateSecuritiesTransfer({ transferPrice, taxYear, asOfDate }));
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -77,10 +82,17 @@ export function SecuritiesCalculator({ taxYear }: Props) {
           style={styles.input}
         />
       </Section>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <EmptyErrorState variant="error" title="Chưa tính được" body={error} /> : null}
       <Button label="Tính CK" onPress={onCalculate} />
       {result ? (
         <>
+          <ResultHero
+            tone="primary"
+            eyebrow="Chuyển nhượng CK"
+            label="Thuế CN"
+            amount={result.tax}
+          />
+          <NgaiMiuTip tip="Tỷ lệ theo ngày giao dịch — đọc chú thích nếu ruleset ghi hiệu lực hạn chế." />
           <OtherIncomeBreakdownCard
             title="Chuyển nhượng CK"
             total={result.tax}
@@ -89,9 +101,15 @@ export function SecuritiesCalculator({ taxYear }: Props) {
             lines={[{ id: 'tax', label: 'Thuế chuyển nhượng', amount: result.tax }]}
             explanations={result.explanations}
             note={result.ineffectivenessReason}
+            hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
         </>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có ước thuế CK"
+          body="Nhập giá bán và ngày giao dịch, rồi bấm Tính CK."
+        />
       ) : null}
     </View>
   );
@@ -118,10 +136,5 @@ const styles = StyleSheet.create({
     color: colors.foreground,
     fontVariant: ['tabular-nums'],
     backgroundColor: colors.white,
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: '#DC2626',
   },
 });

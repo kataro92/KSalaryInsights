@@ -1,8 +1,13 @@
+import { useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import type { ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { colors, layout, motion, radii, space, typography } from '@/src/theme/tokens';
 
 type Tone = 'primarySoft' | 'secondarySoft' | 'muted' | 'accentSoft';
 
@@ -23,7 +28,7 @@ const toneBg: Record<Tone, string> = {
 };
 
 /**
- * Hub destination — Color Block pressable (Flat Design: no shadow, scale on press).
+ * Hub destination — Color Block pressable (Flat Design: no shadow, Reanimated scale).
  */
 export function HubNavCard({
   title,
@@ -33,23 +38,42 @@ export function HubNavCard({
   icon,
   accessibilityLabel,
 }: Props) {
+  const scale = useSharedValue(1);
+  const [pressed, setPressed] = useState(false);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.card,
-        { backgroundColor: toneBg[tone] },
-        pressed && styles.pressed,
-      ]}
+      onPressIn={() => {
+        setPressed(true);
+        scale.value = withTiming(0.98, { duration: motion.interactionMs });
+      }}
+      onPressOut={() => {
+        setPressed(false);
+        scale.value = withTiming(1, { duration: motion.interactionMs });
+      }}
     >
-      {icon ? <View style={styles.iconWrap}>{icon}</View> : null}
-      <View style={styles.text}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
-      </View>
-      <ChevronRight color={colors.foregroundMuted} size={20} strokeWidth={2.2} />
+      <Animated.View
+        style={[
+          styles.card,
+          { backgroundColor: toneBg[tone] },
+          pressed && styles.pressedOpacity,
+          animatedStyle,
+        ]}
+      >
+        {icon ? <View style={styles.iconWrap}>{icon}</View> : null}
+        <View style={styles.text}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.description}>{description}</Text>
+        </View>
+        <ChevronRight color={colors.foregroundMuted} size={20} strokeWidth={2.2} />
+      </Animated.View>
     </Pressable>
   );
 }
@@ -64,8 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space[3],
   },
-  pressed: {
-    transform: [{ scale: 0.98 }],
+  pressedOpacity: {
     opacity: 0.92,
   },
   iconWrap: {

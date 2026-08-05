@@ -18,6 +18,7 @@ import { Section } from '@/src/components/common/Section';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { emptyCopy, miuTips } from '@/src/copy/miu';
 import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { UnemploymentBreakdown } from '@/src/domain/types/benefits';
 import type { RegionCode } from '@/src/domain/types/salary';
@@ -189,7 +190,7 @@ export function UnemploymentCalculatorScreen() {
         </Section>
 
         {error ? (
-          <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+          <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
         ) : null}
 
         {result ? (
@@ -201,7 +202,7 @@ export function UnemploymentCalculatorScreen() {
                   label="Tổng hưởng"
                   amount={result.totalBenefit}
                 />
-                <NgaiMiuTip tip="Trần 5×LTTV theo vùng — checklist điều kiện nằm dưới breakdown." />
+                <NgaiMiuTip tip={miuTips.unemployment} />
               </>
             ) : (
               <EmptyErrorState
@@ -240,8 +241,8 @@ export function UnemploymentCalculatorScreen() {
           </>
         ) : !error ? (
           <EmptyErrorState
-            title="Chưa có ước BHTN"
-            body="Nhập tháng đóng và lương bình quân, rồi bấm Tính BHTN."
+            title={emptyCopy.unemployment.title}
+            body={emptyCopy.unemployment.body}
           />
         ) : null}
     </ToolScreen>

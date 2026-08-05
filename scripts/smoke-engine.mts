@@ -419,4 +419,25 @@ assert(cas25.withheld === 400_000, 'cas25');
 
 assert(getRuleset(2026).other_income!.hkd.industry_rates.length === 5, 'hkd industries');
 
+import { calcOvertimePay } from '../src/engine/overtime.ts';
+import { calculateBonusMonth } from '../src/engine/bonusMonth.ts';
+
+const ot01 = calcOvertimePay({
+  monthlySalary: 20_000_000,
+  hours: 10,
+  dayType: 'weekday',
+});
+assert(ot01.otPay === 1_442_308, `ot01 ${ot01.otPay}`);
+
+const bonus = calculateBonusMonth({
+  baseGross: 30_000_000,
+  bonus: 30_000_000,
+  region: 'I',
+  taxYear: 2026,
+  asOfDate: '2026-12-15',
+  numDependents: 0,
+});
+assert(bonus.withExtras.gross === 60_000_000, 'bonus gross');
+assert(bonus.deltaTax > 0, 'bonus tax up');
+
 console.log('ALL ENGINE ASSERTIONS PASSED');

@@ -9,6 +9,7 @@ import { PageHero } from '@/src/components/common/PageHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
 import { Section } from '@/src/components/common/Section';
 import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { aboutCopy, brand } from '@/src/copy/miu';
 import { usePreferences } from '@/src/hooks/usePreferences';
 import type { RegionCode } from '@/src/store/preferences';
 import { requestOnboardingReplay } from '@/src/store/onboarding';
@@ -43,15 +44,12 @@ export default function SettingsScreen() {
       ) : null}
 
       <Section title="Về chúng tôi">
-        <View style={styles.about} accessibilityLabel="Giới thiệu Ngài Miu và KVSalaryTools">
-          <NgaiMiuPlaceholder size={96} pose="bow" accessibilityLabel="Ngài Miu" />
+        <View style={styles.about} accessibilityLabel={`Giới thiệu ${aboutCopy.name} và ${brand.name}`}>
+          <NgaiMiuPlaceholder size={88} pose="bow" accessibilityLabel="Ngài Miu" />
           <View style={styles.aboutCopy}>
-            <Text style={styles.aboutName}>Ngài Miu</Text>
-            <Text style={styles.aboutRole}>Trợ lý hướng dẫn trong app</Text>
-            <Text style={styles.aboutBody}>
-              KVSalaryTools giúp ước tính lương Gross↔Net, quyết toán thuế và quyền lợi BHXH — offline,
-              minh bạch từng khoản trừ. Ngài Miu chỉ đường; kết quả không thay thế tư vấn pháp lý.
-            </Text>
+            <Text style={styles.aboutName}>{aboutCopy.name}</Text>
+            <Text style={styles.aboutRole}>{aboutCopy.role}</Text>
+            <Text style={styles.aboutBody}>{aboutCopy.body}</Text>
           </View>
         </View>
       </Section>
@@ -99,7 +97,7 @@ export default function SettingsScreen() {
             </Text>
             <Text style={[styles.privacyTitle, { marginTop: space[4] }]}>Disclaimer</Text>
             <Text style={styles.privacyBody}>
-              KVSalaryTools chỉ hỗ trợ ước tính. Kết quả không thay thế tư vấn pháp lý, kế toán hay
+              {brand.name} chỉ hỗ trợ ước tính. Kết quả không thay thế tư vấn pháp lý, kế toán hay
               quyết định của cơ quan thuế / BHXH.
             </Text>
           </ColorBlock>

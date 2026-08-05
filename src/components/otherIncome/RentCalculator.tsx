@@ -2,12 +2,17 @@ import { useState } from 'react';
 import { StyleSheet, Switch, Text, View } from 'react-native';
 
 import { Button } from '@/src/components/common/Button';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { Section } from '@/src/components/common/Section';
 import { TextField } from '@/src/components/common/TextField';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
+import { miuTips } from '@/src/copy/miu';
 import type { RentBreakdown } from '@/src/domain/types/otherIncome';
 import { calculateRent } from '@/src/engine/otherIncome/rent';
+import { successHaptic } from '@/src/theme/haptics';
 import { colors, layout, space, typography } from '@/src/theme/tokens';
 
 function parseMoney(raw: string): number | null {
@@ -41,6 +46,7 @@ export function RentCalculator({ taxYear }: Props) {
     const annualRevenue = monthlyMode ? amount * 12 : amount;
     try {
       setResult(calculateRent({ annualRevenue, taxYear }));
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -73,10 +79,17 @@ export function RentCalculator({ taxYear }: Props) {
           }}
         />
       </Section>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <EmptyErrorState variant="error" title="Chưa tính được" body={error} /> : null}
       <Button label="Tính cho thuê" onPress={onCalculate} />
       {result ? (
         <>
+          <ResultHero
+            tone="primary"
+            eyebrow="Ước thuế cho thuê"
+            label="Tổng thuế"
+            amount={result.totalTax}
+          />
+          <NgaiMiuTip tip={miuTips.rent} />
           <OtherIncomeBreakdownCard
             title="Cho thuê"
             total={result.totalTax}
@@ -87,9 +100,15 @@ export function RentCalculator({ taxYear }: Props) {
             ]}
             explanations={result.explanations}
             note={result.reportingNote}
+            hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
         </>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có ước cho thuê"
+          body="Nhập doanh thu, rồi bấm Tính cho thuê."
+        />
       ) : null}
     </View>
   );
@@ -108,10 +127,5 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.medium,
     fontSize: 14,
     color: colors.foreground,
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: '#DC2626',
   },
 });

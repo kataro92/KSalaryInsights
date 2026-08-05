@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { brand } from '@/src/copy/miu';
 import { colors, layout, space, typography } from '@/src/theme/tokens';
 
 type Props = {
@@ -14,7 +15,7 @@ export function SplashView({ visible }: Props) {
     <View
       style={styles.root}
       accessibilityRole="summary"
-      accessibilityLabel="Màn hình chào KVSalaryTools"
+      accessibilityLabel={`Màn hình chào ${brand.name}`}
     >
       <View style={styles.decorCircle} />
       <View style={styles.decorSquare} />
@@ -23,9 +24,9 @@ export function SplashView({ visible }: Props) {
         pose="splash"
         accessibilityLabel="Ngài Miu chào bạn"
       />
-      <Text style={styles.brand}>KVSalaryTools</Text>
-      <Text style={styles.guide}>Ngài Miu sẵn sàng hướng dẫn bạn</Text>
-      <Text style={styles.tagline}>Ước tính lương · thuế · bảo hiểm</Text>
+      <Text style={styles.brand}>{brand.name}</Text>
+      <Text style={styles.guide}>{brand.guideLine}</Text>
+      <Text style={styles.tagline}>{brand.tagline}</Text>
     </View>
   );
 }

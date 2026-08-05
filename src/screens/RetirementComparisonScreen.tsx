@@ -9,7 +9,7 @@ import {
 
 import { LumpSumEligibilityChecklist } from '@/src/components/checklist/LumpSumEligibilityChecklist';
 import { Button } from '@/src/components/common/Button';
-import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
 import { MoneyField } from '@/src/components/common/MoneyField';
 import { Section } from '@/src/components/common/Section';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
@@ -19,6 +19,8 @@ import {
   canShowRetirementAmounts,
   LumpSumDisclaimerGate,
 } from '@/src/components/disclaimer/LumpSumDisclaimerGate';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { miuTips } from '@/src/copy/miu';
 import type {
   DisclaimerAckState,
   LumpSumBreakdown,
@@ -31,6 +33,7 @@ import {
   getInflationAdjustment,
   listInflationAdjustmentYears,
 } from '@/src/engine/rulesetLoader';
+import { successHaptic } from '@/src/theme/haptics';
 import { parseMoney } from '@/src/theme/money';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
@@ -85,6 +88,7 @@ export function RetirementComparisonScreen() {
       });
       setLumpSum(nextLump);
       setPension(nextPension);
+      void successHaptic();
     } catch (e) {
       setLumpSum(null);
       setPension(null);
@@ -229,9 +233,11 @@ export function RetirementComparisonScreen() {
         </Section>
 
         {error ? (
-          <ColorBlock tone="primarySoft">
-            <Text style={styles.error}>{error}</Text>
-          </ColorBlock>
+          <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+        ) : null}
+
+        {showAmounts && lumpSum && pension ? (
+          <NgaiMiuTip tip={miuTips.retirement} />
         ) : null}
 
         <RetirementComparisonView
@@ -326,10 +332,5 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     marginTop: space[2],
     marginBottom: space[2],
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: colors.danger,
   },
 });
