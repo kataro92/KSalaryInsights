@@ -1,6 +1,6 @@
 # Design Upgrade Plan — AAA Product Ready
 
-**Status**: Draft for execution  
+**Status**: Slice 1 in progress (tokens + primitives + Calculator IA)  
 **Date**: 2026-08-05  
 **Baseline**: Post mobile polish (PR #2) — functional MVP with Flat Design tokens  
 **Goal**: Elevate KVSalaryTools from “competent utility” to **AAA consumer-finance product** without abandoning Flat Design / Constitution principles.

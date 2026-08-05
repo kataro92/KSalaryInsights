@@ -2,11 +2,8 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { ColorBlock } from '@/src/components/common/ColorBlock';
 import type { SalaryBreakdown } from '@/src/domain/types/salary';
+import { formatVnd } from '@/src/theme/money';
 import { colors, space, typography } from '@/src/theme/tokens';
-
-function formatVnd(n: number): string {
-  return `${n.toLocaleString('vi-VN')} ₫`;
-}
 
 function Row({
   label,
@@ -15,24 +12,15 @@ function Row({
 }: {
   label: string;
   value: string;
-  emphasis?: 'muted' | 'net' | 'tax' | 'subtotal';
+  emphasis?: 'muted' | 'tax' | 'subtotal';
 }) {
   return (
     <View style={styles.row}>
-      <Text
-        style={[
-          styles.label,
-          emphasis === 'net' && styles.netLabel,
-          emphasis === 'subtotal' && styles.subtotalLabel,
-        ]}
-      >
-        {label}
-      </Text>
+      <Text style={[styles.label, emphasis === 'subtotal' && styles.subtotalLabel]}>{label}</Text>
       <Text
         style={[
           styles.value,
           emphasis === 'muted' && styles.mutedValue,
-          emphasis === 'net' && styles.netValue,
           emphasis === 'tax' && styles.taxValue,
           emphasis === 'subtotal' && styles.subtotalValue,
         ]}
@@ -44,15 +32,21 @@ function Row({
   );
 }
 
+function GroupTitle({ children }: { children: string }) {
+  return <Text style={styles.groupTitle}>{children}</Text>;
+}
+
 function GroupDivider() {
   return <View style={styles.divider} />;
 }
 
 type Props = {
   breakdown: SalaryBreakdown;
+  /** When ResultHero already shows Net above. */
+  hideNet?: boolean;
 };
 
-export function SalaryBreakdownCard({ breakdown }: Props) {
+export function SalaryBreakdownCard({ breakdown, hideNet = false }: Props) {
   const { insurance, pit } = breakdown;
   return (
     <View style={styles.wrap} accessibilityLabel="Bảng chi tiết tính lương">
@@ -60,7 +54,9 @@ export function SalaryBreakdownCard({ breakdown }: Props) {
         <Text style={styles.heading}>Chi tiết tính lương</Text>
 
         <Row label="Gross" value={formatVnd(breakdown.gross)} emphasis="subtotal" />
+
         <GroupDivider />
+        <GroupTitle>Bảo hiểm</GroupTitle>
         <Row label="BHXH (8%)" value={`− ${formatVnd(insurance.social)}`} emphasis="muted" />
         <Row label="BHYT (1,5%)" value={`− ${formatVnd(insurance.health)}`} emphasis="muted" />
         <Row label="BHTN (1%)" value={`− ${formatVnd(insurance.unemployment)}`} emphasis="muted" />
@@ -76,6 +72,7 @@ export function SalaryBreakdownCard({ breakdown }: Props) {
         />
 
         <GroupDivider />
+        <GroupTitle>Giảm trừ gia cảnh</GroupTitle>
         <Row
           label="GTGC bản thân"
           value={`− ${formatVnd(breakdown.reliefBreakdown.personal)}`}
@@ -94,6 +91,7 @@ export function SalaryBreakdownCard({ breakdown }: Props) {
         <Row label="Thu nhập tính thuế" value={formatVnd(pit.taxableIncome)} emphasis="subtotal" />
 
         <GroupDivider />
+        <GroupTitle>Thuế TNCN</GroupTitle>
         {pit.brackets.map((b) => (
           <Row
             key={b.bracket}
@@ -105,18 +103,20 @@ export function SalaryBreakdownCard({ breakdown }: Props) {
         <Row label="Tổng thuế TNCN" value={`− ${formatVnd(pit.totalTax)}`} emphasis="tax" />
       </ColorBlock>
 
-      <ColorBlock tone="secondarySoft" style={styles.netBlock}>
-        <Text style={styles.netEyebrow}>Thực nhận</Text>
-        <View style={styles.netRow}>
-          <Text style={styles.netLabelWide}>Net</Text>
-          <Text
-            style={styles.netValueWide}
-            accessibilityLabel={`Net thực nhận ${formatVnd(breakdown.net)}`}
-          >
-            {formatVnd(breakdown.net)}
-          </Text>
-        </View>
-      </ColorBlock>
+      {!hideNet ? (
+        <ColorBlock tone="secondarySoft" style={styles.netBlock}>
+          <Text style={styles.netEyebrow}>Thực nhận</Text>
+          <View style={styles.netRow}>
+            <Text style={styles.netLabelWide}>Net</Text>
+            <Text
+              style={styles.netValueWide}
+              accessibilityLabel={`Net thực nhận ${formatVnd(breakdown.net)}`}
+            >
+              {formatVnd(breakdown.net)}
+            </Text>
+          </View>
+        </ColorBlock>
+      ) : null}
     </View>
   );
 }
@@ -127,16 +127,23 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontFamily: typography.fontFamily.bold,
-    fontSize: 18,
+    fontSize: typography.scale.subtitle.fontSize,
     color: colors.foreground,
     marginBottom: space[3],
     letterSpacing: typography.letterSpacingTight,
   },
+  groupTitle: {
+    fontFamily: typography.fontFamily.semiBold,
+    fontSize: typography.scale.caption.fontSize,
+    letterSpacing: typography.letterSpacingLabel,
+    textTransform: 'uppercase',
+    color: colors.foregroundMuted,
+    marginBottom: space[2],
+  },
   divider: {
     height: 2,
     backgroundColor: colors.border,
-    marginVertical: space[2],
-    opacity: 0.7,
+    marginVertical: space[3],
   },
   row: {
     flexDirection: 'row',
@@ -149,15 +156,15 @@ const styles = StyleSheet.create({
   label: {
     flex: 1,
     fontFamily: typography.fontFamily.regular,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: typography.scale.moneySm.fontSize,
+    lineHeight: typography.scale.moneySm.lineHeight,
     color: colors.foreground,
   },
   value: {
     fontFamily: typography.fontFamily.semiBold,
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.foreground,
+    fontSize: typography.scale.moneySm.fontSize,
+    lineHeight: typography.scale.moneySm.lineHeight,
+    color: colors.deduction,
     fontVariant: ['tabular-nums'],
     textAlign: 'right',
   },
@@ -179,8 +186,8 @@ const styles = StyleSheet.create({
   },
   netEyebrow: {
     fontFamily: typography.fontFamily.semiBold,
-    fontSize: 12,
-    letterSpacing: 0.8,
+    fontSize: typography.scale.caption.fontSize,
+    letterSpacing: typography.letterSpacingLabel,
     textTransform: 'uppercase',
     color: colors.white,
     opacity: 0.85,
@@ -192,25 +199,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space[3],
   },
-  netLabel: {
-    fontFamily: typography.fontFamily.bold,
-    color: colors.white,
-    fontSize: 16,
-  },
-  netValue: {
-    fontFamily: typography.fontFamily.extraBold,
-    color: colors.white,
-    fontSize: 20,
-  },
   netLabelWide: {
     fontFamily: typography.fontFamily.bold,
     color: colors.white,
-    fontSize: 18,
+    fontSize: typography.scale.subtitle.fontSize,
   },
   netValueWide: {
     fontFamily: typography.fontFamily.extraBold,
     color: colors.white,
-    fontSize: 24,
+    fontSize: typography.scale.moneyLg.fontSize,
     fontVariant: ['tabular-nums'],
     flexShrink: 1,
     textAlign: 'right',

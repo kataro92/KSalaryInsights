@@ -19,27 +19,33 @@ Phù hợp đặc thù sản phẩm: app tính thuế cần **rõ ràng, đáng 
 
 ## 2. Design tokens
 
-### 2.1. Màu (một palette, light mode)
+### 2.1. Màu (một palette, light mode) — **v2 Ink · Cobalt · Mint**
 
 | Token | Giá trị | Vai trò |
 |-------|---------|---------|
 | `background` | `#FFFFFF` | Nền chính |
-| `foreground` | `#111827` (Gray 900) | Chữ, tương phản cao |
-| `primary` | `#3B82F6` (Blue 500) | Hành động chính (nút Tính, CTA) |
-| `secondary` | `#10B981` (Emerald 500) | Accent phụ (kết quả net, số dương/hoàn thuế) |
-| `accent` | `#F59E0B` (Amber 500) | Highlight/badge (cảnh báo nhẹ, nhắc hạn) |
-| `muted` | `#F3F4F6` (Gray 100) | Nền khối phụ, input |
-| `border` | `#E5E7EB` (Gray 200) | Dùng tiết kiệm |
+| `foreground` | `#0F172A` (Ink) | Chữ, tương phản cao |
+| `foregroundMuted` | `#64748B` | Chữ phụ |
+| `primary` | `#1D4ED8` (Cobalt) | Hành động chính (nút Tính, CTA) |
+| `primaryPressed` | `#1E3A8A` | Pressed CTA |
+| `secondary` | `#0F766E` (Mint) | Kết quả net, số dương/hoàn thuế |
+| `accent` | `#B45309` (Amber) | Highlight/badge (cảnh báo nhẹ, nhắc hạn) |
+| `muted` | `#F1F5F9` | Nền khối phụ, input |
+| `border` | `#E2E8F0` | Dùng tiết kiệm |
+| `danger` | `#B91C1C` | Lỗi nhập (không dùng cho khoản trừ thuế) |
 
 Quy ước ngữ nghĩa cho domain: tiền **hoàn/net/quyền lợi** dùng `secondary`; **phải nộp thêm/trừ** dùng `foreground` (không dùng đỏ gắt trừ trạng thái lỗi); **nhắc hạn mùa vụ** dùng `accent`.
+
+> ADR: [`docs/decisions/0005-palette-v2-ink-cobalt-mint.md`](../decisions/0005-palette-v2-ink-cobalt-mint.md)
 
 ### 2.2. Typography
 
 - **Font**: `Outfit` (geometric sans) — Expo: `@expo-google-fonts/outfit`. Fallback hệ thống khi chưa load.
+- **Scale tokens** (`typography.scale`): `display` 32 / `title` 28 / `subtitle` 18 / `body` 15 / `label` 13 / `caption` 12 / `moneyLg` 28 / `moneyMd` 18 / `moneySm` 14.
 - **Heading**: Bold 700 / ExtraBold 800, letter-spacing `-0.02em`.
 - **Body**: Regular 400.
 - **Label/Button**: Medium 500 / SemiBold 600; label thường UPPERCASE + tracking rộng.
-- **Số tiền** (đặc thù app): tabular nums (`fontVariant: ['tabular-nums']`) để breakdown thẳng cột; số kết quả chính cỡ lớn ExtraBold.
+- **Số tiền** (đặc thù app): tabular nums (`fontVariant: ['tabular-nums']`) để breakdown thẳng cột; số kết quả chính cỡ lớn ExtraBold (`moneyLg`).
 
 ### 2.3. Bo góc & viền
 

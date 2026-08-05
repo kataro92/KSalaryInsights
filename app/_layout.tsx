@@ -11,6 +11,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/outfit';
 import { View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { LoadingOverlay } from '@/src/components/loading/LoadingOverlay';
 import { SplashView } from '@/src/components/splash/SplashView';
@@ -85,46 +86,48 @@ function RootGate({ children }: { children: ReactNode }) {
 
 export default function RootLayout() {
   return (
-    <PreferencesProvider>
-      <LoadingProvider>
-        <RootGate>
-          <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen
-              name="comparison"
-              options={{ headerShown: true, title: 'So sánh 2025 vs 2026' }}
-            />
-            <Stack.Screen
-              name="filing-wizard"
-              options={{ headerShown: true, title: 'Wizard quyết toán' }}
-            />
-            <Stack.Screen
-              name="severance"
-              options={{ headerShown: true, title: 'Thôi việc / mất việc' }}
-            />
-            <Stack.Screen
-              name="unemployment"
-              options={{ headerShown: true, title: 'Trợ cấp thất nghiệp' }}
-            />
-            <Stack.Screen
-              name="maternity"
-              options={{ headerShown: true, title: 'Thai sản' }}
-            />
-            <Stack.Screen
-              name="sick-leave"
-              options={{ headerShown: true, title: 'Ốm đau' }}
-            />
-            <Stack.Screen
-              name="retirement"
-              options={{ headerShown: true, title: 'Hưu / BHXH một lần' }}
-            />
-            <Stack.Screen
-              name="other-income"
-              options={{ headerShown: true, title: 'Thu nhập khác' }}
-            />
-          </Stack>
-        </RootGate>
-      </LoadingProvider>
-    </PreferencesProvider>
+    <SafeAreaProvider>
+      <PreferencesProvider>
+        <LoadingProvider>
+          <RootGate>
+            <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen
+                name="comparison"
+                options={{ headerShown: true, title: 'So sánh 2025 vs 2026' }}
+              />
+              <Stack.Screen
+                name="filing-wizard"
+                options={{ headerShown: true, title: 'Wizard quyết toán' }}
+              />
+              <Stack.Screen
+                name="severance"
+                options={{ headerShown: true, title: 'Thôi việc / mất việc' }}
+              />
+              <Stack.Screen
+                name="unemployment"
+                options={{ headerShown: true, title: 'Trợ cấp thất nghiệp' }}
+              />
+              <Stack.Screen
+                name="maternity"
+                options={{ headerShown: true, title: 'Thai sản' }}
+              />
+              <Stack.Screen
+                name="sick-leave"
+                options={{ headerShown: true, title: 'Ốm đau' }}
+              />
+              <Stack.Screen
+                name="retirement"
+                options={{ headerShown: true, title: 'Hưu / BHXH một lần' }}
+              />
+              <Stack.Screen
+                name="other-income"
+                options={{ headerShown: true, title: 'Thu nhập khác' }}
+              />
+            </Stack>
+          </RootGate>
+        </LoadingProvider>
+      </PreferencesProvider>
+    </SafeAreaProvider>
   );
 }

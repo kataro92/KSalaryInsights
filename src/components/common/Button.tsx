@@ -1,6 +1,12 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, type PressableProps } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { colors, layout, motion, radii, space, typography } from '@/src/theme/tokens';
 
 type Variant = 'primary' | 'secondary' | 'outline';
 
@@ -9,25 +15,53 @@ type Props = PressableProps & {
   variant?: Variant;
 };
 
-export function Button({ label, variant = 'primary', disabled, ...rest }: Props) {
+export function Button({
+  label,
+  variant = 'primary',
+  disabled,
+  onPressIn,
+  onPressOut,
+  style,
+  ...rest
+}: Props) {
+  const scale = useSharedValue(1);
+  const [pressed, setPressed] = useState(false);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
       disabled={disabled}
-      style={({ pressed }) => [
-        styles.base,
-        variant === 'primary' && styles.primary,
-        variant === 'secondary' && styles.secondary,
-        variant === 'outline' && styles.outline,
-        pressed && !disabled && variant === 'primary' && styles.primaryPressed,
-        pressed && !disabled && variant === 'secondary' && styles.secondaryPressed,
-        pressed && !disabled && variant === 'outline' && styles.outlinePressed,
-        disabled && styles.disabled,
-      ]}
+      onPressIn={(e) => {
+        setPressed(true);
+        scale.value = withTiming(0.97, { duration: motion.interactionMs });
+        onPressIn?.(e);
+      }}
+      onPressOut={(e) => {
+        setPressed(false);
+        scale.value = withTiming(1, { duration: motion.interactionMs });
+        onPressOut?.(e);
+      }}
+      style={typeof style === 'function' ? undefined : style}
       {...rest}
     >
-      {({ pressed }) => (
+      <Animated.View
+        style={[
+          styles.base,
+          variant === 'primary' && styles.primary,
+          variant === 'secondary' && styles.secondary,
+          variant === 'outline' && styles.outline,
+          pressed && !disabled && variant === 'primary' && styles.primaryPressed,
+          pressed && !disabled && variant === 'secondary' && styles.secondaryPressed,
+          pressed && !disabled && variant === 'outline' && styles.outlinePressed,
+          disabled && styles.disabled,
+          animatedStyle,
+        ]}
+      >
         <Text
           style={[
             styles.label,
@@ -39,7 +73,7 @@ export function Button({ label, variant = 'primary', disabled, ...rest }: Props)
         >
           {label}
         </Text>
-      )}
+      </Animated.View>
     </Pressable>
   );
 }
@@ -57,14 +91,12 @@ const styles = StyleSheet.create({
   },
   primaryPressed: {
     backgroundColor: colors.primaryPressed,
-    transform: [{ scale: 0.97 }],
   },
   secondary: {
     backgroundColor: colors.muted,
   },
   secondaryPressed: {
     backgroundColor: colors.mutedPressed,
-    transform: [{ scale: 0.97 }],
   },
   outline: {
     backgroundColor: 'transparent',
@@ -73,7 +105,6 @@ const styles = StyleSheet.create({
   },
   outlinePressed: {
     backgroundColor: colors.primary,
-    transform: [{ scale: 0.97 }],
   },
   disabled: {
     opacity: 0.5,
