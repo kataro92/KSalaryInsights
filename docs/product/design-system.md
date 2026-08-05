@@ -19,24 +19,25 @@ Phù hợp đặc thù sản phẩm: app tính thuế cần **rõ ràng, đáng 
 
 ## 2. Design tokens
 
-### 2.1. Màu (một palette, light mode) — **v2 Ink · Cobalt · Mint**
+### 2.1. Màu (một palette, light mode) — **v3 Pastel Sky · Soft Cobalt · Soft Mint**
 
 | Token | Giá trị | Vai trò |
 |-------|---------|---------|
-| `background` | `#FFFFFF` | Nền chính |
-| `foreground` | `#0F172A` (Ink) | Chữ, tương phản cao |
-| `foregroundMuted` | `#64748B` | Chữ phụ |
-| `primary` | `#1D4ED8` (Cobalt) | Hành động chính (nút Tính, CTA) |
-| `primaryPressed` | `#1E3A8A` | Pressed CTA |
-| `secondary` | `#0F766E` (Mint) | Kết quả net, số dương/hoàn thuế |
-| `accent` | `#B45309` (Amber) | Highlight/badge (cảnh báo nhẹ, nhắc hạn) |
-| `muted` | `#F1F5F9` | Nền khối phụ, input |
-| `border` | `#E2E8F0` | Dùng tiết kiệm |
-| `danger` | `#B91C1C` | Lỗi nhập (không dùng cho khoản trừ thuế) |
+| `background` | `#F7FAFF` (soft sky) | Nền canvas pastel |
+| `foreground` | `#243B53` (soft navy ink) | Chữ, tương phản cao |
+| `foregroundMuted` | `#7B8FA6` | Chữ phụ |
+| `primary` | `#4F84E0` (soft cobalt) | Hành động chính (nút Tính, CTA) |
+| `primaryPressed` | `#3A6BC4` | Pressed CTA |
+| `secondary` | `#5AAE9B` (soft mint) | Kết quả net, số dương/hoàn thuế |
+| `accent` | `#E09B6A` (soft peach) | Highlight/badge (cảnh báo nhẹ, nhắc hạn) |
+| `muted` | `#EEF3F9` | Nền khối phụ |
+| `white` | `#FFFFFF` | Khối nội dung nổi trên canvas |
+| `border` | `#D8E2EF` | Dùng tiết kiệm |
+| `danger` | `#D45B5B` | Lỗi nhập (không dùng cho khoản trừ thuế) |
 
 Quy ước ngữ nghĩa cho domain: tiền **hoàn/net/quyền lợi** dùng `secondary`; **phải nộp thêm/trừ** dùng `foreground` (không dùng đỏ gắt trừ trạng thái lỗi); **nhắc hạn mùa vụ** dùng `accent`.
 
-> ADR: [`docs/decisions/0005-palette-v2-ink-cobalt-mint.md`](../decisions/0005-palette-v2-ink-cobalt-mint.md)
+> ADR: [`docs/decisions/0006-pastel-raster-mascot.md`](../decisions/0006-pastel-raster-mascot.md) (supersedes hard cobalt look from 0005 for surfaces)
 
 ### 2.2. Typography
 
@@ -152,10 +153,11 @@ Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal tex
 
 ### 8.3. Style hình ảnh (bắt buộc khớp design system)
 
-- **Flat vector, hình học**: dựng từ hình tròn/oval/chữ nhật bo góc; **không** gradient, **không** đổ bóng, **không** outline mảnh kiểu hand-drawn; nét đồng bộ stroke icon (2–2.5px) nếu có nét.
-- Palette: chỉ dùng token — đen `#111827` (không đen thuần), trắng `#FFFFFF`, kính + phụ kiện được dùng `primary`/`accent`; má hồng nhẹ dùng tint có sẵn.
-- Tỷ lệ: đầu to vừa phải (khoảng 1:1,5 so với thân) — nghiêm túc hơn chibi, thân thiện hơn tả thực.
-- Bộ pose tối thiểu (asset set v1): ① chào/vẫy (onboarding), ② chỉ tay vào bảng số (giải thích breakdown), ③ đẩy gọng kính (tips/lưu ý), ④ ôm hồ sơ (mùa quyết toán/nhắc hạn), ⑤ ngơ ngác nhẹ (empty state / lỗi nhập), ⑥ cúi chào (hoàn tất).
+- **Raster cartoon (PNG/WebP)** — cute cel-shaded illustration, not geometric SVG. Avoid “flat SVG mascot” look that reads as generic AI chrome.
+- Giữ nhận diện: mèo tuxedo, kính gọng tròn xanh soft-cobalt, nơ amber/peach; nền pose có thể pastel sky/mint.
+- Chrome UI (tab, chevron, hub glyph) vẫn dùng Lucide SVG — chỉ **nhân vật brand** bắt buộc raster.
+- Bộ pose (`assets/mascot/`): wave, tip, point, confused/empty, bow, docs, icon, splash.
+- Xuất hiện bắt buộc: app icon, splash, onboarding, About Us (Cài đặt), tip rows, seasonal reminder.
 
 ### 8.4. Vị trí xuất hiện (usage)
 
@@ -177,7 +179,7 @@ Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal tex
 
 ## 9. Việc tiếp theo (khi vào `/speckit-plan`)
 
-1. Chốt tên chính thức cho mascot (ADR nhỏ nếu đổi "Ngài Miu").
-2. Sinh bộ asset ⑥ pose (SVG flat, tối ưu cho `react-native-svg`).
-3. Map token vào theme code (NativeWind/StyleSheet constants) — một nguồn token duy nhất.
-4. Kiểm tra contrast AA cho các cặp màu chữ/nền thực tế.
+1. Chốt tên chính thức cho mascot (ADR nhỏ nếu đổi "Ngài Miu") — đang dùng "Ngài Miu".
+2. ~~Sinh bộ asset pose SVG~~ → **đã chuyển PNG/WebP** (ADR 0006).
+3. Map token vào theme code — một nguồn token duy nhất (`src/theme/tokens.ts`).
+4. Kiểm tra contrast AA cho CTA pastel trên nền sky.
