@@ -1,10 +1,16 @@
 import { Tabs } from 'expo-router';
 import { Briefcase, Calculator, FileText, Settings } from 'lucide-react-native';
 import { Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, layout, typography } from '@/src/theme/tokens';
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+  // Web device-emulation often reports 0; keep a floor so labels aren't clipped.
+  const bottomInset = Math.max(insets.bottom, Platform.OS === 'web' ? 10 : 8);
+  const tabBarHeight = 56 + bottomInset;
+
   return (
     <Tabs
       screenOptions={{
@@ -15,9 +21,9 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: colors.muted,
           borderTopWidth: 0,
-          height: Platform.OS === 'web' ? 72 : 78,
-          paddingBottom: Platform.OS === 'web' ? 12 : 16,
-          paddingTop: 10,
+          height: tabBarHeight,
+          paddingBottom: bottomInset,
+          paddingTop: 8,
           maxWidth: layout.maxContentWidth,
           width: '100%',
           alignSelf: 'center',
@@ -25,10 +31,10 @@ export default function TabsLayout() {
         tabBarLabelStyle: {
           fontFamily: typography.fontFamily.medium,
           fontSize: 11,
-          marginTop: 2,
+          marginBottom: 2,
         },
         tabBarItemStyle: {
-          paddingVertical: 2,
+          paddingTop: 4,
         },
       }}
     >
