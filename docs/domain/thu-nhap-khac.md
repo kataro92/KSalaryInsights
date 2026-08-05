@@ -1,6 +1,6 @@
 # Thu nhập khác (ngoài tiền lương HĐLĐ)
 
-**Cập nhật**: 2026-07-31 (đối chiếu bản gốc đợt 2 — `_verify_C`)  
+**Cập nhật**: 2026-08-05  
 **Tầng xác minh**: ✅ **Tầng 1** — Luật 109/2025; Luật GTGT 2024 Đ.12.2; NQ 198/2025 Đ.10.6; NĐ 68/2026 (bản công báo); NĐ 141/2026; NĐ 253/2026 (Đ.50/51/54/69/70); TT 50/2026[...]
 **Nguồn khung**: NQ 198/2025/QH15 (bỏ thuế khoán); NĐ 68/2026/NĐ-CP + NĐ 141/2026/NĐ-CP (hộ KD, cho thuê — ngưỡng 1 tỷ); NĐ 253/2026/NĐ-CP (vãng lai, chứng khoán, ESOP); [...]
 

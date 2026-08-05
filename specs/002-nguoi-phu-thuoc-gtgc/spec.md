@@ -1,21 +1,15 @@
 # Feature Specification: Người phụ thuộc & giảm trừ gia cảnh
 
-**Feature Branch**: `002-nguoi-phu-thuoc-gtgc`
-
-**Created**: 2026-07-31
-
-**Status**: Draft (clarified)
+**Status**: Implemented
 
 **Input**: Cho phép khai báo số người phụ thuộc và áp GTGC đúng ruleset năm khi tính thuế.
 
 **Tham chiếu**: `docs/domain/thue-tncn.md`, F003
 
-## Clarifications
+## Locked decisions
 
-### Session 2026-07-31
-
-- Q: Có cần nhập hồ sơ chi tiết từng NPT (tên, năm sinh)? → A: MVP chỉ nhập **số lượng** NPT (0–20); không lưu PII.
-- Q: Validate điều kiện NPT theo luật? → A: Không validate pháp lý sâu ở MVP; có tooltip “điều kiện NPT theo luật, mỗi NPT chỉ giảm trừ một lần”.
+- MVP chỉ nhập **số lượng** NPT (0–20); không lưu PII.
+- Không validate pháp lý sâu ở MVP; có tooltip “điều kiện NPT theo luật, mỗi NPT chỉ giảm trừ một lần”.
 
 ## User Scenarios & Testing *(mandatory)*
 

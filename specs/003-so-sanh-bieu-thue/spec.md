@@ -1,21 +1,15 @@
 # Feature Specification: So sánh biểu thuế cũ và mới
 
-**Feature Branch**: `003-so-sanh-bieu-thue`
-
-**Created**: 2026-07-31
-
-**Status**: Draft (clarified)
+**Status**: Implemented
 
 **Input**: Với cùng input lương, chạy song song ruleset 2025 và 2026, hiện chênh lệch thuế và net.
 
 **Tham chiếu**: F004, TC-TNCN-2025-01 vs TC-TNCN-2026-01
 
-## Clarifications
+## Locked decisions
 
-### Session 2026-07-31
-
-- Q: So sánh cố định 2025 vs 2026 hay chọn cặp năm bất kỳ? → A: MVP cố định cặp **2025 vs 2026**; V1 mới mở chọn cặp ruleset.
-- Q: BH có tính lại theo LTTV từng năm không? → A: Có — mỗi ruleset dùng LTTV/trần của năm đó; nếu mức BH dưới cả hai trần thì BH giống nhau.
+- MVP cố định cặp **2025 vs 2026**; V1 mới mở chọn cặp ruleset.
+- Có — mỗi ruleset dùng LTTV/trần của năm đó; nếu mức BH dưới cả hai trần thì BH giống nhau.
 
 ## User Scenarios & Testing *(mandatory)*
 

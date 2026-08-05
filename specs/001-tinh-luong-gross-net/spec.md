@@ -1,23 +1,17 @@
 # Feature Specification: Tính lương Gross–Net
 
-**Feature Branch**: `001-tinh-luong-gross-net`
-
-**Created**: 2026-07-31
-
-**Status**: Draft (clarified)
+**Status**: Implemented
 
 **Input**: Người dùng nhập lương gross hoặc net, chọn năm luật và vùng, xem thực nhận/cần trả kèm breakdown BHXH/BHYT/BHTN và thuế TNCN theo ruleset.
 
 **Tham chiếu**: `docs/domain/thue-tncn.md`, `docs/domain/bhxh-bhyt-bhtn.md`, `docs/product/rules-versioning.md`, scope F001/F002/F005/F006
 
-## Clarifications
+## Locked decisions
 
-### Session 2026-07-31
-
-- Q: Mức đóng BH mặc định lấy từ đâu? → A: Mặc định = gross; cho phép sửa “mức lương đóng BH” riêng.
-- Q: Đoàn phí có mặc định bật không? → A: Tắt mặc định; toggle tùy chọn.
-- Q: Làm tròn tiền thế nào? → A: Làm tròn đến đồng (số nguyên VND) ở mỗi khoản BH và thuế cuối; ghi rõ trong breakdown.
-- Q: Net→gross dùng thuật toán nào? → A: Tìm kiếm nhị phân / lặp trên gross đến khi net khớp trong sai số ≤ 1 đồng.
+- Mặc định mức đóng BH = gross; cho phép sửa riêng.
+- Đoàn phí: tắt mặc định; toggle tùy chọn.
+- Làm tròn đến đồng (số nguyên VND) ở mỗi khoản BH và thuế cuối; ghi rõ trong breakdown.
+- Tìm kiếm nhị phân / lặp trên gross đến khi net khớp trong sai số ≤ 1 đồng.
 
 ## User Scenarios & Testing *(mandatory)*
 

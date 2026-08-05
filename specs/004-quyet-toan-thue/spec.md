@@ -1,30 +1,19 @@
 # Feature Specification: Quyết toán thuế (ước tính)
 
-**Feature Branch**: `004-quyet-toan-thue`
-
-**Created**: 2026-07-31
-
-**Status**: Draft (clarified)
+**Status**: Implemented
 
 **Input**: Tổng hợp thu nhập cả năm (lương ± vãng lai), GTGC năm, thuế đã khấu trừ, ước nộp thêm hoặc hoàn.
 
 **Tham chiếu**: F007, F008, N07, N08; `thue-tncn.md` mục 4 (công thức năm) + TC-QT-2025-01, TC-QT-2026-01/02
 
-## Clarifications
-
-### Session 2026-07-31 (cập nhật vòng xác minh #3)
+## Locked decisions
 
 - Quyết toán năm Y dùng **ruleset năm Y** (không dùng năm mở app).
 - MVP ước tính: nhập tổng thu nhập/tháng trung bình × 12 hoặc nhập theo tháng đơn giản (12 ô); không import XML tờ khai.
 - Vãng lai: cộng thu nhập và thuế đã khấu trừ 10% do user nhập.
 - **Quy tắc mới NĐ 253/2026 (từ 01/07/2026)**: vãng lai bình quân tháng ≤ 15.000.000 đ và đã khấu trừ 10% tại nguồn → **không bắt buộc quyết toán phần đó**; ngưỡng khấu trừ tại nguồn 5tr/lần (trước đó 2tr). Wizard MUST kiểm tra điều kiện này trước khi khuyên gộp vãng lai vào quyết toán.
-- Bổ sung wizard “ủy quyền vs tự quyết toán” (F007b theo scope): quiz điều kiện + checklist chứng từ + hạn nộp (tổ chức 31/03; cá nhân ~đầu tháng 5 theo hướng dẫn từng năm).
-
-### Session 2026-07-31 (speckit-analyze — đóng finding C1/C2/A1)
-
-- Q: Acceptance thiếu test case tính tay (Constitution IV)? → A: **Đã thêm** TC-QT-2025-01 (hoàn 4,8tr), TC-QT-2026-01 (nộp thêm 1,62tr), TC-QT-2026-02 (miễn vãng lai nhưng gộp tự nguyện có lợi — hoàn 3tr) vào `thue-tncn.md` mục 6; acceptance viết lại theo TC.
-- Q: Breakdown năm? → A: Bổ sung FR-009 (Constitution III áp cho phép tính năm).
-- Q: Tolerance "giải thích được"? → A: Chốt số: TC pass ≤ 1 đồng; property test 12 tháng ≤ 12 đồng.
+- Bổ sung wizard “ủy quyền vs tự quyết toán” (F007b): quiz điều kiện + checklist chứng từ + hạn nộp (tổ chức 31/03; cá nhân ~đầu tháng 5 theo hướng dẫn từng năm).
+- Tolerance: TC pass ≤ 1 đồng; property test 12 tháng ≤ 12 đồng.
 
 ## User Scenarios & Testing *(mandatory)*
 

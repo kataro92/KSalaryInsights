@@ -1,87 +1,67 @@
-# Phạm vi sản phẩm (Scope)
+# Phạm vi sản phẩm
 
-**Cập nhật**: 2026-07-31  
-**Căn cứ**: [user-needs.md](../research/user-needs.md), [personas.md](../research/personas.md), [competitor-matrix.md](../research/competitor-matrix.md), domain docs.
+**Cập nhật**: 2026-08-05  
+**Tham chiếu**: [domain docs](../domain/), [specs](../../specs/README.md)
 
 ## Tuyên bố sản phẩm
 
-KVSalaryTools là ứng dụng **React + Expo** giúp người lao động Việt Nam **ước tính** thuế TNCN, bảo hiểm bắt buộc và quyền lợi tài chính liên quan, với **bộ tham số luật theo năm/giai đoạn** có thể cập nhật.
+KVSalaryTools là ứng dụng **React Native + Expo** giúp người lao động Việt Nam **ước tính** thuế TNCN, bảo hiểm bắt buộc và quyền lợi tài chính liên quan, với **ruleset theo năm/giai đoạn** (2025 & 2026 bundled).
 
 Không thay thế VssID, cơ quan thuế, hay tư vấn chuyên nghiệp.
 
-## Ngoài phạm vi (chung)
+## Ngoài phạm vi
 
-- Nộp tờ khai / kết nối API thuế–BHXH chính thức (trừ khi có ADR sau).
+- Nộp tờ khai / API thuế–BHXH chính thức (trừ khi có ADR mới).
 - Tư vấn pháp lý cá nhân hóa.
-- Tính cho cá nhân không cư trú / DN (CIT) ở giai đoạn đầu.
+- Cá nhân không cư trú / thuế doanh nghiệp (CIT).
 - Thu thập CCCD, MST, số sổ BHXH bắt buộc.
 
-## MVP (Foundation)
+## Trạng thái tính năng
 
-Mục tiêu: P1 Minh hoàn thành job “hiểu net và so sánh luật 2025 vs 2026”.
+| ID | Tính năng | Trạng thái |
+|----|-----------|------------|
+| F001 | Gross→Net + breakdown BH + thuế | ✅ Shipped |
+| F002 | Net→Gross | ✅ Shipped |
+| F003 | Người phụ thuộc & GTGC | ✅ Shipped |
+| F004 | So sánh biểu thuế 2025 vs 2026 | ✅ Shipped |
+| F005 | Vùng LTTV + trần BH | ✅ Shipped |
+| F006 | Ruleset versioned (2025 & 2026) | ✅ Shipped |
+| F007 | Quyết toán năm | ✅ Shipped |
+| F008 | Nhiều nguồn (lương + vãng lai) | ✅ Shipped |
+| F007b | Wizard ủy quyền vs tự quyết toán | ✅ Shipped |
+| F009 | Tháng có thưởng / tháng 13 | ✅ Shipped |
+| F010 | OT 150/200/300% | ✅ Shipped |
+| F011 | Trợ cấp thôi việc / mất việc | ✅ Shipped |
+| F012 | Trợ cấp thất nghiệp | ✅ Shipped |
+| F013 | Thai sản / ốm đau | ✅ Shipped |
+| F014 | Lưu kịch bản cục bộ + nhắc mùa vụ | ✅ Shipped (Calculator) |
+| F015 | BHXH một lần vs hưu | ✅ Shipped |
+| F016 | Cho thuê nhà | ✅ Shipped |
+| F017 | Hộ kinh doanh | ✅ Shipped |
+| F018 | Chứng khoán / ESOP | ✅ Shipped |
+| F016′ | HKD / cho thuê bản đơn giản (ADR 0003) | ⚠️ Có màn hình; chưa tách “bản đơn giản” riêng |
+| F019 | Remote update ruleset | ❌ Chưa — cần ADR |
 
-| ID | Tính năng | Nhu cầu | Domain |
-|----|-----------|---------|--------|
-| F001 | Tính gross→net + breakdown BH + thuế | N01, N19 | thue-tncn, bhxh-bhyt-bhtn |
-| F002 | Tính net→gross (đàm phán offer) | N02 | như trên |
-| F003 | Người phụ thuộc & GTGC theo ruleset năm | N03 | thue-tncn |
-| F004 | So sánh biểu thuế / GTGC cũ vs mới trên cùng input | N04 | thue-tncn |
-| F005 | Chọn vùng LTTV + áp trần BH | N05 | bhxh-bhyt-bhtn |
-| F006 | Kiến trúc ruleset versioned (bundled tối thiểu 2025 & 2026) | N17 | rules-versioning |
+## Backlog (V1.1+)
 
-**Tiêu chí xong MVP**: TC-TNCN-2025-01, TC-TNCN-2026-01, TC-TNCN-2026-02, TC-BH-2026-01/02 pass; UI có breakdown + disclaimer + nguồn.
+| Hạng mục | Ghi chú |
+|----------|---------|
+| OT đêm | Ghi nợ trong engine; chưa mô phỏng |
+| F014 mở rộng | Lưu kịch bản trên Quyết toán / màn khác |
+| Store capture | 6 screenshot theo [store/README.md](../store/README.md) |
+| Design QA sign-off | [design-qa-checklist.md](./design-qa-checklist.md) |
+| F019 | Cập nhật ruleset từ xa |
 
-## V1 (Mở rộng hành trình)
+## Ánh xạ spec ↔ F-ID
 
-Ưu tiên đầu V1 (theo research bổ sung + [ADR 0003](../decisions/0003-ho-kd-priority.md)): quyết toán đa nguồn + wizard thủ tục; cân nhắc HKD/cho thuê sớm (có thể V1.1).
-
-| ID | Tính năng | Nhu cầu |
-|----|-----------|---------|
-| F007 | Quyết toán năm (ước nộp thêm/hoàn) | N07 |
-| F008 | Nhiều nguồn (lương + vãng lai) | N08 |
-| F007b | Wizard ủy quyền vs tự quyết toán + checklist/hạn | (bổ sung research) |
-| F009 | Mô phỏng tháng có thưởng Tết | N09 |
-| F016′ | Thuế hộ KD / cho thuê (bản đơn giản) — có thể V1.1 | N14, N15 |
-| F010 | OT 150/200/300% | N06 |
-| F011 | Trợ cấp thôi việc / mất việc (ước) | N10 |
-| F012 | Trợ cấp thất nghiệp (ước) | N11 |
-| F013 | Thai sản / ốm đau (ước) | N12 |
-| F014 | Lưu kịch bản cục bộ + nhắc hạn mùa vụ | N18 |
-
-## V2+ (Thu nhập khác & hưu)
-
-| ID | Tính năng | Nhu cầu |
-|----|-----------|---------|
-| F015 | BHXH một lần vs hưu (ước + cảnh báo) | N13 |
-| F016 | Cho thuê nhà | N14 |
-| F017 | Hộ kinh doanh | N15 |
-| F018 | Chứng khoán / ESOP | N16 |
-| F019 | Remote update ruleset (nếu ADR chấp thuận) | N17 nâng cao |
-
-## Thứ tự spec (Phase 4)
-
-Khớp kế hoạch tài liệu. **Ánh xạ F-ID (scope) ↔ thư mục spec**: mã thư mục `00N` gộp một hoặc nhiều F-ID — không phải 1:1.
-
-| Spec dir | F-ID trong scope | Giai đoạn |
-|----------|------------------|-----------|
-| `001-tinh-luong-gross-net` | F001, F002, F005, F006 (một phần) | MVP |
-| `002-nguoi-phu-thuoc-gtgc` | F003 | MVP |
-| `003-so-sanh-bieu-thue` | F004 | MVP |
-| `004-quyet-toan-thue` | F007, F008, F007b | V1 |
-| `005-quyen-loi-nghi-viec` | F011, F012 | V1 |
-| `006-thai-san-om-dau` | F013 | V1 |
-| `007-huu-tri-bhxh-mot-lan` | F015 | V2 |
-| `008-thu-nhap-khac` | F016, F017, F018 | V2 |
-
-OT (F010) và thưởng Tết (F009) có thể gộp vào mở rộng 001 hoặc spec phụ sau MVP. F016′ (HKD/cho thuê đơn giản) có thể tách epic `009` theo ADR 0003.
-
-## Định nghĩa xong tài liệu (Definition of Ready cho code)
-
-- [x] Constitution  
-- [x] Research + domain đủ cho MVP  
-- [x] Scope + rules-versioning + ruleset-schema  
-- [x] Spec 001–008 đã clarify (Tầng 1)  
-- [x] Checklist chất lượng requirement 001–008  
-- [x] `plan.md` + `tasks.md` cho **001–008** (2026-08-05)  
-
-**Sẵn sàng code**: bắt đầu `/speckit-implement` **001**. V1/V2 (004–008) đã có plan/tasks sẵn — triển khai sau khi MVP ổn định.
+| Spec | F-ID | Spec file |
+|------|------|-----------|
+| `001-tinh-luong-gross-net` | F001, F002, F005, F006, F009, F010 | [spec.md](../../specs/001-tinh-luong-gross-net/spec.md) |
+| `002-nguoi-phu-thuoc-gtgc` | F003 | [spec.md](../../specs/002-nguoi-phu-thuoc-gtgc/spec.md) |
+| `003-so-sanh-bieu-thue` | F004 | [spec.md](../../specs/003-so-sanh-bieu-thue/spec.md) |
+| `004-quyet-toan-thue` | F007, F008, F007b | [spec.md](../../specs/004-quyet-toan-thue/spec.md) |
+| `005-quyen-loi-nghi-viec` | F011, F012 | [spec.md](../../specs/005-quyen-loi-nghi-viec/spec.md) |
+| `006-thai-san-om-dau` | F013 | [spec.md](../../specs/006-thai-san-om-dau/spec.md) |
+| `007-huu-tri-bhxh-mot-lan` | F015 | [spec.md](../../specs/007-huu-tri-bhxh-mot-lan/spec.md) |
+| `008-thu-nhap-khac` | F016–F018 | [spec.md](../../specs/008-thu-nhap-khac/spec.md) |
+| `009-app-shell-ux` | Shell, settings, onboarding | [spec.md](../../specs/009-app-shell-ux/spec.md) |

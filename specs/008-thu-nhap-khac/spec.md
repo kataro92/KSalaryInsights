@@ -1,32 +1,20 @@
 # Feature Specification: Thu nhập khác
 
-**Feature Branch**: `008-thu-nhap-khac`
-
-**Created**: 2026-07-31
-
-**Status**: Draft (clarified — toàn bộ tham số đã khóa, gồm ESOP)
+**Status**: Implemented
 
 **Input**: Ước thuế cho thuê nhà, hộ kinh doanh, chứng khoán, (sau) ESOP theo tỷ lệ ruleset.
 
 **Tham chiếu**: F016–F018; `thu-nhap-khac.md`
 
-## Clarifications
+## Locked decisions
 
-### Session 2026-07-31 (vòng xác minh #3)
-
-- Q: Ngưỡng và tỷ lệ cho thuê? → A: **Đã khóa** (NĐ 141/2026): ≤1 tỷ/năm miễn GTGT+TNCN (vẫn thông báo mẫu 01/BĐS); >1 tỷ: GTGT 5% toàn bộ + TNCN 5% phần vượt 1 tỷ.
-- Q: Hộ KD? → A: **Khóa khung** — bỏ khoán từ 01/01/2026 (NQ 198/2025); ngưỡng miễn 1 tỷ; trên ngưỡng theo tỷ lệ ngành NĐ 68/2026 (biểu tỷ lệ nguyên văn cần nhập ruleset trước implement).
-- Q: Chứng khoán? → A: **Đã khóa** — 0,1% giá chuyển nhượng từng lần, thống nhất từ 01/07/2026 (NĐ 253/2026).
-- Q: ESOP cùng release? → A: **Chốt tách riêng** — thuê nhà + CK + hộ KD ship trước; ESOP chờ đối chiếu văn bản gốc NĐ 253/2026 (2 cách đọc mâu thuẫn, xem domain).
-
-### Session 2026-07-31 (vòng xác minh #5 — đóng nợ)
-
-- Q: Biểu tỷ lệ ngành hộ KD? → A: **Đã khóa** vào domain: GTGT 1% / 5% / 3% / 2%; TNCN 0,5% / 2% (cho thuê TS & đại lý 5%) / 1,5% / 1% (Luật GTGT 2024 Đ.12 k2; Luật 109/2025 Đ.7 k3; NĐ 68/2026). Nhóm >3 tỷ: phương pháp thu nhập 17%/20%. ~~Note còn lại: xác nhận doanh thu tính thuế TNCN (toàn bộ vs phần vượt)~~ → **đã đóng** ở vòng đối chiếu bản gốc: phần vượt ngưỡng (Đ.7 k3a Luật 109/2025).
-- Q: ESOP? → A: **Đã khóa cơ chế** bằng nguyên văn Đ.50 k3a NĐ 253/2026: khi bán chịu song song thuế TLTC (thu nhập = chi phí ghi sổ tại thời điểm phát hành; khấu trừ 10% tại lưu ký; quyết toán lũy tiến năm) + 0,1% chuyển nhượng. Bỏ feature-gate; User Story 4 chuyển thành calculator hai dòng thuế.
-
-### Session 2026-07-31 (speckit-analyze — đóng finding C3)
-
-- Q: TC-CASUAL trong SC nhưng không có User Story vãng lai? → A: **Thêm User Story 5** — calculator khấu trừ tại nguồn vãng lai (TC-CASUAL-01/02, ngưỡng 2tr → 5tr theo `as_of_date`). Riêng TC-CASUAL-03 (miễn quyết toán) kiểm chứng ở spec 004 (TC-QT-2026-02) — SC hai spec tham chiếu chéo, logic dùng chung ruleset.
+- **Đã khóa** (NĐ 141/2026): ≤1 tỷ/năm miễn GTGT+TNCN (vẫn thông báo mẫu 01/BĐS); >1 tỷ: GTGT 5% toàn bộ + TNCN 5% phần vượt 1 tỷ.
+- **Khóa khung** — bỏ khoán từ 01/01/2026 (NQ 198/2025); ngưỡng miễn 1 tỷ; trên ngưỡng theo tỷ lệ ngành NĐ 68/2026 (biểu tỷ lệ nguyên văn cần nhập ruleset trước implement).
+- **Đã khóa** — 0,1% giá chuyển nhượng từng lần, thống nhất từ 01/07/2026 (NĐ 253/2026).
+- **Chốt tách riêng** — thuê nhà + CK + hộ KD ship trước; ESOP chờ đối chiếu văn bản gốc NĐ 253/2026 (2 cách đọc mâu thuẫn, xem domain).
+- **Đã khóa** vào domain: GTGT 1% / 5% / 3% / 2%; TNCN 0,5% / 2% (cho thuê TS & đại lý 5%) / 1,5% / 1% (Luật GTGT 2024 Đ.12 k2; Luật 109/2025 Đ.7 k3; NĐ 68/2026). Nhóm >3 tỷ: phương pháp thu nhập 17%/20%. ~~Note còn lại: xác nhận doanh thu tính thuế TNCN (toàn bộ vs phần vượt)~~ → **đã đóng** ở vòng đối chiếu bản gốc: phần vượt ngưỡng (Đ.7 k3a Luật 109/2025).
+- **Đã khóa cơ chế** bằng nguyên văn Đ.50 k3a NĐ 253/2026: khi bán chịu song song thuế TLTC (thu nhập = chi phí ghi sổ tại thời điểm phát hành; khấu trừ 10% tại lưu ký; quyết toán lũy tiến năm) + 0,1% chuyển nhượng. Bỏ feature-gate; User Story 4 chuyển thành calculator hai dòng thuế.
+- **Thêm User Story 5** — calculator khấu trừ tại nguồn vãng lai (TC-CASUAL-01/02, ngưỡng 2tr → 5tr theo `as_of_date`). Riêng TC-CASUAL-03 (miễn quyết toán) kiểm chứng ở spec 004 (TC-QT-2026-02) — SC hai spec tham chiếu chéo, logic dùng chung ruleset.
 
 ## User Scenarios & Testing *(mandatory)*
 

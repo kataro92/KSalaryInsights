@@ -26,5 +26,5 @@
 ## Alternatives rejected
 
 - Keep Blue 500 / Emerald 500 and only tweak spacing (insufficient distinctiveness).
-- Purple / cream-serif AI-default aesthetics (explicitly banned in design upgrade plan).
+- Purple / cream-serif AI-default aesthetics (explicitly banned in design-system).
 - Dark mode first (polish light mode before splitting themes).

@@ -1,10 +1,6 @@
 # Feature Specification: Hưu trí và BHXH một lần (ước)
 
-**Feature Branch**: `007-huu-tri-bhxh-mot-lan`
-
-**Created**: 2026-07-31
-
-**Status**: Draft (clarified — công thức BHXH một lần + tỷ lệ hưu đã khóa)
+**Status**: Implemented
 
 **Input**: So sánh ước lương hưu hàng tháng vs rút BHXH một lần; cảnh báo mạnh.
 

@@ -1,6 +1,6 @@
 # Design QA checklist — KVSalaryTools
 
-Use before store submission. Cross-check [`design-system.md`](./design-system.md) §1–8 and [`design-upgrade-plan.md`](./design-upgrade-plan.md) §8.
+Use before store submission. Cross-check [`design-system.md`](./design-system.md) §1–8.
 
 ## Visual / brand
 

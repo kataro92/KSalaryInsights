@@ -20,7 +20,7 @@ Ghi nhận thay đổi ảnh hưởng công thức/tham số. Mỗi dòng MUST c
 
 **Lưu ý quyết toán**: Quyết toán năm 2025 (nộp 2026) vẫn dùng GTGC 11tr/4,4tr và biểu 7 bậc — **đã xác minh** theo Công văn 1296/CT-NVT (Cục Thuế). GTGC mới + biểu 5 bậc áp từ kỳ tính thuế 2026 theo khoản 2 Điều 29 Luật 109/2025/QH15.
 
-**Đối chiếu bản gốc 2026-07-31** (đợt 1, `docs/legal-originals/`): Luật 109/2025, NQ 110/2025, NĐ 293/2025, NĐ 161/2026, CV 340/BHXH-CSXH — tất cả dòng changelog liên quan khớp nguyên văn; bảng hệ số trượt giá 2026 nhập vào `quyen-loi-lao-dong.md`; trạng thái từng văn bản xem [legal-sources.md](./legal-sources.md).
+**Đối chiếu**: Mọi tham số ruleset hiện tại đạt Tầng 1 — chi tiết [legal-sources.md](./legal-sources.md).
 
 **Lưu ý GTGC 2026**: Domain hiện khóa theo NQ 110/2025 + kỳ tính thuế 2026 (từ 01/01/2026 cho lương/công). Một số bài/community ghi nhầm mốc 01/07/2026 cho GTGC — khi implement MUST đối chiếu văn bản gốc, không theo FAQ đối thủ.
 

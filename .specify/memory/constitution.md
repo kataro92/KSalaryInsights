@@ -58,7 +58,7 @@ Tính năng mới MUST đi qua chu trình Spec Kit (`specify` → `clarify` khi 
 
 - Tiếng Việt là ngôn ngữ chính của tài liệu nghiệp vụ, spec, và giao diện người dùng.
 - Thuật ngữ pháp lý giữ nguyên (giảm trừ gia cảnh, BHXH, BHYT, BHTN, quyết toán…).
-- Cấu trúc tài liệu chuẩn: `docs/research/`, `docs/domain/`, `docs/product/`, `docs/decisions/`, `specs/`.
+- Cấu trúc tài liệu: `docs/domain/`, `docs/product/`, `docs/decisions/`, `docs/store/`, `specs/`.
 - Mỗi quyết định nghiệp vụ lớn MUST ghi ADR trong `docs/decisions/`.
 
 ## Quy trình Spec-Driven

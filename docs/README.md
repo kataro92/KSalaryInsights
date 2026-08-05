@@ -1,12 +1,14 @@
-# docs/
+# Tài liệu KVSalaryTools
 
-| Thư mục / file | Mục đích |
-|----------------|----------|
-| [research/](./research/) | Thị trường, đối thủ, personas, nhu cầu |
-| [domain/](./domain/) | Kho tri thức nghiệp vụ (nguồn sự thật) |
-| [product/](./product/) | Phạm vi MVP, versioning tham số luật, design system + mascot |
-| [decisions/](./decisions/) | ADR nghiệp vụ |
-| [legal-originals/](./legal-originals/) | Văn bản pháp lý gốc (PDF) + báo cáo đối chiếu `_verify_*.md` |
-| [analyze-consistency.md](./analyze-consistency.md) | Báo cáo nhất quán tài liệu (constitution ↔ domain ↔ specs) |
-| [1st_doc_review_report.md](./1st_doc_review_report.md) | Review toàn bộ tài liệu + backlog sửa |
-| [design_prompt.xml](./design_prompt.xml) | Prompt thiết kế UI gốc (Flat Design + Ngài Miu) |
+**Cập nhật**: 2026-08-05
+
+| Thư mục | Mục đích |
+|---------|----------|
+| [domain/](./domain/) | Nguồn sự thật nghiệp vụ (công thức, tham số, nguồn pháp lý) |
+| [product/](./product/) | Phạm vi, ruleset, design system, QA store |
+| [decisions/](./decisions/) | ADR — quyết định kiến trúc & sản phẩm |
+| [store/](./store/) | Bộ listing cửa hàng ứng dụng |
+
+Spec tính năng: [../specs/README.md](../specs/README.md)
+
+Nguyên tắc dự án: [.specify/memory/constitution.md](../.specify/memory/constitution.md)

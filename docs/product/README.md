@@ -2,8 +2,10 @@
 
 | File | Mục đích |
 |------|----------|
-| [scope.md](./scope.md) | MVP và roadmap (F001–F019) |
-| [rules-versioning.md](./rules-versioning.md) | Cơ chế tham số theo năm / giai đoạn |
-| [ruleset-spec.md](./ruleset-spec.md) | Quy chuẩn cấu trúc ruleset JSON |
+| [scope.md](./scope.md) | Phạm vi tính năng & trạng thái triển khai |
+| [rules-versioning.md](./rules-versioning.md) | Chọn ruleset theo năm / giai đoạn |
+| [ruleset-spec.md](./ruleset-spec.md) | Cấu trúc ruleset JSON |
 | [ruleset-schema.json](./ruleset-schema.json) | JSON Schema validate ruleset |
-| [design-system.md](./design-system.md) | Design system (Flat Design) + linh vật "Ngài Miu" |
+| [design-system.md](./design-system.md) | UI Flat Design + Ngài Miu (token, motion, a11y) |
+| [design-qa-checklist.md](./design-qa-checklist.md) | Checklist trước khi submit store |
+| [../store/README.md](../store/README.md) | Screenshot & copy listing |
