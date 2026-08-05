@@ -1,21 +1,19 @@
 import { useMemo, useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Switch,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/src/components/common/Button';
+import { ChipRow } from '@/src/components/common/ChipRow';
 import { ChoiceChip } from '@/src/components/common/ChoiceChip';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { PageHero } from '@/src/components/common/PageHero';
+import { ScreenShell } from '@/src/components/common/ScreenShell';
 import { Section } from '@/src/components/common/Section';
 import { TextField } from '@/src/components/common/TextField';
 import { SalaryBreakdownCard } from '@/src/components/breakdown/SalaryBreakdownCard';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { DependentCountInput } from '@/src/components/inputs/DependentCountInput';
+import { MonthPicker } from '@/src/components/inputs/MonthPicker';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type {
@@ -43,6 +41,11 @@ function formatInput(n: number | null): string {
 function asOfFromMonth(taxYear: number, month: number): string {
   const m = String(month).padStart(2, '0');
   return `${taxYear}-${m}-15`;
+}
+
+function formatAsOfVi(iso: string): string {
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
 }
 
 export function CalculatorScreen() {
@@ -142,149 +145,143 @@ export function CalculatorScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
-      accessibilityLabel="Máy tính lương gross net"
-    >
-      <View style={styles.inner}>
-        <View style={styles.hero}>
-          <Text style={styles.brand}>KVSalaryTools</Text>
-          <Text style={styles.heroTitle}>Tính lương</Text>
-          <Text style={styles.heroBody}>Gross ↔ Net offline · ruleset 2025 / 2026</Text>
+    <ScreenShell accessibilityLabel="Máy tính lương gross net" decorated>
+      <PageHero
+        title="Tính lương"
+        subtitle="Gross ↔ Net offline · biểu thuế 2025 / 2026"
+      />
+
+      <Section title="Chế độ tính">
+        <ChipRow equal>
+          {(
+            [
+              ['gross-to-net', 'Gross → Net'],
+              ['net-to-gross', 'Net → Gross'],
+            ] as const
+          ).map(([id, label]) => (
+            <ChoiceChip
+              key={id}
+              flex
+              label={label}
+              selected={mode === id}
+              onPress={() => {
+                setMode(id);
+                setBreakdown(null);
+                setError(null);
+              }}
+            />
+          ))}
+        </ChipRow>
+      </Section>
+
+      <Section
+        title={mode === 'gross-to-net' ? 'Lương Gross' : 'Net mong muốn'}
+        subtitle="Nhập số nguyên VNĐ"
+      >
+        <TextField
+          accessibilityLabel={
+            mode === 'gross-to-net' ? 'Nhập lương gross' : 'Nhập net mong muốn'
+          }
+          keyboardType="number-pad"
+          value={amountText}
+          onChangeText={(t) => {
+            setAmountText(formatInput(parseMoney(t)));
+            clearResult();
+          }}
+          placeholder="0"
+          style={styles.amountInput}
+        />
+      </Section>
+
+      <Section title="Vùng LTTV">
+        <ChipRow equal>
+          {REGION_OPTIONS.map(({ code, label }) => (
+            <ChoiceChip
+              key={code}
+              flex
+              label={label}
+              selected={region === code}
+              onPress={() => {
+                setRegion(code);
+                clearResult();
+              }}
+            />
+          ))}
+        </ChipRow>
+      </Section>
+
+      <Section title="Năm thuế">
+        <ChipRow equal>
+          {TAX_YEAR_OPTIONS.map((y) => (
+            <ChoiceChip
+              key={y}
+              flex
+              label={String(y)}
+              selected={taxYear === y}
+              onPress={() => {
+                setTaxYear(y);
+                clearResult();
+              }}
+            />
+          ))}
+        </ChipRow>
+      </Section>
+
+      <Section
+        title="Tháng tính lương"
+        subtitle="Chọn đúng tháng để áp trần BH (2026 đổi từ 01/07)."
+      >
+        <MonthPicker
+          value={month}
+          onChange={(m) => {
+            setMonth(m);
+            clearResult();
+          }}
+        />
+        <Text style={styles.meta}>Ngày áp dụng: {formatAsOfVi(asOfDate)}</Text>
+      </Section>
+
+      <Section title="Người phụ thuộc" subtitle="Chỉ nhập số lượng — không thu thập PII.">
+        <DependentCountInput
+          value={numDependents}
+          onChange={(n) => {
+            setNumDependents(n);
+            clearResult();
+          }}
+        />
+      </Section>
+
+      <ColorBlock tone="muted">
+        <View style={styles.switchRow}>
+          <View style={styles.switchText}>
+            <Text style={styles.switchLabel}>Mức đóng BH riêng</Text>
+            <Text style={styles.switchHint}>Khi lương đóng BH khác Gross</Text>
+          </View>
+          <Switch
+            accessibilityLabel="Bật mức đóng bảo hiểm riêng"
+            value={customBh}
+            onValueChange={(v) => {
+              setCustomBh(v);
+              clearResult();
+            }}
+            trackColor={{ false: colors.border, true: colors.primary }}
+          />
         </View>
-
-        <Section title="Chế độ tính">
-          <View style={styles.modeRow}>
-            {(
-              [
-                ['gross-to-net', 'Gross → Net'],
-                ['net-to-gross', 'Net → Gross'],
-              ] as const
-            ).map(([id, label]) => (
-              <ChoiceChip
-                key={id}
-                label={label}
-                selected={mode === id}
-                onPress={() => {
-                  setMode(id);
-                  setBreakdown(null);
-                  setError(null);
-                }}
-              />
-            ))}
-          </View>
-        </Section>
-
-        <Section
-          title={mode === 'gross-to-net' ? 'Lương Gross' : 'Net mong muốn'}
-          subtitle="Nhập số nguyên VNĐ"
-        >
+        {customBh ? (
           <TextField
-            accessibilityLabel={
-              mode === 'gross-to-net' ? 'Nhập lương gross' : 'Nhập net mong muốn'
-            }
+            accessibilityLabel="Nhập mức lương đóng bảo hiểm"
             keyboardType="number-pad"
-            value={amountText}
+            value={bhText}
             onChangeText={(t) => {
-              setAmountText(formatInput(parseMoney(t)));
+              setBhText(formatInput(parseMoney(t)));
               clearResult();
             }}
-            placeholder="0"
-            style={styles.amountInput}
+            style={{ marginTop: space[3] }}
           />
-        </Section>
+        ) : null}
+      </ColorBlock>
 
-        <Section title="Vùng LTTV">
-          <View style={styles.modeRow}>
-            {REGION_OPTIONS.map(({ code, label }) => (
-              <ChoiceChip
-                key={code}
-                label={label}
-                selected={region === code}
-                onPress={() => {
-                  setRegion(code);
-                  clearResult();
-                }}
-              />
-            ))}
-          </View>
-        </Section>
-
-        <Section title="Năm thuế">
-          <View style={styles.modeRow}>
-            {TAX_YEAR_OPTIONS.map((y) => (
-              <ChoiceChip
-                key={y}
-                label={String(y)}
-                selected={taxYear === y}
-                onPress={() => {
-                  setTaxYear(y);
-                  clearResult();
-                }}
-              />
-            ))}
-          </View>
-        </Section>
-
-        <Section
-          title="Tháng tính lương"
-          subtitle="Chọn đúng tháng để áp trần BH (2026 đổi 01/07)."
-        >
-          <View style={styles.modeRow}>
-            {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-              <ChoiceChip
-                key={m}
-                label={String(m)}
-                selected={month === m}
-                onPress={() => {
-                  setMonth(m);
-                  clearResult();
-                }}
-              />
-            ))}
-          </View>
-          <Text style={styles.meta}>as_of: {asOfDate}</Text>
-        </Section>
-
-        <Section title="Người phụ thuộc" subtitle="Chỉ nhập số lượng — không thu thập PII.">
-          <DependentCountInput
-            value={numDependents}
-            onChange={(n) => {
-              setNumDependents(n);
-              clearResult();
-            }}
-          />
-        </Section>
-
-        <ColorBlock tone="muted">
-          <View style={styles.switchRow}>
-            <Text style={styles.switchLabel}>Mức đóng BH riêng (≠ gross)</Text>
-            <Switch
-              accessibilityLabel="Bật mức đóng bảo hiểm riêng"
-              value={customBh}
-              onValueChange={(v) => {
-                setCustomBh(v);
-                clearResult();
-              }}
-              trackColor={{ false: colors.border, true: colors.primary }}
-            />
-          </View>
-          {customBh ? (
-            <TextField
-              accessibilityLabel="Nhập mức lương đóng bảo hiểm"
-              keyboardType="number-pad"
-              value={bhText}
-              onChangeText={(t) => {
-                setBhText(formatInput(parseMoney(t)));
-                clearResult();
-              }}
-              style={{ marginTop: space[3] }}
-            />
-          ) : null}
-        </ColorBlock>
-
+      <View style={styles.actions}>
         <Button label="Tính" onPress={onCalculate} />
         {mode === 'gross-to-net' ? (
           <Button
@@ -293,68 +290,30 @@ export function CalculatorScreen() {
             onPress={openComparison}
           />
         ) : null}
-
-        {error ? (
-          <ColorBlock tone="primarySoft">
-            <Text style={styles.error}>{error}</Text>
-          </ColorBlock>
-        ) : null}
-
-        {breakdown ? (
-          <>
-            <NgaiMiuTip tip="Tôi tách từng khoản trừ để bạn thấy rõ — số liệu không bị che." />
-            <SalaryBreakdownCard breakdown={breakdown} />
-            <DisclaimerFooter legalSources={breakdown.legalSources} />
-          </>
-        ) : null}
       </View>
-    </ScrollView>
+
+      {error ? (
+        <ColorBlock tone="primarySoft">
+          <Text style={styles.error}>{error}</Text>
+        </ColorBlock>
+      ) : null}
+
+      {breakdown ? (
+        <>
+          <NgaiMiuTip tip="Tôi tách từng khoản trừ để bạn thấy rõ — số liệu không bị che." />
+          <SalaryBreakdownCard breakdown={breakdown} />
+          <DisclaimerFooter legalSources={breakdown.legalSources} />
+        </>
+      ) : null}
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    paddingVertical: space[6],
-    paddingHorizontal: layout.pagePaddingX,
-    alignItems: 'center',
-  },
-  inner: {
-    width: '100%',
-    maxWidth: layout.maxContentWidth,
-    gap: space[5],
-  },
-  hero: { gap: space[1], marginBottom: space[1] },
-  brand: {
-    fontFamily: typography.fontFamily.extraBold,
-    fontSize: 12,
-    letterSpacing: 1.2,
-    textTransform: 'uppercase',
-    color: colors.primary,
-  },
-  heroTitle: {
-    fontFamily: typography.fontFamily.extraBold,
-    fontSize: 30,
-    letterSpacing: typography.letterSpacingTight,
-    color: colors.foreground,
-  },
-  heroBody: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 14,
-    color: colors.foregroundMuted,
-  },
-  modeRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: space[2],
-  },
   amountInput: {
     minHeight: 56,
     fontFamily: typography.fontFamily.semiBold,
-    fontSize: 22,
+    fontSize: 24,
   },
   switchRow: {
     flexDirection: 'row',
@@ -363,16 +322,24 @@ const styles = StyleSheet.create({
     gap: space[3],
     minHeight: layout.minTouch,
   },
+  switchText: { flex: 1, gap: 2 },
   switchLabel: {
-    flex: 1,
     fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
+    fontSize: 15,
     color: colors.foreground,
   },
-  meta: {
+  switchHint: {
     fontFamily: typography.fontFamily.regular,
     fontSize: 12,
     color: colors.foregroundMuted,
+  },
+  meta: {
+    fontFamily: typography.fontFamily.regular,
+    fontSize: 13,
+    color: colors.foregroundMuted,
+  },
+  actions: {
+    gap: space[3],
   },
   error: {
     fontFamily: typography.fontFamily.medium,

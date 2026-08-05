@@ -7,12 +7,15 @@ type Props = PressableProps & {
   selected?: boolean;
   /** Selected fill — primary for tax tools, secondary for benefits. */
   tone?: 'primary' | 'secondary';
+  /** Stretch to fill ChipRow equal mode. */
+  flex?: boolean;
 };
 
 export function ChoiceChip({
   label,
   selected = false,
   tone = 'primary',
+  flex = false,
   disabled,
   ...rest
 }: Props) {
@@ -26,13 +29,16 @@ export function ChoiceChip({
       disabled={disabled}
       style={({ pressed }) => [
         styles.chip,
+        flex && styles.flex,
         selected && { backgroundColor: selectedBg },
         pressed && !disabled && styles.pressed,
         disabled && styles.disabled,
       ]}
       {...rest}
     >
-      <Text style={[styles.label, selected && styles.labelSelected]}>{label}</Text>
+      <Text style={[styles.label, selected && styles.labelSelected]} numberOfLines={1}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -40,11 +46,15 @@ export function ChoiceChip({
 const styles = StyleSheet.create({
   chip: {
     minHeight: layout.minTouch,
-    paddingHorizontal: space[4],
+    paddingHorizontal: space[3],
     borderRadius: radii.md,
     backgroundColor: colors.muted,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  flex: {
+    flex: 1,
+    minWidth: 0,
   },
   pressed: { transform: [{ scale: 0.97 }] },
   disabled: { opacity: 0.5 },

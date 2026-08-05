@@ -1,33 +1,40 @@
 import { Tabs } from 'expo-router';
 import { Briefcase, Calculator, FileText, Settings } from 'lucide-react-native';
+import { Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, typography } from '@/src/theme/tokens';
+import { colors, layout, typography } from '@/src/theme/tokens';
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+  // Web device-emulation often reports 0; keep a floor so labels aren't clipped.
+  const bottomInset = Math.max(insets.bottom, Platform.OS === 'web' ? 10 : 8);
+  const tabBarHeight = 56 + bottomInset;
+
   return (
     <Tabs
       screenOptions={{
-        headerShown: true,
-        headerTitleStyle: {
-          fontFamily: typography.fontFamily.bold,
-          color: colors.foreground,
-        },
-        headerStyle: {
-          backgroundColor: colors.background,
-        },
-        headerShadowVisible: false,
+        // PageHero owns brand + title — avoids duplicate chrome on mobile.
+        headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.foregroundMuted,
         tabBarStyle: {
           backgroundColor: colors.muted,
           borderTopWidth: 0,
-          height: 68,
-          paddingBottom: 10,
+          height: tabBarHeight,
+          paddingBottom: bottomInset,
           paddingTop: 8,
+          maxWidth: layout.maxContentWidth,
+          width: '100%',
+          alignSelf: 'center',
         },
         tabBarLabelStyle: {
           fontFamily: typography.fontFamily.medium,
           fontSize: 11,
+          marginBottom: 2,
+        },
+        tabBarItemStyle: {
+          paddingTop: 4,
         },
       }}
     >
@@ -35,7 +42,6 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'Tính lương',
-          headerTitle: 'KVSalaryTools',
           tabBarLabel: 'Lương',
           tabBarAccessibilityLabel: 'Tab tính lương',
           tabBarIcon: ({ color, size }) => <Calculator color={color} size={size} />,
@@ -54,7 +60,6 @@ export default function TabsLayout() {
         name="benefits"
         options={{
           title: 'Quyền lợi',
-          headerTitle: 'KVSalaryTools',
           tabBarLabel: 'Quyền lợi',
           tabBarAccessibilityLabel: 'Tab quyền lợi',
           tabBarIcon: ({ color, size }) => <Briefcase color={color} size={size} />,

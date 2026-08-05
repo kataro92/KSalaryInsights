@@ -1,27 +1,20 @@
-import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
 import type { InflationAdjustmentTable } from '@/src/domain/types/retirement';
 import type { Ruleset } from '@/src/domain/types/salary';
 
-// Metro/Jest (CJS) and Node ESM both supported via createRequire + import.meta.
-const moduleUrl = import.meta.url;
-const requireJson = createRequire(moduleUrl);
-const rulesetDir = join(dirname(fileURLToPath(moduleUrl)), 'rulesets');
+// Import JSON files directly (works in web/Metro bundle)
+import ruleset2025 from './rulesets/2025.json';
+import ruleset2026H1 from './rulesets/2026-h1.json';
+import ruleset2026H2 from './rulesets/2026-h2.json';
+import inflation2026 from './rulesets/inflation-adjustment-2026.json';
 
-const ruleset2025 = requireJson(join(rulesetDir, '2025.json')) as Ruleset;
-const ruleset2026H1 = requireJson(join(rulesetDir, '2026-h1.json')) as Ruleset;
-const ruleset2026H2 = requireJson(join(rulesetDir, '2026-h2.json')) as Ruleset;
+const ALL_RULESETS: Ruleset[] = [
+  ruleset2025 as Ruleset,
+  ruleset2026H1 as Ruleset,
+  ruleset2026H2 as Ruleset,
+];
 
-/** Bảng trượt giá CV 340 — tách khỏi ruleset thuế (spec 007 / FR-006). */
-const inflation2026 = requireJson(
-  join(rulesetDir, 'inflation-adjustment-2026.json'),
-) as InflationAdjustmentTable;
-
-const ALL_RULESETS: Ruleset[] = [ruleset2025, ruleset2026H1, ruleset2026H2];
 const INFLATION_BY_YEAR: Record<number, InflationAdjustmentTable> = {
-  2026: inflation2026,
+  2026: inflation2026 as InflationAdjustmentTable,
 };
 
 function dateInRange(date: string, from: string, to: string): boolean {
