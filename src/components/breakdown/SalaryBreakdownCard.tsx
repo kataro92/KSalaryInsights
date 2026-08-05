@@ -212,17 +212,4 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     textAlign: 'right',
   },
-  netLabelWide: {
-    fontFamily: typography.fontFamily.bold,
-    color: colors.white,
-    fontSize: 18,
-  },
-  netValueWide: {
-    fontFamily: typography.fontFamily.extraBold,
-    color: colors.white,
-    fontSize: 24,
-    fontVariant: ['tabular-nums'],
-    flexShrink: 1,
-    textAlign: 'right',
-  },
 });

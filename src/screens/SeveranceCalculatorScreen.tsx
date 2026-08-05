@@ -225,7 +225,7 @@ export function SeveranceCalculatorScreen() {
           <>
             <ResultHero eyebrow="Ước trợ cấp" label="Tổng" amount={result.amount} />
             <NgaiMiuTip tip="Đã trừ thời gian BHTN / đã chi trả trong công thức — xem breakdown bên dưới." />
-            <BenefitBreakdownCard result={result} />
+            <BenefitBreakdownCard result={result} hideTotal />
             <DisclaimerFooter legalSources={result.legalSources} collapseSources />
           </>
         ) : !error ? (

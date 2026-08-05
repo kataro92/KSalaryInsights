@@ -12,6 +12,8 @@ type Props = {
   lines: OtherIncomeLine[];
   explanations: string[];
   note?: string;
+  /** When ResultHero already shows the peak total. */
+  hideTotal?: boolean;
 };
 
 export function OtherIncomeBreakdownCard({
@@ -22,12 +24,17 @@ export function OtherIncomeBreakdownCard({
   lines,
   explanations,
   note,
+  hideTotal = false,
 }: Props) {
   return (
     <ColorBlock tone="secondarySoft" accessibilityLabel={`Kết quả ${title}`}>
-      <Text style={styles.eyebrow}>{title}</Text>
-      <Text style={styles.totalLabel}>{totalLabel}</Text>
-      <Text style={styles.amount}>{total.toLocaleString('vi-VN')} ₫</Text>
+      <Text style={styles.eyebrow}>{hideTotal ? `Chi tiết · ${title}` : title}</Text>
+      {!hideTotal ? (
+        <>
+          <Text style={styles.totalLabel}>{totalLabel}</Text>
+          <Text style={styles.amount}>{total.toLocaleString('vi-VN')} ₫</Text>
+        </>
+      ) : null}
       <Text style={styles.formula}>{formula}</Text>
       {lines.map((line) => (
         <View key={line.id} style={styles.row}>

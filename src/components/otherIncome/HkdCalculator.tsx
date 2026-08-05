@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Button } from '@/src/components/common/Button';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { Section } from '@/src/components/common/Section';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
 import type { HkdBreakdown, HkdIndustryId } from '@/src/domain/types/otherIncome';
 import { calculateHkd } from '@/src/engine/otherIncome/hkd';
 import { getRuleset } from '@/src/engine/rulesetLoader';
+import { successHaptic } from '@/src/theme/haptics';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 function parseMoney(raw: string): number | null {
@@ -49,6 +53,7 @@ export function HkdCalculator({ taxYear }: Props) {
           taxYear,
         }),
       );
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -104,10 +109,17 @@ export function HkdCalculator({ taxYear }: Props) {
           style={styles.input}
         />
       </Section>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <EmptyErrorState variant="error" title="Chưa tính được" body={error} /> : null}
       <Button label="Tính HKD" onPress={onCalculate} />
       {result ? (
         <>
+          <ResultHero
+            tone="primary"
+            eyebrow={`HKD · ${result.industryLabel}`}
+            label="Tổng thuế"
+            amount={result.totalTax}
+          />
+          <NgaiMiuTip tip="GTGT + TNCN theo nhóm ngành — nếu miễn tỷ lệ, vẫn cần kê khai doanh thu." />
           <OtherIncomeBreakdownCard
             title={`HKD — ${result.industryLabel}`}
             total={result.totalTax}
@@ -122,9 +134,15 @@ export function HkdCalculator({ taxYear }: Props) {
                 ? 'Miễn thuế tỷ lệ — vẫn kê khai doanh thu.'
                 : result.incomeMethodHint?.note
             }
+            hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
         </>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có ước HKD"
+          body="Chọn ngành và doanh thu năm, rồi bấm Tính HKD."
+        />
       ) : null}
     </View>
   );
@@ -167,10 +185,5 @@ const styles = StyleSheet.create({
     color: colors.foreground,
     fontVariant: ['tabular-nums'],
     backgroundColor: colors.white,
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: '#DC2626',
   },
 });

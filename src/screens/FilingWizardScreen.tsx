@@ -4,11 +4,13 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 
 import { Button } from '@/src/components/common/Button';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
 import { Section } from '@/src/components/common/Section';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import type { FilingWizardAnswers } from '@/src/domain/types/settlement';
 import { evaluateFilingWizard } from '@/src/engine/filingWizard';
+import { successHaptic } from '@/src/theme/haptics';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 function paramString(v: string | string[] | undefined): string {
@@ -36,19 +38,27 @@ export function FilingWizardScreen() {
     setAnswers((a) => ({ ...a, [key]: !a[key] }));
   };
 
+  const onSubmit = () => {
+    setSubmitted(true);
+    void successHaptic();
+  };
+
   return (
     <>
       <Stack.Screen options={{ title: 'Wizard quyết toán', headerShown: true }} />
       <ToolScreen
-      nested
+        nested
         title="Wizard quyết toán"
         subtitle={`Năm ${year} — trả lời nhanh để chọn ủy quyền hay tự QT.`}
         showBrand={false}
         accessibilityLabel="Wizard quyết toán thuế"
-        sticky={<Button label="Xem kết luận" onPress={() => setSubmitted(true)} />}
+        sticky={<Button label="Xem kết luận" onPress={onSubmit} />}
         aboveTabBar={false}
       >
-        <NgaiMiuTip tip="Không thu thập giấy tờ trong app — chỉ gợi ý hướng nộp." />
+        <NgaiMiuTip
+          pose="tip"
+          tip="Không thu thập giấy tờ trong app — tôi chỉ gợi ý hướng nộp để bạn tự chuẩn bị."
+        />
 
         <Section title="Điều kiện">
           {(
@@ -95,7 +105,12 @@ export function FilingWizardScreen() {
               </Text>
             ))}
           </ColorBlock>
-        ) : null}
+        ) : (
+          <EmptyErrorState
+            title="Chưa có kết luận"
+            body="Trả lời các câu hỏi, rồi bấm Xem kết luận — Ngài Miu gợi ý hướng nộp."
+          />
+        )}
       </ToolScreen>
     </>
   );

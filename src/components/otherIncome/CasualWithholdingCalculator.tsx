@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Button } from '@/src/components/common/Button';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { Section } from '@/src/components/common/Section';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
 import type { CasualWithholdingBreakdown } from '@/src/domain/types/otherIncome';
 import { calculateCasualWithholding } from '@/src/engine/otherIncome/casualWithholding';
+import { successHaptic } from '@/src/theme/haptics';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 function parseMoney(raw: string): number | null {
@@ -44,6 +48,7 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
           asOfDate: asOfDate ?? `${taxYear}-08-15`,
         }),
       );
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -68,10 +73,17 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
           style={styles.input}
         />
       </Section>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <EmptyErrorState variant="error" title="Chưa tính được" body={error} /> : null}
       <Button label="Tính khấu trừ" onPress={onCalculate} />
       {result ? (
         <>
+          <ResultHero
+            tone="primary"
+            eyebrow="Khấu trừ vãng lai"
+            label="Đã trừ"
+            amount={result.withheld}
+          />
+          <NgaiMiuTip tip="Thực nhận nằm trong breakdown — miễn QT chỉ áp khi đủ điều kiện ở Quyết toán." />
           <OtherIncomeBreakdownCard
             title="Khấu trừ vãng lai"
             total={result.withheld}
@@ -83,9 +95,15 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
             ]}
             explanations={result.explanations}
             note={result.settlementWarning}
+            hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
         </>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có ước khấu trừ"
+          body="Nhập số tiền chi trả, rồi bấm Tính khấu trừ."
+        />
       ) : null}
     </View>
   );
@@ -104,10 +122,5 @@ const styles = StyleSheet.create({
     color: colors.foreground,
     fontVariant: ['tabular-nums'],
     backgroundColor: colors.white,
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: '#DC2626',
   },
 });

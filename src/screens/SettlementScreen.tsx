@@ -235,7 +235,7 @@ export function SettlementScreen() {
                 withheldMissingWarning={result.primary.breakdown.withheldMissingWarning}
               />
               <NgaiMiuTip
-                pose="docs"
+                pose="tip"
                 tip="Đối chiếu với bảng lương / chứng từ khấu trừ trước khi nộp — đây chỉ là ước tính."
               />
               <AnnualBreakdownCard breakdown={result.primary.breakdown} />

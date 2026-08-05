@@ -358,11 +358,6 @@ const styles = StyleSheet.create({
     fontSize: typography.scale.caption.fontSize,
     color: colors.foregroundMuted,
   },
-  meta: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 13,
-    color: colors.foregroundMuted,
-  },
   actions: {
     gap: space[3],
   },
