@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SalaryBreakdownCard } from '@/src/components/breakdown/SalaryBreakdownCard';
 import { ResultHero } from '@/src/components/common/ResultHero';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { miuTips } from '@/src/copy/miu';
 import type { ComparisonResult } from '@/src/domain/types/comparison';
 import { moneyAccessibilityLabel } from '@/src/theme/money';
 import { colors, space, typography } from '@/src/theme/tokens';
@@ -34,7 +35,7 @@ export function ComparisonView({ result }: Props) {
           netGain >= 0 ? 'Net năm mới cao hơn' : 'Net năm mới thấp hơn',
         )}
       />
-      <NgaiMiuTip tip="Gross giữ nguyên — tôi chỉ đối chiếu Net và thuế giữa hai năm ruleset." />
+      <NgaiMiuTip tip={miuTips.comparison} />
       <Text style={styles.deltaLine} accessibilityLabel={`Chênh thuế ${formatVndSigned(result.delta.tax)}`}>
         Thuế: {formatVndSigned(result.delta.tax)}
         {taxSaved > 0 ? ` (tiết kiệm ${taxSaved.toLocaleString('vi-VN')} ₫)` : ''}

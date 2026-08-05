@@ -9,6 +9,7 @@ import { TextField } from '@/src/components/common/TextField';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
+import { miuTips } from '@/src/copy/miu';
 import type { RentBreakdown } from '@/src/domain/types/otherIncome';
 import { calculateRent } from '@/src/engine/otherIncome/rent';
 import { successHaptic } from '@/src/theme/haptics';
@@ -88,7 +89,7 @@ export function RentCalculator({ taxYear }: Props) {
             label="Tổng thuế"
             amount={result.totalTax}
           />
-          <NgaiMiuTip tip="GTGT và TNCN tách dòng bên dưới — ngưỡng miễn theo ruleset năm." />
+          <NgaiMiuTip tip={miuTips.rent} />
           <OtherIncomeBreakdownCard
             title="Cho thuê"
             total={result.totalTax}

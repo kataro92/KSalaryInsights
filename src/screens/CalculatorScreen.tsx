@@ -20,6 +20,7 @@ import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { DependentCountInput } from '@/src/components/inputs/DependentCountInput';
 import { MonthPicker } from '@/src/components/inputs/MonthPicker';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { emptyCopy, miuTips } from '@/src/copy/miu';
 import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type {
   CalculationMode,
@@ -295,13 +296,13 @@ export function CalculatorScreen() {
         </CollapseSection>
 
       {error ? (
-        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+        <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
       ) : null}
 
         {breakdown ? (
           <View style={styles.resultBlock}>
             <ResultHero amount={breakdown.net} />
-            <NgaiMiuTip tip="Tôi tách từng khoản trừ để bạn thấy rõ — số liệu không bị che." />
+            <NgaiMiuTip tip={miuTips.calculatorResult} />
             <SalaryBreakdownCard breakdown={breakdown} hideNet />
             <DisclaimerFooter legalSources={breakdown.legalSources} collapseSources />
             {mode === 'gross-to-net' ? (
@@ -317,8 +318,8 @@ export function CalculatorScreen() {
           </View>
         ) : !error ? (
           <EmptyErrorState
-            title="Chưa có kết quả"
-            body="Nhập Gross hoặc Net, rồi bấm Tính — Ngài Miu sẽ hiện Net và breakdown."
+            title={emptyCopy.calculator.title}
+            body={emptyCopy.calculator.body}
           />
         ) : null}
       </ScreenShell>

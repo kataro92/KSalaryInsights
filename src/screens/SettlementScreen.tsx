@@ -20,6 +20,7 @@ import { DependentCountInput } from '@/src/components/inputs/DependentCountInput
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { DualScenarioCard } from '@/src/components/settlement/DualScenarioCard';
 import { SettlementResultCard } from '@/src/components/settlement/SettlementResultCard';
+import { emptyCopy, miuTips } from '@/src/copy/miu';
 import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { AnnualSettlementResult } from '@/src/domain/types/settlement';
 import type { RegionCode } from '@/src/domain/types/salary';
@@ -221,7 +222,7 @@ export function SettlementScreen() {
       </ColorBlock>
 
       {error ? (
-        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+        <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
       ) : null}
 
       {result ? (
@@ -234,10 +235,7 @@ export function SettlementScreen() {
                 delta={result.primary.breakdown.delta}
                 withheldMissingWarning={result.primary.breakdown.withheldMissingWarning}
               />
-              <NgaiMiuTip
-                pose="tip"
-                tip="Đối chiếu với bảng lương / chứng từ khấu trừ trước khi nộp — đây chỉ là ước tính."
-              />
+              <NgaiMiuTip pose="tip" tip={miuTips.settlement} />
               <AnnualBreakdownCard breakdown={result.primary.breakdown} />
             </>
           )}
@@ -245,8 +243,8 @@ export function SettlementScreen() {
         </>
       ) : !error ? (
         <EmptyErrorState
-          title="Chưa có ước quyết toán"
-          body="Điền lương tháng, số tháng và thuế đã khấu trừ, rồi bấm Ước quyết toán."
+          title={emptyCopy.settlement.title}
+          body={emptyCopy.settlement.body}
         />
       ) : null}
       </ScreenShell>

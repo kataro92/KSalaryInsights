@@ -8,6 +8,7 @@ import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
 import { Section } from '@/src/components/common/Section';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { emptyCopy, miuTips } from '@/src/copy/miu';
 import type { FilingWizardAnswers } from '@/src/domain/types/settlement';
 import { evaluateFilingWizard } from '@/src/engine/filingWizard';
 import { successHaptic } from '@/src/theme/haptics';
@@ -55,10 +56,7 @@ export function FilingWizardScreen() {
         sticky={<Button label="Xem kết luận" onPress={onSubmit} />}
         aboveTabBar={false}
       >
-        <NgaiMiuTip
-          pose="tip"
-          tip="Không thu thập giấy tờ trong app — tôi chỉ gợi ý hướng nộp để bạn tự chuẩn bị."
-        />
+        <NgaiMiuTip pose="tip" tip={miuTips.filingWizard} />
 
         <Section title="Điều kiện">
           {(
@@ -107,8 +105,8 @@ export function FilingWizardScreen() {
           </ColorBlock>
         ) : (
           <EmptyErrorState
-            title="Chưa có kết luận"
-            body="Trả lời các câu hỏi, rồi bấm Xem kết luận — Ngài Miu gợi ý hướng nộp."
+            title={emptyCopy.filing.title}
+            body={emptyCopy.filing.body}
           />
         )}
       </ToolScreen>

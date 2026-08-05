@@ -20,6 +20,7 @@ import {
   LumpSumDisclaimerGate,
 } from '@/src/components/disclaimer/LumpSumDisclaimerGate';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { miuTips } from '@/src/copy/miu';
 import type {
   DisclaimerAckState,
   LumpSumBreakdown,
@@ -236,7 +237,7 @@ export function RetirementComparisonScreen() {
         ) : null}
 
         {showAmounts && lumpSum && pension ? (
-          <NgaiMiuTip tip="Hai kịch bản chỉ để đối chiếu — tôi không khuyên rút hay giữ. Đọc checklist điều kiện bên dưới." />
+          <NgaiMiuTip tip={miuTips.retirement} />
         ) : null}
 
         <RetirementComparisonView

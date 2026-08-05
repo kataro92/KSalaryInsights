@@ -11,6 +11,7 @@ import {
   type SickLeaveInputsValue,
 } from '@/src/components/inputs/SickLeaveInputs';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { emptyCopy, miuTips } from '@/src/copy/miu';
 import { TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { SickLeaveBreakdown } from '@/src/domain/types/benefits';
 import { calculateSickLeave } from '@/src/engine/sickLeave';
@@ -82,19 +83,19 @@ export function SickLeaveCalculatorScreen() {
         }}
       />
       {error ? (
-        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+        <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
       ) : null}
       {result ? (
         <>
           <ResultHero eyebrow="Ước ốm đau" label="Trợ cấp" amount={result.amount} />
-          <NgaiMiuTip tip="Trần năm theo năm đóng — nếu bị cắt, công thức ghi rõ bên dưới." />
+          <NgaiMiuTip tip={miuTips.sickLeave} />
           <SickLeaveBreakdownCard result={result} hideTotal />
           <DisclaimerFooter legalSources={result.legalSources} collapseSources />
         </>
       ) : !error ? (
         <EmptyErrorState
-          title="Chưa có ước ốm đau"
-          body="Nhập lương liền kề và số ngày nghỉ, rồi bấm Tính ốm đau."
+          title={emptyCopy.sickLeave.title}
+          body={emptyCopy.sickLeave.body}
         />
       ) : null}
     </ToolScreen>
