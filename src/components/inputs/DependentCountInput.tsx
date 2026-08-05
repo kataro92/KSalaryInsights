@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: typography.fontFamily.regular,
     fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 19,
     color: colors.foreground,
   },
 });

@@ -1,18 +1,15 @@
 import { useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/src/components/common/Button';
+import { ChipRow } from '@/src/components/common/ChipRow';
+import { ChoiceChip } from '@/src/components/common/ChoiceChip';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { PageHero } from '@/src/components/common/PageHero';
+import { ScreenShell } from '@/src/components/common/ScreenShell';
 import { Section } from '@/src/components/common/Section';
+import { TextField } from '@/src/components/common/TextField';
 import { AnnualBreakdownCard } from '@/src/components/breakdown/AnnualBreakdownCard';
 import { SettlementDisclaimer } from '@/src/components/disclaimer/SettlementDisclaimer';
 import { DependentCountInput } from '@/src/components/inputs/DependentCountInput';
@@ -23,7 +20,7 @@ import type { AnnualSettlementResult } from '@/src/domain/types/settlement';
 import type { RegionCode } from '@/src/domain/types/salary';
 import { calculateAnnualSettlement } from '@/src/engine/annualSettlement';
 import { usePreferences } from '@/src/hooks/usePreferences';
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { colors, layout, space, typography } from '@/src/theme/tokens';
 
 function parseMoney(raw: string): number | null {
   const digits = raw.replace(/[^\d]/g, '');
@@ -55,6 +52,8 @@ export function SettlementScreen() {
   const [casualWithheldText, setCasualWithheldText] = useState('0');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AnnualSettlementResult | null>(null);
+
+  const clearResult = () => setResult(null);
 
   const onCalculate = () => {
     setError(null);
@@ -95,117 +94,136 @@ export function SettlementScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
-      accessibilityLabel="Màn hình quyết toán thuế"
-    >
-      <View style={styles.inner}>
-        <Section title="Năm quyết toán" subtitle="Ruleset theo năm thu nhập, không theo ngày mở app.">
-          <View style={styles.row}>
-            {TAX_YEAR_OPTIONS.map((y) => {
-              const selected = taxYear === y;
-              return (
-                <Pressable
-                  key={y}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected }}
-                  onPress={() => {
-                    setTaxYear(y);
-                    setResult(null);
-                  }}
-                  style={[styles.chip, selected && styles.chipSelected]}
-                >
-                  <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>
-                    {y}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </Section>
+    <ScreenShell accessibilityLabel="Màn hình quyết toán thuế" decorated>
+      <PageHero
+        title="Quyết toán"
+        subtitle="Ước tính quyết toán thuế năm — đối chiếu với bảng lương trước khi nộp."
+      />
 
-        <Section title="Vùng LTTV">
-          <View style={styles.row}>
-            {REGION_OPTIONS.map(({ code, label }) => {
-              const selected = region === code;
-              return (
-                <Pressable
-                  key={code}
-                  onPress={() => setRegion(code)}
-                  style={[styles.chip, selected && styles.chipSelected]}
-                >
-                  <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>
-                    {label}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </Section>
+      <Section
+        title="Năm quyết toán"
+        subtitle="Ruleset theo năm thu nhập, không theo ngày mở app."
+      >
+        <ChipRow equal>
+          {TAX_YEAR_OPTIONS.map((y) => (
+            <ChoiceChip
+              key={y}
+              flex
+              label={String(y)}
+              selected={taxYear === y}
+              onPress={() => {
+                setTaxYear(y);
+                clearResult();
+              }}
+            />
+          ))}
+        </ChipRow>
+      </Section>
 
-        <Section title="Người phụ thuộc">
-          <DependentCountInput value={numDependents} onChange={setNumDependents} />
-        </Section>
+      <Section title="Vùng LTTV">
+        <ChipRow equal>
+          {REGION_OPTIONS.map(({ code, label }) => (
+            <ChoiceChip
+              key={code}
+              flex
+              label={label}
+              selected={region === code}
+              onPress={() => {
+                setRegion(code);
+                clearResult();
+              }}
+            />
+          ))}
+        </ChipRow>
+      </Section>
 
-        <Section title="Lương tháng (trung bình)" subtitle="× số tháng có lương trong năm.">
-          <TextInput
-            accessibilityLabel="Lương gross tháng"
-            keyboardType="number-pad"
-            value={monthlyText}
-            onChangeText={(t) => setMonthlyText(formatInput(parseMoney(t)))}
-            style={styles.input}
-          />
-          <Text style={styles.fieldLabel}>Số tháng làm việc</Text>
-          <TextInput
-            accessibilityLabel="Số tháng làm việc"
-            keyboardType="number-pad"
-            value={monthsText}
-            onChangeText={setMonthsText}
-            style={styles.input}
-          />
-        </Section>
+      <Section title="Người phụ thuộc">
+        <DependentCountInput
+          value={numDependents}
+          onChange={(n) => {
+            setNumDependents(n);
+            clearResult();
+          }}
+        />
+      </Section>
 
-        <Section title="Thuế đã khấu trừ (lương)">
-          <TextInput
-            accessibilityLabel="Thuế đã khấu trừ"
-            keyboardType="number-pad"
-            value={withheldText}
-            onChangeText={(t) => setWithheldText(formatInput(parseMoney(t)))}
-            style={styles.input}
-          />
-        </Section>
+      <Section title="Lương tháng (trung bình)" subtitle="× số tháng có lương trong năm.">
+        <TextField
+          accessibilityLabel="Lương gross tháng"
+          keyboardType="number-pad"
+          value={monthlyText}
+          onChangeText={(t) => {
+            setMonthlyText(formatInput(parseMoney(t)));
+            clearResult();
+          }}
+          style={styles.amountInput}
+        />
+        <TextField
+          label="Số tháng làm việc"
+          accessibilityLabel="Số tháng làm việc"
+          keyboardType="number-pad"
+          value={monthsText}
+          onChangeText={(t) => {
+            setMonthsText(t.replace(/[^\d]/g, ''));
+            clearResult();
+          }}
+        />
+      </Section>
 
-        <ColorBlock tone="muted">
-          <View style={styles.switchRow}>
+      <Section title="Thuế đã khấu trừ (lương)">
+        <TextField
+          accessibilityLabel="Thuế đã khấu trừ"
+          keyboardType="number-pad"
+          value={withheldText}
+          onChangeText={(t) => {
+            setWithheldText(formatInput(parseMoney(t)));
+            clearResult();
+          }}
+          style={styles.amountInput}
+        />
+      </Section>
+
+      <ColorBlock tone="muted">
+        <View style={styles.switchRow}>
+          <View style={styles.switchText}>
             <Text style={styles.switchLabel}>Thêm thu nhập vãng lai</Text>
-            <Switch
-              value={includeCasual}
-              onValueChange={setIncludeCasual}
-              trackColor={{ false: colors.border, true: colors.primary }}
+            <Text style={styles.switchHint}>Thu nhập ngoài lương đã khấu trừ 10%</Text>
+          </View>
+          <Switch
+            accessibilityLabel="Thêm thu nhập vãng lai"
+            value={includeCasual}
+            onValueChange={(v) => {
+              setIncludeCasual(v);
+              clearResult();
+            }}
+            trackColor={{ false: colors.border, true: colors.primary }}
+          />
+        </View>
+        {includeCasual ? (
+          <View style={styles.casualFields}>
+            <TextField
+              label="Tổng vãng lai năm"
+              keyboardType="number-pad"
+              value={casualGrossText}
+              onChangeText={(t) => {
+                setCasualGrossText(formatInput(parseMoney(t)));
+                clearResult();
+              }}
+            />
+            <TextField
+              label="Thuế đã khấu trừ vãng lai (10%)"
+              keyboardType="number-pad"
+              value={casualWithheldText}
+              onChangeText={(t) => {
+                setCasualWithheldText(formatInput(parseMoney(t)));
+                clearResult();
+              }}
             />
           </View>
-          {includeCasual ? (
-            <>
-              <Text style={styles.fieldLabel}>Tổng vãng lai năm</Text>
-              <TextInput
-                keyboardType="number-pad"
-                value={casualGrossText}
-                onChangeText={(t) => setCasualGrossText(formatInput(parseMoney(t)))}
-                style={styles.input}
-              />
-              <Text style={styles.fieldLabel}>Thuế đã khấu trừ vãng lai (10%)</Text>
-              <TextInput
-                keyboardType="number-pad"
-                value={casualWithheldText}
-                onChangeText={(t) => setCasualWithheldText(formatInput(parseMoney(t)))}
-                style={styles.input}
-              />
-            </>
-          ) : null}
-        </ColorBlock>
+        ) : null}
+      </ColorBlock>
 
+      <View style={styles.actions}>
         <Button label="Ước quyết toán" onPress={onCalculate} />
         <Button
           label="Wizard ủy quyền / tự QT"
@@ -217,86 +235,64 @@ export function SettlementScreen() {
             })
           }
         />
-
-        {error ? (
-          <ColorBlock tone="primarySoft">
-            <Text style={styles.error}>{error}</Text>
-          </ColorBlock>
-        ) : null}
-
-        {result ? (
-          <>
-            {result.casualStatus === 'exempt' ? (
-              <DualScenarioCard scenarios={result.scenarios} />
-            ) : (
-              <>
-                <SettlementResultCard
-                  delta={result.primary.breakdown.delta}
-                  withheldMissingWarning={result.primary.breakdown.withheldMissingWarning}
-                />
-                <AnnualBreakdownCard breakdown={result.primary.breakdown} />
-              </>
-            )}
-            <SettlementDisclaimer legalSources={result.primary.breakdown.legalSources} />
-          </>
-        ) : null}
       </View>
-    </ScrollView>
+
+      {error ? (
+        <ColorBlock tone="primarySoft">
+          <Text style={styles.error}>{error}</Text>
+        </ColorBlock>
+      ) : null}
+
+      {result ? (
+        <>
+          {result.casualStatus === 'exempt' ? (
+            <DualScenarioCard scenarios={result.scenarios} />
+          ) : (
+            <>
+              <SettlementResultCard
+                delta={result.primary.breakdown.delta}
+                withheldMissingWarning={result.primary.breakdown.withheldMissingWarning}
+              />
+              <AnnualBreakdownCard breakdown={result.primary.breakdown} />
+            </>
+          )}
+          <SettlementDisclaimer legalSources={result.primary.breakdown.legalSources} />
+        </>
+      ) : null}
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  content: {
-    paddingVertical: space[6],
-    paddingHorizontal: layout.pagePaddingX,
-    alignItems: 'center',
-  },
-  inner: { width: '100%', maxWidth: layout.maxContentWidth, gap: space[5] },
-  row: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2] },
-  chip: {
-    minHeight: layout.minTouch,
-    paddingHorizontal: space[4],
-    borderRadius: radii.md,
-    backgroundColor: colors.muted,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chipSelected: { backgroundColor: colors.primary },
-  chipLabel: {
+  amountInput: {
+    minHeight: 56,
     fontFamily: typography.fontFamily.semiBold,
-    fontSize: 14,
-    color: colors.foreground,
-  },
-  chipLabelSelected: { color: colors.white },
-  input: {
-    minHeight: 52,
-    backgroundColor: colors.muted,
-    borderRadius: radii.md,
-    paddingHorizontal: space[4],
-    fontFamily: typography.fontFamily.semiBold,
-    fontSize: 18,
-    color: colors.foreground,
-    fontVariant: ['tabular-nums'],
-  },
-  fieldLabel: {
-    marginTop: space[3],
-    marginBottom: space[2],
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 13,
-    color: colors.foreground,
+    fontSize: 22,
   },
   switchRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: space[3],
     minHeight: layout.minTouch,
   },
+  switchText: { flex: 1, gap: 2 },
   switchLabel: {
-    flex: 1,
     fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
+    fontSize: 15,
     color: colors.foreground,
+  },
+  switchHint: {
+    fontFamily: typography.fontFamily.regular,
+    fontSize: 12,
+    color: colors.foregroundMuted,
+  },
+  casualFields: {
+    marginTop: space[4],
+    gap: space[3],
+  },
+  actions: {
+    gap: space[3],
   },
   error: {
     fontFamily: typography.fontFamily.medium,

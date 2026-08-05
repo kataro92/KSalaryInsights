@@ -14,6 +14,7 @@ export const colors = {
   border: '#E5E7EB',
   primarySoft: '#EFF6FF',
   secondarySoft: '#ECFDF5',
+  accentSoft: '#FFFBEB',
   /** Inactive chrome (tabs, hints) — softer than foreground. */
   foregroundMuted: '#6B7280',
   white: '#FFFFFF',
@@ -56,7 +57,9 @@ export const motion = {
 } as const;
 
 export const layout = {
-  pagePaddingX: 20,
-  maxContentWidth: 720,
+  pagePaddingX: 16,
+  maxContentWidth: 560,
   minTouch: 44,
+  /** Extra bottom inset so content clears the tab bar on mobile. */
+  tabBarClearance: 24,
 } as const;

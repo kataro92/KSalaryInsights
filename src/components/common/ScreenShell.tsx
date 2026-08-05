@@ -25,6 +25,7 @@ export function ScreenShell({
       style={styles.scroll}
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
       accessibilityLabel={accessibilityLabel}
       {...rest}
     >
@@ -43,10 +44,13 @@ export function ScreenShell({
 
 const styles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: space[10], flexGrow: 1 },
+  content: {
+    paddingBottom: space[10] + layout.tabBarClearance,
+    flexGrow: 1,
+  },
   inner: {
     paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[5],
+    paddingTop: space[4],
     gap: space[5],
     maxWidth: layout.maxContentWidth,
     width: '100%',

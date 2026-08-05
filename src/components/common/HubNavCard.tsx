@@ -19,7 +19,7 @@ const toneBg: Record<Tone, string> = {
   primarySoft: colors.primarySoft,
   secondarySoft: colors.secondarySoft,
   muted: colors.muted,
-  accentSoft: '#FFFBEB',
+  accentSoft: colors.accentSoft,
 };
 
 /**
@@ -56,9 +56,10 @@ export function HubNavCard({
 
 const styles = StyleSheet.create({
   card: {
-    minHeight: layout.minTouch + 28,
+    minHeight: layout.minTouch + 32,
     borderRadius: radii.lg,
-    padding: space[5],
+    paddingVertical: space[4],
+    paddingHorizontal: space[4],
     flexDirection: 'row',
     alignItems: 'center',
     gap: space[3],
@@ -68,17 +69,17 @@ const styles = StyleSheet.create({
     opacity: 0.92,
   },
   iconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: { flex: 1, gap: space[1] },
+  text: { flex: 1, gap: 4 },
   title: {
     fontFamily: typography.fontFamily.bold,
-    fontSize: 17,
+    fontSize: 16,
     color: colors.foreground,
     letterSpacing: typography.letterSpacingTight,
   },
@@ -86,7 +87,6 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.regular,
     fontSize: 13,
     lineHeight: 18,
-    color: colors.foreground,
-    opacity: 0.72,
+    color: colors.foregroundMuted,
   },
 });

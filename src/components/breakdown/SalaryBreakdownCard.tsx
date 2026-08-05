@@ -15,17 +15,26 @@ function Row({
 }: {
   label: string;
   value: string;
-  emphasis?: 'muted' | 'net' | 'tax';
+  emphasis?: 'muted' | 'net' | 'tax' | 'subtotal';
 }) {
   return (
     <View style={styles.row}>
-      <Text style={[styles.label, emphasis === 'net' && styles.netLabel]}>{label}</Text>
+      <Text
+        style={[
+          styles.label,
+          emphasis === 'net' && styles.netLabel,
+          emphasis === 'subtotal' && styles.subtotalLabel,
+        ]}
+      >
+        {label}
+      </Text>
       <Text
         style={[
           styles.value,
           emphasis === 'muted' && styles.mutedValue,
           emphasis === 'net' && styles.netValue,
           emphasis === 'tax' && styles.taxValue,
+          emphasis === 'subtotal' && styles.subtotalValue,
         ]}
         accessibilityLabel={`${label} ${value}`}
       >
@@ -33,6 +42,10 @@ function Row({
       </Text>
     </View>
   );
+}
+
+function GroupDivider() {
+  return <View style={styles.divider} />;
 }
 
 type Props = {
@@ -44,21 +57,25 @@ export function SalaryBreakdownCard({ breakdown }: Props) {
   return (
     <View style={styles.wrap} accessibilityLabel="Bảng chi tiết tính lương">
       <ColorBlock tone="muted">
-        <Text style={styles.heading}>Breakdown</Text>
-        <Row label="Gross" value={formatVnd(breakdown.gross)} />
+        <Text style={styles.heading}>Chi tiết tính lương</Text>
+
+        <Row label="Gross" value={formatVnd(breakdown.gross)} emphasis="subtotal" />
+        <GroupDivider />
         <Row label="BHXH (8%)" value={`− ${formatVnd(insurance.social)}`} emphasis="muted" />
         <Row label="BHYT (1,5%)" value={`− ${formatVnd(insurance.health)}`} emphasis="muted" />
         <Row label="BHTN (1%)" value={`− ${formatVnd(insurance.unemployment)}`} emphasis="muted" />
         <Row
-          label="Tổng BH NLĐ"
+          label="Tổng BH người lao động"
           value={`− ${formatVnd(insurance.totalEmployee)}`}
-          emphasis="muted"
+          emphasis="subtotal"
         />
         <Row
-          label="TN sau BH"
+          label="Thu nhập sau BH"
           value={formatVnd(pit.incomeAfterInsurance)}
-          emphasis="muted"
+          emphasis="subtotal"
         />
+
+        <GroupDivider />
         <Row
           label="GTGC bản thân"
           value={`− ${formatVnd(breakdown.reliefBreakdown.personal)}`}
@@ -70,10 +87,13 @@ export function SalaryBreakdownCard({ breakdown }: Props) {
           emphasis="muted"
         />
         <Row
-          label="Giảm trừ gia cảnh (GTGC)"
+          label="Tổng giảm trừ gia cảnh"
           value={`− ${formatVnd(breakdown.reliefBreakdown.total)}`}
+          emphasis="subtotal"
         />
-        <Row label="TNTT" value={formatVnd(pit.taxableIncome)} />
+        <Row label="Thu nhập tính thuế" value={formatVnd(pit.taxableIncome)} emphasis="subtotal" />
+
+        <GroupDivider />
         {pit.brackets.map((b) => (
           <Row
             key={b.bracket}
@@ -84,8 +104,18 @@ export function SalaryBreakdownCard({ breakdown }: Props) {
         ))}
         <Row label="Tổng thuế TNCN" value={`− ${formatVnd(pit.totalTax)}`} emphasis="tax" />
       </ColorBlock>
+
       <ColorBlock tone="secondarySoft" style={styles.netBlock}>
-        <Row label="Net (thực nhận)" value={formatVnd(breakdown.net)} emphasis="net" />
+        <Text style={styles.netEyebrow}>Thực nhận</Text>
+        <View style={styles.netRow}>
+          <Text style={styles.netLabelWide}>Net</Text>
+          <Text
+            style={styles.netValueWide}
+            accessibilityLabel={`Net thực nhận ${formatVnd(breakdown.net)}`}
+          >
+            {formatVnd(breakdown.net)}
+          </Text>
+        </View>
       </ColorBlock>
     </View>
   );
@@ -102,34 +132,65 @@ const styles = StyleSheet.create({
     marginBottom: space[3],
     letterSpacing: typography.letterSpacingTight,
   },
+  divider: {
+    height: 2,
+    backgroundColor: colors.border,
+    marginVertical: space[2],
+    opacity: 0.7,
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: space[3],
-    minHeight: 36,
+    minHeight: 40,
     paddingVertical: space[1],
   },
   label: {
     flex: 1,
     fontFamily: typography.fontFamily.regular,
     fontSize: 14,
+    lineHeight: 20,
     color: colors.foreground,
   },
   value: {
     fontFamily: typography.fontFamily.semiBold,
     fontSize: 14,
+    lineHeight: 20,
     color: colors.foreground,
     fontVariant: ['tabular-nums'],
+    textAlign: 'right',
   },
   mutedValue: {
-    opacity: 0.75,
+    color: colors.foregroundMuted,
   },
   taxValue: {
     color: colors.foreground,
   },
+  subtotalLabel: {
+    fontFamily: typography.fontFamily.semiBold,
+  },
+  subtotalValue: {
+    fontFamily: typography.fontFamily.bold,
+  },
   netBlock: {
     backgroundColor: colors.secondary,
+    paddingVertical: space[5],
+  },
+  netEyebrow: {
+    fontFamily: typography.fontFamily.semiBold,
+    fontSize: 12,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: colors.white,
+    opacity: 0.85,
+    marginBottom: space[2],
+  },
+  netRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: space[3],
   },
   netLabel: {
     fontFamily: typography.fontFamily.bold,
@@ -140,5 +201,18 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.extraBold,
     color: colors.white,
     fontSize: 20,
+  },
+  netLabelWide: {
+    fontFamily: typography.fontFamily.bold,
+    color: colors.white,
+    fontSize: 18,
+  },
+  netValueWide: {
+    fontFamily: typography.fontFamily.extraBold,
+    color: colors.white,
+    fontSize: 24,
+    fontVariant: ['tabular-nums'],
+    flexShrink: 1,
+    textAlign: 'right',
   },
 });
