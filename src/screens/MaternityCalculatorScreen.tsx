@@ -12,6 +12,7 @@ import {
   type MaternityInputsValue,
 } from '@/src/components/inputs/MaternityInputs';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { emptyCopy, miuTips } from '@/src/copy/miu';
 import type { MaternityBreakdown } from '@/src/domain/types/benefits';
 import { calculateMaternity } from '@/src/engine/maternity';
 import { successHaptic } from '@/src/theme/haptics';
@@ -68,7 +69,7 @@ export function MaternityCalculatorScreen() {
         }}
       />
       {error ? (
-        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+        <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
       ) : null}
       {result ? (
         <>
@@ -77,14 +78,14 @@ export function MaternityCalculatorScreen() {
             label="Tổng"
             amount={result.total}
           />
-          <NgaiMiuTip tip="Tách chế độ tháng và trợ cấp một lần bên dưới — không cộng vào Gross↔Net." />
+          <NgaiMiuTip tip={miuTips.maternity} />
           <MaternityBreakdownCard result={result} hideTotal />
           <DisclaimerFooter legalSources={result.legalSources} collapseSources />
         </>
       ) : !error ? (
         <EmptyErrorState
-          title="Chưa có ước thai sản"
-          body="Điền bình quân lương và thông tin sinh, rồi bấm Tính thai sản."
+          title={emptyCopy.maternity.title}
+          body={emptyCopy.maternity.body}
         />
       ) : null}
       <OutOfScopeNote />

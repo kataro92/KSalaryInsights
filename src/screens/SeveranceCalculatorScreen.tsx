@@ -16,6 +16,7 @@ import { Section } from '@/src/components/common/Section';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { emptyCopy, miuTips } from '@/src/copy/miu';
 import { TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { SeveranceBreakdown, SeveranceMode } from '@/src/domain/types/benefits';
 import { calcSeverancePay } from '@/src/engine/severance';
@@ -218,20 +219,20 @@ export function SeveranceCalculatorScreen() {
         </Section>
 
         {error ? (
-          <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+          <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
         ) : null}
 
         {result ? (
           <>
             <ResultHero eyebrow="Ước trợ cấp" label="Tổng" amount={result.amount} />
-            <NgaiMiuTip tip="Đã trừ thời gian BHTN / đã chi trả trong công thức — xem breakdown bên dưới." />
-            <BenefitBreakdownCard result={result} />
+            <NgaiMiuTip tip={miuTips.severance} />
+            <BenefitBreakdownCard result={result} hideTotal />
             <DisclaimerFooter legalSources={result.legalSources} collapseSources />
           </>
         ) : !error ? (
           <EmptyErrorState
-            title="Chưa có ước trợ cấp"
-            body="Chọn loại thôi việc / mất việc, điền thời gian và lương, rồi bấm Tính trợ cấp."
+            title={emptyCopy.severance.title}
+            body={emptyCopy.severance.body}
           />
         ) : null}
     </ToolScreen>

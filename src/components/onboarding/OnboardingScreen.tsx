@@ -4,32 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/src/components/common/Button';
 import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { brand, onboardingSteps } from '@/src/copy/miu';
 import { saveOnboardingCompleted } from '@/src/store/onboarding';
 import { colors, layout, space, typography } from '@/src/theme/tokens';
-
-type Step = {
-  title: string;
-  body: string;
-  pose: 'wave' | 'point' | 'tip';
-};
-
-const STEPS: Step[] = [
-  {
-    title: 'Tính Gross ↔ Net',
-    body: 'Ước tính lương offline theo ruleset 2025/2026. Breakdown từng khoản trừ — không che số.',
-    pose: 'wave',
-  },
-  {
-    title: 'Quyết toán thuế năm',
-    body: 'Đối chiếu đã khấu trừ với nghĩa vụ ước tính. Có wizard gợi ý ủy quyền hay tự QT.',
-    pose: 'point',
-  },
-  {
-    title: 'Quyền lợi BHXH',
-    body: 'Thai sản, ốm đau, thôi việc, thất nghiệp, hưu / một lần — mỗi máy tính độc lập.',
-    pose: 'tip',
-  },
-];
 
 type Props = {
   onDone: () => void;
@@ -38,8 +15,8 @@ type Props = {
 export function OnboardingScreen({ onDone }: Props) {
   const insets = useSafeAreaInsets();
   const [index, setIndex] = useState(0);
-  const step = STEPS[index];
-  const last = index === STEPS.length - 1;
+  const step = onboardingSteps[index];
+  const last = index === onboardingSteps.length - 1;
 
   const finish = async () => {
     await saveOnboardingCompleted();
@@ -52,7 +29,7 @@ export function OnboardingScreen({ onDone }: Props) {
         styles.root,
         { paddingTop: Math.max(insets.top, space[6]), paddingBottom: Math.max(insets.bottom, space[6]) },
       ]}
-      accessibilityLabel="Giới thiệu KVSalaryTools"
+      accessibilityLabel={`Giới thiệu ${brand.name}`}
     >
       <View style={styles.decor} pointerEvents="none" />
       <Pressable accessibilityRole="button" accessibilityLabel="Bỏ qua" onPress={() => void finish()} style={styles.skip}>
@@ -60,21 +37,21 @@ export function OnboardingScreen({ onDone }: Props) {
       </Pressable>
 
       <View style={styles.center}>
-        <NgaiMiuPlaceholder size={140} pose={step.pose} accessibilityLabel="Ngài Miu chào bạn" />
-        <Text style={styles.brand}>KVSalaryTools</Text>
+        <NgaiMiuPlaceholder size={152} pose={step.pose} accessibilityLabel="Ngài Miu hướng dẫn" />
+        <Text style={styles.brand}>{brand.name}</Text>
         <Text style={styles.title}>{step.title}</Text>
         <Text style={styles.body}>{step.body}</Text>
       </View>
 
       <View style={styles.dots}>
-        {STEPS.map((_, i) => (
+        {onboardingSteps.map((_, i) => (
           <View key={i} style={[styles.dot, i === index && styles.dotOn]} />
         ))}
       </View>
 
       <View style={styles.actions}>
         {last ? (
-          <Button label="Bắt đầu" onPress={() => void finish()} />
+          <Button label="Bắt đầu cùng Ngài Miu" onPress={() => void finish()} />
         ) : (
           <Button label="Tiếp" onPress={() => setIndex((i) => i + 1)} />
         )}
@@ -122,7 +99,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: space[2],
   },
   brand: {
-    marginTop: space[4],
+    marginTop: space[3],
     fontFamily: typography.fontFamily.extraBold,
     fontSize: 12,
     letterSpacing: 1.4,

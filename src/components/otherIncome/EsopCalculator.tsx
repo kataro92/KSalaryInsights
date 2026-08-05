@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
 import { Button } from '@/src/components/common/Button';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { Section } from '@/src/components/common/Section';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
 import type { EsopBreakdown } from '@/src/domain/types/otherIncome';
 import { calculateEsop } from '@/src/engine/otherIncome/esop';
+import { successHaptic } from '@/src/theme/haptics';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 function parseMoney(raw: string): number | null {
@@ -59,6 +63,7 @@ export function EsopCalculator({ taxYear }: Props) {
           amountPaid: useBookCost ? undefined : parseMoney(paidText) ?? 0,
         }),
       );
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -155,10 +160,17 @@ export function EsopCalculator({ taxYear }: Props) {
           style={styles.input}
         />
       </Section>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <EmptyErrorState variant="error" title="Chưa tính được" body={error} /> : null}
       <Button label="Tính ESOP" onPress={onCalculate} />
       {result ? (
         <>
+          <ResultHero
+            tone="primary"
+            eyebrow="Ước thuế ESOP"
+            label="Tổng thuế"
+            amount={result.totalTax}
+          />
+          <NgaiMiuTip tip="TLTC khấu trừ và thuế chuyển nhượng tách dòng — đọc ghi chú quyết toán nếu có." />
           <OtherIncomeBreakdownCard
             title="ESOP"
             total={result.totalTax}
@@ -169,9 +181,15 @@ export function EsopCalculator({ taxYear }: Props) {
             ]}
             explanations={result.explanations}
             note={result.settlementNote}
+            hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
         </>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có ước ESOP"
+          body="Nhập chi phí / giá bán, rồi bấm Tính ESOP."
+        />
       ) : null}
     </View>
   );
@@ -211,10 +229,5 @@ const styles = StyleSheet.create({
     fontVariant: ['tabular-nums'],
     backgroundColor: colors.white,
     marginBottom: space[2],
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: '#DC2626',
   },
 });

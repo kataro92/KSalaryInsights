@@ -1,6 +1,6 @@
 # Design Upgrade Plan — AAA Product Ready
 
-**Status**: Slice 1–2 shipped · Slice 3 (motion + a11y + empty states) in progress  
+**Status**: Slice 1–4 shipped · Phase E (brand finish / store kit / microcopy) in progress  
 **Date**: 2026-08-05  
 **Baseline**: Post mobile polish (PR #2) — functional MVP with Flat Design tokens  
 **Goal**: Elevate KVSalaryTools from “competent utility” to **AAA consumer-finance product** without abandoning Flat Design / Constitution principles.
@@ -165,10 +165,11 @@ Shared patterns: validate → calculate → `ResultHero` → breakdown → discl
 5. Visual regression snapshots (Detox/Maestro or Storybook+web) for 390×844  
 
 ### Phase E — Brand finish (ship bar)
-1. App icon, splash, store screenshots aligned to palette v2  
-2. Mascot asset pack in repo (`assets/mascot/*.svg`) replacing placeholder  
-3. Microcopy pass (tone: Ngài Miu voice guide)  
-4. Design QA checklist signed off against design-system.md §1–8  
+1. App icon / splash / store screenshot kit — see [`docs/store/README.md`](../store/README.md)  
+2. Mascot asset pack — raster PNG/WebP (ADR 0006); SVG placeholder until that PR merges  
+3. Microcopy pass — `src/copy/miu.ts` (Ngài Miu voice)  
+4. Design QA checklist — [`docs/product/design-qa-checklist.md`](./design-qa-checklist.md)  
+5. Brand name locked — ADR 0007 (`KVSalaryTools`)  
 
 ---
 
@@ -200,13 +201,13 @@ Do **not** start with dark mode, charts, or social features — they dilute AAA 
 
 ## 8. Acceptance checklist (AAA gate)
 
-- [ ] Palette + typography recognizable without reading the logo  
+- [x] Palette + typography recognizable without reading the logo (tokens + brand lock; pastel pack in PR #6)  
 - [x] All user-facing screens use shared shell/primitives  
 - [x] Net/result is the emotional peak of each calculator  
 - [x] Ngài Miu: ≥4 poses shipped; tips never overlay number rows  
 - [x] Primary journey has 2–3 intentional motions  
 - [x] WCAG AA matrix documented and green  
-- [ ] Mobile 390×844 visual QA passed on all tabs + 3 deep screens  
+- [x] Mobile 390×844 visual QA passed on all tabs + 3 deep screens  
 - [x] Disclaimer + legal sources remain prominent but non-blocking  
 
 ---

@@ -6,9 +6,11 @@ import { colors, space, typography } from '@/src/theme/tokens';
 
 type Props = {
   result: SeveranceBreakdown;
+  /** When ResultHero already shows the peak amount. */
+  hideTotal?: boolean;
 };
 
-export function BenefitBreakdownCard({ result }: Props) {
+export function BenefitBreakdownCard({ result, hideTotal = false }: Props) {
   const modeLabel =
     result.mode === 'resignation' ? 'Trợ cấp thôi việc' : 'Trợ cấp mất việc';
 
@@ -17,10 +19,12 @@ export function BenefitBreakdownCard({ result }: Props) {
       tone="secondarySoft"
       accessibilityLabel={`Kết quả ${modeLabel}`}
     >
-      <Text style={styles.eyebrow}>{modeLabel}</Text>
-      <Text style={styles.amount} accessibilityRole="text">
-        {result.amount.toLocaleString('vi-VN')} ₫
-      </Text>
+      <Text style={styles.eyebrow}>{hideTotal ? `Chi tiết · ${modeLabel}` : modeLabel}</Text>
+      {!hideTotal ? (
+        <Text style={styles.amount} accessibilityRole="text">
+          {result.amount.toLocaleString('vi-VN')} ₫
+        </Text>
+      ) : null}
       <Text style={styles.formula}>{result.formula}</Text>
       <View style={styles.meta}>
         <Text style={styles.metaLine}>

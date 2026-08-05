@@ -11,7 +11,7 @@ type Props = {
 };
 
 export function SettlementResultCard({ delta, withheldMissingWarning }: Props) {
-  if (delta.kind === 'balanced') {
+  if (delta.kind === 'even') {
     return (
       <View style={styles.balanced} accessibilityLabel="Khớp — không chênh lệch">
         <Text style={styles.balancedTitle}>Khớp — không chênh lệch</Text>

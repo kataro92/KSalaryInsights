@@ -1,14 +1,12 @@
 import { useMemo } from 'react';
-import { StyleSheet, Text } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 
-import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { ComparisonView } from '@/src/components/comparison/ComparisonView';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import type { RegionCode } from '@/src/domain/types/salary';
 import { compareRulesets } from '@/src/engine/compareRulesets';
-import { colors, space, typography } from '@/src/theme/tokens';
 
 function paramString(v: string | string[] | undefined): string {
   if (Array.isArray(v)) return v[0] ?? '';
@@ -43,7 +41,7 @@ export function ComparisonScreen() {
     <>
       <Stack.Screen options={{ title: 'So sánh 2025 vs 2026', headerShown: true }} />
       <ToolScreen
-      nested
+        nested
         title="So sánh biểu thuế"
         subtitle="Gross giữ nguyên — đối chiếu Net / thuế giữa 2025 và 2026."
         showBrand={false}
@@ -51,10 +49,11 @@ export function ComparisonScreen() {
         aboveTabBar={false}
       >
         {!outcome.ok ? (
-          <ColorBlock tone="primarySoft">
-            <Text style={styles.error}>{outcome.message}</Text>
-            <Text style={styles.hint}>Không so sánh được với tham số hiện tại.</Text>
-          </ColorBlock>
+          <EmptyErrorState
+            variant="error"
+            title="Không so sánh được"
+            body={outcome.message}
+          />
         ) : (
           <>
             <ComparisonView result={outcome.result} />
@@ -73,17 +72,3 @@ export function ComparisonScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  error: {
-    fontFamily: typography.fontFamily.semiBold,
-    fontSize: 15,
-    color: colors.foreground,
-  },
-  hint: {
-    marginTop: space[2],
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 13,
-    color: colors.foregroundMuted,
-  },
-});

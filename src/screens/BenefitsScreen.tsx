@@ -16,6 +16,7 @@ import { SeasonalBanner } from '@/src/components/common/SeasonalBanner';
 import { Section } from '@/src/components/common/Section';
 import { OutOfScopeNote } from '@/src/components/disclaimer/OutOfScopeNote';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
+import { miuTips } from '@/src/copy/miu';
 import { colors, space } from '@/src/theme/tokens';
 
 /** Hub quyền lợi — nhóm theo việc làm / BHXH / thu nhập khác. */
@@ -31,7 +32,7 @@ export function BenefitsScreen() {
 
       <SeasonalBanner />
 
-      <NgaiMiuTip tip="Chọn một mục bên dưới. Mỗi máy tính độc lập — không cộng vào lương Gross↔Net." />
+      <NgaiMiuTip tip={miuTips.benefitsHub} />
 
       <Section title="BHXH hàng ngày" subtitle="Thai sản, ốm đau, hưu / một lần.">
         <View style={styles.cardStack}>

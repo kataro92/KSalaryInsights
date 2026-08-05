@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ScreenEnter } from '@/src/components/common/ScreenEnter';
 import { colors, layout, space } from '@/src/theme/tokens';
 
 type Props = ScrollViewProps & {
@@ -62,7 +63,7 @@ export const ScreenShell = forwardRef(function ScreenShell(
             <View style={styles.blobSecondary} pointerEvents="none" />
           </>
         ) : null}
-        {children}
+        <ScreenEnter style={styles.enter}>{children}</ScreenEnter>
       </View>
     </ScrollView>
   );
@@ -77,12 +78,14 @@ const styles = StyleSheet.create({
   inner: {
     paddingHorizontal: layout.pagePaddingX,
     paddingTop: space[4],
-    gap: space[5],
     maxWidth: layout.maxContentWidth,
     width: '100%',
     alignSelf: 'center',
     position: 'relative',
     overflow: 'hidden',
+  },
+  enter: {
+    gap: space[5],
   },
   blobPrimary: {
     position: 'absolute',

@@ -8,13 +8,29 @@ type Props = {
   title: string;
   children: ReactNode;
   defaultOpen?: boolean;
+  /** Controlled open state (overrides internal state when set). */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 /**
  * Expand/collapse block for advanced fields or legal sources.
  */
-export function CollapseSection({ title, children, defaultOpen = false }: Props) {
-  const [open, setOpen] = useState(defaultOpen);
+export function CollapseSection({
+  title,
+  children,
+  defaultOpen = false,
+  open: openControlled,
+  onOpenChange,
+}: Props) {
+  const [openInternal, setOpenInternal] = useState(defaultOpen);
+  const controlled = openControlled !== undefined;
+  const open = controlled ? openControlled : openInternal;
+
+  const setOpen = (next: boolean) => {
+    if (!controlled) setOpenInternal(next);
+    onOpenChange?.(next);
+  };
 
   return (
     <View style={styles.wrap}>
@@ -22,7 +38,7 @@ export function CollapseSection({ title, children, defaultOpen = false }: Props)
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
         accessibilityLabel={title}
-        onPress={() => setOpen((v) => !v)}
+        onPress={() => setOpen(!open)}
         style={({ pressed }) => [styles.header, pressed && styles.pressed]}
       >
         <Text style={styles.title}>{title}</Text>

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { colors, space, typography } from '@/src/theme/tokens';
+import { brand } from '@/src/copy/miu';
 
 type Props = {
   title: string;
@@ -16,7 +17,7 @@ type Props = {
 export function PageHero({ title, subtitle, showBrand = true }: Props) {
   return (
     <View style={styles.hero} accessibilityRole="header">
-      {showBrand ? <Text style={styles.brand}>KVSalaryTools</Text> : null}
+      {showBrand ? <Text style={styles.brand}>{brand.name}</Text> : null}
       <Text style={styles.title}>{title}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
     </View>
