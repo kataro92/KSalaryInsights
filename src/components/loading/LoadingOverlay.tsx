@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255,255,255,0.94)',
+    backgroundColor: 'rgba(247,250,255,0.96)',
     alignItems: 'center',
     justifyContent: 'center',
     padding: space[6],

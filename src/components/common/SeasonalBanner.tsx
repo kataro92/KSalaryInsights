@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
+import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 type Props = {
@@ -37,6 +38,7 @@ export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
 
   return (
     <View style={styles.banner} accessibilityRole="summary" accessibilityLabel={copy.title}>
+      <NgaiMiuPlaceholder size={64} pose="docs" accessibilityLabel="Ngài Miu nhắc hạn" />
       <View style={styles.textCol}>
         <Text style={styles.title}>{copy.title}</Text>
         <Text style={styles.body}>{copy.body}</Text>
@@ -60,8 +62,11 @@ const styles = StyleSheet.create({
     padding: space[4],
     borderLeftWidth: 4,
     borderLeftColor: colors.accent,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[3],
   },
-  textCol: { gap: space[2] },
+  textCol: { flex: 1, gap: space[2] },
   title: {
     fontFamily: typography.fontFamily.bold,
     fontSize: typography.scale.body.fontSize,

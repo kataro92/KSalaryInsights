@@ -31,7 +31,7 @@ export function BenefitsScreen() {
 
       <SeasonalBanner />
 
-      <NgaiMiuTip tip="Chọn một mục bên dưới. Mỗi máy tính độc lập — không cộng vào lương Gross↔Net." />
+      <NgaiMiuTip pose="point" tip="Chọn một mục bên dưới. Mỗi máy tính độc lập — không cộng vào lương Gross↔Net." />
 
       <Section title="BHXH hàng ngày" subtitle="Thai sản, ốm đau, hưu / một lần.">
         <View style={styles.cardStack}>

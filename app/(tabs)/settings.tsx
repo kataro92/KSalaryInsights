@@ -8,10 +8,11 @@ import { ColorBlock } from '@/src/components/common/ColorBlock';
 import { PageHero } from '@/src/components/common/PageHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
 import { Section } from '@/src/components/common/Section';
+import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
 import { usePreferences } from '@/src/hooks/usePreferences';
 import type { RegionCode } from '@/src/store/preferences';
 import { requestOnboardingReplay } from '@/src/store/onboarding';
-import { colors, space, typography } from '@/src/theme/tokens';
+import { colors, radii, space, typography } from '@/src/theme/tokens';
 
 const REGIONS: RegionCode[] = ['I', 'II', 'III', 'IV'];
 const TAX_YEARS = [2025, 2026, 2027];
@@ -40,6 +41,20 @@ export default function SettingsScreen() {
           </Text>
         </ColorBlock>
       ) : null}
+
+      <Section title="Về chúng tôi">
+        <View style={styles.about} accessibilityLabel="Giới thiệu Ngài Miu và KVSalaryTools">
+          <NgaiMiuPlaceholder size={96} pose="bow" accessibilityLabel="Ngài Miu" />
+          <View style={styles.aboutCopy}>
+            <Text style={styles.aboutName}>Ngài Miu</Text>
+            <Text style={styles.aboutRole}>Trợ lý hướng dẫn trong app</Text>
+            <Text style={styles.aboutBody}>
+              KVSalaryTools giúp ước tính lương Gross↔Net, quyết toán thuế và quyền lợi BHXH — offline,
+              minh bạch từng khoản trừ. Ngài Miu chỉ đường; kết quả không thay thế tư vấn pháp lý.
+            </Text>
+          </View>
+        </View>
+      </Section>
 
       <Section title="Vùng LTTV mặc định" subtitle="Áp dụng khi mở công cụ tính lương.">
         <ChipRow equal>
@@ -98,7 +113,7 @@ export default function SettingsScreen() {
           onPress={() => void resetToDefaults()}
         />
         <Button
-          label="Xem lại giới thiệu"
+          label="Xem lại hướng dẫn với Ngài Miu"
           variant="secondary"
           onPress={() => void requestOnboardingReplay()}
         />
@@ -112,6 +127,35 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.regular,
     fontSize: 14,
     color: colors.foreground,
+  },
+  about: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: space[4],
+    backgroundColor: colors.secondarySoft,
+    padding: space[4],
+    borderRadius: radii.lg,
+  },
+  aboutCopy: {
+    flex: 1,
+    gap: space[1],
+  },
+  aboutName: {
+    fontFamily: typography.fontFamily.extraBold,
+    fontSize: 18,
+    color: colors.foreground,
+  },
+  aboutRole: {
+    fontFamily: typography.fontFamily.medium,
+    fontSize: 13,
+    color: colors.primary,
+    marginBottom: space[1],
+  },
+  aboutBody: {
+    fontFamily: typography.fontFamily.regular,
+    fontSize: 14,
+    lineHeight: 21,
+    color: colors.foregroundMuted,
   },
   privacyTitle: {
     fontFamily: typography.fontFamily.bold,
