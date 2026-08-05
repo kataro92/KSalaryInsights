@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[4],
+    paddingTop: space[5],
     gap: space[5],
     maxWidth: layout.maxContentWidth,
     width: '100%',

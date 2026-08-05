@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   tipRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: space[3],
     backgroundColor: colors.primarySoft,
     padding: space[3],
