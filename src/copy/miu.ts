@@ -12,6 +12,10 @@ export const brand = {
 export const miuTips = {
   calculatorResult:
     'Tôi tách từng khoản trừ để bạn thấy rõ — số liệu không bị che.',
+  bonusMonth:
+    'Thưởng/OT chịu thuế trong tháng nhận — BH mặc định vẫn theo lương căn cứ, không cộng thưởng.',
+  overtime:
+    'OT 150/200/300% theo BLLĐ Đ.98 — tôi cộng vào Gross tháng; đêm chưa mô phỏng.',
   benefitsHub:
     'Chọn một mục bên dưới. Mỗi máy tính độc lập — không cộng vào lương Gross↔Net.',
   settlement:

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/src/components/common/Button';
@@ -27,12 +27,21 @@ import type {
   RegionCode,
   SalaryBreakdown,
 } from '@/src/domain/types/salary';
+import {
+  calculateBonusMonth,
+  type BonusMonthResult,
+} from '@/src/engine/bonusMonth';
 import { grossToNet } from '@/src/engine/grossToNet';
 import { netToGross } from '@/src/engine/netToGross';
+import {
+  calcOvertimePay,
+  OT_DAY_LABELS,
+  type OtDayType,
+} from '@/src/engine/overtime';
 import { usePreferences } from '@/src/hooks/usePreferences';
 import { successHaptic } from '@/src/theme/haptics';
-import { parseMoney } from '@/src/theme/money';
-import { colors, layout, space, typography } from '@/src/theme/tokens';
+import { formatVnd, parseMoney } from '@/src/theme/money';
+import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 function asOfFromMonth(taxYear: number, month: number): string {
   const m = String(month).padStart(2, '0');
@@ -43,6 +52,8 @@ function formatAsOfVi(iso: string): string {
   const [y, m, d] = iso.split('-');
   return `${d}/${m}/${y}`;
 }
+
+const OT_TYPES: OtDayType[] = ['weekday', 'weekend', 'holiday'];
 
 export function CalculatorScreen() {
   const router = useRouter();
@@ -61,13 +72,19 @@ export function CalculatorScreen() {
   const [numDependents, setNumDependents] = useState(0);
   const [customBh, setCustomBh] = useState(false);
   const [bhText, setBhText] = useState('30.000.000');
+  const [bonusText, setBonusText] = useState('0');
+  const [otHoursText, setOtHoursText] = useState('0');
+  const [otDayType, setOtDayType] = useState<OtDayType>('weekday');
   const [error, setError] = useState<string | null>(null);
   const [breakdown, setBreakdown] = useState<SalaryBreakdown | null>(null);
+  const [bonusMonth, setBonusMonth] = useState<BonusMonthResult | null>(null);
 
   const asOfDate = useMemo(() => asOfFromMonth(taxYear, month), [taxYear, month]);
+  const seasonalHint = month === 12 || month === 1;
 
   const clearResult = () => {
     setBreakdown(null);
+    setBonusMonth(null);
     setError(null);
   };
 
@@ -77,6 +94,7 @@ export function CalculatorScreen() {
     if (amount == null || amount <= 0) {
       setError('Vui lòng nhập số tiền hợp lệ (> 0).');
       setBreakdown(null);
+      setBonusMonth(null);
       return;
     }
 
@@ -84,22 +102,52 @@ export function CalculatorScreen() {
     if (customBh && (insuranceSalary == null || insuranceSalary < 0)) {
       setError('Mức đóng BH không hợp lệ.');
       setBreakdown(null);
+      setBonusMonth(null);
       return;
     }
 
     try {
       if (mode === 'gross-to-net') {
-        const result = grossToNet({
-          gross: amount,
-          region,
-          taxYear,
-          asOfDate,
-          numDependents,
-          insuranceSalary,
-        });
-        setBreakdown(result);
+        const bonus = parseMoney(bonusText) ?? 0;
+        const otHours = Number(otHoursText.replace(/[^\d.]/g, '') || '0');
+        let otPay = 0;
+        if (otHours > 0) {
+          otPay = calcOvertimePay({
+            monthlySalary: amount,
+            hours: otHours,
+            dayType: otDayType,
+          }).otPay;
+        }
+
+        if (bonus > 0 || otPay > 0) {
+          const monthResult = calculateBonusMonth({
+            baseGross: amount,
+            bonus,
+            otPay,
+            region,
+            taxYear,
+            asOfDate,
+            numDependents,
+            insuranceSalary,
+          });
+          setBonusMonth(monthResult);
+          setBreakdown(monthResult.withExtras);
+        } else {
+          setBonusMonth(null);
+          setBreakdown(
+            grossToNet({
+              gross: amount,
+              region,
+              taxYear,
+              asOfDate,
+              numDependents,
+              insuranceSalary,
+            }),
+          );
+        }
         void successHaptic();
       } else {
+        setBonusMonth(null);
         const result = netToGross({
           net: amount,
           region,
@@ -121,6 +169,7 @@ export function CalculatorScreen() {
       }
     } catch (e) {
       setBreakdown(null);
+      setBonusMonth(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
     }
   };
@@ -162,7 +211,7 @@ export function CalculatorScreen() {
       >
         <PageHero
           title="Tính lương"
-          subtitle="Gross ↔ Net offline · biểu thuế 2025 / 2026"
+          subtitle="Gross ↔ Net offline · thưởng Tết · OT · biểu thuế 2025 / 2026"
         />
 
         <SeasonalBanner />
@@ -182,8 +231,7 @@ export function CalculatorScreen() {
                 selected={mode === id}
                 onPress={() => {
                   setMode(id);
-                  setBreakdown(null);
-                  setError(null);
+                  clearResult();
                 }}
               />
             ))}
@@ -222,6 +270,58 @@ export function CalculatorScreen() {
             ))}
           </ChipRow>
         </Section>
+
+        {mode === 'gross-to-net' ? (
+          <CollapseSection
+            title="Thưởng tháng · OT"
+            defaultOpen={seasonalHint}
+          >
+            <Section
+              title="Thưởng / tháng 13"
+              subtitle={
+                seasonalHint
+                  ? 'Gợi ý mùa Tết (T12–T1) — mô phỏng thuế tháng nhận thưởng.'
+                  : 'Cộng vào Gross tháng này để ước PIT (F009).'
+              }
+            >
+              <MoneyField
+                accessibilityLabel="Nhập thưởng tháng"
+                value={bonusText}
+                onValueChange={(formatted) => {
+                  setBonusText(formatted || '0');
+                  clearResult();
+                }}
+              />
+            </Section>
+
+            <Section title="Làm thêm giờ" subtitle="BLLĐ Đ.98 — 150% / 200% / 300% (F010).">
+              <ChipRow>
+                {OT_TYPES.map((t) => (
+                  <ChoiceChip
+                    key={t}
+                    label={OT_DAY_LABELS[t]}
+                    selected={otDayType === t}
+                    onPress={() => {
+                      setOtDayType(t);
+                      clearResult();
+                    }}
+                  />
+                ))}
+              </ChipRow>
+              <Text style={styles.fieldLabel}>Số giờ OT</Text>
+              <TextInput
+                accessibilityLabel="Số giờ làm thêm"
+                keyboardType="decimal-pad"
+                value={otHoursText}
+                onChangeText={(t) => {
+                  setOtHoursText(t.replace(/[^\d.]/g, ''));
+                  clearResult();
+                }}
+                style={styles.hoursInput}
+              />
+            </Section>
+          </CollapseSection>
+        ) : null}
 
         <CollapseSection title="Tùy chỉnh · vùng, tháng, NPT, BH">
           <Section title="Vùng LTTV">
@@ -295,14 +395,42 @@ export function CalculatorScreen() {
           </ColorBlock>
         </CollapseSection>
 
-      {error ? (
-        <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
-      ) : null}
+        {error ? (
+          <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
+        ) : null}
 
         {breakdown ? (
           <View style={styles.resultBlock}>
-            <ResultHero amount={breakdown.net} />
-            <NgaiMiuTip tip={miuTips.calculatorResult} />
+            <ResultHero
+              amount={breakdown.net}
+              eyebrow={bonusMonth && bonusMonth.extrasTotal > 0 ? 'Net tháng có thưởng/OT' : undefined}
+              label="Net"
+            />
+            {bonusMonth && bonusMonth.extrasTotal > 0 ? (
+              <ColorBlock tone="primarySoft" accessibilityLabel="So sánh tháng thường và tháng thưởng">
+                <Text style={styles.compareTitle}>So với tháng lương thường</Text>
+                <Text style={styles.compareLine}>
+                  Net thường: {formatVnd(bonusMonth.base.net)}
+                </Text>
+                <Text style={styles.compareLine}>
+                  Thưởng + OT: {formatVnd(bonusMonth.extrasTotal)}
+                  {bonusMonth.otPay > 0 ? ` (OT ${formatVnd(bonusMonth.otPay)})` : ''}
+                </Text>
+                <Text style={styles.compareLine}>
+                  Thuế tăng: {formatVnd(bonusMonth.deltaTax)}
+                </Text>
+                <Text style={styles.compareLine}>
+                  Net tăng: {formatVnd(bonusMonth.deltaNet)}
+                </Text>
+              </ColorBlock>
+            ) : null}
+            <NgaiMiuTip
+              tip={
+                bonusMonth && bonusMonth.extrasTotal > 0
+                  ? miuTips.bonusMonth
+                  : miuTips.calculatorResult
+              }
+            />
             <SalaryBreakdownCard breakdown={breakdown} hideNet />
             <DisclaimerFooter legalSources={breakdown.legalSources} collapseSources />
             {mode === 'gross-to-net' ? (
@@ -341,6 +469,24 @@ const styles = StyleSheet.create({
     fontSize: typography.scale.caption.fontSize,
     color: colors.foregroundMuted,
   },
+  fieldLabel: {
+    fontFamily: typography.fontFamily.medium,
+    fontSize: typography.scale.caption.fontSize,
+    color: colors.foregroundMuted,
+    marginTop: space[3],
+    marginBottom: space[1],
+  },
+  hoursInput: {
+    minHeight: layout.minTouch,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    paddingHorizontal: space[3],
+    fontFamily: typography.fontFamily.medium,
+    fontSize: 16,
+    color: colors.foreground,
+    backgroundColor: colors.white,
+  },
   switchRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -359,11 +505,21 @@ const styles = StyleSheet.create({
     fontSize: typography.scale.caption.fontSize,
     color: colors.foregroundMuted,
   },
-  actions: {
-    gap: space[3],
-  },
   resultBlock: {
     gap: space[4],
+  },
+  compareTitle: {
+    fontFamily: typography.fontFamily.bold,
+    fontSize: 16,
+    color: colors.foreground,
+    marginBottom: space[2],
+  },
+  compareLine: {
+    fontFamily: typography.fontFamily.regular,
+    fontSize: 14,
+    lineHeight: 22,
+    color: colors.foreground,
+    fontVariant: ['tabular-nums'],
   },
   compareLink: {
     minHeight: layout.minTouch,
