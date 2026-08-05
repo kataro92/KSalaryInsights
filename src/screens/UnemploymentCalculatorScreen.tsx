@@ -11,16 +11,19 @@ import {
 import { EligibilityChecklist } from '@/src/components/benefits/EligibilityChecklist';
 import { Button } from '@/src/components/common/Button';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
 import { MoneyField } from '@/src/components/common/MoneyField';
 import { ResultHero } from '@/src/components/common/ResultHero';
 import { Section } from '@/src/components/common/Section';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { UnemploymentBreakdown } from '@/src/domain/types/benefits';
 import type { RegionCode } from '@/src/domain/types/salary';
 import { calcUnemploymentBenefit } from '@/src/engine/unemploymentBenefit';
 import { usePreferences } from '@/src/hooks/usePreferences';
+import { successHaptic } from '@/src/theme/haptics';
 import { parseMoney } from '@/src/theme/money';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
@@ -69,6 +72,7 @@ export function UnemploymentCalculatorScreen() {
         shortTermContract: shortTerm,
       });
       setResult(next);
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -185,20 +189,27 @@ export function UnemploymentCalculatorScreen() {
         </Section>
 
         {error ? (
-          <ColorBlock tone="primarySoft">
-            <Text style={styles.error}>{error}</Text>
-          </ColorBlock>
+          <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
         ) : null}
 
         {result ? (
           <>
             {result.eligible ? (
-              <ResultHero
-                eyebrow="Trợ cấp thất nghiệp"
-                label="Tổng hưởng"
-                amount={result.totalBenefit}
+              <>
+                <ResultHero
+                  eyebrow="Trợ cấp thất nghiệp"
+                  label="Tổng hưởng"
+                  amount={result.totalBenefit}
+                />
+                <NgaiMiuTip tip="Trần 5×LTTV theo vùng — checklist điều kiện nằm dưới breakdown." />
+              </>
+            ) : (
+              <EmptyErrorState
+                variant="error"
+                title="Không đủ điều kiện"
+                body={result.ineligibilityReason}
               />
-            ) : null}
+            )}
             <ColorBlock
               tone={result.eligible ? 'secondarySoft' : 'muted'}
               accessibilityLabel="Kết quả trợ cấp thất nghiệp"
@@ -227,6 +238,11 @@ export function UnemploymentCalculatorScreen() {
             <EligibilityChecklist items={result.checklist} />
             <DisclaimerFooter legalSources={result.legalSources} collapseSources />
           </>
+        ) : !error ? (
+          <EmptyErrorState
+            title="Chưa có ước BHTN"
+            body="Nhập tháng đóng và lương bình quân, rồi bấm Tính BHTN."
+          />
         ) : null}
     </ToolScreen>
   );

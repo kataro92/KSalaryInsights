@@ -1,6 +1,6 @@
 # Design Upgrade Plan — AAA Product Ready
 
-**Status**: Slice 1 shipped · Slice 2 (consistency + onboarding + seasonal + mascot poses) in progress  
+**Status**: Slice 1–2 shipped · Slice 3 (motion + a11y + empty states) in progress  
 **Date**: 2026-08-05  
 **Baseline**: Post mobile polish (PR #2) — functional MVP with Flat Design tokens  
 **Goal**: Elevate KVSalaryTools from “competent utility” to **AAA consumer-finance product** without abandoning Flat Design / Constitution principles.
@@ -201,13 +201,13 @@ Do **not** start with dark mode, charts, or social features — they dilute AAA 
 ## 8. Acceptance checklist (AAA gate)
 
 - [ ] Palette + typography recognizable without reading the logo  
-- [ ] All user-facing screens use shared shell/primitives  
-- [ ] Net/result is the emotional peak of each calculator  
-- [ ] Ngài Miu: ≥4 poses shipped; tips never overlay number rows  
-- [ ] Primary journey has 2–3 intentional motions  
-- [ ] WCAG AA matrix documented and green  
+- [x] All user-facing screens use shared shell/primitives  
+- [x] Net/result is the emotional peak of each calculator  
+- [x] Ngài Miu: ≥4 poses shipped; tips never overlay number rows  
+- [x] Primary journey has 2–3 intentional motions  
+- [x] WCAG AA matrix documented and green  
 - [ ] Mobile 390×844 visual QA passed on all tabs + 3 deep screens  
-- [ ] Disclaimer + legal sources remain prominent but non-blocking  
+- [x] Disclaimer + legal sources remain prominent but non-blocking  
 
 ---
 

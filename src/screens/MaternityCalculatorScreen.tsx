@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
 
 import { MaternityBreakdownCard } from '@/src/components/breakdown/MaternityBreakdownCard';
 import { Button } from '@/src/components/common/Button';
-import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { OutOfScopeNote } from '@/src/components/disclaimer/OutOfScopeNote';
@@ -11,10 +11,11 @@ import {
   MaternityInputs,
   type MaternityInputsValue,
 } from '@/src/components/inputs/MaternityInputs';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import type { MaternityBreakdown } from '@/src/domain/types/benefits';
 import { calculateMaternity } from '@/src/engine/maternity';
+import { successHaptic } from '@/src/theme/haptics';
 import { parseMoney } from '@/src/theme/money';
-import { colors, typography } from '@/src/theme/tokens';
 
 export function MaternityCalculatorScreen() {
   const [inputs, setInputs] = useState<MaternityInputsValue>({
@@ -44,6 +45,7 @@ export function MaternityCalculatorScreen() {
         hasMinContribution: inputs.hasMinContribution,
       });
       setResult(next);
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -66,25 +68,26 @@ export function MaternityCalculatorScreen() {
         }}
       />
       {error ? (
-        <ColorBlock tone="primarySoft">
-          <Text style={styles.error}>{error}</Text>
-        </ColorBlock>
+        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
       {result ? (
         <>
-          <MaternityBreakdownCard result={result} />
+          <ResultHero
+            eyebrow="Ước thai sản"
+            label="Tổng"
+            amount={result.total}
+          />
+          <NgaiMiuTip tip="Tách chế độ tháng và trợ cấp một lần bên dưới — không cộng vào Gross↔Net." />
+          <MaternityBreakdownCard result={result} hideTotal />
           <DisclaimerFooter legalSources={result.legalSources} collapseSources />
         </>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có ước thai sản"
+          body="Điền bình quân lương và thông tin sinh, rồi bấm Tính thai sản."
+        />
       ) : null}
       <OutOfScopeNote />
     </ToolScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: colors.danger,
-  },
-});

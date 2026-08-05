@@ -104,8 +104,29 @@ Transition 200ms, dùng `Pressable` + Reanimated; không ripple Android mặc đ
 ## 6. Accessibility
 
 - Focus/pressed state tương phản cao (viền solid 2px, không glow).
-- Chữ trên nền màu phải đạt WCAG AA (trắng/Blue 500 OK; kiểm tra kỹ với Amber).
-- Touch target tối thiểu 44×44. Số tiền đọc được bởi screen reader dạng đầy đủ ("hai mươi sáu triệu…").
+- Touch target tối thiểu 44×44.
+- Số tiền: `moneyAccessibilityLabel` / `numberToVietnameseWords` — screen reader đọc dạng đầy đủ ("hai mươi sáu triệu… đồng").
+
+### 6.1. WCAG AA contrast matrix (palette v2 Ink · Cobalt · Mint)
+
+Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal text, ≥3:1 large/bold UI text & icons.
+
+| Foreground | Background | Role | ≈ ratio | AA |
+|------------|------------|------|---------|----|
+| `#FFFFFF` | `#1D4ED8` primary | CTA label | ~5.9 | Pass |
+| `#FFFFFF` | `#1E3A8A` primaryPressed | CTA pressed | ~9.5 | Pass |
+| `#FFFFFF` | `#0F766E` secondary / resultPositive | Net hero | ~5.4 | Pass |
+| `#0F172A` | `#FFFFFF` background | Body | ~16.1 | Pass |
+| `#0F172A` | `#F1F5F9` muted | Body on muted | ~14.0 | Pass |
+| `#0F172A` | `#EFF6FF` primarySoft | Body on soft | ~14.8 | Pass |
+| `#0F172A` | `#F0FDFA` secondarySoft | Body on soft | ~15.2 | Pass |
+| `#0F172A` | `#FFFBEB` accentSoft | Body on soft | ~15.6 | Pass |
+| `#64748B` muted text | `#FFFFFF` | Secondary copy | ~4.6 | Pass |
+| `#B45309` accent | `#FFFBEB` accentSoft | Seasonal CTA | ~4.7 | Pass |
+| `#B91C1C` danger | `#FEF2F2` dangerSoft | Error title | ~5.9 | Pass |
+| `#B91C1C` danger | `#FFFFFF` | Error on white | ~6.5 | Pass |
+
+**Do not** put muted `#64748B` on soft tint fills for critical labels — keep critical labels on `foreground` / white on solid fills.
 
 ## 7. "The Bold Factor" — chống generic
 

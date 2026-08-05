@@ -6,13 +6,20 @@ import { colors, space, typography } from '@/src/theme/tokens';
 
 type Props = {
   result: SickLeaveBreakdown;
+  hideTotal?: boolean;
 };
 
-export function SickLeaveBreakdownCard({ result }: Props) {
+export function SickLeaveBreakdownCard({ result, hideTotal = false }: Props) {
   return (
     <ColorBlock tone="secondarySoft" accessibilityLabel="Kết quả ốm đau">
-      <Text style={styles.eyebrow}>Ước ốm đau</Text>
-      <Text style={styles.amount}>{result.amount.toLocaleString('vi-VN')} ₫</Text>
+      {!hideTotal ? (
+        <>
+          <Text style={styles.eyebrow}>Ước ốm đau</Text>
+          <Text style={styles.amount}>{result.amount.toLocaleString('vi-VN')} ₫</Text>
+        </>
+      ) : (
+        <Text style={styles.eyebrow}>Chi tiết ốm đau</Text>
+      )}
       <Text style={styles.formula}>{result.formula}</Text>
       <Text style={styles.meta}>
         {result.dailyRate.toLocaleString('vi-VN')} ₫/ngày × {result.daysPaid} ngày

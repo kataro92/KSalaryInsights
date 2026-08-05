@@ -6,6 +6,7 @@ import { Button } from '@/src/components/common/Button';
 import { ChipRow } from '@/src/components/common/ChipRow';
 import { ChoiceChip } from '@/src/components/common/ChoiceChip';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
 import { MoneyField } from '@/src/components/common/MoneyField';
 import { PageHero } from '@/src/components/common/PageHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
@@ -16,6 +17,7 @@ import { TextField } from '@/src/components/common/TextField';
 import { AnnualBreakdownCard } from '@/src/components/breakdown/AnnualBreakdownCard';
 import { SettlementDisclaimer } from '@/src/components/disclaimer/SettlementDisclaimer';
 import { DependentCountInput } from '@/src/components/inputs/DependentCountInput';
+import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
 import { DualScenarioCard } from '@/src/components/settlement/DualScenarioCard';
 import { SettlementResultCard } from '@/src/components/settlement/SettlementResultCard';
 import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
@@ -23,8 +25,9 @@ import type { AnnualSettlementResult } from '@/src/domain/types/settlement';
 import type { RegionCode } from '@/src/domain/types/salary';
 import { calculateAnnualSettlement } from '@/src/engine/annualSettlement';
 import { usePreferences } from '@/src/hooks/usePreferences';
-import { colors, layout, space, typography } from '@/src/theme/tokens';
+import { successHaptic } from '@/src/theme/haptics';
 import { parseMoney } from '@/src/theme/money';
+import { colors, layout, space, typography } from '@/src/theme/tokens';
 
 export function SettlementScreen() {
   const router = useRouter();
@@ -79,6 +82,7 @@ export function SettlementScreen() {
           : undefined,
       });
       setResult(next);
+      void successHaptic();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : 'Không tính được.');
@@ -217,9 +221,7 @@ export function SettlementScreen() {
       </ColorBlock>
 
       {error ? (
-        <ColorBlock tone="primarySoft">
-          <Text style={styles.error}>{error}</Text>
-        </ColorBlock>
+        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
 
       {result ? (
@@ -232,11 +234,20 @@ export function SettlementScreen() {
                 delta={result.primary.breakdown.delta}
                 withheldMissingWarning={result.primary.breakdown.withheldMissingWarning}
               />
+              <NgaiMiuTip
+                pose="docs"
+                tip="Đối chiếu với bảng lương / chứng từ khấu trừ trước khi nộp — đây chỉ là ước tính."
+              />
               <AnnualBreakdownCard breakdown={result.primary.breakdown} />
             </>
           )}
           <SettlementDisclaimer legalSources={result.primary.breakdown.legalSources} />
         </>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có ước quyết toán"
+          body="Điền lương tháng, số tháng và thuế đã khấu trừ, rồi bấm Ước quyết toán."
+        />
       ) : null}
       </ScreenShell>
 
@@ -283,10 +294,5 @@ const styles = StyleSheet.create({
   casualFields: {
     marginTop: space[4],
     gap: space[3],
-  },
-  error: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: colors.foreground,
   },
 });
