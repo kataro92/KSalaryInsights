@@ -9,7 +9,7 @@
 ## Locked decisions
 
 - MVP cố định cặp **2025 vs 2026**; V1 mới mở chọn cặp ruleset.
-- Có — mỗi ruleset dùng LTTV/trần của năm đó; nếu mức BH dưới cả hai trần thì BH giống nhau.
+- Có. mỗi ruleset dùng LTTV/trần của năm đó; nếu mức BH dưới cả hai trần thì BH giống nhau.
 
 ## User Scenarios & Testing *(mandatory)*
 

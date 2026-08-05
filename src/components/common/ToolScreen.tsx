@@ -1,16 +1,18 @@
-import type { ReactNode, Ref } from 'react';
-import { StyleSheet, Text, View, type ScrollView } from 'react-native';
+import type { ReactNode, Ref } from "react";
+import { Text, View, type ScrollView } from "react-native";
 
-import { PageHero } from '@/src/components/common/PageHero';
-import { ScreenShell } from '@/src/components/common/ScreenShell';
-import { StickyActionBar } from '@/src/components/common/StickyActionBar';
-import { colors, layout, space, typography } from '@/src/theme/tokens';
+import { PageHero } from "@/src/components/common/PageHero";
+import { ScreenShell } from "@/src/components/common/ScreenShell";
+import { StickyActionBar } from "@/src/components/common/StickyActionBar";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { layout, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles } from "@/src/theme/useThemedStyles";
 
 type Props = {
   title: string;
   subtitle?: string;
   showBrand?: boolean;
-  /** Stack screens already have a header — skip PageHero to avoid duplicate titles. */
+  /** Stack screens already have a header. Skip PageHero to avoid duplicate titles. */
   nested?: boolean;
   accessibilityLabel?: string;
   decorated?: boolean;
@@ -23,7 +25,7 @@ type Props = {
 };
 
 /**
- * Standard calculator chrome — PageHero + ScreenShell + optional StickyActionBar.
+ * Standard calculator chrome. PageHero + ScreenShell + optional StickyActionBar.
  */
 export function ToolScreen({
   title,
@@ -37,6 +39,7 @@ export function ToolScreen({
   aboveTabBar = false,
   scrollRef,
 }: Props) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.root}>
       <ScreenShell
@@ -61,16 +64,18 @@ export function ToolScreen({
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.background },
-  scrollWithSticky: {
-    paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
-  },
-  nestedSubtitle: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: typography.scale.body.fontSize,
-    lineHeight: typography.scale.body.lineHeight,
-    color: colors.foregroundMuted,
-    marginBottom: space[1],
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    root: { flex: 1, backgroundColor: colors.background },
+    scrollWithSticky: {
+      paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
+    },
+    nestedSubtitle: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: typography.scale.body.fontSize,
+      lineHeight: typography.scale.body.lineHeight,
+      color: colors.foregroundMuted,
+      marginBottom: space[1],
+    },
+  } as const;
+}

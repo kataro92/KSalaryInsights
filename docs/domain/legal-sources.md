@@ -1,9 +1,9 @@
 # Sổ đăng ký văn bản pháp lý (Legal Sources Registry)
 
-**Cập nhật**: 2026-08-05  
+**Cập nhật**: 2026-08-05 
 **Quy tắc** (Constitution I): tham số chỉ **ship** khi văn bản nguồn đạt **Tầng 1 (văn bản gốc)**. Tầng 2 chỉ đủ cho draft.
 
-Ký hiệu: ✅ Tầng 1 — đã có toàn văn/trích nguyên văn từ nguồn chính thức · ⚠ Tầng 2 — mới xác minh qua nguồn thứ cấp · ❌ Chưa có dữ liệu
+Ký hiệu: ✅ Tầng 1: đã có toàn văn/trích nguyên văn từ nguồn chính thức · ⚠ Tầng 2: mới xác minh qua nguồn thứ cấp · ❌ Chưa có dữ liệu
 
 ## 1. Trạng thái từng văn bản
 
@@ -14,7 +14,7 @@ Ký hiệu: ✅ Tầng 1 — đã có toàn văn/trích nguyên văn từ nguồ
 | **Luật TNCN 2007 (VBHN 15/VBHN-VPQH)** | Đ.7, 21, 22 | Biểu 7 bậc (ruleset 2025) | ✅ | VBHN 15|
 | **NQ 954/2020/UBTVQH14** | Đ.1 | GTGC 11tr / 4,4tr (ruleset 2025) | ✅ | `NQ 954-2020-UBTVQH14.pdf`|
 | **CV 1296/CT-NVT** | Phần A | Quyết toán 2025 dùng 11/4,4 + 7 bậc | ✅ | `CV 1296-CT-NVT.pdf` (04/03/2026)|
-| **Luật BHXH 41/2024/QH15** | Đ.5 k6, 7, 31, 33, 43, 45, 53, 58, 59, 64, 66, 70, 72, 141 | Tỷ lệ 8%; trần 20×; ốm đau; thai sản; hưu; BHXH 1 lần | ✅ | 41/2024/QH15 — tháng lẻ = Đ.5 k6 |
+| **Luật BHXH 41/2024/QH15** | Đ.5 k6, 7, 31, 33, 43, 45, 53, 58, 59, 64, 66, 70, 72, 141 | Tỷ lệ 8%; trần 20×; ốm đau; thai sản; hưu; BHXH 1 lần | ✅ | 41/2024/QH15: tháng lẻ = Đ.5 k6 |
 | **Luật Việc làm 74/2025/QH15** | Đ.34, 35, 38, 39, 54, 55 | BHTN 60%/5×LTTV/3–12 tháng; chờ 10 ngày LV | ✅ | `74qh15.signed.pdf`|
 | **Bộ luật Lao động 45/2019/QH14** | Đ.34, 36, 46, 47, 98, **139** | Thôi việc, mất việc, OT; nghỉ sinh 6 tháng (+1/con từ con thứ 2) | ✅ | Toàn văn VCCI; Đ.139 được Luật BHXH Đ.53 dẫn chiếu |
 | **NĐ 293/2025/NĐ-CP** | Đ.3, Đ.5 + Phụ lục | LTTV 2026 | ✅ | `293-cp.signed.pdf`|

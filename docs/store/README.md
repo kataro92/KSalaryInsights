@@ -1,4 +1,4 @@
-# Store listing kit — KVSalaryTools
+# Store listing kit. KVSalaryTools
 
 ## Brand (ADR 0007)
 
@@ -6,7 +6,7 @@
 |-------|--------|
 | Name | KVSalaryTools |
 | Subtitle / short | Ước tính lương · thuế · BHXH offline |
-| Assistant | Ngài Miu — hướng dẫn breakdown & disclaimer |
+| Assistant | Ngài Miu. hướng dẫn breakdown & disclaimer |
 | Author | Phạm Huy Đức · kataro92@gmail.com |
 
 ## Screenshot set (phone 390×844)
@@ -27,27 +27,30 @@ Save files under [`captures/`](./captures/) using the names below.
 ### Capture procedure (local)
 
 ```bash
-npx expo start
-# Open on device/simulator at ~390×844
-# Walk through the 6 screens above; export PNGs into docs/store/captures/
+# Prefer production Metro so Expo overlays are quieter
+npx expo start --ios --no-dev --minify
+
+# Or batch-capture + scrub Expo FAB:
+bash scripts/capture-screenshots.sh
+# Then copy key frames into docs/store/captures/ (see root README)
 ```
 
-Also walk Design QA: [`../product/design-qa-checklist.md`](../product/design-qa-checklist.md).
+Full feature gallery: [`../screenshots/`](../screenshots/). Also walk Design QA: [`./product/design-qa-checklist.md`](./product/design-qa-checklist.md).
 
 ## Copy snippets
 
 Full bilingual listing: [`listing-copy.md`](./listing-copy.md).
 
-**Short description (vi)**  
-Ước tính Gross↔Net, quyết toán thuế và quyền lợi BHXH — offline trên thiết bị.
+**Short description (vi)** 
+Ước tính Gross↔Net, quyết toán thuế và quyền lợi BHXH. offline trên thiết bị.
 
-**Full description opening (vi)**  
-KVSalaryTools giúp bạn xem rõ từng khoản trừ lương và thuế theo ruleset năm. Ngài Miu hướng dẫn từng bước; tính toán lưu cục bộ — không yêu cầu CCCD / MST.
+**Full description opening (vi)** 
+KVSalaryTools giúp bạn xem rõ từng khoản trừ lương và thuế theo ruleset năm. Ngài Miu hướng dẫn từng bước; tính toán lưu cục bộ. không yêu cầu CCCD / MST.
 
 ## Assets
 
 - App icon / splash: `assets/images/` · Mascot: `assets/mascot/`
-- Design QA: [`../product/design-qa-checklist.md`](../product/design-qa-checklist.md)
+- Design QA: [`./product/design-qa-checklist.md`](./product/design-qa-checklist.md)
 - Automated token/shadow check: `npm run qa:design`
 
 ## Status
@@ -56,5 +59,5 @@ KVSalaryTools giúp bạn xem rõ từng khoản trừ lương và thuế theo r
 |------|--------|
 | Listing copy (vi/en) | Ready |
 | Capture naming + folder | Ready |
-| PNG captures (6) | Pending device/session capture |
+| PNG captures (6) | Captured (see `captures/` + `../screenshots/`) |
 | Design QA human sign-off | Pending visual review |

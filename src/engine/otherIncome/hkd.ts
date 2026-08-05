@@ -1,17 +1,17 @@
-import { roundVnd } from '@/src/domain/constants/salary';
-import type { HkdBreakdown, HkdInput } from '@/src/domain/types/otherIncome';
-import { getRuleset } from '@/src/engine/rulesetLoader';
+import { roundVnd } from "@/src/domain/constants/salary";
+import type { HkdBreakdown, HkdInput } from "@/src/domain/types/otherIncome";
+import { getRuleset } from "@/src/engine/rulesetLoader";
 
 /**
- * Hộ kinh doanh — GTGT trên toàn bộ DT khi vượt ngưỡng; TNCN trên phần vượt.
+ * Hộ kinh doanh. GTGT trên toàn bộ DT khi vượt ngưỡng; TNCN trên phần vượt.
  */
 export function calculateHkd(input: HkdInput): HkdBreakdown {
-  if (input.annualRevenue < 0) throw new Error('Doanh thu không hợp lệ');
+  if (input.annualRevenue < 0) throw new Error("Doanh thu không hợp lệ");
 
   const asOf = input.asOfDate ?? `${input.taxYear}-06-15`;
   const ruleset = getRuleset(input.taxYear, asOf);
   const params = ruleset.other_income?.hkd;
-  if (!params) throw new Error('Ruleset thiếu other_income.hkd');
+  if (!params) throw new Error("Thiếu tham số other_income.hkd");
 
   const industry = params.industry_rates.find((r) => r.id === input.industryId);
   if (!industry) {
@@ -28,21 +28,29 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
 
   if (exempt) {
     explanations.push(
-      `Doanh thu ${input.annualRevenue.toLocaleString('vi-VN')} ≤ ngưỡng ${threshold.toLocaleString('vi-VN')} — thuế tỷ lệ = 0; vẫn kê khai doanh thu.`,
+      `Doanh thu ${input.annualRevenue.toLocaleString(
+        "vi-VN"
+      )} ≤ ngưỡng ${threshold.toLocaleString(
+        "vi-VN"
+      )}. Thuế tỷ lệ = 0; vẫn kê khai doanh thu.`
     );
   } else {
     vat = roundVnd(industry.vat_rate * input.annualRevenue);
     const excess = input.annualRevenue - threshold;
     pit = roundVnd(industry.pit_rate * excess);
     explanations.push(
-      `Nhóm «${industry.label}»: GTGT ${industry.vat_rate * 100}% × toàn bộ = ${vat.toLocaleString('vi-VN')}.`,
+      `Nhóm «${industry.label}»: GTGT ${
+        industry.vat_rate * 100
+      }% × toàn bộ = ${vat.toLocaleString("vi-VN")}.`
     );
     explanations.push(
-      `TNCN ${industry.pit_rate * 100}% × phần vượt (${excess.toLocaleString('vi-VN')}) = ${pit.toLocaleString('vi-VN')}.`,
+      `TNCN ${industry.pit_rate * 100}% × phần vượt (${excess.toLocaleString(
+        "vi-VN"
+      )}) = ${pit.toLocaleString("vi-VN")}.`
     );
   }
 
-  let incomeMethodHint: HkdBreakdown['incomeMethodHint'];
+  let incomeMethodHint: HkdBreakdown["incomeMethodHint"];
   if (
     !exempt &&
     input.costs != null &&
@@ -55,19 +63,27 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
       taxableIncome,
       rate: params.income_method_rate,
       estimatedTax,
-      note: `Gợi ý so sánh phương pháp thu nhập: (DT − CP) × ${params.income_method_rate * 100}% = ${estimatedTax.toLocaleString('vi-VN')} (không thay thế tờ khai).`,
+      note: `Gợi ý so sánh phương pháp thu nhập: (DT − CP) × ${
+        params.income_method_rate * 100
+      }% = ${estimatedTax.toLocaleString("vi-VN")} (không thay thế tờ khai).`,
     };
     explanations.push(incomeMethodHint.note);
   } else if (!exempt && input.annualRevenue >= params.income_method_threshold) {
     explanations.push(
-      `Doanh thu ≥ ${params.income_method_threshold.toLocaleString('vi-VN')} — cân nhắc so sánh với phương pháp (DT−CP)×${params.income_method_rate * 100}%.`,
+      `Doanh thu ≥ ${params.income_method_threshold.toLocaleString(
+        "vi-VN"
+      )}. Cân nhắc so sánh với phương pháp (DT−CP)×${
+        params.income_method_rate * 100
+      }%.`
     );
   }
 
   const totalTax = vat + pit;
   const formula = exempt
-    ? 'Thuế = 0 (≤ ngưỡng)'
-    : `GTGT ${vat.toLocaleString('vi-VN')} + TNCN ${pit.toLocaleString('vi-VN')} = ${totalTax.toLocaleString('vi-VN')}`;
+    ? "Thuế = 0 (≤ ngưỡng)"
+    : `GTGT ${vat.toLocaleString("vi-VN")} + TNCN ${pit.toLocaleString(
+        "vi-VN"
+      )} = ${totalTax.toLocaleString("vi-VN")}`;
 
   return {
     annualRevenue: input.annualRevenue,
@@ -85,8 +101,8 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
     rulesetId: ruleset.id,
     legalSources: [
       ...ruleset.legal_sources,
-      'NĐ 68/2026 — biểu tỷ lệ ngành HKD',
-      'Luật 109/2025 Đ.7 — ngưỡng HKD',
+      "NĐ 68/2026: biểu tỷ lệ ngành HKD",
+      "Luật 109/2025 Đ.7: ngưỡng HKD",
     ],
   };
 }

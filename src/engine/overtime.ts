@@ -1,9 +1,9 @@
 /**
- * OT pay — BLLĐ 2019 Đ.98 + NĐ 145/2020 Đ.55–57 (ban ngày & ban đêm).
+ * OT pay. BLLĐ 2019 Đ.98 + NĐ 145/2020 Đ.55–57 (ban ngày & ban đêm).
  * @see docs/domain/quyen-loi-lao-dong.md §1
  */
 
-export type OtDayType = 'weekday' | 'weekend' | 'holiday';
+export type OtDayType = "weekday" | "weekend" | "holiday";
 
 export const OT_MULTIPLIERS: Record<OtDayType, number> = {
   weekday: 1.5,
@@ -12,15 +12,15 @@ export const OT_MULTIPLIERS: Record<OtDayType, number> = {
 };
 
 export const OT_DAY_LABELS: Record<OtDayType, string> = {
-  weekday: 'Ngày thường (150%)',
-  weekend: 'Cuối tuần (200%)',
-  holiday: 'Lễ / Tết (300%)',
+  weekday: "Ngày thường (150%)",
+  weekend: "Cuối tuần (200%)",
+  holiday: "Lễ / Tết (300%)",
 };
 
-/** Đ.98 k.2 — phụ cấp làm đêm tối thiểu. */
+/** Đ.98 k.2: phụ cấp làm đêm tối thiểu. */
 export const NIGHT_WORK_PREMIUM = 0.3;
 
-/** Đ.98 k.3 — phụ cấp thêm khi OT vào ban đêm. */
+/** Đ.98 k.3: phụ cấp thêm khi OT vào ban đêm. */
 export const NIGHT_OT_EXTRA = 0.2;
 
 /**
@@ -34,7 +34,7 @@ export const NIGHT_OT_EXTRA = 0.2;
  */
 export function nightOtMultiplier(dayType: OtDayType): number {
   const dayOt = OT_MULTIPLIERS[dayType];
-  const daytimeUnitForExtra = dayType === 'weekday' ? 1 : dayOt;
+  const daytimeUnitForExtra = dayType === "weekday" ? 1 : dayOt;
   return dayOt + NIGHT_WORK_PREMIUM + NIGHT_OT_EXTRA * daytimeUnitForExtra;
 }
 
@@ -43,7 +43,7 @@ export type OvertimeInput = {
   monthlySalary: number;
   hours: number;
   dayType: OtDayType;
-  /** OT trong khung 22h–6h (Đ.106) — áp Đ.98 k.2 + k.3. */
+  /** OT trong khung 22h–6h (Đ.106). Áp Đ.98 k.2 + k.3. */
   isNight?: boolean;
   /** Mặc định 26 ngày công × 8 giờ. */
   workDaysPerMonth?: number;
@@ -72,37 +72,45 @@ export function calcOvertimePay(input: OvertimeInput): OvertimeBreakdown {
   } = input;
 
   if (!Number.isFinite(monthlySalary) || monthlySalary <= 0) {
-    throw new Error('Lương tháng căn cứ OT phải > 0');
+    throw new Error("Lương tháng căn cứ OT phải > 0");
   }
   if (!Number.isFinite(hours) || hours < 0) {
-    throw new Error('Số giờ OT không hợp lệ');
+    throw new Error("Số giờ OT không hợp lệ");
   }
   if (workDaysPerMonth <= 0 || hoursPerDay <= 0) {
-    throw new Error('Ngày công / giờ ngày không hợp lệ');
+    throw new Error("Ngày công / giờ ngày không hợp lệ");
   }
 
   const divisor = workDaysPerMonth * hoursPerDay;
   const hourlyRate = monthlySalary / divisor;
-  const multiplier = isNight ? nightOtMultiplier(dayType) : OT_MULTIPLIERS[dayType];
+  const multiplier = isNight
+    ? nightOtMultiplier(dayType)
+    : OT_MULTIPLIERS[dayType];
   const otPay = Math.round(hourlyRate * hours * multiplier);
 
   const pct = Math.round(multiplier * 100);
   const explanations = [
-    `Đơn giá giờ ≈ ${Math.round(hourlyRate).toLocaleString('vi-VN')} ₫ (${workDaysPerMonth}×${hoursPerDay}h).`,
+    `Đơn giá giờ ≈ ${Math.round(hourlyRate).toLocaleString(
+      "vi-VN"
+    )} ₫ (${workDaysPerMonth}×${hoursPerDay}h).`,
   ];
 
   if (isNight) {
     const dayOt = OT_MULTIPLIERS[dayType];
-    const daytimeUnitForExtra = dayType === 'weekday' ? 1 : dayOt;
+    const daytimeUnitForExtra = dayType === "weekday" ? 1 : dayOt;
     explanations.push(
-      `OT ban đêm ${OT_DAY_LABELS[dayType]} → ${pct}% = ${dayOt * 100}% (OT ngày) + ${NIGHT_WORK_PREMIUM * 100}% (đêm) + ${NIGHT_OT_EXTRA * 100}%×${daytimeUnitForExtra * 100}% (Đ.98 k.2–3 / NĐ 145 Đ.57).`,
+      `OT ban đêm ${OT_DAY_LABELS[dayType]} → ${pct}% = ${
+        dayOt * 100
+      }% (OT ngày) + ${NIGHT_WORK_PREMIUM * 100}% (đêm) + ${
+        NIGHT_OT_EXTRA * 100
+      }%×${daytimeUnitForExtra * 100}% (Đ.98 k.2–3 / NĐ 145 Đ.57).`
     );
   } else {
-    explanations.push(`Hệ số ${OT_DAY_LABELS[dayType]} — BLLĐ 2019 Đ.98.`);
+    explanations.push(`Hệ số ${OT_DAY_LABELS[dayType]}. BLLĐ 2019 Đ.98.`);
   }
 
   explanations.push(
-    'OT cộng vào Gross tháng để ước PIT; mức đóng BH mặc định giữ theo lương căn cứ (không cộng OT).',
+    "OT cộng vào Gross tháng để ước PIT; mức đóng BH mặc định giữ theo lương căn cứ (không cộng OT)."
   );
 
   return {
@@ -112,7 +120,9 @@ export function calcOvertimePay(input: OvertimeInput): OvertimeBreakdown {
     dayType,
     isNight,
     otPay,
-    formula: `${monthlySalary.toLocaleString('vi-VN')} ÷ ${divisor} × ${hours} × ${multiplier}`,
+    formula: `${monthlySalary.toLocaleString(
+      "vi-VN"
+    )} ÷ ${divisor} × ${hours} × ${multiplier}`,
     explanations,
   };
 }

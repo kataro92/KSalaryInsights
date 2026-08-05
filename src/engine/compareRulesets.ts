@@ -1,7 +1,7 @@
-import type { RegionCode } from '@/src/domain/types/salary';
-import type { ComparisonOutcome } from '@/src/domain/types/comparison';
-import { grossToNet } from '@/src/engine/grossToNet';
-import { getRuleset } from '@/src/engine/rulesetLoader';
+import type { RegionCode } from "@/src/domain/types/salary";
+import type { ComparisonOutcome } from "@/src/domain/types/comparison";
+import { grossToNet } from "@/src/engine/grossToNet";
+import { getRuleset } from "@/src/engine/rulesetLoader";
 
 export type CompareRulesetsInput = {
   gross: number;
@@ -15,13 +15,15 @@ export type CompareRulesetsInput = {
 };
 
 function asOf(taxYear: number, month: number): string {
-  return `${taxYear}-${String(month).padStart(2, '0')}-15`;
+  return `${taxYear}-${String(month).padStart(2, "0")}-15`;
 }
 
 /**
  * Orchestrates two grossToNet calls (2025 vs 2026 by default). No new tax formulas.
  */
-export function compareRulesets(input: CompareRulesetsInput): ComparisonOutcome {
+export function compareRulesets(
+  input: CompareRulesetsInput
+): ComparisonOutcome {
   const {
     gross,
     region,
@@ -35,8 +37,8 @@ export function compareRulesets(input: CompareRulesetsInput): ComparisonOutcome 
   if (!Number.isFinite(gross) || gross <= 0) {
     return {
       ok: false,
-      code: 'invalid_input',
-      message: 'Gross phải là số dương để so sánh.',
+      code: "invalid_input",
+      message: "Gross phải là số dương để so sánh.",
     };
   }
 
@@ -46,8 +48,8 @@ export function compareRulesets(input: CompareRulesetsInput): ComparisonOutcome 
   } catch {
     return {
       ok: false,
-      code: 'missing_ruleset',
-      message: `Không so sánh được: thiếu ruleset bundle cho năm ${year1} hoặc ${year2}.`,
+      code: "missing_ruleset",
+      message: `Không so sánh được: thiếu mức tính cho năm ${year1} hoặc ${year2}.`,
     };
   }
 
@@ -85,11 +87,11 @@ export function compareRulesets(input: CompareRulesetsInput): ComparisonOutcome 
   } catch (e) {
     return {
       ok: false,
-      code: 'missing_ruleset',
+      code: "missing_ruleset",
       message:
         e instanceof Error
           ? e.message
-          : 'Không so sánh được vì lỗi ruleset hoặc tham số.',
+          : "Không so sánh được vì lỗi mức tính hoặc tham số.",
     };
   }
 }

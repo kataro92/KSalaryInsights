@@ -1,43 +1,43 @@
-import type { CasualIncomeInput } from '@/src/domain/types/settlement';
+import type { CasualIncomeInput } from "@/src/domain/types/settlement";
 
 export const CASUAL_EXEMPTION_MONTHLY_AVG = 15_000_000;
 
 export type CasualExemptionResult =
-  | { status: 'none' }
-  | { status: 'mandatory_merge'; monthlyAverage: number }
+  | { status: "none" }
+  | { status: "mandatory_merge"; monthlyAverage: number }
   | {
-      status: 'exempt';
+      status: "exempt";
       monthlyAverage: number;
       reason: string;
     };
 
 /**
- * NĐ 253/2026 Đ.69.1.a — miễn QT phần vãng lai khi tax_year ≥ 2026,
+ * NĐ 253/2026 Đ.69.1.a. Miễn QT phần vãng lai khi tax_year ≥ 2026,
  * bình quân ≤ 15tr/tháng và đã khấu trừ tại nguồn (> 0).
  */
 export function evaluateCasualExemption(
   taxYear: number,
-  casual: CasualIncomeInput | undefined,
+  casual: CasualIncomeInput | undefined
 ): CasualExemptionResult {
   if (!casual || !Number.isFinite(casual.gross) || casual.gross <= 0) {
-    return { status: 'none' };
+    return { status: "none" };
   }
 
   const monthlyAverage = casual.gross / 12;
 
   if (taxYear < 2026) {
-    return { status: 'mandatory_merge', monthlyAverage };
+    return { status: "mandatory_merge", monthlyAverage };
   }
 
   const withheldOk = Number.isFinite(casual.withheld) && casual.withheld > 0;
   if (monthlyAverage <= CASUAL_EXEMPTION_MONTHLY_AVG && withheldOk) {
     return {
-      status: 'exempt',
+      status: "exempt",
       monthlyAverage,
       reason:
-        'Vãng lai bình quân ≤ 15.000.000 đ/tháng và đã khấu trừ tại nguồn — không bắt buộc quyết toán phần này (NĐ 253/2026).',
+        "Vãng lai bình quân ≤ 15.000.000 đ/tháng và đã khấu trừ tại nguồn. Không bắt buộc quyết toán phần này (NĐ 253/2026).",
     };
   }
 
-  return { status: 'mandatory_merge', monthlyAverage };
+  return { status: "mandatory_merge", monthlyAverage };
 }

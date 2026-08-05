@@ -1,31 +1,31 @@
 /**
- * F019 — fetch remote ruleset manifest, verify checksum, cache + apply overlays.
+ * F019: fetch remote ruleset manifest, verify checksum, cache + apply overlays.
  * @see docs/decisions/0008-remote-ruleset-update.md
  */
 
-import { getRulesetManifestUrl } from '@/src/config/rulesetUpdate';
-import type { InflationAdjustmentTable } from '@/src/domain/types/retirement';
-import type { Ruleset } from '@/src/domain/types/salary';
+import { getRulesetManifestUrl } from "@/src/config/rulesetUpdate";
+import type { InflationAdjustmentTable } from "@/src/domain/types/retirement";
+import type { Ruleset } from "@/src/domain/types/salary";
 import {
   clearRulesetOverlays,
   listBundledRulesets,
   setInflationOverlays,
   setRulesetOverlays,
-} from '@/src/engine/rulesetLoader';
+} from "@/src/engine/rulesetLoader";
 import {
   compareSemver,
   parseRulesetManifest,
   validateInflationTable,
   validateRuleset,
   type RulesetManifest,
-} from '@/src/engine/rulesetValidate';
-import { verifySha256 } from '@/src/engine/sha256';
+} from "@/src/engine/rulesetValidate";
+import { verifySha256 } from "@/src/engine/sha256";
 import {
   emptyRemoteRulesetCache,
   loadRemoteRulesetCache,
   saveRemoteRulesetCache,
   type RemoteRulesetCache,
-} from '@/src/store/remoteRulesets';
+} from "@/src/store/remoteRulesets";
 
 export type RulesetUpdateResult = {
   ok: boolean;
@@ -39,8 +39,8 @@ type FetchLike = typeof fetch;
 
 async function fetchText(url: string, fetchImpl: FetchLike): Promise<string> {
   const res = await fetchImpl(url, {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
+    method: "GET",
+    headers: { Accept: "application/json" },
   });
   if (!res.ok) {
     throw new Error(`HTTP ${res.status} khi tải ${url}`);
@@ -73,7 +73,7 @@ export async function clearRemoteRulesetsAndOverlays(): Promise<RemoteRulesetCac
 
 /**
  * Check remote manifest and install newer / new rulesets.
- * Never uploads salary data — GET only.
+ * Never uploads salary data. GET only.
  */
 export async function checkAndApplyRulesetUpdates(options?: {
   fetchImpl?: FetchLike;
@@ -90,7 +90,7 @@ export async function checkAndApplyRulesetUpdates(options?: {
     const manifestText = await fetchText(manifestUrl, fetchImpl);
     const manifest = parseRulesetManifest(JSON.parse(manifestText));
     if (!manifest) {
-      throw new Error('Manifest không hợp lệ');
+      throw new Error("Manifest không hợp lệ");
     }
 
     const nextRulesets = new Map<string, Ruleset>();
@@ -105,18 +105,18 @@ export async function checkAndApplyRulesetUpdates(options?: {
       const body = await fetchText(entry.url, fetchImpl);
       const okHash = await verifySha256(body, entry.sha256);
       if (!okHash) {
-        throw new Error(`Checksum sai cho ruleset ${entry.id}`);
+        throw new Error(`Checksum sai cho bộ tham số ${entry.id}`);
       }
       const parsed = validateRuleset(JSON.parse(body));
       if (!parsed) {
-        throw new Error(`Ruleset ${entry.id} không đúng cấu trúc`);
+        throw new Error(`Bộ tham số ${entry.id} không đúng cấu trúc`);
       }
       if (parsed.id !== entry.id) {
         throw new Error(`Manifest id ${entry.id} ≠ file id ${parsed.id}`);
       }
       if (parsed.version !== entry.version) {
         throw new Error(
-          `Manifest version ${entry.version} ≠ file version ${parsed.version}`,
+          `Manifest version ${entry.version} ≠ file version ${parsed.version}`
         );
       }
       // Only cache if newer than bundle (or brand-new id).
@@ -142,7 +142,9 @@ export async function checkAndApplyRulesetUpdates(options?: {
         throw new Error(`Bảng trượt giá ${entry.year} không hợp lệ`);
       }
       if (parsed.table_year !== entry.year) {
-        throw new Error(`Manifest year ${entry.year} ≠ table_year ${parsed.table_year}`);
+        throw new Error(
+          `Manifest year ${entry.year} ≠ table_year ${parsed.table_year}`
+        );
       }
       nextInflation.set(parsed.table_year, parsed);
       appliedIds.push(`inflation-${parsed.table_year}`);
@@ -164,12 +166,15 @@ export async function checkAndApplyRulesetUpdates(options?: {
 
     const message =
       appliedIds.length > 0
-        ? `Đã cập nhật ${appliedIds.length} mục ruleset.`
-        : 'Ruleset đã ở phiên bản mới nhất (bundle + cache).';
+        ? `Đã cập nhật ${appliedIds.length} bộ tham số.`
+        : "Mức thuế · BH đã ở phiên bản mới nhất.";
 
     return { ok: true, cache, appliedIds, message };
   } catch (e) {
-    const message = e instanceof Error ? e.message : 'Không kiểm tra được ruleset';
+    const message =
+      e instanceof Error
+        ? e.message
+        : "Không kiểm tra được cập nhật mức thuế · BH";
     const cache: RemoteRulesetCache = {
       ...prev,
       lastError: message,

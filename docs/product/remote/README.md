@@ -1,6 +1,6 @@
 # Remote ruleset distribution (F019)
 
-**ADR**: [0008-remote-ruleset-update.md](../../decisions/0008-remote-ruleset-update.md)
+**ADR**: [0008-remote-ruleset-update.md](././decisions/0008-remote-ruleset-update.md)
 
 ## Files
 
@@ -28,4 +28,4 @@ node -e "const fs=require('fs');const c=require('crypto');const b=fs.readFileSyn
 
 ## Empty manifest
 
-`rulesets: []` is valid — check reports “đã ở phiên bản mới nhất” and keeps the bundle.
+`rulesets: []` is valid. check reports “đã ở phiên bản mới nhất” and keeps the bundle.

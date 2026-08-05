@@ -32,8 +32,8 @@ Lan nhập thu nhập năm và thuế đã khấu trừ, xem chênh lệch.
 
 ### User Story 2 - Thêm nguồn vãng lai (Priority: P2)
 
-1. **Given** lương 30tr × 12 + vãng lai 240tr (bình quân 20tr/tháng > 15tr, đã trừ 24tr — TC-QT-2026-01), **When** quyết toán 2026, **Then** bắt buộc gộp, thuế năm = 33.240.000, "ước nộp thêm 1.620.000".
-2. **Given** lương 20tr × 12 + vãng lai 60tr (bình quân 5tr/tháng ≤ 15tr, đã trừ 10% — TC-QT-2026-02), **When** quyết toán 2026, **Then** hệ thống báo phần vãng lai **được miễn** và trình bày **cả hai phương án**: không gộp (chênh 0) vs gộp tự nguyện (ước hoàn 3.000.000) — nêu rõ gộp có lợi.
+1. **Given** lương 30tr × 12 + vãng lai 240tr (bình quân 20tr/tháng > 15tr, đã trừ 24tr. TC-QT-2026-01), **When** quyết toán 2026, **Then** bắt buộc gộp, thuế năm = 33.240.000, "ước nộp thêm 1.620.000".
+2. **Given** lương 20tr × 12 + vãng lai 60tr (bình quân 5tr/tháng ≤ 15tr, đã trừ 10%. TC-QT-2026-02), **When** quyết toán 2026, **Then** hệ thống báo phần vãng lai **được miễn** và trình bày **cả hai phương án**: không gộp (chênh 0) vs gộp tự nguyện (ước hoàn 3.000.000). nêu rõ gộp có lợi.
 
 ### Edge Cases
 
@@ -48,9 +48,9 @@ Lan nhập thu nhập năm và thuế đã khấu trừ, xem chênh lệch.
 - **FR-004**: MUST hỗ trợ ít nhất một dòng thu nhập vãng lai (số nhận + thuế đã trừ).
 - **FR-005**: MUST hiện kết quả ước (nộp thêm/hoàn/khớp) + disclaimer mạnh.
 - **FR-006**: MUST NOT nộp tờ khai thay người dùng.
-- **FR-007**: MUST áp quy tắc miễn quyết toán vãng lai ≤15tr/tháng (đã khấu trừ 10%) khi tax_year ≥ 2026 theo ruleset — thông báo phần nào bắt buộc/không bắt buộc gộp, và khi được miễn MUST trình bày cả phương án gộp tự nguyện kèm chênh lệch (TC-QT-2026-02). **Đã chốt** theo NĐ 253/2026 Đ.69.1.a: ngưỡng 5tr + miễn QT 15tr áp **cả kỳ tính thuế năm 2026** (không chỉ từ 01/07); phần đã khấu trừ H1/2026 theo quy định cũ điều chỉnh khi quyết toán năm (Đ.70.2).
-- **FR-008**: Wizard ủy quyền vs tự quyết toán: kết luận + checklist hồ sơ + hạn — thuần logic câu hỏi, không thu thập giấy tờ.
-- **FR-009**: MUST hiển thị breakdown năm đầy đủ (tổng TN chịu thuế → GTGC năm → TNTT năm → thuế từng bậc biểu năm → tổng đã khấu trừ → chênh lệch) — Constitution III áp cho cả phép tính năm.
+- **FR-007**: MUST áp quy tắc miễn quyết toán vãng lai ≤15tr/tháng (đã khấu trừ 10%) khi tax_year ≥ 2026 theo ruleset. thông báo phần nào bắt buộc/không bắt buộc gộp, và khi được miễn MUST trình bày cả phương án gộp tự nguyện kèm chênh lệch (TC-QT-2026-02). **Đã chốt** theo NĐ 253/2026 Đ.69.1.a: ngưỡng 5tr + miễn QT 15tr áp **cả kỳ tính thuế năm 2026** (không chỉ từ 01/07); phần đã khấu trừ H1/2026 theo quy định cũ điều chỉnh khi quyết toán năm (Đ.70.2).
+- **FR-008**: Wizard ủy quyền vs tự quyết toán: kết luận + checklist hồ sơ + hạn. thuần logic câu hỏi, không thu thập giấy tờ.
+- **FR-009**: MUST hiển thị breakdown năm đầy đủ (tổng TN chịu thuế → GTGC năm → TNTT năm → thuế từng bậc biểu năm → tổng đã khấu trừ → chênh lệch). Constitution III áp cho cả phép tính năm.
 
 ## Success Criteria *(mandatory)*
 

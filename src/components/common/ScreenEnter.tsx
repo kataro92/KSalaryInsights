@@ -1,13 +1,13 @@
-import { useEffect, type ReactNode } from 'react';
-import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
+import { useEffect, type ReactNode } from "react";
+import { StyleSheet, type StyleProp, type ViewStyle } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import { motion } from '@/src/theme/tokens';
+import { motion } from "@/src/theme/tokens";
 
 type Props = {
   children: ReactNode;
@@ -15,7 +15,7 @@ type Props = {
 };
 
 /**
- * Soft enter — slight rise + fade.
+ * Soft enter. Slight rise + fade.
  * Starts near-visible so a missed animation never blanks the screen.
  */
 export function ScreenEnter({ children, style }: Props) {
@@ -39,12 +39,14 @@ export function ScreenEnter({ children, style }: Props) {
   }));
 
   return (
-    <Animated.View style={[styles.root, style, animStyle]}>{children}</Animated.View>
+    <Animated.View style={[styles.root, style, animStyle]}>
+      {children}
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   root: {
-    width: '100%',
+    width: "100%",
   },
 });

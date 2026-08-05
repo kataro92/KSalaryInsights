@@ -8,8 +8,8 @@
 
 ## Locked decisions
 
-- **Đã khóa** — thôi việc ½ tháng/năm (Đ.46 BLLĐ 2019); mất việc 1 tháng/năm, sàn 2 tháng (Đ.47). Thời gian tính = tổng thời gian − thời gian đã đóng BHTN − thời gian đã được chi trả; lẻ 1–<6 tháng = ½ năm, ≥6 tháng = 1 năm.
-- **Đã khóa** — 60% bình quân 6 tháng đóng BHTN gần nhất, trần **duy nhất** 5× LTTV tháng cuối đóng (bỏ nhánh 5× lương cơ sở khu vực NN); 12–36 tháng đóng → 3 tháng hưởng, +12 tháng → +1, tối đa 12 (Đ.38–39 Luật Việc làm 74/2025/QH15). Chờ việc = **10 ngày làm việc** (không phải 15); thời điểm hưởng = ngày LV thứ 11. Nhóm 12/36 áp mọi HĐ từ đủ 1 tháng (bỏ "mùa vụ").
+- **Đã khóa**. thôi việc ½ tháng/năm (Đ.46 BLLĐ 2019); mất việc 1 tháng/năm, sàn 2 tháng (Đ.47). Thời gian tính = tổng thời gian − thời gian đã đóng BHTN − thời gian đã được chi trả; lẻ 1–<6 tháng = ½ năm, ≥6 tháng = 1 năm.
+- **Đã khóa**. 60% bình quân 6 tháng đóng BHTN gần nhất, trần **duy nhất** 5× LTTV tháng cuối đóng (bỏ nhánh 5× lương cơ sở khu vực NN); 12–36 tháng đóng → 3 tháng hưởng, +12 tháng → +1, tối đa 12 (Đ.38–39 Luật Việc làm 74/2025/QH15). Chờ việc = **10 ngày làm việc** (không phải 15); thời điểm hưởng = ngày LV thứ 11. Nhóm 12/36 áp mọi HĐ từ đủ 1 tháng (bỏ "mùa vụ").
 - Đúng luật; UI MUST giải thích thay vì chỉ hiện 0.
 - **Sửa** thành 10 ngày làm việc + ngày hưởng thứ 11 (Đ.38 k.1.d, Đ.39 k.3).
 
@@ -44,7 +44,7 @@ Hùng nhập 5 năm làm việc và lương căn cứ 20tr, xem ước trợ c�
 
 - **FR-001**: MUST tách calculator thôi việc và thất nghiệp.
 - **FR-002**: MUST lấy hệ số/trần từ ruleset (thôi việc 0,5; mất việc 1,0 sàn 2 tháng; BHTN 60%/5×LTTV/3–12 tháng).
-- **FR-003**: MUST hiện điều kiện hưởng dạng checklist (user tự tick — app không xác minh hồ sơ); checklist BHTN MUST gồm: 12/24 tháng (hoặc 12/36 nếu HĐ thời hạn từ đủ 1–<12 tháng); nộp hồ sơ trong 3 tháng; **10 ngày làm việc** chưa thuộc diện có việc; thời điểm hưởng = ngày LV thứ 11.
+- **FR-003**: MUST hiện điều kiện hưởng dạng checklist (user tự tick. app không xác minh hồ sơ); checklist BHTN MUST gồm: 12/24 tháng (hoặc 12/36 nếu HĐ thời hạn từ đủ 1–<12 tháng); nộp hồ sơ trong 3 tháng; **10 ngày làm việc** chưa thuộc diện có việc; thời điểm hưởng = ngày LV thứ 11.
 - **FR-004**: MUST disclaimer không thay BHXH/Sở LĐ.
 - **FR-005**: MUST áp quy tắc trừ thời gian BHTN + làm tròn ½/1 năm khi tính thôi việc/mất việc.
 - **FR-006**: MUST chọn LTTV trần BHTN theo tháng cuối đóng (`as_of_date`).

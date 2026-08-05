@@ -1,10 +1,13 @@
-import { calcPensionMonthly, calcPensionRate } from '@/src/engine/pensionEstimate';
-import { getRuleset } from '@/src/engine/rulesetLoader';
+import {
+  calcPensionMonthly,
+  calcPensionRate,
+} from "@/src/engine/pensionEstimate";
+import { getRuleset } from "@/src/engine/rulesetLoader";
 
-describe('TC-PENSION-01 / TC-PENSION-02', () => {
-  it('TC-PENSION-01: nữ 25 năm, MBQTL 10tr → 6.500.000/tháng', () => {
+describe("TC-PENSION-01 / TC-PENSION-02", () => {
+  it("TC-PENSION-01: nữ 25 năm, MBQTL 10tr → 6.500.000/tháng", () => {
     const r = calcPensionMonthly({
-      sex: 'female',
+      sex: "female",
       contributionYears: 25,
       adjustedAvgSalary: 10_000_000,
     });
@@ -13,9 +16,9 @@ describe('TC-PENSION-01 / TC-PENSION-02', () => {
     expect(r.rateSteps.length).toBeGreaterThan(0);
   });
 
-  it('TC-PENSION-02: nam 17 năm, MBQTL 10tr → 4.200.000/tháng', () => {
+  it("TC-PENSION-02: nam 17 năm, MBQTL 10tr → 4.200.000/tháng", () => {
     const r = calcPensionMonthly({
-      sex: 'male',
+      sex: "male",
       contributionYears: 17,
       adjustedAvgSalary: 10_000_000,
     });
@@ -23,9 +26,9 @@ describe('TC-PENSION-01 / TC-PENSION-02', () => {
     expect(r.monthlyAmount).toBe(4_200_000);
   });
 
-  it('trần 75%: nữ 30+ năm', () => {
+  it("trần 75%: nữ 30+ năm", () => {
     const params = getRuleset(2026).pension_rates!;
-    const { rate } = calcPensionRate('female', 35, params);
+    const { rate } = calcPensionRate("female", 35, params);
     expect(rate).toBe(0.75);
   });
 });

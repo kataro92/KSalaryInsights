@@ -1,7 +1,7 @@
-import { REGION_TO_KEY } from '@/src/domain/constants/salary';
-import type { RegionCode, SalaryBreakdown } from '@/src/domain/types/salary';
-import { grossToNet } from '@/src/engine/grossToNet';
-import { getRuleset } from '@/src/engine/rulesetLoader';
+import { REGION_TO_KEY } from "@/src/domain/constants/salary";
+import type { RegionCode, SalaryBreakdown } from "@/src/domain/types/salary";
+import { grossToNet } from "@/src/engine/grossToNet";
+import { getRuleset } from "@/src/engine/rulesetLoader";
 
 export type NetToGrossParams = {
   net: number;
@@ -16,7 +16,7 @@ export type NetToGrossParams = {
 
 export type NetToGrossResult =
   | { ok: true; gross: number; breakdown: SalaryBreakdown }
-  | { ok: false; reason: 'infeasible'; minFeasibleNet: number };
+  | { ok: false; reason: "infeasible"; minFeasibleNet: number };
 
 /**
  * Binary search gross such that grossToNet(gross).net ≈ target net (±1 VND).
@@ -33,7 +33,7 @@ export function netToGross(params: NetToGrossParams): NetToGrossResult {
   } = params;
 
   if (!Number.isFinite(net) || net <= 0) {
-    throw new Error('Net phải là số dương');
+    throw new Error("Net phải là số dương");
   }
 
   const ruleset = getRuleset(taxYear, asOfDate);
@@ -50,7 +50,7 @@ export function netToGross(params: NetToGrossParams): NetToGrossResult {
   if (net < minBreakdown.net) {
     return {
       ok: false,
-      reason: 'infeasible',
+      reason: "infeasible",
       minFeasibleNet: minBreakdown.net,
     };
   }

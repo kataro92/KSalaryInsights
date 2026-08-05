@@ -1,13 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import type { InflationAdjustmentTable } from '@/src/domain/types/retirement';
-import type { Ruleset } from '@/src/domain/types/salary';
+import type { InflationAdjustmentTable } from "@/src/domain/types/retirement";
+import type { Ruleset } from "@/src/domain/types/salary";
 import {
   validateInflationTable,
   validateRuleset,
-} from '@/src/engine/rulesetValidate';
+} from "@/src/engine/rulesetValidate";
 
-export const REMOTE_RULESETS_STORAGE_KEY = 'kv.remoteRulesets.v1';
+export const REMOTE_RULESETS_STORAGE_KEY = "kv.remoteRulesets.v1";
 
 export type RemoteRulesetCache = {
   schemaVersion: 1;
@@ -31,8 +31,10 @@ export function emptyRemoteRulesetCache(): RemoteRulesetCache {
   };
 }
 
-export function parseRemoteRulesetCache(raw: unknown): RemoteRulesetCache | null {
-  if (!raw || typeof raw !== 'object') return null;
+export function parseRemoteRulesetCache(
+  raw: unknown
+): RemoteRulesetCache | null {
+  if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
   if (o.schemaVersion !== 1) return null;
   if (!Array.isArray(o.rulesets) || !Array.isArray(o.inflation)) return null;
@@ -51,13 +53,13 @@ export function parseRemoteRulesetCache(raw: unknown): RemoteRulesetCache | null
 
   return {
     schemaVersion: 1,
-    updatedAt: typeof o.updatedAt === 'string' ? o.updatedAt : null,
+    updatedAt: typeof o.updatedAt === "string" ? o.updatedAt : null,
     manifestGeneratedAt:
-      typeof o.manifestGeneratedAt === 'string' ? o.manifestGeneratedAt : null,
+      typeof o.manifestGeneratedAt === "string" ? o.manifestGeneratedAt : null,
     rulesets,
     inflation,
-    lastError: typeof o.lastError === 'string' ? o.lastError : null,
-    lastCheckAt: typeof o.lastCheckAt === 'string' ? o.lastCheckAt : null,
+    lastError: typeof o.lastError === "string" ? o.lastError : null,
+    lastCheckAt: typeof o.lastCheckAt === "string" ? o.lastCheckAt : null,
   };
 }
 
@@ -80,14 +82,22 @@ export async function loadRemoteRulesetCache(): Promise<{
   }
 }
 
-export async function saveRemoteRulesetCache(cache: RemoteRulesetCache): Promise<void> {
+export async function saveRemoteRulesetCache(
+  cache: RemoteRulesetCache
+): Promise<void> {
   const normalized = parseRemoteRulesetCache(cache);
-  if (!normalized) throw new Error('Invalid remote ruleset cache');
-  await AsyncStorage.setItem(REMOTE_RULESETS_STORAGE_KEY, JSON.stringify(normalized));
+  if (!normalized) throw new Error("Invalid remote ruleset cache");
+  await AsyncStorage.setItem(
+    REMOTE_RULESETS_STORAGE_KEY,
+    JSON.stringify(normalized)
+  );
 }
 
 export async function clearRemoteRulesetCache(): Promise<RemoteRulesetCache> {
   const empty = emptyRemoteRulesetCache();
-  await AsyncStorage.setItem(REMOTE_RULESETS_STORAGE_KEY, JSON.stringify(empty));
+  await AsyncStorage.setItem(
+    REMOTE_RULESETS_STORAGE_KEY,
+    JSON.stringify(empty)
+  );
   return empty;
 }

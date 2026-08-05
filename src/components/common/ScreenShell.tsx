@@ -1,20 +1,17 @@
-import {
-  forwardRef,
-  type ReactNode,
-  type Ref,
-} from 'react';
+import { forwardRef, type ReactNode, type Ref } from "react";
 import {
   ScrollView,
-  StyleSheet,
   View,
   type ScrollViewProps,
   type StyleProp,
   type ViewStyle,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ScreenEnter } from '@/src/components/common/ScreenEnter';
-import { colors, layout, space } from '@/src/theme/tokens';
+import { ScreenEnter } from "@/src/components/common/ScreenEnter";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { layout, space } from "@/src/theme/tokens";
+import { useThemedStyles } from "@/src/theme/useThemedStyles";
 
 type Props = ScrollViewProps & {
   children: ReactNode;
@@ -25,7 +22,7 @@ type Props = ScrollViewProps & {
 };
 
 /**
- * Shared screen chrome — consistent padding, max width, optional décor.
+ * Shared screen chrome. Consistent padding, max width, optional décor.
  */
 export const ScreenShell = forwardRef(function ScreenShell(
   {
@@ -37,10 +34,11 @@ export const ScreenShell = forwardRef(function ScreenShell(
     contentStyle,
     ...rest
   }: Props,
-  ref: Ref<ScrollView>,
+  ref: Ref<ScrollView>
 ) {
   const insets = useSafeAreaInsets();
   const topPad = Math.max(insets.top, space[3]);
+  const styles = useThemedStyles(makeStyles);
 
   return (
     <ScrollView
@@ -61,6 +59,7 @@ export const ScreenShell = forwardRef(function ScreenShell(
           <>
             <View style={styles.blobPrimary} pointerEvents="none" />
             <View style={styles.blobSecondary} pointerEvents="none" />
+            <View style={styles.blobAccent} pointerEvents="none" />
           </>
         ) : null}
         <ScreenEnter style={styles.enter}>{children}</ScreenEnter>
@@ -69,43 +68,55 @@ export const ScreenShell = forwardRef(function ScreenShell(
   );
 });
 
-const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  content: {
-    paddingBottom: space[10] + layout.tabBarClearance,
-    flexGrow: 1,
-  },
-  inner: {
-    paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[4],
-    maxWidth: layout.maxContentWidth,
-    width: '100%',
-    alignSelf: 'center',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  enter: {
-    gap: space[5],
-  },
-  blobPrimary: {
-    position: 'absolute',
-    width: 220,
-    height: 220,
-    borderRadius: 110,
-    backgroundColor: colors.primary,
-    opacity: 0.07,
-    top: -40,
-    right: -60,
-  },
-  blobSecondary: {
-    position: 'absolute',
-    width: 160,
-    height: 160,
-    borderRadius: 16,
-    backgroundColor: colors.secondary,
-    opacity: 0.06,
-    top: 120,
-    left: -50,
-    transform: [{ rotate: '18deg' }],
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    scroll: { flex: 1, backgroundColor: colors.background },
+    content: {
+      paddingBottom: space[10] + layout.tabBarClearance,
+      flexGrow: 1,
+    },
+    inner: {
+      paddingHorizontal: layout.pagePaddingX,
+      paddingTop: space[4],
+      maxWidth: layout.maxContentWidth,
+      width: "100%",
+      alignSelf: "center",
+      position: "relative",
+      overflow: "hidden",
+    },
+    enter: {
+      gap: space[5],
+    },
+    blobPrimary: {
+      position: "absolute",
+      width: 260,
+      height: 260,
+      borderRadius: 130,
+      backgroundColor: colors.primary,
+      opacity: 0.14,
+      top: -50,
+      right: -70,
+    },
+    blobSecondary: {
+      position: "absolute",
+      width: 200,
+      height: 200,
+      borderRadius: 24,
+      backgroundColor: colors.secondary,
+      opacity: 0.12,
+      top: 140,
+      left: -70,
+      transform: [{ rotate: "18deg" }],
+    },
+    blobAccent: {
+      position: "absolute",
+      width: 140,
+      height: 140,
+      borderRadius: 70,
+      backgroundColor: colors.accent,
+      opacity: 0.1,
+      top: 360,
+      right: -30,
+    },
+  } as const;
+}

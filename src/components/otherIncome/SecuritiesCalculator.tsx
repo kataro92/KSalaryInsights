@@ -1,35 +1,38 @@
-import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { useState } from "react";
+import { Text, TextInput, View } from "react-native";
 
-import { Button } from '@/src/components/common/Button';
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { ResultHero } from '@/src/components/common/ResultHero';
-import { Section } from '@/src/components/common/Section';
-import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
-import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
-import type { SecuritiesBreakdown } from '@/src/domain/types/otherIncome';
-import { calculateSecuritiesTransfer } from '@/src/engine/otherIncome/securities';
-import { successHaptic } from '@/src/theme/haptics';
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { Button } from "@/src/components/common/Button";
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { ResultHero } from "@/src/components/common/ResultHero";
+import { Section } from "@/src/components/common/Section";
+import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
+import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
+import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
+import type { SecuritiesBreakdown } from "@/src/domain/types/otherIncome";
+import { calculateSecuritiesTransfer } from "@/src/engine/otherIncome/securities";
+import { successHaptic } from "@/src/theme/haptics";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { layout, radii, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
 
 function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
+  const digits = raw.replace(/[^\d]/g, "");
   if (!digits) return null;
   const n = Number(digits);
   return Number.isFinite(n) ? n : null;
 }
 
 function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return '';
-  return n.toLocaleString('vi-VN');
+  if (n == null || !Number.isFinite(n)) return "";
+  return n.toLocaleString("vi-VN");
 }
 
 type Props = { taxYear: number };
 
 export function SecuritiesCalculator({ taxYear }: Props) {
-  const [priceText, setPriceText] = useState('100.000.000');
-  const [asOfDate, setAsOfDate] = useState('2026-08-15');
+  const styles = useThemedStyles(makeStyles);
+  const [priceText, setPriceText] = useState("100.000.000");
+  const [asOfDate, setAsOfDate] = useState("2026-08-15");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<SecuritiesBreakdown | null>(null);
 
@@ -37,27 +40,32 @@ export function SecuritiesCalculator({ taxYear }: Props) {
     setError(null);
     const transferPrice = parseMoney(priceText);
     if (transferPrice == null || transferPrice < 0) {
-      setError('Nhập giá bán hợp lệ.');
+      setError("Nhập giá bán hợp lệ.");
       setResult(null);
       return;
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(asOfDate)) {
-      setError('Ngày phải dạng YYYY-MM-DD.');
+      setError("Ngày phải dạng YYYY-MM-DD.");
       setResult(null);
       return;
     }
     try {
-      setResult(calculateSecuritiesTransfer({ transferPrice, taxYear, asOfDate }));
+      setResult(
+        calculateSecuritiesTransfer({ transferPrice, taxYear, asOfDate })
+      );
       void successHaptic();
     } catch (e) {
       setResult(null);
-      setError(e instanceof Error ? e.message : 'Không tính được.');
+      setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
 
   return (
     <View style={styles.wrap}>
-      <Section title="Chứng khoán" subtitle="Tỷ lệ CN từ ruleset theo as_of_date.">
+      <Section
+        title="Chứng khoán"
+        subtitle="Tỷ lệ chuyển nhượng theo ngày giao dịch."
+      >
         <Text style={styles.fieldLabel}>Giá chuyển nhượng</Text>
         <TextInput
           accessibilityLabel="Giá bán chứng khoán"
@@ -65,7 +73,7 @@ export function SecuritiesCalculator({ taxYear }: Props) {
           value={priceText}
           onChangeText={(t) => {
             const n = parseMoney(t);
-            setPriceText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+            setPriceText(n == null ? t.replace(/[^\d.]/g, "") : formatInput(n));
             setResult(null);
           }}
           style={styles.input}
@@ -82,7 +90,9 @@ export function SecuritiesCalculator({ taxYear }: Props) {
           style={styles.input}
         />
       </Section>
-      {error ? <EmptyErrorState variant="error" title="Chưa tính được" body={error} /> : null}
+      {error ? (
+        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+      ) : null}
       <Button label="Tính CK" onPress={onCalculate} />
       {result ? (
         <>
@@ -92,13 +102,15 @@ export function SecuritiesCalculator({ taxYear }: Props) {
             label="Thuế CN"
             amount={result.tax}
           />
-          <NgaiMiuTip tip="Tỷ lệ theo ngày giao dịch — đọc chú thích nếu ruleset ghi hiệu lực hạn chế." />
+          <NgaiMiuTip tip="Tỷ lệ theo ngày giao dịch. đọc chú thích nếu mức đang áp dụng có hiệu lực hạn chế." />
           <OtherIncomeBreakdownCard
             title="Chuyển nhượng CK"
             total={result.tax}
             totalLabel="Thuế CN"
             formula={result.formula}
-            lines={[{ id: 'tax', label: 'Thuế chuyển nhượng', amount: result.tax }]}
+            lines={[
+              { id: "tax", label: "Thuế chuyển nhượng", amount: result.tax },
+            ]}
             explanations={result.explanations}
             note={result.ineffectivenessReason}
             hideTotal
@@ -115,26 +127,28 @@ export function SecuritiesCalculator({ taxYear }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: { gap: space[4] },
-  fieldLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 12,
-    color: colors.foreground,
-    opacity: 0.7,
-    marginBottom: space[1],
-    marginTop: space[2],
-  },
-  input: {
-    minHeight: layout.minTouch,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    paddingHorizontal: space[3],
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 16,
-    color: colors.foreground,
-    fontVariant: ['tabular-nums'],
-    backgroundColor: colors.white,
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    wrap: { gap: space[4] },
+    fieldLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 12,
+      color: colors.foreground,
+      opacity: 0.7,
+      marginBottom: space[1],
+      marginTop: space[2],
+    },
+    input: {
+      minHeight: layout.minTouch,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radii.md,
+      paddingHorizontal: space[3],
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 16,
+      color: colors.foreground,
+      fontVariant: ["tabular-nums"],
+      backgroundColor: colors.white,
+    },
+  } satisfies ThemedStyleSheet;
+}

@@ -1,6 +1,6 @@
 /** Domain contracts for retirement / BHXH lump sum (spec 007). */
 
-export type Sex = 'male' | 'female';
+export type Sex = "male" | "female";
 
 export type EligibilityChecklistItem = {
   id: string;
@@ -22,12 +22,12 @@ export type LumpSumInput = {
   /** MBQTL đã trượt giá (VND). */
   adjustedAvgSalary: number;
   /**
-   * Ngày tham gia BHXH lần đầu (YYYY-MM-DD) — chọn checklist trước/từ 01/07/2025.
+   * Ngày tham gia BHXH lần đầu (YYYY-MM-DD). Chọn checklist trước/từ 01/07/2025.
    * Không ảnh hưởng số tiền.
    */
   firstParticipationDate?: string;
   /**
-   * Số tiền đã đóng (edge <1 năm) — nếu thiếu, ước = min(đã đóng?, 2×MBQTL).
+   * Số tiền đã đóng (edge <1 năm). Nếu thiếu, ước = min(đã đóng?, 2×MBQTL).
    */
   amountContributed?: number;
   taxYear?: number;

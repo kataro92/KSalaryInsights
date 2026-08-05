@@ -1,23 +1,23 @@
-/** App limits for dependent count (spec 002) — not a legal validation. */
+/** App limits for dependent count (spec 002). Not a legal validation. */
 export const MIN_DEPENDENTS = 0;
 export const MAX_DEPENDENTS = 20;
 
 export type DependentsValidation =
   | { ok: true; value: number }
-  | { ok: false; reason: 'negative' | 'above_max'; message: string };
+  | { ok: false; reason: "negative" | "above_max"; message: string };
 
 export function validateDependents(raw: number): DependentsValidation {
   if (!Number.isInteger(raw) || raw < MIN_DEPENDENTS) {
     return {
       ok: false,
-      reason: 'negative',
-      message: 'Số người phụ thuộc phải là số nguyên ≥ 0.',
+      reason: "negative",
+      message: "Số người phụ thuộc phải là số nguyên ≥ 0.",
     };
   }
   if (raw > MAX_DEPENDENTS) {
     return {
       ok: false,
-      reason: 'above_max',
+      reason: "above_max",
       message: `Giới hạn app: tối đa ${MAX_DEPENDENTS} người phụ thuộc.`,
     };
   }

@@ -27,7 +27,7 @@ Minh nhập gross, chọn năm 2026 và vùng I, xem net và từng khoản tr�
 
 1. **Given** ruleset 2026-H1 (tháng 01–06/2026), **When** nhập gross 30.000.000, 0 NPT, vùng I, mức BH = gross, **Then** BH NLĐ = 3.150.000, thuế = 635.000, net = 26.065.000 và breakdown hiển thị đủ các dòng.
 2. **Given** cùng input với ruleset 2025, **When** tính, **Then** khớp TC-TNCN-2025-01 (thuế 1.627.500, net 25.222.500).
-3. **Given** mức BH 60.000.000 vùng I, **When** đổi tháng tính từ 03/2026 sang 08/2026, **Then** tổng BH NLĐ đổi từ 5.046.000 sang 5.407.000 (trần 46,8tr → 50,6tr theo NĐ 161/2026 — TC-BH-2026H2-01).
+3. **Given** mức BH 60.000.000 vùng I, **When** đổi tháng tính từ 03/2026 sang 08/2026, **Then** tổng BH NLĐ đổi từ 5.046.000 sang 5.407.000 (trần 46,8tr → 50,6tr theo NĐ 161/2026: TC-BH-2026H2-01).
 4. **Given** bất kỳ kết quả nào, **When** xem màn hình, **Then** có disclaimer ước tính + liệt kê nguồn pháp lý của ruleset đang dùng.
 
 ---
@@ -43,7 +43,7 @@ Minh biết thực nhận mong muốn, tìm gross tương ứng để đàm phá
 **Acceptance Scenarios**:
 
 1. **Given** ruleset 2026, 0 NPT, vùng I, **When** nhập net = 26.065.000, **Then** gross đề xuất ≈ 30.000.000 (sai số ≤ 1 đồng sau khi tính lại).
-2. **Given** net nhập vào nhỏ hơn net tối thiểu khả thi (net tính từ gross = lương tối thiểu vùng đang chọn), **When** tính, **Then** hệ thống thông báo "không khả thi với vùng/tham số hiện tại" kèm net tối thiểu tham khảo — KHÔNG trả về gross dưới lương tối thiểu vùng.
+2. **Given** net nhập vào nhỏ hơn net tối thiểu khả thi (net tính từ gross = lương tối thiểu vùng đang chọn), **When** tính, **Then** hệ thống thông báo "không khả thi với vùng/tham số hiện tại" kèm net tối thiểu tham khảo. KHÔNG trả về gross dưới lương tối thiểu vùng.
 
 ---
 
@@ -73,7 +73,7 @@ Khoa nhập mức đóng trên trần BHXH để kiểm tra không bị trừ v�
 - **FR-001**: Hệ thống MUST cho phép nhập gross hoặc net (chế độ chuyển đổi).
 - **FR-002**: Hệ thống MUST chọn ruleset theo năm kỳ tính thuế do người dùng chọn (mặc định năm hiện tại nếu có ruleset); tham số bảo hiểm (trần theo lương cơ sở/mức tham chiếu) MUST chọn theo **tháng tính** (`as_of_date`) vì có thể đổi giữa năm (2026: 01/07 đổi trần).
 - **FR-003**: Hệ thống MUST tính BH NLĐ (8%+1,5%+1%) với trần BHXH/BHYT và trần BHTN theo vùng.
-- **FR-004**: Hệ thống MUST tính thuế TNCN theo biểu lũy tiến của ruleset (sau GTGC — mặc định 0 NPT ở feature này nếu chưa có F003 (spec 002); khi F003 có sẵn thì dùng số NPT).
+- **FR-004**: Hệ thống MUST tính thuế TNCN theo biểu lũy tiến của ruleset (sau GTGC. mặc định 0 NPT ở feature này nếu chưa có F003 (spec 002); khi F003 có sẵn thì dùng số NPT).
 - **FR-005**: Hệ thống MUST hiển thị breakdown từng bước và net/gross kết quả.
 - **FR-006**: Hệ thống MUST hiển thị disclaimer và `legal_sources` của ruleset.
 - **FR-007**: Hệ thống MUST NOT yêu cầu CCCD/MST/sổ BHXH.
@@ -100,5 +100,5 @@ Khoa nhập mức đóng trên trần BHXH để kiểm tra không bị trừ v�
 
 - Cá nhân cư trú, 1 nguồn lương HĐLĐ.
 - Chưa gồm OT, thưởng, phúc lợi miễn thuế chi tiết.
-- Lương cơ sở/mức tham chiếu lấy từ ruleset theo `as_of_date`: 2.340.000 (đến 30/06/2026) / 2.530.000 (từ 01/07/2026 — NĐ 161/2026).
+- Lương cơ sở/mức tham chiếu lấy từ ruleset theo `as_of_date`: 2.340.000 (đến 30/06/2026) / 2.530.000 (từ 01/07/2026: NĐ 161/2026).
 - F003 (spec 002) sẽ bổ sung NPT; trước đó NPT = 0.

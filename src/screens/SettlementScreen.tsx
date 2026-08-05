@@ -1,75 +1,76 @@
-import { useEffect, useRef, useState } from 'react';
-import {
-  Alert,
-  Share,
-  StyleSheet,
-  Switch,
-  Text,
-  View,
-} from 'react-native';
-import { useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from "react";
+import { Alert, Share, Switch, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 
-import { ScenarioPanel } from '@/src/components/calculator/ScenarioPanel';
-import { Button } from '@/src/components/common/Button';
-import { ChipRow } from '@/src/components/common/ChipRow';
-import { ChoiceChip } from '@/src/components/common/ChoiceChip';
-import { CollapseSection } from '@/src/components/common/CollapseSection';
-import { ColorBlock } from '@/src/components/common/ColorBlock';
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { MoneyField } from '@/src/components/common/MoneyField';
-import { PageHero } from '@/src/components/common/PageHero';
-import { ScreenShell } from '@/src/components/common/ScreenShell';
-import { SeasonalBanner } from '@/src/components/common/SeasonalBanner';
-import { Section } from '@/src/components/common/Section';
-import { StickyActionBar } from '@/src/components/common/StickyActionBar';
-import { TextField } from '@/src/components/common/TextField';
-import { AnnualBreakdownCard } from '@/src/components/breakdown/AnnualBreakdownCard';
-import { SettlementDisclaimer } from '@/src/components/disclaimer/SettlementDisclaimer';
-import { DependentCountInput } from '@/src/components/inputs/DependentCountInput';
-import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { DualScenarioCard } from '@/src/components/settlement/DualScenarioCard';
-import { SettlementResultCard } from '@/src/components/settlement/SettlementResultCard';
-import { brand, emptyCopy, miuTips } from '@/src/copy/miu';
-import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
-import type { AnnualSettlementResult } from '@/src/domain/types/settlement';
-import type { RegionCode } from '@/src/domain/types/salary';
-import { calculateAnnualSettlement } from '@/src/engine/annualSettlement';
-import { usePreferences } from '@/src/hooks/usePreferences';
-import { useScenarios } from '@/src/hooks/useScenarios';
-import { useI18n } from '@/src/i18n/useI18n';
+import { ScenarioPanel } from "@/src/components/calculator/ScenarioPanel";
+import { Button } from "@/src/components/common/Button";
+import { ChipRow } from "@/src/components/common/ChipRow";
+import { ChoiceChip } from "@/src/components/common/ChoiceChip";
+import { CollapseSection } from "@/src/components/common/CollapseSection";
+import { ColorBlock } from "@/src/components/common/ColorBlock";
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
+import { PageHero } from "@/src/components/common/PageHero";
+import { ScreenShell } from "@/src/components/common/ScreenShell";
+import { SeasonalBanner } from "@/src/components/common/SeasonalBanner";
+import { Section } from "@/src/components/common/Section";
+import { StickyActionBar } from "@/src/components/common/StickyActionBar";
+import { TextField } from "@/src/components/common/TextField";
+import { AnnualBreakdownCard } from "@/src/components/breakdown/AnnualBreakdownCard";
+import { SettlementDisclaimer } from "@/src/components/disclaimer/SettlementDisclaimer";
+import { DependentCountInput } from "@/src/components/inputs/DependentCountInput";
+import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
+import { DualScenarioCard } from "@/src/components/settlement/DualScenarioCard";
+import { SettlementResultCard } from "@/src/components/settlement/SettlementResultCard";
+import { brand, emptyCopy, miuTips } from "@/src/copy/miu";
+import {
+  REGION_OPTIONS,
+  TAX_YEAR_OPTIONS,
+} from "@/src/domain/constants/salary";
+import type { AnnualSettlementResult } from "@/src/domain/types/settlement";
+import type { RegionCode } from "@/src/domain/types/salary";
+import { calculateAnnualSettlement } from "@/src/engine/annualSettlement";
+import { usePreferences } from "@/src/hooks/usePreferences";
+import { useScenarios } from "@/src/hooks/useScenarios";
+import { useI18n } from "@/src/i18n/useI18n";
 import {
   defaultScenarioName,
   formatScenarioShareText,
   type SavedScenario,
   type SettlementScenarioInputs,
-} from '@/src/store/scenarios';
-import { successHaptic } from '@/src/theme/haptics';
-import { formatMoneyInput, parseMoney } from '@/src/theme/money';
-import { colors, layout, space, typography } from '@/src/theme/tokens';
+} from "@/src/store/scenarios";
+import { successHaptic } from "@/src/theme/haptics";
+import { formatMoneyInput, parseMoney } from "@/src/theme/money";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { useTheme } from "@/src/theme/ThemeProvider";
+import { layout, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
 
 export function SettlementScreen() {
   const router = useRouter();
   const { t } = useI18n();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { preferences } = usePreferences();
-  const { scenarios, save, remove } = useScenarios('settlement');
+  const { scenarios, save, remove } = useScenarios("settlement");
 
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
       ? preferences.defaultTaxYear
-      : 2025,
+      : 2025
   );
   const [region, setRegion] = useState<RegionCode>(preferences.defaultRegion);
   const [numDependents, setNumDependents] = useState(0);
-  const [monthlyText, setMonthlyText] = useState('30.000.000');
-  const [monthsText, setMonthsText] = useState('10');
-  const [withheldText, setWithheldText] = useState('16.275.000');
+  const [monthlyText, setMonthlyText] = useState("30.000.000");
+  const [monthsText, setMonthsText] = useState("10");
+  const [withheldText, setWithheldText] = useState("16.275.000");
   const [includeCasual, setIncludeCasual] = useState(false);
-  const [casualGrossText, setCasualGrossText] = useState('0');
-  const [casualWithheldText, setCasualWithheldText] = useState('0');
+  const [casualGrossText, setCasualGrossText] = useState("0");
+  const [casualWithheldText, setCasualWithheldText] = useState("0");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AnnualSettlementResult | null>(null);
   const [saving, setSaving] = useState(false);
-  const [saveName, setSaveName] = useState('');
+  const [saveName, setSaveName] = useState("");
   const [scenariosOpen, setScenariosOpen] = useState(false);
   const scenariosBootstrapped = useRef(false);
 
@@ -85,10 +86,15 @@ export function SettlementScreen() {
 
   const collectInputs = (): SettlementScenarioInputs | null => {
     const monthlyGross = parseMoney(monthlyText);
-    const monthsWorked = Number(monthsText.replace(/[^\d]/g, ''));
+    const monthsWorked = Number(monthsText.replace(/[^\d]/g, ""));
     const salaryWithheld = parseMoney(withheldText) ?? 0;
     if (monthlyGross == null || monthlyGross <= 0) return null;
-    if (!Number.isInteger(monthsWorked) || monthsWorked < 1 || monthsWorked > 12) return null;
+    if (
+      !Number.isInteger(monthsWorked) ||
+      monthsWorked < 1 ||
+      monthsWorked > 12
+    )
+      return null;
     return {
       taxYear,
       region,
@@ -97,13 +103,13 @@ export function SettlementScreen() {
       monthsWorked,
       salaryWithheld,
       includeCasual,
-      casualGross: includeCasual ? (parseMoney(casualGrossText) ?? 0) : 0,
-      casualWithheld: includeCasual ? (parseMoney(casualWithheldText) ?? 0) : 0,
+      casualGross: includeCasual ? parseMoney(casualGrossText) ?? 0 : 0,
+      casualWithheld: includeCasual ? parseMoney(casualWithheldText) ?? 0 : 0,
     };
   };
 
   const applyScenario = (s: SavedScenario) => {
-    if (s.kind !== 'settlement') return;
+    if (s.kind !== "settlement") return;
     const i = s.inputs;
     setTaxYear(i.taxYear);
     setRegion(i.region);
@@ -112,8 +118,8 @@ export function SettlementScreen() {
     setMonthsText(String(i.monthsWorked));
     setWithheldText(formatMoneyInput(i.salaryWithheld));
     setIncludeCasual(i.includeCasual);
-    setCasualGrossText(formatMoneyInput(i.casualGross) || '0');
-    setCasualWithheldText(formatMoneyInput(i.casualWithheld) || '0');
+    setCasualGrossText(formatMoneyInput(i.casualGross) || "0");
+    setCasualWithheldText(formatMoneyInput(i.casualWithheld) || "0");
     clearResult();
     void successHaptic();
   };
@@ -121,10 +127,10 @@ export function SettlementScreen() {
   const beginSave = () => {
     const inputs = collectInputs();
     if (!inputs || !result) {
-      setError('Ước quyết toán trước khi lưu kịch bản.');
+      setError("Ước quyết toán trước khi lưu kịch bản.");
       return;
     }
-    setSaveName(defaultScenarioName(inputs, 'settlement'));
+    setSaveName(defaultScenarioName(inputs, "settlement"));
     setSaving(true);
     setScenariosOpen(true);
   };
@@ -134,7 +140,7 @@ export function SettlementScreen() {
     if (!inputs || !result) return;
     try {
       await save({
-        kind: 'settlement',
+        kind: "settlement",
         name: saveName,
         inputs,
         lastDelta: result.primary.breakdown.delta.signed,
@@ -142,7 +148,7 @@ export function SettlementScreen() {
       setSaving(false);
       void successHaptic();
     } catch {
-      Alert.alert('Không lưu được', 'Vui lòng thử lại.');
+      Alert.alert("Không lưu được", "Vui lòng thử lại.");
     }
   };
 
@@ -150,8 +156,8 @@ export function SettlementScreen() {
     const inputs = collectInputs();
     if (!inputs || !result) return;
     const message = formatScenarioShareText({
-      kind: 'settlement',
-      name: saveName || defaultScenarioName(inputs, 'settlement'),
+      kind: "settlement",
+      name: saveName || defaultScenarioName(inputs, "settlement"),
       inputs,
       delta: result.primary.breakdown.delta.signed,
       brand: brand.name,
@@ -169,9 +175,9 @@ export function SettlementScreen() {
     if (!inputs) {
       const monthlyGross = parseMoney(monthlyText);
       if (monthlyGross == null || monthlyGross <= 0) {
-        setError('Nhập lương tháng hợp lệ.');
+        setError("Nhập lương tháng hợp lệ.");
       } else {
-        setError('Số tháng làm việc phải từ 1 đến 12.');
+        setError("Số tháng làm việc phải từ 1 đến 12.");
       }
       setResult(null);
       return;
@@ -196,7 +202,7 @@ export function SettlementScreen() {
       void successHaptic();
     } catch (e) {
       setResult(null);
-      setError(e instanceof Error ? e.message : 'Không tính được.');
+      setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
 
@@ -208,8 +214,8 @@ export function SettlementScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         <PageHero
-          title={t('settlement.title')}
-          subtitle={t('settlement.subtitle')}
+          title={t("settlement.title")}
+          subtitle={t("settlement.subtitle")}
         />
 
         <SeasonalBanner />
@@ -218,7 +224,7 @@ export function SettlementScreen() {
           title={
             scenarios.length > 0
               ? `Kịch bản quyết toán (${scenarios.length})`
-              : 'Kịch bản quyết toán'
+              : "Kịch bản quyết toán"
           }
           open={scenariosOpen}
           onOpenChange={(next) => {
@@ -247,7 +253,7 @@ export function SettlementScreen() {
 
         <Section
           title="Năm quyết toán"
-          subtitle="Ruleset theo năm thu nhập, không theo ngày mở app."
+          subtitle="Mức tính theo năm thu nhập, không theo ngày mở app."
         >
           <ChipRow equal>
             {TAX_YEAR_OPTIONS.map((y) => (
@@ -265,7 +271,7 @@ export function SettlementScreen() {
           </ChipRow>
         </Section>
 
-        <Section title="Vùng LTTV">
+        <Section title="Vùng lương tối thiểu">
           <ChipRow equal>
             {REGION_OPTIONS.map(({ code, label }) => (
               <ChoiceChip
@@ -292,7 +298,10 @@ export function SettlementScreen() {
           />
         </Section>
 
-        <Section title="Lương tháng (trung bình)" subtitle="× số tháng có lương trong năm.">
+        <Section
+          title="Lương tháng (trung bình)"
+          subtitle="× số tháng có lương trong năm."
+        >
           <MoneyField
             accessibilityLabel="Lương gross tháng"
             value={monthlyText}
@@ -307,7 +316,7 @@ export function SettlementScreen() {
             keyboardType="number-pad"
             value={monthsText}
             onChangeText={(t) => {
-              setMonthsText(t.replace(/[^\d]/g, ''));
+              setMonthsText(t.replace(/[^\d]/g, ""));
               clearResult();
             }}
           />
@@ -328,7 +337,9 @@ export function SettlementScreen() {
           <View style={styles.switchRow}>
             <View style={styles.switchText}>
               <Text style={styles.switchLabel}>Thêm thu nhập vãng lai</Text>
-              <Text style={styles.switchHint}>Thu nhập ngoài lương đã khấu trừ 10%</Text>
+              <Text style={styles.switchHint}>
+                Thu nhập ngoài lương đã khấu trừ 10%
+              </Text>
             </View>
             <Switch
               accessibilityLabel="Thêm thu nhập vãng lai"
@@ -363,18 +374,24 @@ export function SettlementScreen() {
         </ColorBlock>
 
         {error ? (
-          <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
+          <EmptyErrorState
+            variant="error"
+            title={emptyCopy.calculateError.title}
+            body={error}
+          />
         ) : null}
 
         {result ? (
           <View style={styles.resultBlock}>
-            {result.casualStatus === 'exempt' ? (
+            {result.casualStatus === "exempt" ? (
               <DualScenarioCard scenarios={result.scenarios} />
             ) : (
               <>
                 <SettlementResultCard
                   delta={result.primary.breakdown.delta}
-                  withheldMissingWarning={result.primary.breakdown.withheldMissingWarning}
+                  withheldMissingWarning={
+                    result.primary.breakdown.withheldMissingWarning
+                  }
                 />
                 <NgaiMiuTip pose="tip" tip={miuTips.settlement} />
                 <AnnualBreakdownCard breakdown={result.primary.breakdown} />
@@ -382,13 +399,23 @@ export function SettlementScreen() {
             )}
             <View style={styles.resultActions}>
               <View style={styles.resultActionBtn}>
-                <Button label="Lưu kịch bản" variant="secondary" onPress={beginSave} />
+                <Button
+                  label="Lưu kịch bản"
+                  variant="secondary"
+                  onPress={beginSave}
+                />
               </View>
               <View style={styles.resultActionBtn}>
-                <Button label="Chia sẻ" variant="outline" onPress={() => void onShare()} />
+                <Button
+                  label="Chia sẻ"
+                  variant="outline"
+                  onPress={() => void onShare()}
+                />
               </View>
             </View>
-            <SettlementDisclaimer legalSources={result.primary.breakdown.legalSources} />
+            <SettlementDisclaimer
+              legalSources={result.primary.breakdown.legalSources}
+            />
           </View>
         ) : !error ? (
           <EmptyErrorState
@@ -399,13 +426,13 @@ export function SettlementScreen() {
       </ScreenShell>
 
       <StickyActionBar>
-        <Button label={t('settlement.cta')} onPress={onCalculate} />
+        <Button label={t("settlement.cta")} onPress={onCalculate} />
         <Button
           label="Wizard ủy quyền / tự QT"
           variant="secondary"
           onPress={() =>
             router.push({
-              pathname: '/filing-wizard',
+              pathname: "/filing-wizard",
               params: { year: String(taxYear) },
             })
           }
@@ -415,41 +442,43 @@ export function SettlementScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.background },
-  scrollContent: {
-    paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
-  },
-  switchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: space[3],
-    minHeight: layout.minTouch,
-  },
-  switchText: { flex: 1, gap: 2 },
-  switchLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 15,
-    color: colors.foreground,
-  },
-  switchHint: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 12,
-    color: colors.foregroundMuted,
-  },
-  casualFields: {
-    marginTop: space[4],
-    gap: space[3],
-  },
-  resultBlock: {
-    gap: space[4],
-  },
-  resultActions: {
-    flexDirection: 'row',
-    gap: space[2],
-  },
-  resultActionBtn: {
-    flex: 1,
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    root: { flex: 1, backgroundColor: colors.background },
+    scrollContent: {
+      paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
+    },
+    switchRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: space[3],
+      minHeight: layout.minTouch,
+    },
+    switchText: { flex: 1, gap: 2 },
+    switchLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 15,
+      color: colors.foreground,
+    },
+    switchHint: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: 12,
+      color: colors.foregroundMuted,
+    },
+    casualFields: {
+      marginTop: space[4],
+      gap: space[3],
+    },
+    resultBlock: {
+      gap: space[4],
+    },
+    resultActions: {
+      flexDirection: "row",
+      gap: space[2],
+    },
+    resultActionBtn: {
+      flex: 1,
+    },
+  } satisfies ThemedStyleSheet;
+}

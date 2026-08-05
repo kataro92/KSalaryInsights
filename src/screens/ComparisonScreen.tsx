@@ -1,24 +1,24 @@
-import { useMemo } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useMemo } from "react";
+import { Stack, useLocalSearchParams } from "expo-router";
 
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { ToolScreen } from '@/src/components/common/ToolScreen';
-import { ComparisonView } from '@/src/components/comparison/ComparisonView';
-import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
-import type { RegionCode } from '@/src/domain/types/salary';
-import { compareRulesets } from '@/src/engine/compareRulesets';
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { ToolScreen } from "@/src/components/common/ToolScreen";
+import { ComparisonView } from "@/src/components/comparison/ComparisonView";
+import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
+import type { RegionCode } from "@/src/domain/types/salary";
+import { compareRulesets } from "@/src/engine/compareRulesets";
 
 function paramString(v: string | string[] | undefined): string {
-  if (Array.isArray(v)) return v[0] ?? '';
-  return v ?? '';
+  if (Array.isArray(v)) return v[0] ?? "";
+  return v ?? "";
 }
 
 export function ComparisonScreen() {
   const params = useLocalSearchParams();
   const gross = Number(paramString(params.gross));
-  const region = (paramString(params.region) || 'I') as RegionCode;
-  const numDependents = Number(paramString(params.numDependents) || '0');
-  const month = Number(paramString(params.month) || '3');
+  const region = (paramString(params.region) || "I") as RegionCode;
+  const numDependents = Number(paramString(params.numDependents) || "0");
+  const month = Number(paramString(params.month) || "3");
   const insuranceRaw = paramString(params.insuranceSalary);
   const insuranceSalary = insuranceRaw ? Number(insuranceRaw) : undefined;
 
@@ -34,16 +34,18 @@ export function ComparisonScreen() {
             ? insuranceSalary
             : undefined,
       }),
-    [gross, region, numDependents, month, insuranceSalary],
+    [gross, region, numDependents, month, insuranceSalary]
   );
 
   return (
     <>
-      <Stack.Screen options={{ title: 'So sánh 2025 vs 2026', headerShown: true }} />
+      <Stack.Screen
+        options={{ title: "So sánh 2025 vs 2026", headerShown: true }}
+      />
       <ToolScreen
         nested
         title="So sánh biểu thuế"
-        subtitle="Gross giữ nguyên — đối chiếu Net / thuế giữa 2025 và 2026."
+        subtitle="Gross giữ nguyên; so Net và thuế giữa 2025 và 2026."
         showBrand={false}
         accessibilityLabel="Màn hình so sánh biểu thuế"
         aboveTabBar={false}

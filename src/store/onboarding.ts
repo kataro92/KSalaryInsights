@@ -1,6 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const ONBOARDING_STORAGE_KEY = 'kv.onboarding.v1';
+export const ONBOARDING_STORAGE_KEY = "kv.onboarding.v1";
 
 export type OnboardingState = {
   completed: boolean;

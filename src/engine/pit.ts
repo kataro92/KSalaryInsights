@@ -1,5 +1,9 @@
-import { roundVnd } from '@/src/domain/constants/salary';
-import type { PitBracketSlice, PitBreakdown, Ruleset } from '@/src/domain/types/salary';
+import { roundVnd } from "@/src/domain/constants/salary";
+import type {
+  PitBracketSlice,
+  PitBreakdown,
+  Ruleset,
+} from "@/src/domain/types/salary";
 
 /**
  * Progressive PIT on monthly taxable income (TNTT).
@@ -8,13 +12,13 @@ import type { PitBracketSlice, PitBreakdown, Ruleset } from '@/src/domain/types/
 export function calculatePit(
   incomeAfterInsurance: number,
   numDependents: number,
-  ruleset: Ruleset,
+  ruleset: Ruleset
 ): PitBreakdown {
   const personalRelief = ruleset.personal_relief;
   const dependentReliefTotal = numDependents * ruleset.dependent_relief;
   const taxableIncome = Math.max(
     0,
-    incomeAfterInsurance - personalRelief - dependentReliefTotal,
+    incomeAfterInsurance - personalRelief - dependentReliefTotal
   );
 
   const brackets: PitBracketSlice[] = [];
@@ -54,11 +58,11 @@ export function calculatePit(
 }
 
 /**
- * Progressive PIT on annual TNTT — bracket ceilings = monthly max × 12.
+ * Progressive PIT on annual TNTT. Bracket ceilings = monthly max × 12.
  */
 export function calculateAnnualPit(
   taxableIncomeYear: number,
-  ruleset: Ruleset,
+  ruleset: Ruleset
 ): { brackets: PitBracketSlice[]; totalTax: number } {
   const brackets: PitBracketSlice[] = [];
   let remaining = Math.max(0, taxableIncomeYear);

@@ -6,9 +6,9 @@ import React, {
   useRef,
   useState,
   type ReactNode,
-} from 'react';
+} from "react";
 
-import { motion } from '@/src/theme/tokens';
+import { motion } from "@/src/theme/tokens";
 
 type LoadingContextValue = {
   visible: boolean;
@@ -44,7 +44,7 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
         }
       }, motion.loadingDelayMs);
     },
-    [clearDelay],
+    [clearDelay]
   );
 
   const hideLoading = useCallback(() => {
@@ -63,21 +63,23 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
         hideLoading();
       }
     },
-    [hideLoading, showLoading],
+    [hideLoading, showLoading]
   );
 
   const value = useMemo(
     () => ({ visible, message, showLoading, hideLoading, runWithLoading }),
-    [visible, message, showLoading, hideLoading, runWithLoading],
+    [visible, message, showLoading, hideLoading, runWithLoading]
   );
 
-  return <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>;
+  return (
+    <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>
+  );
 }
 
 export function useLoading(): LoadingContextValue {
   const ctx = useContext(LoadingContext);
   if (!ctx) {
-    throw new Error('useLoading must be used within LoadingProvider');
+    throw new Error("useLoading must be used within LoadingProvider");
   }
   return ctx;
 }

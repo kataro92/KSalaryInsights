@@ -1,11 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import { TextField } from '@/src/components/common/TextField';
-import { formatMoneyInput, parseMoney } from '@/src/theme/money';
-import { typography } from '@/src/theme/tokens';
-import type { TextInputProps } from 'react-native';
+import { TextField } from "@/src/components/common/TextField";
+import { formatMoneyInput, parseMoney } from "@/src/theme/money";
+import { typography } from "@/src/theme/tokens";
+import type { TextInputProps } from "react-native";
 
-type Props = Omit<TextInputProps, 'value' | 'onChangeText' | 'keyboardType'> & {
+type Props = Omit<TextInputProps, "value" | "onChangeText" | "keyboardType"> & {
   label?: string;
   value: string;
   onValueChange: (formatted: string, parsed: number | null) => void;
@@ -13,9 +13,15 @@ type Props = Omit<TextInputProps, 'value' | 'onChangeText' | 'keyboardType'> & {
 };
 
 /**
- * Money input — numeric pad, vi-VN grouping, tabular nums, large type.
+ * Money input. Numeric pad, vi-VN grouping, tabular nums, large type.
  */
-export function MoneyField({ label, value, onValueChange, style, ...rest }: Props) {
+export function MoneyField({
+  label,
+  value,
+  onValueChange,
+  style,
+  ...rest
+}: Props) {
   return (
     <TextField
       {...rest}

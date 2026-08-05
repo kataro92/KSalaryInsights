@@ -1,4 +1,4 @@
-import type { SalaryBreakdown } from '@/src/domain/types/salary';
+import type { SalaryBreakdown } from "@/src/domain/types/salary";
 
 export type ComparisonDelta = {
   /** year2.tax − year1.tax (negative = save tax in year2) */
@@ -17,7 +17,7 @@ export type ComparisonResult = {
 
 export type ComparisonFailure = {
   ok: false;
-  code: 'missing_ruleset' | 'invalid_input';
+  code: "missing_ruleset" | "invalid_input";
   message: string;
 };
 

@@ -1,19 +1,19 @@
-import { grossToNet } from '@/src/engine/grossToNet';
+import { grossToNet } from "@/src/engine/grossToNet";
 
-describe('Dependents ruleset switch (US2)', () => {
-  it('NPT=1: 2025 → 2026 updates personal and dependent relief', () => {
+describe("Dependents ruleset switch (US2)", () => {
+  it("NPT=1: 2025 → 2026 updates personal and dependent relief", () => {
     const y2025 = grossToNet({
       gross: 30_000_000,
-      region: 'I',
+      region: "I",
       taxYear: 2025,
-      asOfDate: '2025-06-15',
+      asOfDate: "2025-06-15",
       numDependents: 1,
     });
     const y2026 = grossToNet({
       gross: 30_000_000,
-      region: 'I',
+      region: "I",
       taxYear: 2026,
-      asOfDate: '2026-03-15',
+      asOfDate: "2026-03-15",
       numDependents: 1,
     });
 

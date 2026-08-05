@@ -24,15 +24,15 @@
 ### Edge Cases
 
 - Công thức hưu phức tạp → kết quả ghi “khoảng ước tính”, không phải số chính thức.
-- Điều kiện rút thay đổi theo luật — ruleset phải version.
+- Điều kiện rút thay đổi theo luật. ruleset phải version.
 
 ## Requirements *(mandatory)*
 
 - **FR-001**: MUST so sánh side-by-side hai kịch bản.
 - **FR-002**: MUST bắt buộc hiện và xác nhận disclaimer.
 - **FR-003**: MUST lấy điều kiện/hệ số từ ruleset gắn Luật BHXH 2024:
-  - BHXH một lần (Đ.70, **đã khóa**): (1,5 × năm trước 2014 + 2 × năm từ 2014) × MBQTL đã nhân hệ số trượt giá (CV 340/BHXH-CSXH cho 2026); lẻ 1–6 tháng = ½ năm, 7–11 = 1 năm; <1 năm = số đã đóng, tối đa 2 tháng.
-  - Điều kiện rút tách theo mốc tham gia trước/từ **01/07/2025** (checklist khác nhau).
+ - BHXH một lần (Đ.70, **đã khóa**): (1,5 × năm trước 2014 + 2 × năm từ 2014) × MBQTL đã nhân hệ số trượt giá (CV 340/BHXH-CSXH cho 2026); lẻ 1–6 tháng = ½ năm, 7–11 = 1 năm; <1 năm = số đã đóng, tối đa 2 tháng.
+ - Điều kiện rút tách theo mốc tham gia trước/từ **01/07/2025** (checklist khác nhau).
 - **FR-004**: MUST NOT khuyến nghị “nên rút” hay “nên chờ”.
 - **FR-005**: Lương hưu = **giản lược có ghi chú giới hạn** (đã chốt): user nhập giới tính + số năm đóng + MBQTL giả định → ước tính. Tỷ lệ **đã khóa** theo Đ.66 Luật BHXH 2024: nữ 45%@15 năm +2%/năm (max 75%@30); nam ≥20 năm: 45%@20 +2%/năm (max 75%@35); nam 15–<20 năm: 40%@15 +1%/năm. Giới hạn ghi rõ: MBQTL thật phụ thuộc lịch sử đóng + trượt giá, app không tính thay.
 - **FR-006**: MUST cho nhập hệ số trượt giá thủ công hoặc chọn bảng năm từ ruleset.

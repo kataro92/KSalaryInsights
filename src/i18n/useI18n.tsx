@@ -1,9 +1,15 @@
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  type ReactNode,
+} from "react";
 
-import { translate, type MessageKey } from '@/src/i18n/messages';
-import { getTip } from '@/src/i18n/tips';
-import type { LocaleCode, TipContent, TipId } from '@/src/i18n/types';
-import { usePreferences } from '@/src/hooks/usePreferences';
+import { translate, type MessageKey } from "@/src/i18n/messages";
+import { getTip } from "@/src/i18n/tips";
+import type { LocaleCode, TipContent, TipId } from "@/src/i18n/types";
+import { usePreferences } from "@/src/hooks/usePreferences";
 
 type I18nValue = {
   locale: LocaleCode;
@@ -18,8 +24,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const locale = preferences.locale;
 
   const t = useCallback(
-    (key: MessageKey, vars?: Record<string, string | number>) => translate(locale, key, vars),
-    [locale],
+    (key: MessageKey, vars?: Record<string, string | number>) =>
+      translate(locale, key, vars),
+    [locale]
   );
 
   const tip = useCallback((id: TipId) => getTip(locale, id), [locale]);
@@ -32,7 +39,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 export function useI18n(): I18nValue {
   const ctx = useContext(I18nContext);
   if (!ctx) {
-    throw new Error('useI18n must be used within I18nProvider');
+    throw new Error("useI18n must be used within I18nProvider");
   }
   return ctx;
 }

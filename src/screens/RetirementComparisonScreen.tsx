@@ -1,65 +1,67 @@
-import { useMemo, useState } from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { useMemo, useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 
-import { LumpSumEligibilityChecklist } from '@/src/components/checklist/LumpSumEligibilityChecklist';
-import { Button } from '@/src/components/common/Button';
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { MoneyField } from '@/src/components/common/MoneyField';
-import { Section } from '@/src/components/common/Section';
-import { ToolScreen } from '@/src/components/common/ToolScreen';
-import { RetirementComparisonView } from '@/src/components/comparison/RetirementComparisonView';
-import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { LumpSumEligibilityChecklist } from "@/src/components/checklist/LumpSumEligibilityChecklist";
+import { Button } from "@/src/components/common/Button";
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
+import { Section } from "@/src/components/common/Section";
+import { ToolScreen } from "@/src/components/common/ToolScreen";
+import { RetirementComparisonView } from "@/src/components/comparison/RetirementComparisonView";
+import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import {
   canShowRetirementAmounts,
   LumpSumDisclaimerGate,
-} from '@/src/components/disclaimer/LumpSumDisclaimerGate';
-import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { miuTips } from '@/src/copy/miu';
+} from "@/src/components/disclaimer/LumpSumDisclaimerGate";
+import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
+import { miuTips } from "@/src/copy/miu";
 import type {
   DisclaimerAckState,
   LumpSumBreakdown,
   PensionBreakdown,
   Sex,
-} from '@/src/domain/types/retirement';
-import { calcLumpSum } from '@/src/engine/bhxhLumpSum';
-import { calcPensionMonthly } from '@/src/engine/pensionEstimate';
+} from "@/src/domain/types/retirement";
+import { calcLumpSum } from "@/src/engine/bhxhLumpSum";
+import { calcPensionMonthly } from "@/src/engine/pensionEstimate";
 import {
   getInflationAdjustment,
   listInflationAdjustmentYears,
-} from '@/src/engine/rulesetLoader';
-import { successHaptic } from '@/src/theme/haptics';
-import { parseMoney } from '@/src/theme/money';
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+} from "@/src/engine/rulesetLoader";
+import { successHaptic } from "@/src/theme/haptics";
+import { parseMoney } from "@/src/theme/money";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { useTheme } from "@/src/theme/ThemeProvider";
+import { layout, radii, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
 
 function parseIntSafe(raw: string): number {
-  const digits = raw.replace(/[^\d]/g, '');
+  const digits = raw.replace(/[^\d]/g, "");
   if (!digits) return 0;
   return Number(digits);
 }
 
 export function RetirementComparisonScreen() {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [ack, setAck] = useState<DisclaimerAckState>({ acknowledged: false });
-  const [sex, setSex] = useState<Sex>('female');
-  const [t1Years, setT1Years] = useState('4');
-  const [t1Months, setT1Months] = useState('0');
-  const [t2Years, setT2Years] = useState('10');
-  const [t2Months, setT2Months] = useState('0');
-  const [pensionYears, setPensionYears] = useState('25');
-  const [mbqtlText, setMbqtlText] = useState('12.000.000');
-  const [participationDate, setParticipationDate] = useState('2020-01-15');
+  const [sex, setSex] = useState<Sex>("female");
+  const [t1Years, setT1Years] = useState("4");
+  const [t1Months, setT1Months] = useState("0");
+  const [t2Years, setT2Years] = useState("10");
+  const [t2Months, setT2Months] = useState("0");
+  const [pensionYears, setPensionYears] = useState("25");
+  const [mbqtlText, setMbqtlText] = useState("12.000.000");
+  const [participationDate, setParticipationDate] = useState("2020-01-15");
   const [tableYear, setTableYear] = useState(2026);
   const [error, setError] = useState<string | null>(null);
   const [lumpSum, setLumpSum] = useState<LumpSumBreakdown | null>(null);
   const [pension, setPension] = useState<PensionBreakdown | null>(null);
 
   const tableYears = useMemo(() => listInflationAdjustmentYears(), []);
-  const inflation = useMemo(() => getInflationAdjustment(tableYear), [tableYear]);
+  const inflation = useMemo(
+    () => getInflationAdjustment(tableYear),
+    [tableYear]
+  );
 
   const showAmounts = canShowRetirementAmounts(ack.acknowledged);
 
@@ -67,7 +69,7 @@ export function RetirementComparisonScreen() {
     setError(null);
     const mbqtl = parseMoney(mbqtlText);
     if (mbqtl == null || mbqtl <= 0) {
-      setError('Nhập MBQTL hợp lệ.');
+      setError("Nhập MBQTL hợp lệ.");
       setLumpSum(null);
       setPension(null);
       return;
@@ -92,7 +94,7 @@ export function RetirementComparisonScreen() {
     } catch (e) {
       setLumpSum(null);
       setPension(null);
-      setError(e instanceof Error ? e.message : 'Không tính được.');
+      setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
 
@@ -106,156 +108,210 @@ export function RetirementComparisonScreen() {
     <ToolScreen
       nested
       title="Hưu / BHXH một lần"
-      subtitle="So sánh hai kịch bản · bắt buộc đọc cảnh báo trước khi xem số."
+      subtitle="So sánh hai hướng. đọc cảnh báo trước khi xem số."
       accessibilityLabel="So sánh hưu trí và BHXH một lần"
       sticky={<Button label="Tính so sánh" onPress={onCalculate} />}
     >
-        <LumpSumDisclaimerGate
-          acknowledged={ack.acknowledged}
-          onAcknowledge={() =>
-            setAck({
-              acknowledged: true,
-              acknowledgedAt: new Date().toISOString(),
-            })
-          }
-        />
+      <LumpSumDisclaimerGate
+        acknowledged={ack.acknowledged}
+        onAcknowledge={() =>
+          setAck({
+            acknowledged: true,
+            acknowledgedAt: new Date().toISOString(),
+          })
+        }
+      />
 
-        <Section title="Giới tính" subtitle="Chọn nhánh tỷ lệ lương hưu Đ.66.">
-          <View style={styles.row}>
-            {(
-              [
-                { id: 'female' as const, label: 'Nữ' },
-                { id: 'male' as const, label: 'Nam' },
-              ] as const
-            ).map((opt) => {
-              const selected = sex === opt.id;
-              return (
-                <Pressable
-                  key={opt.id}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected }}
-                  onPress={() => {
-                    setSex(opt.id);
-                    setLumpSum(null);
-                    setPension(null);
-                  }}
-                  style={[styles.chip, selected && styles.chipSelected]}
+      <Section title="Giới tính" subtitle="Chọn nhánh tỷ lệ lương hưu Đ.66.">
+        <View style={styles.row}>
+          {(
+            [
+              { id: "female" as const, label: "Nữ" },
+              { id: "male" as const, label: "Nam" },
+            ] as const
+          ).map((opt) => {
+            const selected = sex === opt.id;
+            return (
+              <Pressable
+                key={opt.id}
+                accessibilityRole="button"
+                accessibilityState={{ selected }}
+                onPress={() => {
+                  setSex(opt.id);
+                  setLumpSum(null);
+                  setPension(null);
+                }}
+                style={[styles.chip, selected && styles.chipSelected]}
+              >
+                <Text
+                  style={[
+                    styles.chipLabel,
+                    selected && styles.chipLabelSelected,
+                  ]}
                 >
-                  <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>
-                    {opt.label}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </Section>
+                  {opt.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </Section>
 
-        <Section
-          title="Năm đóng BHXH một lần"
-          subtitle="T1 trước 2014 · T2 từ 2014 (tháng lẻ Đ.5 k.6)."
-        >
-          <View style={styles.pair}>
-            <Field label="T1 năm" value={t1Years} onChange={setT1Years} clear={() => { setLumpSum(null); setPension(null); }} />
-            <Field label="T1 tháng lẻ" value={t1Months} onChange={setT1Months} clear={() => { setLumpSum(null); setPension(null); }} />
-          </View>
-          <View style={styles.pair}>
-            <Field label="T2 năm" value={t2Years} onChange={setT2Years} clear={() => { setLumpSum(null); setPension(null); }} />
-            <Field label="T2 tháng lẻ" value={t2Months} onChange={setT2Months} clear={() => { setLumpSum(null); setPension(null); }} />
-          </View>
-        </Section>
-
-        <Section title="Năm đóng cho lương hưu" subtitle="Tổng năm đóng dùng cho tỷ lệ Đ.66.">
+      <Section
+        title="Năm đóng BHXH một lần"
+        subtitle="T1 trước 2014 · T2 từ 2014 (tháng lẻ Đ.5 k.6)."
+      >
+        <View style={styles.pair}>
           <Field
-            label="Tổng năm đóng"
-            value={pensionYears}
-            onChange={setPensionYears}
+            styles={styles}
+            label="T1 năm"
+            value={t1Years}
+            onChange={setT1Years}
             clear={() => {
               setLumpSum(null);
               setPension(null);
             }}
           />
-        </Section>
-
-        <Section
-          title="MBQTL đã trượt giá"
-          subtitle={`Nhập thủ công hoặc tham chiếu bảng CV ${inflation.table_year}.`}
-        >
-          <MoneyField
-            accessibilityLabel="MBQTL đã trượt giá"
-            value={mbqtlText}
-            onValueChange={(formatted) => {
-              setMbqtlText(formatted);
+          <Field
+            styles={styles}
+            label="T1 tháng lẻ"
+            value={t1Months}
+            onChange={setT1Months}
+            clear={() => {
               setLumpSum(null);
               setPension(null);
             }}
           />
-          <Text style={styles.hint}>
-            Bảng hệ số {inflation.table_year}: ví dụ 2014 = {inflation.coefficients_by_year['2014']},
-            2025 = {inflation.coefficients_by_year['2025']} ({inflation.legal_source}).
-          </Text>
-          <View style={styles.row}>
-            {tableYears.map((y) => {
-              const selected = tableYear === y;
-              return (
-                <Pressable
-                  key={y}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected }}
-                  onPress={() => setTableYear(y)}
-                  style={[styles.chip, selected && styles.chipSelected]}
-                >
-                  <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>
-                    Bảng {y}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </Section>
-
-        <Section
-          title="Ngày tham gia lần đầu"
-          subtitle="Chỉ ảnh hưởng checklist điều kiện rút (không đổi số tiền)."
-        >
-          <TextInput
-            accessibilityLabel="Ngày tham gia BHXH YYYY-MM-DD"
-            autoCapitalize="none"
-            value={participationDate}
-            onChangeText={(t) => {
-              setParticipationDate(t.trim());
+        </View>
+        <View style={styles.pair}>
+          <Field
+            styles={styles}
+            label="T2 năm"
+            value={t2Years}
+            onChange={setT2Years}
+            clear={() => {
               setLumpSum(null);
               setPension(null);
             }}
-            style={styles.input}
-            placeholder="YYYY-MM-DD"
-            placeholderTextColor={colors.border}
           />
-        </Section>
+          <Field
+            styles={styles}
+            label="T2 tháng lẻ"
+            value={t2Months}
+            onChange={setT2Months}
+            clear={() => {
+              setLumpSum(null);
+              setPension(null);
+            }}
+          />
+        </View>
+      </Section>
 
-        {error ? (
-          <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
-        ) : null}
-
-        {showAmounts && lumpSum && pension ? (
-          <NgaiMiuTip tip={miuTips.retirement} />
-        ) : null}
-
-        <RetirementComparisonView
-          lumpSum={lumpSum}
-          pension={pension}
-          showAmounts={showAmounts}
+      <Section
+        title="Năm đóng cho lương hưu"
+        subtitle="Tổng năm đóng dùng cho tỷ lệ Đ.66."
+      >
+        <Field
+          styles={styles}
+          label="Tổng năm đóng"
+          value={pensionYears}
+          onChange={setPensionYears}
+          clear={() => {
+            setLumpSum(null);
+            setPension(null);
+          }}
         />
+      </Section>
 
-        {showAmounts && lumpSum ? (
-          <LumpSumEligibilityChecklist
-            items={lumpSum.checklist}
-            beforeCutoff={lumpSum.beforeCutoff}
-          />
-        ) : null}
+      <Section
+        title="MBQTL đã trượt giá"
+        subtitle={`Nhập thủ công hoặc tham chiếu bảng CV ${inflation.table_year}.`}
+      >
+        <MoneyField
+          accessibilityLabel="MBQTL đã trượt giá"
+          value={mbqtlText}
+          onValueChange={(formatted) => {
+            setMbqtlText(formatted);
+            setLumpSum(null);
+            setPension(null);
+          }}
+        />
+        <Text style={styles.hint}>
+          Bảng hệ số {inflation.table_year}: ví dụ 2014 ={" "}
+          {inflation.coefficients_by_year["2014"]}, 2025 ={" "}
+          {inflation.coefficients_by_year["2025"]} ({inflation.legal_source}).
+        </Text>
+        <View style={styles.row}>
+          {tableYears.map((y) => {
+            const selected = tableYear === y;
+            return (
+              <Pressable
+                key={y}
+                accessibilityRole="button"
+                accessibilityState={{ selected }}
+                onPress={() => setTableYear(y)}
+                style={[styles.chip, selected && styles.chipSelected]}
+              >
+                <Text
+                  style={[
+                    styles.chipLabel,
+                    selected && styles.chipLabelSelected,
+                  ]}
+                >
+                  Bảng {y}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </Section>
 
-        {showAmounts && lumpSum && pension ? (
-          <DisclaimerFooter legalSources={[...new Set(legalSources)]} collapseSources />
-        ) : null}
+      <Section
+        title="Ngày tham gia lần đầu"
+        subtitle="Chỉ ảnh hưởng checklist điều kiện rút (không đổi số tiền)."
+      >
+        <TextInput
+          accessibilityLabel="Ngày tham gia BHXH YYYY-MM-DD"
+          autoCapitalize="none"
+          value={participationDate}
+          onChangeText={(t) => {
+            setParticipationDate(t.trim());
+            setLumpSum(null);
+            setPension(null);
+          }}
+          style={styles.input}
+          placeholder="YYYY-MM-DD"
+          placeholderTextColor={colors.border}
+        />
+      </Section>
+
+      {error ? (
+        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+      ) : null}
+
+      {showAmounts && lumpSum && pension ? (
+        <NgaiMiuTip tip={miuTips.retirement} />
+      ) : null}
+
+      <RetirementComparisonView
+        lumpSum={lumpSum}
+        pension={pension}
+        showAmounts={showAmounts}
+      />
+
+      {showAmounts && lumpSum ? (
+        <LumpSumEligibilityChecklist
+          items={lumpSum.checklist}
+          beforeCutoff={lumpSum.beforeCutoff}
+        />
+      ) : null}
+
+      {showAmounts && lumpSum && pension ? (
+        <DisclaimerFooter
+          legalSources={[...new Set(legalSources)]}
+          collapseSources
+        />
+      ) : null}
     </ToolScreen>
   );
 }
@@ -265,11 +321,13 @@ function Field({
   value,
   onChange,
   clear,
+  styles,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   clear: () => void;
+  styles: ReturnType<typeof makeStyles>;
 }) {
   return (
     <View style={styles.field}>
@@ -279,7 +337,7 @@ function Field({
         keyboardType="number-pad"
         value={value}
         onChangeText={(t) => {
-          onChange(t.replace(/[^\d]/g, ''));
+          onChange(t.replace(/[^\d]/g, ""));
           clear();
         }}
         style={styles.input}
@@ -288,49 +346,51 @@ function Field({
   );
 }
 
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2] },
-  pair: { flexDirection: 'row', gap: space[3], marginBottom: space[3] },
-  field: { flex: 1, gap: space[1] },
-  fieldLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 12,
-    color: colors.foreground,
-    opacity: 0.7,
-  },
-  chip: {
-    minHeight: layout.minTouch,
-    paddingHorizontal: space[4],
-    borderRadius: radii.md,
-    backgroundColor: colors.muted,
-    justifyContent: 'center',
-  },
-  chipSelected: { backgroundColor: colors.primary },
-  chipLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: colors.foreground,
-  },
-  chipLabelSelected: { color: colors.white },
-  input: {
-    minHeight: layout.minTouch,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    paddingHorizontal: space[3],
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 16,
-    color: colors.foreground,
-    fontVariant: ['tabular-nums'],
-    backgroundColor: colors.white,
-  },
-  hint: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 12,
-    lineHeight: 18,
-    color: colors.foreground,
-    opacity: 0.7,
-    marginTop: space[2],
-    marginBottom: space[2],
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    row: { flexDirection: "row", flexWrap: "wrap", gap: space[2] },
+    pair: { flexDirection: "row", gap: space[3], marginBottom: space[3] },
+    field: { flex: 1, gap: space[1] },
+    fieldLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 12,
+      color: colors.foreground,
+      opacity: 0.7,
+    },
+    chip: {
+      minHeight: layout.minTouch,
+      paddingHorizontal: space[4],
+      borderRadius: radii.md,
+      backgroundColor: colors.muted,
+      justifyContent: "center",
+    },
+    chipSelected: { backgroundColor: colors.primary },
+    chipLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 14,
+      color: colors.foreground,
+    },
+    chipLabelSelected: { color: colors.white },
+    input: {
+      minHeight: layout.minTouch,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radii.md,
+      paddingHorizontal: space[3],
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 16,
+      color: colors.foreground,
+      fontVariant: ["tabular-nums"],
+      backgroundColor: colors.white,
+    },
+    hint: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: 12,
+      lineHeight: 18,
+      color: colors.foreground,
+      opacity: 0.7,
+      marginTop: space[2],
+      marginBottom: space[2],
+    },
+  } satisfies ThemedStyleSheet;
+}

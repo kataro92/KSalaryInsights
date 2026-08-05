@@ -1,16 +1,16 @@
-import { REGION_TO_KEY, roundVnd } from '@/src/domain/constants/salary';
+import { REGION_TO_KEY, roundVnd } from "@/src/domain/constants/salary";
 import type {
   EligibilityChecklistItem,
   UnemploymentBreakdown,
   UnemploymentInput,
-} from '@/src/domain/types/benefits';
-import { getRuleset } from '@/src/engine/rulesetLoader';
+} from "@/src/domain/types/benefits";
+import { getRuleset } from "@/src/engine/rulesetLoader";
 
 function benefitMonthsFromPaid(
   monthsPaid: number,
   base: number,
   per12: number,
-  max: number,
+  max: number
 ): number {
   if (monthsPaid < 36) {
     return base;
@@ -19,15 +19,15 @@ function benefitMonthsFromPaid(
 }
 
 /**
- * Trợ cấp thất nghiệp (BHTN) — mức tháng = min(60% × lương BQ 6 tháng, 5×LTTV).
+ * Trợ cấp thất nghiệp (BHTN). Mức tháng = min(60% × lương BQ 6 tháng, 5×LTTV).
  */
 export function calcUnemploymentBenefit(
-  input: UnemploymentInput,
+  input: UnemploymentInput
 ): UnemploymentBreakdown {
   const ruleset = getRuleset(input.taxYear, input.lastContributionDate);
   const params = ruleset.unemployment_benefit;
   if (!params) {
-    throw new Error('Ruleset thiếu unemployment_benefit');
+    throw new Error("Thiếu tham số unemployment_benefit");
   }
 
   const regionalMinWage =
@@ -43,21 +43,23 @@ export function calcUnemploymentBenefit(
 
   const checklist: EligibilityChecklistItem[] = [
     {
-      id: 'paid_min',
-      label: `Đóng đủ ít nhất ${params.min_paid_months} tháng BHTN trong ${lookback} tháng trước khi thất nghiệp${
-        input.shortTermContract ? ' (HĐ ngắn → lookback 36 tháng)' : ''
+      id: "paid_min",
+      label: `Đóng đủ ít nhất ${
+        params.min_paid_months
+      } tháng BHTN trong ${lookback} tháng trước khi thất nghiệp${
+        input.shortTermContract ? " (HĐ ngắn → lookback 36 tháng)" : ""
       }.`,
     },
     {
-      id: 'file_deadline',
+      id: "file_deadline",
       label: `Nộp hồ sơ hưởng trong ${params.filing_deadline_months} tháng kể từ ngày chấm dứt HĐLĐ.`,
     },
     {
-      id: 'waiting',
+      id: "waiting",
       label: `Sau ${params.waiting_work_days} ngày làm việc kể từ ngày nộp hồ sơ mà chưa có việc làm.`,
     },
     {
-      id: 'start_day',
+      id: "start_day",
       label: `Thời điểm hưởng trợ cấp: ngày làm việc thứ ${params.benefit_start_work_day}.`,
     },
   ];
@@ -65,7 +67,7 @@ export function calcUnemploymentBenefit(
   const explanations: string[] = [];
   const legalSources = [
     ...ruleset.legal_sources,
-    'Luật Việc làm — trợ cấp thất nghiệp BHTN',
+    "Luật Việc làm. Trợ cấp thất nghiệp BHTN",
   ];
 
   if (input.monthsPaid < params.min_paid_months) {
@@ -79,7 +81,7 @@ export function calcUnemploymentBenefit(
       capMonthly,
       hitCap: false,
       regionalMinWage,
-      formula: 'Không đủ điều kiện hưởng',
+      formula: "Không đủ điều kiện hưởng",
       explanations: [
         `Cần tối thiểu ${params.min_paid_months} tháng đóng; hiện tại ${input.monthsPaid} tháng.`,
       ],
@@ -93,24 +95,37 @@ export function calcUnemploymentBenefit(
     input.monthsPaid,
     params.benefit_months_base,
     params.benefit_months_per_12_paid,
-    params.benefit_months_max,
+    params.benefit_months_max
   );
   const totalBenefit = roundVnd(monthlyBenefit * benefitMonths);
 
   explanations.push(
-    `Mức tháng = ${params.monthly_rate * 100}% × ${input.avgSalaryBhtn6m.toLocaleString('vi-VN')} = ${uncappedMonthly.toLocaleString('vi-VN')}.`,
+    `Mức tháng = ${
+      params.monthly_rate * 100
+    }% × ${input.avgSalaryBhtn6m.toLocaleString(
+      "vi-VN"
+    )} = ${uncappedMonthly.toLocaleString("vi-VN")}.`
   );
   explanations.push(
-    `Trần = ${params.cap_lttv_multiplier} × LTTV vùng ${input.region} (${regionalMinWage.toLocaleString('vi-VN')}) = ${capMonthly.toLocaleString('vi-VN')} (ruleset ${ruleset.id}, ngày cuối đóng ${input.lastContributionDate}).`,
+    `Trần = ${params.cap_lttv_multiplier} × LTTV vùng ${
+      input.region
+    } (${regionalMinWage.toLocaleString(
+      "vi-VN"
+    )}) = ${capMonthly.toLocaleString("vi-VN")} (mức ${ruleset.id.replace(
+      /^ruleset-/,
+      ""
+    )}, ngày cuối đóng ${input.lastContributionDate}).`
   );
   if (hitCap) {
-    explanations.push('Đã chạm trần 5× LTTV — không áp trần lương cơ sở.');
+    explanations.push("Đã chạm trần 5× LTTV. Không áp trần lương cơ sở.");
   }
   explanations.push(
-    `Số tháng hưởng = min(${params.benefit_months_max}, ${params.benefit_months_base} + floor((${input.monthsPaid}−36)/12)) = ${benefitMonths}.`,
+    `Số tháng hưởng = min(${params.benefit_months_max}, ${params.benefit_months_base} + floor((${input.monthsPaid}−36)/12)) = ${benefitMonths}.`
   );
 
-  const formula = `${monthlyBenefit.toLocaleString('vi-VN')}/tháng × ${benefitMonths} tháng = ${totalBenefit.toLocaleString('vi-VN')}`;
+  const formula = `${monthlyBenefit.toLocaleString(
+    "vi-VN"
+  )}/tháng × ${benefitMonths} tháng = ${totalBenefit.toLocaleString("vi-VN")}`;
 
   return {
     eligible: true,

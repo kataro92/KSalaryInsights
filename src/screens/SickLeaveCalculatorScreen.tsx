@@ -1,37 +1,37 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { SickLeaveBreakdownCard } from '@/src/components/breakdown/SickLeaveBreakdownCard';
-import { Button } from '@/src/components/common/Button';
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { ResultHero } from '@/src/components/common/ResultHero';
-import { ToolScreen } from '@/src/components/common/ToolScreen';
-import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
+import { SickLeaveBreakdownCard } from "@/src/components/breakdown/SickLeaveBreakdownCard";
+import { Button } from "@/src/components/common/Button";
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { ResultHero } from "@/src/components/common/ResultHero";
+import { ToolScreen } from "@/src/components/common/ToolScreen";
+import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import {
   SickLeaveInputs,
   type SickLeaveInputsValue,
-} from '@/src/components/inputs/SickLeaveInputs';
-import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { emptyCopy, miuTips } from '@/src/copy/miu';
-import { TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
-import type { SickLeaveBreakdown } from '@/src/domain/types/benefits';
-import { calculateSickLeave } from '@/src/engine/sickLeave';
-import { usePreferences } from '@/src/hooks/usePreferences';
-import { successHaptic } from '@/src/theme/haptics';
-import { parseMoney } from '@/src/theme/money';
+} from "@/src/components/inputs/SickLeaveInputs";
+import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
+import { emptyCopy, miuTips } from "@/src/copy/miu";
+import { TAX_YEAR_OPTIONS } from "@/src/domain/constants/salary";
+import type { SickLeaveBreakdown } from "@/src/domain/types/benefits";
+import { calculateSickLeave } from "@/src/engine/sickLeave";
+import { usePreferences } from "@/src/hooks/usePreferences";
+import { successHaptic } from "@/src/theme/haptics";
+import { parseMoney } from "@/src/theme/money";
 
 export function SickLeaveCalculatorScreen() {
   const { preferences } = usePreferences();
   const taxYear = (TAX_YEAR_OPTIONS as readonly number[]).includes(
-    preferences.defaultTaxYear,
+    preferences.defaultTaxYear
   )
     ? preferences.defaultTaxYear
     : 2026;
 
   const [inputs, setInputs] = useState<SickLeaveInputsValue>({
-    salaryText: '12.000.000',
-    daysText: '5',
-    yearsText: '5',
-    hazard: 'normal',
+    salaryText: "12.000.000",
+    daysText: "5",
+    yearsText: "5",
+    hazard: "normal",
   });
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<SickLeaveBreakdown | null>(null);
@@ -40,14 +40,14 @@ export function SickLeaveCalculatorScreen() {
     setError(null);
     const salary = parseMoney(inputs.salaryText);
     const days = Number(inputs.daysText);
-    const years = Number(inputs.yearsText || '0');
+    const years = Number(inputs.yearsText || "0");
     if (salary == null || salary <= 0) {
-      setError('Nhập lương tháng liền kề hợp lệ.');
+      setError("Nhập lương tháng liền kề hợp lệ.");
       setResult(null);
       return;
     }
     if (!Number.isInteger(days) || days < 0) {
-      setError('Số ngày nghỉ không hợp lệ.');
+      setError("Số ngày nghỉ không hợp lệ.");
       setResult(null);
       return;
     }
@@ -63,7 +63,7 @@ export function SickLeaveCalculatorScreen() {
       void successHaptic();
     } catch (e) {
       setResult(null);
-      setError(e instanceof Error ? e.message : 'Không tính được.');
+      setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
 
@@ -71,7 +71,7 @@ export function SickLeaveCalculatorScreen() {
     <ToolScreen
       nested
       title="Ốm đau"
-      subtitle="75% ÷ 24 ngày · trần năm theo năm đóng BHXH."
+      subtitle="75% lương ngày · có trần theo số năm đóng BHXH."
       accessibilityLabel="Máy tính ốm đau"
       sticky={<Button label="Tính ốm đau" onPress={onCalculate} />}
     >
@@ -83,14 +83,25 @@ export function SickLeaveCalculatorScreen() {
         }}
       />
       {error ? (
-        <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
+        <EmptyErrorState
+          variant="error"
+          title={emptyCopy.calculateError.title}
+          body={error}
+        />
       ) : null}
       {result ? (
         <>
-          <ResultHero eyebrow="Ước ốm đau" label="Trợ cấp" amount={result.amount} />
+          <ResultHero
+            eyebrow="Ước ốm đau"
+            label="Trợ cấp"
+            amount={result.amount}
+          />
           <NgaiMiuTip tip={miuTips.sickLeave} />
           <SickLeaveBreakdownCard result={result} hideTotal />
-          <DisclaimerFooter legalSources={result.legalSources} collapseSources />
+          <DisclaimerFooter
+            legalSources={result.legalSources}
+            collapseSources
+          />
         </>
       ) : !error ? (
         <EmptyErrorState

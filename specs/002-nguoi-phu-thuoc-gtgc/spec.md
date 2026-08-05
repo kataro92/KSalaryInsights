@@ -36,7 +36,7 @@ Minh chọn 2 NPT khi tính lương 2026, thấy thuế về 0 theo TC-TNCN-2026
 
 ### Edge Cases
 
-- NPT < 0 → reject; NPT tối đa 20 — nhập quá 20 bị chặn kèm giải thích giới hạn app.
+- NPT < 0 → reject; NPT tối đa 20: nhập quá 20 bị chặn kèm giải thích giới hạn app.
 - GTGC > thu nhập chịu thuế → thuế 0.
 
 ## Requirements *(mandatory)*

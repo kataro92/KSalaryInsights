@@ -1,220 +1,220 @@
 {
-  "id": "ruleset-2025",
-  "version": "1.0.0",
-  "name": "Kỳ tính thuế 2025",
-  "tax_year": 2025,
-  "effective_from": "2025-01-01",
-  "effective_to": "2025-12-31",
-  "legal_sources": [
-    "Luật TNCN 2007 (VBHN 15) Đ.22 — biểu 7 bậc",
-    "NQ 954/2020/UBTVQH14 — GTGC 11/4,4",
-    "NĐ 73/2024/NĐ-CP — lương cơ sở 2,34tr",
-    "NĐ 74/2024/NĐ-CP — LTTV 2025",
-    "Luật BHXH 41/2024/QH15 — tỷ lệ/trần đóng"
-  ],
-  "personal_relief": 11000000,
-  "dependent_relief": 4400000,
-  "reference_salary": 2340000,
-  "regional_minimum_wages": {
-    "1": 4960000,
-    "2": 4410000,
-    "3": 3860000,
-    "4": 3450000
-  },
-  "insurance_rates": {
-    "employee": {
-      "social": 0.08,
-      "health": 0.015,
-      "unemployment": 0.01
-    },
-    "employer": {
-      "social": 0.17,
-      "health": 0.03,
-      "unemployment": 0.01,
-      "occupational_accident": 0.005
-    }
-  },
-  "insurance_caps": {
-    "social_health_multiplier": 20,
-    "unemployment_multiplier": 20
-  },
-  "pit_brackets": [
-    {
-      "bracket": 1,
-      "max_taxable_income": 5000000,
-      "rate": 0.05
-    },
-    {
-      "bracket": 2,
-      "max_taxable_income": 10000000,
-      "rate": 0.1
-    },
-    {
-      "bracket": 3,
-      "max_taxable_income": 18000000,
-      "rate": 0.15
-    },
-    {
-      "bracket": 4,
-      "max_taxable_income": 32000000,
-      "rate": 0.2
-    },
-    {
-      "bracket": 5,
-      "max_taxable_income": 52000000,
-      "rate": 0.25
-    },
-    {
-      "bracket": 6,
-      "max_taxable_income": 80000000,
-      "rate": 0.3
-    },
-    {
-      "bracket": 7,
-      "max_taxable_income": null,
-      "rate": 0.35
-    }
-  ],
-  "severance_pay": {
-    "resignation_months_per_year": 0.5,
-    "job_loss_months_per_year": 1.0,
-    "job_loss_min_months": 2
-  },
-  "unemployment_benefit": {
-    "monthly_rate": 0.6,
-    "cap_lttv_multiplier": 5,
-    "benefit_months_base": 3,
-    "benefit_months_per_12_paid": 1,
-    "benefit_months_max": 12,
-    "min_paid_months": 12,
-    "waiting_work_days": 10,
-    "benefit_start_work_day": 11,
-    "filing_deadline_months": 3,
-    "lookback_months_standard": 24,
-    "lookback_months_short_contract": 36
-  },
-  "maternity": {
-    "rate": 1.0,
-    "one_time_multiplier": 2,
-    "first_child_months": 6,
-    "second_child_months": 7,
-    "second_child_extended_from": "2026-07-01",
-    "twin_bonus_from_child": 2
-  },
-  "sick_leave": {
-    "rate": 0.75,
-    "divisor": 24,
-    "annual_day_caps_normal": [
-      30,
-      40,
-      60
-    ],
-    "annual_day_caps_hazardous": [
-      40,
-      50,
-      70
-    ],
-    "years_thresholds": [
-      15,
-      30
-    ]
-  },
-  "lump_sum_withdrawal": {
-    "pre_2014_coefficient": 1.5,
-    "from_2014_coefficient": 2.0,
-    "participation_cutoff": "2025-07-01",
-    "under_one_year_max_months": 2,
-    "conditions_before_cutoff": [
-      "Sau 12 tháng không tiếp tục đóng và chưa đủ 20 năm đóng",
-      "Đủ tuổi hưu nhưng thiếu năm đóng theo quy định",
-      "Định cư nước ngoài",
-      "Bệnh hiểm nghèo / suy giảm khả năng lao động ≥81% / khuyết tật đặc biệt nặng"
-    ],
-    "conditions_from_cutoff": [
-      "Đủ tuổi hưu nhưng chưa đủ 15 năm đóng",
-      "Định cư nước ngoài",
-      "Bệnh hiểm nghèo / suy giảm khả năng lao động ≥81% / khuyết tật đặc biệt nặng"
-    ]
-  },
-  "pension_rates": {
-    "female_base_years": 15,
-    "female_base_rate": 0.45,
-    "female_increment_per_year": 0.02,
-    "female_max_rate": 0.75,
-    "female_max_years": 30,
-    "male_long_base_years": 20,
-    "male_long_base_rate": 0.45,
-    "male_long_increment_per_year": 0.02,
-    "male_long_max_rate": 0.75,
-    "male_long_max_years": 35,
-    "male_short_base_years": 15,
-    "male_short_base_rate": 0.4,
-    "male_short_increment_per_year": 0.01,
-    "male_short_max_years": 19,
-    "min_years": 15
-  },
-  "inflation_adjustment": {
-    "table_year": 2026,
-    "note": "Bảng hệ số tách file inflation-adjustment-2026.json — load qua getInflationAdjustment(tableYear); không gắn logic thuế."
-  },
-  "other_income": {
-    "rent": {
-      "exemption_threshold": 1000000000,
-      "vat_rate": 0.05,
-      "pit_rate_on_excess": 0.05,
-      "reporting_form": "01/BĐS",
-      "reporting_deadline_note": "Thông báo doanh thu mẫu 01/BĐS hạn 31/01 năm sau; kỳ 2026 thêm mốc kê khai theo hướng dẫn cục thuế."
-    },
-    "hkd": {
-      "exemption_threshold": 1000000000,
-      "income_method_threshold": 3000000000,
-      "income_method_rate": 0.15,
-      "industry_rates": [
-        {
-          "id": "distribution",
-          "label": "Phân phối, cung cấp hàng hóa",
-          "vat_rate": 0.01,
-          "pit_rate": 0.005
-        },
-        {
-          "id": "services",
-          "label": "Dịch vụ, xây dựng không bao thầu NVL",
-          "vat_rate": 0.05,
-          "pit_rate": 0.02
-        },
-        {
-          "id": "asset_rental_agency",
-          "label": "Cho thuê TS, đại lý BH/xổ số/đa cấp",
-          "vat_rate": 0.05,
-          "pit_rate": 0.05
-        },
-        {
-          "id": "production_transport",
-          "label": "Sản xuất, vận tải, XD bao thầu NVL",
-          "vat_rate": 0.03,
-          "pit_rate": 0.015
-        },
-        {
-          "id": "other",
-          "label": "Hoạt động kinh doanh khác",
-          "vat_rate": 0.02,
-          "pit_rate": 0.01
-        }
-      ]
-    },
-    "securities": {
-      "transfer_rate": 0.001,
-      "effective_from": "2026-07-01"
-    },
-    "esop": {
-      "tlcc_withholding_rate": 0.1,
-      "transfer_rate": 0.001,
-      "effective_from": "2026-07-01"
-    }
-  },
-  "casual_income": {
-    "withholding_threshold": 2000000,
-    "withholding_rate": 0.1,
-    "exemption_settlement_monthly_avg": 15000000
-  }
+ "id": "ruleset-2025",
+ "version": "1.0.0",
+ "name": "Kỳ tính thuế 2025",
+ "tax_year": 2025,
+ "effective_from": "2025-01-01",
+ "effective_to": "2025-12-31",
+ "legal_sources": [
+ "Luật TNCN 2007 (VBHN 15) Đ.22: biểu 7 bậc",
+ "NQ 954/2020/UBTVQH14: GTGC 11/4,4",
+ "NĐ 73/2024/NĐ-CP. lương cơ sở 2,34tr",
+ "NĐ 74/2024/NĐ-CP. LTTV 2025",
+ "Luật BHXH 41/2024/QH15: tỷ lệ/trần đóng"
+ ],
+ "personal_relief": 11000000,
+ "dependent_relief": 4400000,
+ "reference_salary": 2340000,
+ "regional_minimum_wages": {
+ "1": 4960000,
+ "2": 4410000,
+ "3": 3860000,
+ "4": 3450000
+ },
+ "insurance_rates": {
+ "employee": {
+ "social": 0.08,
+ "health": 0.015,
+ "unemployment": 0.01
+ },
+ "employer": {
+ "social": 0.17,
+ "health": 0.03,
+ "unemployment": 0.01,
+ "occupational_accident": 0.005
+ }
+ },
+ "insurance_caps": {
+ "social_health_multiplier": 20,
+ "unemployment_multiplier": 20
+ },
+ "pit_brackets": [
+ {
+ "bracket": 1,
+ "max_taxable_income": 5000000,
+ "rate": 0.05
+ },
+ {
+ "bracket": 2,
+ "max_taxable_income": 10000000,
+ "rate": 0.1
+ },
+ {
+ "bracket": 3,
+ "max_taxable_income": 18000000,
+ "rate": 0.15
+ },
+ {
+ "bracket": 4,
+ "max_taxable_income": 32000000,
+ "rate": 0.2
+ },
+ {
+ "bracket": 5,
+ "max_taxable_income": 52000000,
+ "rate": 0.25
+ },
+ {
+ "bracket": 6,
+ "max_taxable_income": 80000000,
+ "rate": 0.3
+ },
+ {
+ "bracket": 7,
+ "max_taxable_income": null,
+ "rate": 0.35
+ }
+ ],
+ "severance_pay": {
+ "resignation_months_per_year": 0.5,
+ "job_loss_months_per_year": 1.0,
+ "job_loss_min_months": 2
+ },
+ "unemployment_benefit": {
+ "monthly_rate": 0.6,
+ "cap_lttv_multiplier": 5,
+ "benefit_months_base": 3,
+ "benefit_months_per_12_paid": 1,
+ "benefit_months_max": 12,
+ "min_paid_months": 12,
+ "waiting_work_days": 10,
+ "benefit_start_work_day": 11,
+ "filing_deadline_months": 3,
+ "lookback_months_standard": 24,
+ "lookback_months_short_contract": 36
+ },
+ "maternity": {
+ "rate": 1.0,
+ "one_time_multiplier": 2,
+ "first_child_months": 6,
+ "second_child_months": 7,
+ "second_child_extended_from": "2026-07-01",
+ "twin_bonus_from_child": 2
+ },
+ "sick_leave": {
+ "rate": 0.75,
+ "divisor": 24,
+ "annual_day_caps_normal": [
+ 30,
+ 40,
+ 60
+ ],
+ "annual_day_caps_hazardous": [
+ 40,
+ 50,
+ 70
+ ],
+ "years_thresholds": [
+ 15,
+ 30
+ ]
+ },
+ "lump_sum_withdrawal": {
+ "pre_2014_coefficient": 1.5,
+ "from_2014_coefficient": 2.0,
+ "participation_cutoff": "2025-07-01",
+ "under_one_year_max_months": 2,
+ "conditions_before_cutoff": [
+ "Sau 12 tháng không tiếp tục đóng và chưa đủ 20 năm đóng",
+ "Đủ tuổi hưu nhưng thiếu năm đóng theo quy định",
+ "Định cư nước ngoài",
+ "Bệnh hiểm nghèo / suy giảm khả năng lao động ≥81% / khuyết tật đặc biệt nặng"
+ ],
+ "conditions_from_cutoff": [
+ "Đủ tuổi hưu nhưng chưa đủ 15 năm đóng",
+ "Định cư nước ngoài",
+ "Bệnh hiểm nghèo / suy giảm khả năng lao động ≥81% / khuyết tật đặc biệt nặng"
+ ]
+ },
+ "pension_rates": {
+ "female_base_years": 15,
+ "female_base_rate": 0.45,
+ "female_increment_per_year": 0.02,
+ "female_max_rate": 0.75,
+ "female_max_years": 30,
+ "male_long_base_years": 20,
+ "male_long_base_rate": 0.45,
+ "male_long_increment_per_year": 0.02,
+ "male_long_max_rate": 0.75,
+ "male_long_max_years": 35,
+ "male_short_base_years": 15,
+ "male_short_base_rate": 0.4,
+ "male_short_increment_per_year": 0.01,
+ "male_short_max_years": 19,
+ "min_years": 15
+ },
+ "inflation_adjustment": {
+ "table_year": 2026,
+ "note": "Bảng hệ số tách file inflation-adjustment-2026.json. load qua getInflationAdjustment(tableYear); không gắn logic thuế."
+ },
+ "other_income": {
+ "rent": {
+ "exemption_threshold": 1000000000,
+ "vat_rate": 0.05,
+ "pit_rate_on_excess": 0.05,
+ "reporting_form": "01/BĐS",
+ "reporting_deadline_note": "Thông báo doanh thu mẫu 01/BĐS hạn 31/01 năm sau; kỳ 2026 thêm mốc kê khai theo hướng dẫn cục thuế."
+ },
+ "hkd": {
+ "exemption_threshold": 1000000000,
+ "income_method_threshold": 3000000000,
+ "income_method_rate": 0.15,
+ "industry_rates": [
+ {
+ "id": "distribution",
+ "label": "Phân phối, cung cấp hàng hóa",
+ "vat_rate": 0.01,
+ "pit_rate": 0.005
+ },
+ {
+ "id": "services",
+ "label": "Dịch vụ, xây dựng không bao thầu NVL",
+ "vat_rate": 0.05,
+ "pit_rate": 0.02
+ },
+ {
+ "id": "asset_rental_agency",
+ "label": "Cho thuê TS, đại lý BH/xổ số/đa cấp",
+ "vat_rate": 0.05,
+ "pit_rate": 0.05
+ },
+ {
+ "id": "production_transport",
+ "label": "Sản xuất, vận tải, XD bao thầu NVL",
+ "vat_rate": 0.03,
+ "pit_rate": 0.015
+ },
+ {
+ "id": "other",
+ "label": "Hoạt động kinh doanh khác",
+ "vat_rate": 0.02,
+ "pit_rate": 0.01
+ }
+ ]
+ },
+ "securities": {
+ "transfer_rate": 0.001,
+ "effective_from": "2026-07-01"
+ },
+ "esop": {
+ "tlcc_withholding_rate": 0.1,
+ "transfer_rate": 0.001,
+ "effective_from": "2026-07-01"
+ }
+ },
+ "casual_income": {
+ "withholding_threshold": 2000000,
+ "withholding_rate": 0.1,
+ "exemption_settlement_monthly_avg": 15000000
+ }
 }

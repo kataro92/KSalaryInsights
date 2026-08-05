@@ -1,5 +1,5 @@
-import type { RegionCode } from '@/src/domain/types/salary';
-import type { PitBracketSlice } from '@/src/domain/types/salary';
+import type { RegionCode } from "@/src/domain/types/salary";
+import type { PitBracketSlice } from "@/src/domain/types/salary";
 
 export type CasualIncomeInput = {
   /** Tổng thu nhập vãng lai trong năm (số nhận). */
@@ -16,7 +16,7 @@ export type AnnualSettlementInput = {
   monthlyGross?: number;
   /** Số tháng có lương (1–12). */
   monthsWorked?: number;
-  /** 12 ô tháng — null/0 = không có lương tháng đó. */
+  /** 12 ô tháng. Null/0 = không có lương tháng đó. */
   monthlyGrosses?: (number | null)[];
   /** Thuế TNCN đã khấu trừ từ lương (lũy kế năm). */
   salaryWithheld: number;
@@ -25,7 +25,7 @@ export type AnnualSettlementInput = {
   asOfDate?: string;
 };
 
-export type SettlementOutcomeKind = 'refund' | 'pay' | 'even';
+export type SettlementOutcomeKind = "refund" | "pay" | "even";
 
 export type SettlementDelta = {
   /** Thuế năm − đã khấu trừ (>0 nộp thêm, <0 hoàn). */
@@ -55,10 +55,10 @@ export type AnnualSettlementBreakdown = {
 };
 
 export type CasualMergeMode =
-  | 'none'
-  | 'mandatory_merge'
-  | 'exempt_no_merge'
-  | 'voluntary_merge';
+  | "none"
+  | "mandatory_merge"
+  | "exempt_no_merge"
+  | "voluntary_merge";
 
 export type SettlementScenario = {
   id: CasualMergeMode;
@@ -70,7 +70,7 @@ export type SettlementScenario = {
 export type AnnualSettlementResult = {
   primary: SettlementScenario;
   scenarios: SettlementScenario[];
-  casualStatus: 'none' | 'mandatory_merge' | 'exempt';
+  casualStatus: "none" | "mandatory_merge" | "exempt";
 };
 
 export type FilingWizardAnswers = {
@@ -79,7 +79,7 @@ export type FilingWizardAnswers = {
   employerOffersAuthorization: boolean;
 };
 
-export type FilingConclusion = 'authorize' | 'self_file';
+export type FilingConclusion = "authorize" | "self_file";
 
 export type FilingWizardResult = {
   conclusion: FilingConclusion;

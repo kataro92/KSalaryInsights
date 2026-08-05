@@ -1,7 +1,7 @@
-# ADR 0004 — Bộ công cụ tính toán Offline độc lập (Pure Offline Calculation Engine & Precision Strategy)
+# ADR 0004: Bộ công cụ tính toán Offline độc lập (Pure Offline Calculation Engine & Precision Strategy)
 
-- **Status**: Accepted  
-- **Date**: 2026-08-03  
+- **Status**: Accepted 
+- **Date**: 2026-08-03 
 - **Context**: Ứng dụng KVSalaryTools hỗ trợ người lao động tính thuế, bảo hiểm và lương Gross ↔ Net với yêu cầu bảo mật quyền riêng tư tuyệt đối (Constitution V), hoạt động không cần mạng và đảm bảo độ chính xác ≤ 1 VNĐ.
 
 ## Decision
@@ -16,7 +16,7 @@
 - Đảm bảo quyền riêng tư tuyệt đối cho người dùng (zero data leakage).
 - Tốc độ tính toán siêu nhanh (< 5ms cho cả Gross → Net lẫn Net → Gross).
 - Engine có thể dùng lại dễ dàng trên nhiều nền tảng (React Native app, Web app, CLI tool).
-- Cần viết suite test bao phủ đầy đủ các edge cases (mức lương chạm trần, lương nhỏ hơn lương tối thiểu vùng...).
+- Cần viết suite test bao phủ đầy đủ các edge cases (mức lương chạm trần, lương nhỏ hơn lương tối thiểu vùng.).
 
 ## Alternatives rejected
 

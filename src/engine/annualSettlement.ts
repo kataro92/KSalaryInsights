@@ -4,11 +4,11 @@ import type {
   AnnualSettlementResult,
   SettlementDelta,
   SettlementScenario,
-} from '@/src/domain/types/settlement';
-import { grossToNet } from '@/src/engine/grossToNet';
-import { evaluateCasualExemption } from '@/src/engine/casualExemption';
-import { calculateAnnualPit } from '@/src/engine/pit';
-import { getRuleset } from '@/src/engine/rulesetLoader';
+} from "@/src/domain/types/settlement";
+import { grossToNet } from "@/src/engine/grossToNet";
+import { evaluateCasualExemption } from "@/src/engine/casualExemption";
+import { calculateAnnualPit } from "@/src/engine/pit";
+import { getRuleset } from "@/src/engine/rulesetLoader";
 
 function defaultAsOf(taxYear: number): string {
   return `${taxYear}-06-15`;
@@ -16,9 +16,9 @@ function defaultAsOf(taxYear: number): string {
 
 function makeDelta(annualTax: number, totalWithheld: number): SettlementDelta {
   const signed = annualTax - totalWithheld;
-  if (signed > 0) return { signed, kind: 'pay', amount: signed };
-  if (signed < 0) return { signed, kind: 'refund', amount: -signed };
-  return { signed: 0, kind: 'even', amount: 0 };
+  if (signed > 0) return { signed, kind: "pay", amount: signed };
+  if (signed < 0) return { signed, kind: "refund", amount: -signed };
+  return { signed: 0, kind: "even", amount: 0 };
 }
 
 function salaryIncomeAfterInsuranceYear(input: AnnualSettlementInput): number {
@@ -29,7 +29,7 @@ function salaryIncomeAfterInsuranceYear(input: AnnualSettlementInput): number {
     input.monthlyGrosses.forEach((g, idx) => {
       if (g == null || !Number.isFinite(g) || g <= 0) return;
       const month = idx + 1;
-      const asOfMonth = `${input.taxYear}-${String(month).padStart(2, '0')}-15`;
+      const asOfMonth = `${input.taxYear}-${String(month).padStart(2, "0")}-15`;
       const m = grossToNet({
         gross: g,
         region: input.region,
@@ -45,10 +45,10 @@ function salaryIncomeAfterInsuranceYear(input: AnnualSettlementInput): number {
   const monthly = input.monthlyGross;
   const months = input.monthsWorked ?? 12;
   if (monthly == null || !Number.isFinite(monthly) || monthly <= 0) {
-    throw new Error('Cần nhập lương tháng hoặc lưới 12 tháng');
+    throw new Error("Cần nhập lương tháng hoặc lưới 12 tháng");
   }
   if (!Number.isInteger(months) || months < 1 || months > 12) {
-    throw new Error('Số tháng làm việc phải từ 1 đến 12');
+    throw new Error("Số tháng làm việc phải từ 1 đến 12");
   }
 
   const one = grossToNet({
@@ -66,11 +66,12 @@ function buildBreakdown(
   opts: {
     includeCasual: boolean;
     withheldMissingWarning: boolean;
-  },
+  }
 ): AnnualSettlementBreakdown {
   const ruleset = getRuleset(input.taxYear);
   const salaryIncome = salaryIncomeAfterInsuranceYear(input);
-  const casualGross = opts.includeCasual && input.casual ? input.casual.gross : 0;
+  const casualGross =
+    opts.includeCasual && input.casual ? input.casual.gross : 0;
   const casualWithheld =
     opts.includeCasual && input.casual ? input.casual.withheld : 0;
 
@@ -81,11 +82,11 @@ function buildBreakdown(
   const reliefTotalYear = personalReliefYear + dependentReliefYear;
   const taxableIncomeAfterRelief = Math.max(
     0,
-    incomeAfterInsuranceYear - reliefTotalYear,
+    incomeAfterInsuranceYear - reliefTotalYear
   );
   const { brackets, totalTax } = calculateAnnualPit(
     taxableIncomeAfterRelief,
-    ruleset,
+    ruleset
   );
   const salaryWithheld = input.salaryWithheld || 0;
   const totalWithheld = salaryWithheld + casualWithheld;
@@ -111,49 +112,49 @@ function buildBreakdown(
 }
 
 /**
- * Ước tính quyết toán TNCN năm — offline, ruleset theo tax_year.
+ * Ước tính quyết toán TNCN năm. Offline, ruleset theo tax_year.
  */
 export function calculateAnnualSettlement(
-  input: AnnualSettlementInput,
+  input: AnnualSettlementInput
 ): AnnualSettlementResult {
   if (!Number.isFinite(input.salaryWithheld) || input.salaryWithheld < 0) {
-    throw new Error('Thuế đã khấu trừ không hợp lệ');
+    throw new Error("Thuế đã khấu trừ không hợp lệ");
   }
 
   const withheldMissingWarning = input.salaryWithheld === 0;
   const casualEval = evaluateCasualExemption(input.taxYear, input.casual);
 
-  if (casualEval.status === 'none') {
+  if (casualEval.status === "none") {
     const breakdown = buildBreakdown(input, {
       includeCasual: false,
       withheldMissingWarning,
     });
     const primary: SettlementScenario = {
-      id: 'none',
-      label: 'Quyết toán lương',
+      id: "none",
+      label: "Quyết toán lương",
       breakdown,
     };
-    return { primary, scenarios: [primary], casualStatus: 'none' };
+    return { primary, scenarios: [primary], casualStatus: "none" };
   }
 
-  if (casualEval.status === 'mandatory_merge') {
+  if (casualEval.status === "mandatory_merge") {
     const breakdown = buildBreakdown(input, {
       includeCasual: true,
       withheldMissingWarning,
     });
     const primary: SettlementScenario = {
-      id: 'mandatory_merge',
-      label: 'Bắt buộc gộp vãng lai',
+      id: "mandatory_merge",
+      label: "Bắt buộc gộp vãng lai",
       breakdown,
     };
     return {
       primary,
       scenarios: [primary],
-      casualStatus: 'mandatory_merge',
+      casualStatus: "mandatory_merge",
     };
   }
 
-  // exempt — dual scenarios
+  // exempt. Dual scenarios
   const noMerge = buildBreakdown(input, {
     includeCasual: false,
     withheldMissingWarning,
@@ -164,21 +165,22 @@ export function calculateAnnualSettlement(
   });
 
   const noMergeScenario: SettlementScenario = {
-    id: 'exempt_no_merge',
-    label: 'Không gộp vãng lai (được miễn)',
+    id: "exempt_no_merge",
+    label: "Không gộp vãng lai (được miễn)",
     breakdown: noMerge,
   };
   const mergeScenario: SettlementScenario = {
-    id: 'voluntary_merge',
-    label: 'Gộp tự nguyện',
+    id: "voluntary_merge",
+    label: "Gộp tự nguyện",
     breakdown: voluntary,
   };
 
   // Recommend voluntary merge when refund is larger or pay is smaller
   const preferMerge =
     voluntary.delta.signed < noMerge.delta.signed ||
-    (voluntary.delta.kind === 'refund' &&
-      voluntary.delta.amount > (noMerge.delta.kind === 'refund' ? noMerge.delta.amount : 0));
+    (voluntary.delta.kind === "refund" &&
+      voluntary.delta.amount >
+        (noMerge.delta.kind === "refund" ? noMerge.delta.amount : 0));
 
   if (preferMerge) mergeScenario.recommended = true;
   else noMergeScenario.recommended = true;
@@ -186,6 +188,6 @@ export function calculateAnnualSettlement(
   return {
     primary: preferMerge ? mergeScenario : noMergeScenario,
     scenarios: [noMergeScenario, mergeScenario],
-    casualStatus: 'exempt',
+    casualStatus: "exempt",
   };
 }

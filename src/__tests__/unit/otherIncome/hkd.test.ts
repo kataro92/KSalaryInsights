@@ -1,10 +1,10 @@
-import { calculateHkd } from '@/src/engine/otherIncome/hkd';
+import { calculateHkd } from "@/src/engine/otherIncome/hkd";
 
-describe('TC-HKD', () => {
-  it('TC-HKD-01: 800tr → 0 + reporting', () => {
+describe("TC-HKD", () => {
+  it("TC-HKD-01: 800tr → 0 + reporting", () => {
     const r = calculateHkd({
       annualRevenue: 800_000_000,
-      industryId: 'distribution',
+      industryId: "distribution",
       taxYear: 2026,
     });
     expect(r.totalTax).toBe(0);
@@ -12,10 +12,10 @@ describe('TC-HKD', () => {
     expect(r.reportingRequired).toBe(true);
   });
 
-  it('TC-HKD-02: tạp hóa 1,5 tỷ → GTGT 15tr + TNCN 2,5tr', () => {
+  it("TC-HKD-02: tạp hóa 1,5 tỷ → GTGT 15tr + TNCN 2,5tr", () => {
     const r = calculateHkd({
       annualRevenue: 1_500_000_000,
-      industryId: 'distribution',
+      industryId: "distribution",
       taxYear: 2026,
       costs: 200_000_000,
     });

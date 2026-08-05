@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   clearScenarios,
@@ -11,7 +11,7 @@ import {
   type SaveScenarioInput,
   type ScenarioKind,
   type SettlementScenarioInputs,
-} from '@/src/store/scenarios';
+} from "@/src/store/scenarios";
 
 export function useScenarios(kind?: ScenarioKind) {
   const [scenarios, setScenarios] = useState<SavedScenario[]>([]);
@@ -61,7 +61,7 @@ export function useScenarios(kind?: ScenarioKind) {
 
   const filtered = useMemo(
     () => (kind ? scenariosOfKind(scenarios, kind) : scenarios),
-    [scenarios, kind],
+    [scenarios, kind]
   );
 
   return {

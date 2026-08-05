@@ -1,12 +1,12 @@
-import type { InflationAdjustmentTable } from '@/src/domain/types/retirement';
-import type { Ruleset } from '@/src/domain/types/salary';
-import { compareSemver } from '@/src/engine/rulesetValidate';
+import type { InflationAdjustmentTable } from "@/src/domain/types/retirement";
+import type { Ruleset } from "@/src/domain/types/salary";
+import { compareSemver } from "@/src/engine/rulesetValidate";
 
 // Import JSON files directly (works in web/Metro bundle)
-import ruleset2025 from './rulesets/2025.json';
-import ruleset2026H1 from './rulesets/2026-h1.json';
-import ruleset2026H2 from './rulesets/2026-h2.json';
-import inflation2026 from './rulesets/inflation-adjustment-2026.json';
+import ruleset2025 from "./rulesets/2025.json";
+import ruleset2026H1 from "./rulesets/2026-h1.json";
+import ruleset2026H2 from "./rulesets/2026-h2.json";
+import inflation2026 from "./rulesets/inflation-adjustment-2026.json";
 
 const BUNDLED_RULESETS: Ruleset[] = [
   ruleset2025 as Ruleset,
@@ -18,7 +18,7 @@ const BUNDLED_INFLATION: Record<number, InflationAdjustmentTable> = {
   2026: inflation2026 as InflationAdjustmentTable,
 };
 
-/** Remote overlays (F019) — never remove bundled; higher version wins per id. */
+/** Remote overlays (F019). Never remove bundled; higher version wins per id. */
 let overlayRulesets: Ruleset[] = [];
 let overlayInflation: Record<number, InflationAdjustmentTable> = {};
 
@@ -34,7 +34,7 @@ export function setInflationOverlays(tables: InflationAdjustmentTable[]): void {
   overlayInflation = next;
 }
 
-/** Test helper — clear overlays without touching AsyncStorage. */
+/** Test helper. Clear overlays without touching AsyncStorage. */
 export function clearRulesetOverlays(): void {
   overlayRulesets = [];
   overlayInflation = {};
@@ -74,21 +74,21 @@ export function getRuleset(taxYear: number, asOfDate?: string): Ruleset {
   const all = mergeRulesets(BUNDLED_RULESETS, overlayRulesets);
   const yearSets = all.filter((r) => r.tax_year === taxYear);
   if (yearSets.length === 0) {
-    throw new Error(`Không có ruleset cho năm thuế ${taxYear}`);
+    throw new Error(`Không có mức tính cho năm thuế ${taxYear}`);
   }
 
   if (asOfDate) {
     const match = yearSets.find((r) =>
-      dateInRange(asOfDate, r.effective_from, r.effective_to),
+      dateInRange(asOfDate, r.effective_from, r.effective_to)
     );
     if (match) return match;
     throw new Error(
-      `Không có ruleset năm ${taxYear} hiệu lực tại ${asOfDate}`,
+      `Không có mức tính năm ${taxYear} hiệu lực tại ${asOfDate}`
     );
   }
 
   return [...yearSets].sort((a, b) =>
-    a.effective_to < b.effective_to ? 1 : -1,
+    a.effective_to < b.effective_to ? 1 : -1
   )[0];
 }
 
@@ -98,10 +98,10 @@ export function listRulesets(): Ruleset[] {
 
 /**
  * Bảng hệ số điều chỉnh tiền lương đã đóng BHXH theo năm công bố
- * (CV 340/BHXH-CSXH…) — không gắn `tax_year` / kỳ thuế.
+ * (CV 340/BHXH-CSXH…). Không gắn `tax_year` / kỳ thuế.
  */
 export function getInflationAdjustment(
-  tableYear = 2026,
+  tableYear = 2026
 ): InflationAdjustmentTable {
   const table = overlayInflation[tableYear] ?? BUNDLED_INFLATION[tableYear];
   if (!table) {

@@ -6,9 +6,9 @@ import React, {
   useMemo,
   useState,
   type ReactNode,
-} from 'react';
+} from "react";
 
-import type { LocaleCode } from '@/src/i18n/types';
+import type { LocaleCode } from "@/src/i18n/types";
 import {
   getDefaultPreferences,
   loadPreferences,
@@ -16,7 +16,8 @@ import {
   savePreferences,
   type AppPreferences,
   type RegionCode,
-} from '@/src/store/preferences';
+  type ThemePreference,
+} from "@/src/store/preferences";
 
 type PreferencesContextValue = {
   preferences: AppPreferences;
@@ -25,13 +26,16 @@ type PreferencesContextValue = {
   setDefaultRegion: (region: RegionCode) => Promise<void>;
   setDefaultTaxYear: (year: number) => Promise<void>;
   setLocale: (locale: LocaleCode) => Promise<void>;
+  setThemePreference: (theme: ThemePreference) => Promise<void>;
   resetToDefaults: () => Promise<void>;
 };
 
 const PreferencesContext = createContext<PreferencesContextValue | null>(null);
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
-  const [preferences, setPreferences] = useState<AppPreferences>(getDefaultPreferences);
+  const [preferences, setPreferences] = useState<AppPreferences>(
+    getDefaultPreferences
+  );
   const [ready, setReady] = useState(false);
   const [recoveredFromCorrupt, setRecoveredFromCorrupt] = useState(false);
 
@@ -59,21 +63,28 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     async (region: RegionCode) => {
       await persist({ ...preferences, defaultRegion: region });
     },
-    [persist, preferences],
+    [persist, preferences]
   );
 
   const setDefaultTaxYear = useCallback(
     async (year: number) => {
       await persist({ ...preferences, defaultTaxYear: year });
     },
-    [persist, preferences],
+    [persist, preferences]
   );
 
   const setLocale = useCallback(
     async (locale: LocaleCode) => {
       await persist({ ...preferences, locale });
     },
-    [persist, preferences],
+    [persist, preferences]
+  );
+
+  const setThemePreference = useCallback(
+    async (themePreference: ThemePreference) => {
+      await persist({ ...preferences, themePreference });
+    },
+    [persist, preferences]
   );
 
   const resetToDefaults = useCallback(async () => {
@@ -90,6 +101,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       setDefaultRegion,
       setDefaultTaxYear,
       setLocale,
+      setThemePreference,
       resetToDefaults,
     }),
     [
@@ -99,19 +111,22 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       setDefaultRegion,
       setDefaultTaxYear,
       setLocale,
+      setThemePreference,
       resetToDefaults,
-    ],
+    ]
   );
 
   return (
-    <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>
+    <PreferencesContext.Provider value={value}>
+      {children}
+    </PreferencesContext.Provider>
   );
 }
 
 export function usePreferences(): PreferencesContextValue {
   const ctx = useContext(PreferencesContext);
   if (!ctx) {
-    throw new Error('usePreferences must be used within PreferencesProvider');
+    throw new Error("usePreferences must be used within PreferencesProvider");
   }
   return ctx;
 }

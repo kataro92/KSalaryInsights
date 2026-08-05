@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useEffect, useState } from "react";
+import { Pressable, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 
-import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
-import { loadScenarios, scenariosOfKind } from '@/src/store/scenarios';
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { AppIcon } from "@/src/components/common/AppIcon";
+import { GlassSurface } from "@/src/components/common/GlassSurface";
+import { NgaiMiuPlaceholder } from "@/src/components/mascot/NgaiMiuPlaceholder";
+import { loadScenarios, scenariosOfKind } from "@/src/store/scenarios";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { useTheme } from "@/src/theme/ThemeProvider";
+import { layout, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles } from "@/src/theme/useThemedStyles";
 
 type Props = {
   /** Force show (tests). Otherwise auto by calendar month. */
@@ -13,12 +18,12 @@ type Props = {
 };
 
 /**
- * Soft amber seasonal cue — quyết toán T3–T4 (and mild Tết reminder in T12).
- * F014: mentions local saved scenarios when present.
- * Flat Design: solid soft fill, no shadow.
+ * Seasonal cue. Glass panel with peach tint (spec 010).
  */
 export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
   const router = useRouter();
+  const { colors, glass } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [calcCount, setCalcCount] = useState(0);
   const [settlementCount, setSettlementCount] = useState(0);
   const month = now.getMonth() + 1; // 1–12
@@ -31,8 +36,8 @@ export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
     (async () => {
       const { store } = await loadScenarios();
       if (cancelled) return;
-      setCalcCount(scenariosOfKind(store.scenarios, 'calculator').length);
-      setSettlementCount(scenariosOfKind(store.scenarios, 'settlement').length);
+      setCalcCount(scenariosOfKind(store.scenarios, "calculator").length);
+      setSettlementCount(scenariosOfKind(store.scenarios, "settlement").length);
     })();
     return () => {
       cancelled = true;
@@ -41,34 +46,46 @@ export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
 
   if (!visible) return null;
 
-  let scenarioHint = '';
+  let scenarioHint = "";
   if (calcCount > 0 && settlementCount > 0) {
     scenarioHint = ` Bạn có ${calcCount} kịch bản lương và ${settlementCount} quyết toán đã lưu.`;
   } else if (calcCount > 0) {
-    scenarioHint = ` Bạn có ${calcCount} kịch bản lương đã lưu — mở Tính lương để tải lại.`;
+    scenarioHint = ` Bạn có ${calcCount} kịch bản lương đã lưu. Mở Tính lương để tải lại.`;
   } else if (settlementCount > 0) {
-    scenarioHint = ` Bạn có ${settlementCount} kịch bản quyết toán đã lưu — mở Quyết toán để tải lại.`;
+    scenarioHint = ` Bạn có ${settlementCount} kịch bản quyết toán đã lưu. Mở Quyết toán để tải lại.`;
   }
 
-  const preferSettlement = filingSeason && (settlementCount > 0 || calcCount === 0);
+  const preferSettlement =
+    filingSeason && (settlementCount > 0 || calcCount === 0);
 
   const copy = filingSeason
     ? {
-        title: 'Mùa quyết toán',
-        body: `T3–T4 thường là kỳ QT thuế năm trước. Ước tính trước, đối chiếu bảng lương.${scenarioHint}`,
-        cta: preferSettlement ? 'Mở quyết toán' : 'Mở Tính lương',
-        href: (preferSettlement ? '/settlement' : '/') as '/' | '/settlement',
+        title: "Mùa quyết toán",
+        body: `Tháng 3–4 thường là kỳ quyết toán thuế năm trước. Ước trước, đối chiếu bảng lương.${scenarioHint}`,
+        cta: preferSettlement ? "Mở quyết toán" : "Mở Tính lương",
+        href: (preferSettlement ? "/settlement" : "/") as "/" | "/settlement",
       }
     : {
-        title: 'Cuối năm · thưởng & QT',
+        title: "Cuối năm · thưởng & quyết toán",
         body: `Chuẩn bị số liệu lương/thưởng trước khi sang năm thuế mới.${scenarioHint}`,
-        cta: 'Tính lương',
-        href: '/' as const,
+        cta: "Tính lương",
+        href: "/" as const,
       };
 
   return (
-    <View style={styles.banner} accessibilityRole="summary" accessibilityLabel={copy.title}>
-      <NgaiMiuPlaceholder size={64} pose="docs" accessibilityLabel="Ngài Miu nhắc hạn" />
+    <GlassSurface
+      intensity="regular"
+      tintColor={glass.accentFill}
+      contentStyle={styles.banner}
+      accessibilityRole="summary"
+      accessibilityLabel={copy.title}
+    >
+      <View style={styles.accentBar} />
+      <NgaiMiuPlaceholder
+        size={64}
+        pose="docs"
+        accessibilityLabel="Ngài Miu nhắc hạn"
+      />
       <View style={styles.textCol}>
         <Text style={styles.title}>{copy.title}</Text>
         <Text style={styles.body}>{copy.body}</Text>
@@ -78,45 +95,58 @@ export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
           onPress={() => router.push(copy.href)}
           style={styles.cta}
         >
-          <Text style={styles.ctaLabel}>{copy.cta} →</Text>
+          <View style={styles.ctaRow}>
+            <Text style={styles.ctaLabel}>{copy.cta}</Text>
+            <AppIcon name="chevron-right" color={colors.accent} size={16} />
+          </View>
         </Pressable>
       </View>
-    </View>
+    </GlassSurface>
   );
 }
 
-const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radii.lg,
-    padding: space[4],
-    borderLeftWidth: 4,
-    borderLeftColor: colors.accent,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space[3],
-  },
-  textCol: { flex: 1, gap: space[2] },
-  title: {
-    fontFamily: typography.fontFamily.bold,
-    fontSize: typography.scale.body.fontSize,
-    color: colors.foreground,
-  },
-  body: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: typography.scale.label.fontSize,
-    lineHeight: 18,
-    color: colors.foreground,
-    opacity: 0.85,
-  },
-  cta: {
-    minHeight: layout.minTouch - 8,
-    justifyContent: 'center',
-    alignSelf: 'flex-start',
-  },
-  ctaLabel: {
-    fontFamily: typography.fontFamily.semiBold,
-    fontSize: typography.scale.body.fontSize,
-    color: colors.accent,
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    banner: {
+      padding: space[4],
+      paddingLeft: space[3],
+      flexDirection: "row",
+      alignItems: "center",
+      gap: space[3],
+    },
+    accentBar: {
+      width: 4,
+      alignSelf: "stretch",
+      borderRadius: 2,
+      backgroundColor: colors.accent,
+    },
+    textCol: { flex: 1, gap: space[2] },
+    title: {
+      fontFamily: typography.fontFamily.bold,
+      fontSize: typography.scale.body.fontSize,
+      color: colors.foreground,
+    },
+    body: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: typography.scale.label.fontSize,
+      lineHeight: 18,
+      color: colors.foreground,
+      opacity: 0.85,
+    },
+    cta: {
+      minHeight: layout.minTouch - 8,
+      justifyContent: "center",
+      alignSelf: "flex-start",
+    },
+    ctaRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: space[1],
+    },
+    ctaLabel: {
+      fontFamily: typography.fontFamily.semiBold,
+      fontSize: typography.scale.body.fontSize,
+      color: colors.accent,
+    },
+  } as const;
+}

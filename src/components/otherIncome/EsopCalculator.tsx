@@ -1,40 +1,45 @@
-import { useState } from 'react';
-import { StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { useState } from "react";
+import { Switch, Text, TextInput, View } from "react-native";
 
-import { Button } from '@/src/components/common/Button';
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { ResultHero } from '@/src/components/common/ResultHero';
-import { Section } from '@/src/components/common/Section';
-import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
-import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
-import type { EsopBreakdown } from '@/src/domain/types/otherIncome';
-import { calculateEsop } from '@/src/engine/otherIncome/esop';
-import { successHaptic } from '@/src/theme/haptics';
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { Button } from "@/src/components/common/Button";
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { ResultHero } from "@/src/components/common/ResultHero";
+import { Section } from "@/src/components/common/Section";
+import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
+import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
+import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
+import type { EsopBreakdown } from "@/src/domain/types/otherIncome";
+import { calculateEsop } from "@/src/engine/otherIncome/esop";
+import { successHaptic } from "@/src/theme/haptics";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { useTheme } from "@/src/theme/ThemeProvider";
+import { layout, radii, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
 
 function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
+  const digits = raw.replace(/[^\d]/g, "");
   if (!digits) return null;
   const n = Number(digits);
   return Number.isFinite(n) ? n : null;
 }
 
 function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return '';
-  return n.toLocaleString('vi-VN');
+  if (n == null || !Number.isFinite(n)) return "";
+  return n.toLocaleString("vi-VN");
 }
 
 type Props = { taxYear: number };
 
 export function EsopCalculator({ taxYear }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [useBookCost, setUseBookCost] = useState(true);
-  const [bookText, setBookText] = useState('100.000.000');
-  const [sharesText, setSharesText] = useState('10000');
-  const [parText, setParText] = useState('10.000');
-  const [paidText, setPaidText] = useState('0');
-  const [saleText, setSaleText] = useState('300.000.000');
-  const [asOfDate, setAsOfDate] = useState('2026-08-15');
+  const [bookText, setBookText] = useState("100.000.000");
+  const [sharesText, setSharesText] = useState("10000");
+  const [parText, setParText] = useState("10.000");
+  const [paidText, setPaidText] = useState("0");
+  const [saleText, setSaleText] = useState("300.000.000");
+  const [asOfDate, setAsOfDate] = useState("2026-08-15");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<EsopBreakdown | null>(null);
 
@@ -42,12 +47,12 @@ export function EsopCalculator({ taxYear }: Props) {
     setError(null);
     const salePrice = parseMoney(saleText);
     if (salePrice == null || salePrice < 0) {
-      setError('Nhập giá bán hợp lệ.');
+      setError("Nhập giá bán hợp lệ.");
       setResult(null);
       return;
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(asOfDate)) {
-      setError('Ngày phải dạng YYYY-MM-DD.');
+      setError("Ngày phải dạng YYYY-MM-DD.");
       setResult(null);
       return;
     }
@@ -57,16 +62,20 @@ export function EsopCalculator({ taxYear }: Props) {
           salePrice,
           taxYear,
           asOfDate,
-          bookCostAtGrant: useBookCost ? parseMoney(bookText) ?? undefined : undefined,
-          shares: useBookCost ? undefined : Number(sharesText.replace(/[^\d]/g, '') || '0'),
+          bookCostAtGrant: useBookCost
+            ? parseMoney(bookText) ?? undefined
+            : undefined,
+          shares: useBookCost
+            ? undefined
+            : Number(sharesText.replace(/[^\d]/g, "") || "0"),
           parValue: useBookCost ? undefined : parseMoney(parText) ?? undefined,
           amountPaid: useBookCost ? undefined : parseMoney(paidText) ?? 0,
-        }),
+        })
       );
       void successHaptic();
     } catch (e) {
       setResult(null);
-      setError(e instanceof Error ? e.message : 'Không tính được.');
+      setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
 
@@ -93,7 +102,9 @@ export function EsopCalculator({ taxYear }: Props) {
               value={bookText}
               onChangeText={(t) => {
                 const n = parseMoney(t);
-                setBookText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+                setBookText(
+                  n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
+                );
                 setResult(null);
               }}
               style={styles.input}
@@ -101,13 +112,15 @@ export function EsopCalculator({ taxYear }: Props) {
           </>
         ) : (
           <>
-            <Text style={styles.fieldLabel}>Số cổ phiếu / Mệnh giá / Đã trả</Text>
+            <Text style={styles.fieldLabel}>
+              Số cổ phiếu / Mệnh giá / Đã trả
+            </Text>
             <TextInput
               accessibilityLabel="Số cổ phiếu"
               keyboardType="number-pad"
               value={sharesText}
               onChangeText={(t) => {
-                setSharesText(t.replace(/[^\d]/g, ''));
+                setSharesText(t.replace(/[^\d]/g, ""));
                 setResult(null);
               }}
               style={styles.input}
@@ -118,7 +131,9 @@ export function EsopCalculator({ taxYear }: Props) {
               value={parText}
               onChangeText={(t) => {
                 const n = parseMoney(t);
-                setParText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+                setParText(
+                  n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
+                );
                 setResult(null);
               }}
               style={styles.input}
@@ -129,7 +144,9 @@ export function EsopCalculator({ taxYear }: Props) {
               value={paidText}
               onChangeText={(t) => {
                 const n = parseMoney(t);
-                setPaidText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+                setPaidText(
+                  n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
+                );
                 setResult(null);
               }}
               style={styles.input}
@@ -143,7 +160,7 @@ export function EsopCalculator({ taxYear }: Props) {
           value={saleText}
           onChangeText={(t) => {
             const n = parseMoney(t);
-            setSaleText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+            setSaleText(n == null ? t.replace(/[^\d.]/g, "") : formatInput(n));
             setResult(null);
           }}
           style={styles.input}
@@ -160,7 +177,9 @@ export function EsopCalculator({ taxYear }: Props) {
           style={styles.input}
         />
       </Section>
-      {error ? <EmptyErrorState variant="error" title="Chưa tính được" body={error} /> : null}
+      {error ? (
+        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+      ) : null}
       <Button label="Tính ESOP" onPress={onCalculate} />
       {result ? (
         <>
@@ -170,14 +189,22 @@ export function EsopCalculator({ taxYear }: Props) {
             label="Tổng thuế"
             amount={result.totalTax}
           />
-          <NgaiMiuTip tip="TLTC khấu trừ và thuế chuyển nhượng tách dòng — đọc ghi chú quyết toán nếu có." />
+          <NgaiMiuTip tip="TLTC khấu trừ và thuế chuyển nhượng tách dòng. đọc ghi chú quyết toán nếu có." />
           <OtherIncomeBreakdownCard
             title="ESOP"
             total={result.totalTax}
             formula={result.formula}
             lines={[
-              { id: 'tlcc', label: 'TLTC khấu trừ', amount: result.tlccWithholding },
-              { id: 'cn', label: 'Thuế chuyển nhượng', amount: result.transferTax },
+              {
+                id: "tlcc",
+                label: "TLTC khấu trừ",
+                amount: result.tlccWithholding,
+              },
+              {
+                id: "cn",
+                label: "Thuế chuyển nhượng",
+                amount: result.transferTax,
+              },
             ]}
             explanations={result.explanations}
             note={result.settlementNote}
@@ -195,39 +222,41 @@ export function EsopCalculator({ taxYear }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: { gap: space[4] },
-  switchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: layout.minTouch,
-    marginBottom: space[2],
-  },
-  switchLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: colors.foreground,
-  },
-  fieldLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 12,
-    color: colors.foreground,
-    opacity: 0.7,
-    marginBottom: space[1],
-    marginTop: space[2],
-  },
-  input: {
-    minHeight: layout.minTouch,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    paddingHorizontal: space[3],
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 16,
-    color: colors.foreground,
-    fontVariant: ['tabular-nums'],
-    backgroundColor: colors.white,
-    marginBottom: space[2],
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    wrap: { gap: space[4] },
+    switchRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      minHeight: layout.minTouch,
+      marginBottom: space[2],
+    },
+    switchLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 14,
+      color: colors.foreground,
+    },
+    fieldLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 12,
+      color: colors.foreground,
+      opacity: 0.7,
+      marginBottom: space[1],
+      marginTop: space[2],
+    },
+    input: {
+      minHeight: layout.minTouch,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radii.md,
+      paddingHorizontal: space[3],
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 16,
+      color: colors.foreground,
+      fontVariant: ["tabular-nums"],
+      backgroundColor: colors.white,
+      marginBottom: space[2],
+    },
+  } satisfies ThemedStyleSheet;
+}

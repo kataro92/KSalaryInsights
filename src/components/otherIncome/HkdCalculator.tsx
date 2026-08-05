@@ -1,38 +1,44 @@
-import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 
-import { Button } from '@/src/components/common/Button';
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { ResultHero } from '@/src/components/common/ResultHero';
-import { Section } from '@/src/components/common/Section';
-import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
-import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
-import type { HkdBreakdown, HkdIndustryId } from '@/src/domain/types/otherIncome';
-import { calculateHkd } from '@/src/engine/otherIncome/hkd';
-import { getRuleset } from '@/src/engine/rulesetLoader';
-import { successHaptic } from '@/src/theme/haptics';
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { Button } from "@/src/components/common/Button";
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { ResultHero } from "@/src/components/common/ResultHero";
+import { Section } from "@/src/components/common/Section";
+import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
+import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
+import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
+import type {
+  HkdBreakdown,
+  HkdIndustryId,
+} from "@/src/domain/types/otherIncome";
+import { calculateHkd } from "@/src/engine/otherIncome/hkd";
+import { getRuleset } from "@/src/engine/rulesetLoader";
+import { successHaptic } from "@/src/theme/haptics";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { layout, radii, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
 
 function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
+  const digits = raw.replace(/[^\d]/g, "");
   if (!digits) return null;
   const n = Number(digits);
   return Number.isFinite(n) ? n : null;
 }
 
 function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return '';
-  return n.toLocaleString('vi-VN');
+  if (n == null || !Number.isFinite(n)) return "";
+  return n.toLocaleString("vi-VN");
 }
 
 type Props = { taxYear: number };
 
 export function HkdCalculator({ taxYear }: Props) {
+  const styles = useThemedStyles(makeStyles);
   const industries = getRuleset(taxYear).other_income?.hkd.industry_rates ?? [];
-  const [industryId, setIndustryId] = useState<HkdIndustryId>('distribution');
-  const [revenueText, setRevenueText] = useState('1.500.000.000');
-  const [costText, setCostText] = useState('');
+  const [industryId, setIndustryId] = useState<HkdIndustryId>("distribution");
+  const [revenueText, setRevenueText] = useState("1.500.000.000");
+  const [costText, setCostText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<HkdBreakdown | null>(null);
 
@@ -40,7 +46,7 @@ export function HkdCalculator({ taxYear }: Props) {
     setError(null);
     const annualRevenue = parseMoney(revenueText);
     if (annualRevenue == null || annualRevenue < 0) {
-      setError('Nhập doanh thu hợp lệ.');
+      setError("Nhập doanh thu hợp lệ.");
       setResult(null);
       return;
     }
@@ -51,18 +57,21 @@ export function HkdCalculator({ taxYear }: Props) {
           industryId,
           costs: parseMoney(costText) ?? undefined,
           taxYear,
-        }),
+        })
       );
       void successHaptic();
     } catch (e) {
       setResult(null);
-      setError(e instanceof Error ? e.message : 'Không tính được.');
+      setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
 
   return (
     <View style={styles.wrap}>
-      <Section title="Hộ kinh doanh" subtitle="Chọn nhóm ngành — tỷ lệ từ ruleset.">
+      <Section
+        title="Hộ kinh doanh"
+        subtitle="Chọn nhóm ngành. Tỷ lệ theo năm thuế."
+      >
         <View style={styles.row}>
           {industries.map((ind) => {
             const selected = industryId === ind.id;
@@ -77,7 +86,12 @@ export function HkdCalculator({ taxYear }: Props) {
                 }}
                 style={[styles.chip, selected && styles.chipSelected]}
               >
-                <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>
+                <Text
+                  style={[
+                    styles.chipLabel,
+                    selected && styles.chipLabelSelected,
+                  ]}
+                >
                   {ind.label}
                 </Text>
               </Pressable>
@@ -91,25 +105,31 @@ export function HkdCalculator({ taxYear }: Props) {
           value={revenueText}
           onChangeText={(t) => {
             const n = parseMoney(t);
-            setRevenueText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+            setRevenueText(
+              n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
+            );
             setResult(null);
           }}
           style={styles.input}
         />
-        <Text style={styles.fieldLabel}>Chi phí (tuỳ chọn — gợi ý PP thu nhập)</Text>
+        <Text style={styles.fieldLabel}>
+          Chi phí (tuỳ chọn. Gợi ý PP thu nhập)
+        </Text>
         <TextInput
           accessibilityLabel="Chi phí HKD"
           keyboardType="number-pad"
           value={costText}
           onChangeText={(t) => {
             const n = parseMoney(t);
-            setCostText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+            setCostText(n == null ? t.replace(/[^\d.]/g, "") : formatInput(n));
             setResult(null);
           }}
           style={styles.input}
         />
       </Section>
-      {error ? <EmptyErrorState variant="error" title="Chưa tính được" body={error} /> : null}
+      {error ? (
+        <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
+      ) : null}
       <Button label="Tính HKD" onPress={onCalculate} />
       {result ? (
         <>
@@ -119,19 +139,29 @@ export function HkdCalculator({ taxYear }: Props) {
             label="Tổng thuế"
             amount={result.totalTax}
           />
-          <NgaiMiuTip tip="GTGT + TNCN theo nhóm ngành — nếu miễn tỷ lệ, vẫn cần kê khai doanh thu." />
+          <NgaiMiuTip tip="GTGT + TNCN theo nhóm ngành. Nếu miễn tỷ lệ, vẫn cần kê khai doanh thu." />
           <OtherIncomeBreakdownCard
-            title={`HKD — ${result.industryLabel}`}
+            title={`HKD. ${result.industryLabel}`}
             total={result.totalTax}
             formula={result.formula}
             lines={[
-              { id: 'vat', label: 'GTGT', amount: result.vat, tipId: 'other.vat' },
-              { id: 'pit', label: 'TNCN', amount: result.pit, tipId: 'other.pit' },
+              {
+                id: "vat",
+                label: "GTGT",
+                amount: result.vat,
+                tipId: "other.vat",
+              },
+              {
+                id: "pit",
+                label: "TNCN",
+                amount: result.pit,
+                tipId: "other.pit",
+              },
             ]}
             explanations={result.explanations}
             note={
               result.exempt
-                ? 'Miễn thuế tỷ lệ — vẫn kê khai doanh thu.'
+                ? "Miễn thuế tỷ lệ. Vẫn kê khai doanh thu."
                 : result.incomeMethodHint?.note
             }
             hideTotal
@@ -148,42 +178,49 @@ export function HkdCalculator({ taxYear }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: { gap: space[4] },
-  row: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2], marginBottom: space[3] },
-  chip: {
-    minHeight: layout.minTouch,
-    paddingHorizontal: space[3],
-    borderRadius: radii.md,
-    backgroundColor: colors.muted,
-    justifyContent: 'center',
-    maxWidth: '100%',
-  },
-  chipSelected: { backgroundColor: colors.secondary },
-  chipLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 12,
-    color: colors.foreground,
-  },
-  chipLabelSelected: { color: colors.white },
-  fieldLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 12,
-    color: colors.foreground,
-    opacity: 0.7,
-    marginBottom: space[1],
-    marginTop: space[2],
-  },
-  input: {
-    minHeight: layout.minTouch,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    paddingHorizontal: space[3],
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 16,
-    color: colors.foreground,
-    fontVariant: ['tabular-nums'],
-    backgroundColor: colors.white,
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    wrap: { gap: space[4] },
+    row: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: space[2],
+      marginBottom: space[3],
+    },
+    chip: {
+      minHeight: layout.minTouch,
+      paddingHorizontal: space[3],
+      borderRadius: radii.md,
+      backgroundColor: colors.muted,
+      justifyContent: "center",
+      maxWidth: "100%",
+    },
+    chipSelected: { backgroundColor: colors.secondary },
+    chipLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 12,
+      color: colors.foreground,
+    },
+    chipLabelSelected: { color: colors.white },
+    fieldLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 12,
+      color: colors.foreground,
+      opacity: 0.7,
+      marginBottom: space[1],
+      marginTop: space[2],
+    },
+    input: {
+      minHeight: layout.minTouch,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radii.md,
+      paddingHorizontal: space[3],
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 16,
+      color: colors.foreground,
+      fontVariant: ["tabular-nums"],
+      backgroundColor: colors.white,
+    },
+  } satisfies ThemedStyleSheet;
+}

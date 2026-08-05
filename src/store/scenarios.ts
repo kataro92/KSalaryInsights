@@ -1,12 +1,12 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import type { CalculationMode, RegionCode } from '@/src/domain/types/salary';
-import type { OtDayType } from '@/src/engine/overtime';
+import type { CalculationMode, RegionCode } from "@/src/domain/types/salary";
+import type { OtDayType } from "@/src/engine/overtime";
 
-export const SCENARIOS_STORAGE_KEY = 'kv.scenarios.v1';
+export const SCENARIOS_STORAGE_KEY = "kv.scenarios.v1";
 export const MAX_SCENARIOS = 20;
 
-export type ScenarioKind = 'calculator' | 'settlement';
+export type ScenarioKind = "calculator" | "settlement";
 
 export type CalculatorScenarioInputs = {
   mode: CalculationMode;
@@ -46,14 +46,14 @@ type ScenarioBase = {
 };
 
 export type SavedCalculatorScenario = ScenarioBase & {
-  kind: 'calculator';
+  kind: "calculator";
   inputs: CalculatorScenarioInputs;
   /** Last computed net for list preview (optional). */
   lastNet?: number;
 };
 
 export type SavedSettlementScenario = ScenarioBase & {
-  kind: 'settlement';
+  kind: "settlement";
   inputs: SettlementScenarioInputs;
   /** Last primary delta (signed) for list preview. */
   lastDelta?: number;
@@ -66,24 +66,26 @@ export type ScenarioStore = {
   scenarios: SavedScenario[];
 };
 
-const MODES: readonly CalculationMode[] = ['gross-to-net', 'net-to-gross'];
-const REGIONS: readonly RegionCode[] = ['I', 'II', 'III', 'IV'];
-const OT_TYPES: readonly OtDayType[] = ['weekday', 'weekend', 'holiday'];
+const MODES: readonly CalculationMode[] = ["gross-to-net", "net-to-gross"];
+const REGIONS: readonly RegionCode[] = ["I", "II", "III", "IV"];
+const OT_TYPES: readonly OtDayType[] = ["weekday", "weekend", "holiday"];
 
 function isMode(v: unknown): v is CalculationMode {
-  return typeof v === 'string' && (MODES as readonly string[]).includes(v);
+  return typeof v === "string" && (MODES as readonly string[]).includes(v);
 }
 
 function isRegion(v: unknown): v is RegionCode {
-  return typeof v === 'string' && (REGIONS as readonly string[]).includes(v);
+  return typeof v === "string" && (REGIONS as readonly string[]).includes(v);
 }
 
 function isOtDay(v: unknown): v is OtDayType {
-  return typeof v === 'string' && (OT_TYPES as readonly string[]).includes(v);
+  return typeof v === "string" && (OT_TYPES as readonly string[]).includes(v);
 }
 
 function isNonNegInt(v: unknown): v is number {
-  return typeof v === 'number' && Number.isInteger(v) && v >= 0 && Number.isFinite(v);
+  return (
+    typeof v === "number" && Number.isInteger(v) && v >= 0 && Number.isFinite(v)
+  );
 }
 
 function isPositiveInt(v: unknown): v is number {
@@ -91,7 +93,7 @@ function isPositiveInt(v: unknown): v is number {
 }
 
 function isFiniteNumber(v: unknown): v is number {
-  return typeof v === 'number' && Number.isFinite(v);
+  return typeof v === "number" && Number.isFinite(v);
 }
 
 function compactMoneyLabel(amount: number): string {
@@ -102,27 +104,40 @@ function compactMoneyLabel(amount: number): string {
   return `${Math.round(amount / 1000)}k`;
 }
 
-export function parseCalculatorInputs(raw: unknown): CalculatorScenarioInputs | null {
-  if (!raw || typeof raw !== 'object') return null;
+export function parseCalculatorInputs(
+  raw: unknown
+): CalculatorScenarioInputs | null {
+  if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
   if (!isMode(o.mode)) return null;
   if (!isPositiveInt(o.amount)) return null;
   if (!isRegion(o.region)) return null;
-  if (typeof o.taxYear !== 'number' || !Number.isInteger(o.taxYear)) return null;
+  if (typeof o.taxYear !== "number" || !Number.isInteger(o.taxYear))
+    return null;
   if (o.taxYear < 2000 || o.taxYear > 2100) return null;
-  if (typeof o.month !== 'number' || !Number.isInteger(o.month) || o.month < 1 || o.month > 12) {
+  if (
+    typeof o.month !== "number" ||
+    !Number.isInteger(o.month) ||
+    o.month < 1 ||
+    o.month > 12
+  ) {
     return null;
   }
   if (!isNonNegInt(o.numDependents) || o.numDependents > 99) return null;
-  if (typeof o.customBh !== 'boolean') return null;
+  if (typeof o.customBh !== "boolean") return null;
   if (o.bhAmount != null && !isNonNegInt(o.bhAmount)) return null;
   if (!isNonNegInt(o.bonus)) return null;
-  if (typeof o.otHours !== 'number' || !Number.isFinite(o.otHours) || o.otHours < 0 || o.otHours > 744) {
+  if (
+    typeof o.otHours !== "number" ||
+    !Number.isFinite(o.otHours) ||
+    o.otHours < 0 ||
+    o.otHours > 744
+  ) {
     return null;
   }
   if (!isOtDay(o.otDayType)) return null;
   // Backward compatible: older v1 saves omit otNight.
-  if (o.otNight != null && typeof o.otNight !== 'boolean') return null;
+  if (o.otNight != null && typeof o.otNight !== "boolean") return null;
   return {
     mode: o.mode,
     amount: o.amount,
@@ -139,16 +154,19 @@ export function parseCalculatorInputs(raw: unknown): CalculatorScenarioInputs | 
   };
 }
 
-export function parseSettlementInputs(raw: unknown): SettlementScenarioInputs | null {
-  if (!raw || typeof raw !== 'object') return null;
+export function parseSettlementInputs(
+  raw: unknown
+): SettlementScenarioInputs | null {
+  if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
-  if (typeof o.taxYear !== 'number' || !Number.isInteger(o.taxYear)) return null;
+  if (typeof o.taxYear !== "number" || !Number.isInteger(o.taxYear))
+    return null;
   if (o.taxYear < 2000 || o.taxYear > 2100) return null;
   if (!isRegion(o.region)) return null;
   if (!isNonNegInt(o.numDependents) || o.numDependents > 99) return null;
   if (!isPositiveInt(o.monthlyGross)) return null;
   if (
-    typeof o.monthsWorked !== 'number' ||
+    typeof o.monthsWorked !== "number" ||
     !Number.isInteger(o.monthsWorked) ||
     o.monthsWorked < 1 ||
     o.monthsWorked > 12
@@ -156,7 +174,7 @@ export function parseSettlementInputs(raw: unknown): SettlementScenarioInputs | 
     return null;
   }
   if (!isNonNegInt(o.salaryWithheld)) return null;
-  if (typeof o.includeCasual !== 'boolean') return null;
+  if (typeof o.includeCasual !== "boolean") return null;
   if (!isNonNegInt(o.casualGross)) return null;
   if (!isNonNegInt(o.casualWithheld)) return null;
   return {
@@ -173,11 +191,12 @@ export function parseSettlementInputs(raw: unknown): SettlementScenarioInputs | 
 }
 
 export function parseSavedScenario(raw: unknown): SavedScenario | null {
-  if (!raw || typeof raw !== 'object') return null;
+  if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
-  if (typeof o.id !== 'string' || !o.id) return null;
-  if (typeof o.name !== 'string' || !o.name.trim()) return null;
-  if (typeof o.createdAt !== 'string' || typeof o.updatedAt !== 'string') return null;
+  if (typeof o.id !== "string" || !o.id) return null;
+  if (typeof o.name !== "string" || !o.name.trim()) return null;
+  if (typeof o.createdAt !== "string" || typeof o.updatedAt !== "string")
+    return null;
 
   const base = {
     id: o.id,
@@ -186,35 +205,35 @@ export function parseSavedScenario(raw: unknown): SavedScenario | null {
     updatedAt: o.updatedAt,
   };
 
-  if (o.kind === 'calculator') {
+  if (o.kind === "calculator") {
     const inputs = parseCalculatorInputs(o.inputs);
     if (!inputs) return null;
     const lastNet =
       o.lastNet == null
         ? undefined
         : isFiniteNumber(o.lastNet)
-          ? o.lastNet
-          : undefined;
-    return { ...base, kind: 'calculator', inputs, lastNet };
+        ? o.lastNet
+        : undefined;
+    return { ...base, kind: "calculator", inputs, lastNet };
   }
 
-  if (o.kind === 'settlement') {
+  if (o.kind === "settlement") {
     const inputs = parseSettlementInputs(o.inputs);
     if (!inputs) return null;
     const lastDelta =
       o.lastDelta == null
         ? undefined
         : isFiniteNumber(o.lastDelta)
-          ? o.lastDelta
-          : undefined;
-    return { ...base, kind: 'settlement', inputs, lastDelta };
+        ? o.lastDelta
+        : undefined;
+    return { ...base, kind: "settlement", inputs, lastDelta };
   }
 
   return null;
 }
 
 export function parseScenarioStore(raw: unknown): ScenarioStore | null {
-  if (!raw || typeof raw !== 'object') return null;
+  if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
   if (o.schemaVersion !== 1) return null;
   if (!Array.isArray(o.scenarios)) return null;
@@ -232,32 +251,38 @@ export function emptyScenarioStore(): ScenarioStore {
 
 export function scenariosOfKind<K extends ScenarioKind>(
   scenarios: readonly SavedScenario[],
-  kind: K,
+  kind: K
 ): Extract<SavedScenario, { kind: K }>[] {
-  return scenarios.filter((s): s is Extract<SavedScenario, { kind: K }> => s.kind === kind);
+  return scenarios.filter(
+    (s): s is Extract<SavedScenario, { kind: K }> => s.kind === kind
+  );
 }
 
-/** Compact default name — calculator e.g. "Gross 30tr · T3/2026". */
+/** Compact default name. Calculator e.g. "Gross 30tr · T3/2026". */
 export function defaultScenarioName(inputs: CalculatorScenarioInputs): string;
 export function defaultScenarioName(
   inputs: SettlementScenarioInputs,
-  kind: 'settlement',
+  kind: "settlement"
 ): string;
 export function defaultScenarioName(
   inputs: CalculatorScenarioInputs | SettlementScenarioInputs,
-  kind: ScenarioKind = 'calculator',
+  kind: ScenarioKind = "calculator"
 ): string {
-  if (kind === 'settlement') {
+  if (kind === "settlement") {
     const i = inputs as SettlementScenarioInputs;
-    const casual = i.includeCasual && i.casualGross > 0 ? ' · vãng lai' : '';
-    return `QT ${compactMoneyLabel(i.monthlyGross)} ×${i.monthsWorked} · ${i.taxYear}${casual}`;
+    const casual = i.includeCasual && i.casualGross > 0 ? " · vãng lai" : "";
+    return `QT ${compactMoneyLabel(i.monthlyGross)} ×${i.monthsWorked} · ${
+      i.taxYear
+    }${casual}`;
   }
   const i = inputs as CalculatorScenarioInputs;
-  const modeLabel = i.mode === 'gross-to-net' ? 'Gross' : 'Net';
-  let suffix = '';
-  if (i.bonus > 0) suffix += ' · thưởng';
-  if (i.otHours > 0) suffix += ' · OT';
-  return `${modeLabel} ${compactMoneyLabel(i.amount)} · T${i.month}/${i.taxYear}${suffix}`;
+  const modeLabel = i.mode === "gross-to-net" ? "Gross" : "Net";
+  let suffix = "";
+  if (i.bonus > 0) suffix += " · thưởng";
+  if (i.otHours > 0) suffix += " · OT";
+  return `${modeLabel} ${compactMoneyLabel(i.amount)} · T${i.month}/${
+    i.taxYear
+  }${suffix}`;
 }
 
 export function newScenarioId(now = Date.now()): string {
@@ -285,13 +310,13 @@ export async function loadScenarios(): Promise<{
 
 async function persistStore(store: ScenarioStore): Promise<void> {
   const normalized = parseScenarioStore(store);
-  if (!normalized) throw new Error('Invalid scenario store');
+  if (!normalized) throw new Error("Invalid scenario store");
   await AsyncStorage.setItem(SCENARIOS_STORAGE_KEY, JSON.stringify(normalized));
 }
 
 export type SaveScenarioInput =
   | {
-      kind?: 'calculator';
+      kind?: "calculator";
       name?: string;
       inputs: CalculatorScenarioInputs;
       lastNet?: number;
@@ -299,7 +324,7 @@ export type SaveScenarioInput =
       now?: Date;
     }
   | {
-      kind: 'settlement';
+      kind: "settlement";
       name?: string;
       inputs: SettlementScenarioInputs;
       lastDelta?: number;
@@ -308,22 +333,29 @@ export type SaveScenarioInput =
     };
 
 export async function saveScenario(
-  input: SaveScenarioInput,
-): Promise<{ store: ScenarioStore; scenario: SavedScenario; replacedOldest: boolean }> {
+  input: SaveScenarioInput
+): Promise<{
+  store: ScenarioStore;
+  scenario: SavedScenario;
+  replacedOldest: boolean;
+}> {
   const { store } = await loadScenarios();
   const nowIso = (input.now ?? new Date()).toISOString();
-  const kind: ScenarioKind = input.kind ?? 'calculator';
+  const kind: ScenarioKind = input.kind ?? "calculator";
 
   let scenario: SavedScenario;
-  if (kind === 'settlement') {
-    const settlementInput = input as Extract<SaveScenarioInput, { kind: 'settlement' }>;
+  if (kind === "settlement") {
+    const settlementInput = input as Extract<
+      SaveScenarioInput,
+      { kind: "settlement" }
+    >;
     const inputs = settlementInputsSafe(settlementInput.inputs);
     const name = (
-      settlementInput.name?.trim() || defaultScenarioName(inputs, 'settlement')
+      settlementInput.name?.trim() || defaultScenarioName(inputs, "settlement")
     ).slice(0, 80);
     if (settlementInput.id) {
       const idx = store.scenarios.findIndex((s) => s.id === settlementInput.id);
-      if (idx >= 0 && store.scenarios[idx].kind === 'settlement') {
+      if (idx >= 0 && store.scenarios[idx].kind === "settlement") {
         const updated: SavedSettlementScenario = {
           ...store.scenarios[idx],
           name,
@@ -343,17 +375,23 @@ export async function saveScenario(
       name,
       createdAt: nowIso,
       updatedAt: nowIso,
-      kind: 'settlement',
+      kind: "settlement",
       inputs,
       lastDelta: settlementInput.lastDelta,
     };
   } else {
-    const calcInput = input as Extract<SaveScenarioInput, { kind?: 'calculator' }>;
+    const calcInput = input as Extract<
+      SaveScenarioInput,
+      { kind?: "calculator" }
+    >;
     const inputs = calculatorInputsSafe(calcInput.inputs);
-    const name = (calcInput.name?.trim() || defaultScenarioName(inputs)).slice(0, 80);
+    const name = (calcInput.name?.trim() || defaultScenarioName(inputs)).slice(
+      0,
+      80
+    );
     if (calcInput.id) {
       const idx = store.scenarios.findIndex((s) => s.id === calcInput.id);
-      if (idx >= 0 && store.scenarios[idx].kind === 'calculator') {
+      if (idx >= 0 && store.scenarios[idx].kind === "calculator") {
         const updated: SavedCalculatorScenario = {
           ...store.scenarios[idx],
           name,
@@ -373,7 +411,7 @@ export async function saveScenario(
       name,
       createdAt: nowIso,
       updatedAt: nowIso,
-      kind: 'calculator',
+      kind: "calculator",
       inputs,
       lastNet: calcInput.lastNet,
     };
@@ -390,15 +428,19 @@ export async function saveScenario(
   return { store: nextStore, scenario, replacedOldest };
 }
 
-function calculatorInputsSafe(inputs: CalculatorScenarioInputs): CalculatorScenarioInputs {
+function calculatorInputsSafe(
+  inputs: CalculatorScenarioInputs
+): CalculatorScenarioInputs {
   const parsed = parseCalculatorInputs(inputs);
-  if (!parsed) throw new Error('Invalid scenario inputs');
+  if (!parsed) throw new Error("Invalid scenario inputs");
   return parsed;
 }
 
-function settlementInputsSafe(inputs: SettlementScenarioInputs): SettlementScenarioInputs {
+function settlementInputsSafe(
+  inputs: SettlementScenarioInputs
+): SettlementScenarioInputs {
   const parsed = parseSettlementInputs(inputs);
-  if (!parsed) throw new Error('Invalid settlement scenario inputs');
+  if (!parsed) throw new Error("Invalid settlement scenario inputs");
   return parsed;
 }
 
@@ -419,9 +461,9 @@ export async function clearScenarios(): Promise<ScenarioStore> {
 }
 
 function formatDeltaPreview(delta: number): string {
-  if (delta === 0) return 'khớp';
-  if (delta > 0) return `nộp thêm ${delta.toLocaleString('vi-VN')} ₫`;
-  return `hoàn ${Math.abs(delta).toLocaleString('vi-VN')} ₫`;
+  if (delta === 0) return "khớp";
+  if (delta > 0) return `nộp thêm ${delta.toLocaleString("vi-VN")} ₫`;
+  return `hoàn ${Math.abs(delta).toLocaleString("vi-VN")} ₫`;
 }
 
 /** Plain-text summary for Share sheet (no PII beyond figures user entered). */
@@ -433,7 +475,7 @@ export function formatScenarioShareText(args: {
 }): string;
 export function formatScenarioShareText(args: {
   name?: string;
-  kind: 'settlement';
+  kind: "settlement";
   inputs: SettlementScenarioInputs;
   delta?: number;
   brand?: string;
@@ -445,65 +487,75 @@ export function formatScenarioShareText(
         inputs: CalculatorScenarioInputs;
         net?: number;
         brand?: string;
-        kind?: 'calculator';
+        kind?: "calculator";
       }
     | {
         name?: string;
-        kind: 'settlement';
+        kind: "settlement";
         inputs: SettlementScenarioInputs;
         delta?: number;
         brand?: string;
-      },
+      }
 ): string {
-  const brand = args.brand ?? 'KVSalaryTools';
-  if (args.kind === 'settlement') {
+  const brand = args.brand ?? "KVSalaryTools";
+  if (args.kind === "settlement") {
     const i = args.inputs;
     const lines = [
-      args.name ? `${args.name}` : 'Kịch bản quyết toán',
-      `Lương ${i.monthlyGross.toLocaleString('vi-VN')} ₫ × ${i.monthsWorked} tháng`,
+      args.name ? `${args.name}` : "Kịch bản quyết toán",
+      `Lương ${i.monthlyGross.toLocaleString("vi-VN")} ₫ × ${
+        i.monthsWorked
+      } tháng`,
       `Năm QT ${i.taxYear} · vùng ${i.region} · NPT ${i.numDependents}`,
-      `Đã khấu trừ lương: ${i.salaryWithheld.toLocaleString('vi-VN')} ₫`,
+      `Đã khấu trừ lương: ${i.salaryWithheld.toLocaleString("vi-VN")} ₫`,
     ];
     if (i.includeCasual) {
       lines.push(
-        `Vãng lai: ${i.casualGross.toLocaleString('vi-VN')} ₫ (đã trừ ${i.casualWithheld.toLocaleString('vi-VN')} ₫)`,
+        `Vãng lai: ${i.casualGross.toLocaleString(
+          "vi-VN"
+        )} ₫ (đã trừ ${i.casualWithheld.toLocaleString("vi-VN")} ₫)`
       );
     }
-    if (args.delta != null) lines.push(`Ước: ${formatDeltaPreview(args.delta)}`);
-    lines.push(`— ước tính offline · ${brand}`);
-    return lines.join('\n');
+    if (args.delta != null)
+      lines.push(`Ước: ${formatDeltaPreview(args.delta)}`);
+    lines.push(` - ước tính offline · ${brand}`);
+    return lines.join("\n");
   }
 
   const i = args.inputs;
   const lines = [
-    args.name ? `${args.name}` : 'Kịch bản lương',
-    `${i.mode === 'gross-to-net' ? 'Gross' : 'Net mục tiêu'}: ${i.amount.toLocaleString('vi-VN')} ₫`,
+    args.name ? `${args.name}` : "Kịch bản lương",
+    `${
+      i.mode === "gross-to-net" ? "Gross" : "Net mục tiêu"
+    }: ${i.amount.toLocaleString("vi-VN")} ₫`,
     `Năm thuế ${i.taxYear} · tháng ${i.month} · vùng ${i.region} · NPT ${i.numDependents}`,
   ];
-  if (i.bonus > 0) lines.push(`Thưởng: ${i.bonus.toLocaleString('vi-VN')} ₫`);
+  if (i.bonus > 0) lines.push(`Thưởng: ${i.bonus.toLocaleString("vi-VN")} ₫`);
   if (i.otHours > 0) {
-    const night = i.otNight ? ' · đêm' : '';
+    const night = i.otNight ? " · đêm" : "";
     lines.push(`OT: ${i.otHours} giờ (${i.otDayType}${night})`);
   }
-  if (args.net != null) lines.push(`Net ước: ${args.net.toLocaleString('vi-VN')} ₫`);
-  lines.push(`— ước tính offline · ${brand}`);
-  return lines.join('\n');
+  if (args.net != null)
+    lines.push(`Net ước: ${args.net.toLocaleString("vi-VN")} ₫`);
+  lines.push(` - ước tính offline · ${brand}`);
+  return lines.join("\n");
 }
 
 export function scenarioRowMeta(scenario: SavedScenario): string {
-  if (scenario.kind === 'settlement') {
+  if (scenario.kind === "settlement") {
     const i = scenario.inputs;
-    const base = `${formatVndCompact(i.monthlyGross)} ×${i.monthsWorked} · ${i.taxYear}`;
+    const base = `${formatVndCompact(i.monthlyGross)} ×${i.monthsWorked} · ${
+      i.taxYear
+    }`;
     if (scenario.lastDelta == null) return base;
     return `${base} · ${formatDeltaPreview(scenario.lastDelta)}`;
   }
   const i = scenario.inputs;
-  const mode = i.mode === 'gross-to-net' ? 'Gross' : 'Net';
+  const mode = i.mode === "gross-to-net" ? "Gross" : "Net";
   const base = `${mode} ${formatVndCompact(i.amount)}`;
   if (scenario.lastNet == null) return base;
   return `${base} · Net ${formatVndCompact(scenario.lastNet)}`;
 }
 
 function formatVndCompact(n: number): string {
-  return `${n.toLocaleString('vi-VN')} ₫`;
+  return `${n.toLocaleString("vi-VN")} ₫`;
 }

@@ -1,14 +1,14 @@
-import { REGION_TO_KEY, roundVnd } from '@/src/domain/constants/salary';
+import { REGION_TO_KEY, roundVnd } from "@/src/domain/constants/salary";
 import type {
   InsuranceBreakdown,
   RegionCode,
   Ruleset,
-} from '@/src/domain/types/salary';
+} from "@/src/domain/types/salary";
 
 export function calculateInsurance(
   insuranceSalary: number,
   region: RegionCode,
-  ruleset: Ruleset,
+  ruleset: Ruleset
 ): InsuranceBreakdown {
   const rates = ruleset.insurance_rates.employee;
   const regionKey = REGION_TO_KEY[region];

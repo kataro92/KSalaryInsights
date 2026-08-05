@@ -1,10 +1,10 @@
 /** Domain contracts for salary calculation (spec 001). */
 
-export type RegionCode = 'I' | 'II' | 'III' | 'IV';
+export type RegionCode = "I" | "II" | "III" | "IV";
 
-export type RegionKey = '1' | '2' | '3' | '4';
+export type RegionKey = "1" | "2" | "3" | "4";
 
-export type CalculationMode = 'gross-to-net' | 'net-to-gross';
+export type CalculationMode = "gross-to-net" | "net-to-gross";
 
 export type PitBracket = {
   bracket: number;
@@ -150,11 +150,11 @@ export type SalaryInput = {
   net?: number;
   region: RegionCode;
   taxYear: number;
-  /** YYYY-MM-DD — selects mid-year insurance caps (e.g. 2026-H1 vs H2). */
+  /** YYYY-MM-DD. Selects mid-year insurance caps (e.g. 2026-H1 vs H2). */
   asOfDate: string;
   /**
    * Số người phụ thuộc (NPT).
-   * App constraint: `0 ≤ numDependents ≤ 20` (MVP — chỉ số lượng, không PII).
+   * App constraint: `0 ≤ numDependents ≤ 20` (MVP. Chỉ số lượng, không PII).
    */
   numDependents: number;
   /** Insurance contribution base; defaults to gross. */

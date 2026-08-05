@@ -1,7 +1,7 @@
-import { StyleSheet, View, type ViewProps } from 'react-native';
-import type { ReactNode } from 'react';
+import { StyleSheet, View, type ViewProps } from "react-native";
+import type { ReactNode } from "react";
 
-import { space } from '@/src/theme/tokens';
+import { space } from "@/src/theme/tokens";
 
 type Props = ViewProps & {
   children: ReactNode;
@@ -22,11 +22,11 @@ export function ChipRow({ children, equal = false, style, ...rest }: Props) {
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: space[2],
   },
   equal: {
-    flexWrap: 'nowrap',
+    flexWrap: "nowrap",
   },
 });

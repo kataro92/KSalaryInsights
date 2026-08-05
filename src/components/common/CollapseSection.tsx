@@ -1,8 +1,11 @@
 import { useState, type ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { ChevronDown, ChevronUp } from 'lucide-react-native';
+import { Pressable, Text, View } from 'react-native';
 
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+import { AppIcon } from '@/src/components/common/AppIcon';
+import type { ThemeContextValue } from '@/src/theme/ThemeProvider';
+import { useTheme } from '@/src/theme/ThemeProvider';
+import { layout, radii, space, typography } from '@/src/theme/tokens';
+import { useThemedStyles } from '@/src/theme/useThemedStyles';
 
 type Props = {
   title: string;
@@ -23,6 +26,8 @@ export function CollapseSection({
   open: openControlled,
   onOpenChange,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [openInternal, setOpenInternal] = useState(defaultOpen);
   const controlled = openControlled !== undefined;
   const open = controlled ? openControlled : openInternal;
@@ -43,9 +48,9 @@ export function CollapseSection({
       >
         <Text style={styles.title}>{title}</Text>
         {open ? (
-          <ChevronUp color={colors.foregroundMuted} size={20} strokeWidth={2.2} />
+          <AppIcon name="chevron-up" color={colors.foregroundMuted} size={20} />
         ) : (
-          <ChevronDown color={colors.foregroundMuted} size={20} strokeWidth={2.2} />
+          <AppIcon name="chevron-down" color={colors.foregroundMuted} size={20} />
         )}
       </Pressable>
       {open ? <View style={styles.body}>{children}</View> : null}
@@ -53,33 +58,35 @@ export function CollapseSection({
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: {
-    backgroundColor: colors.muted,
-    borderRadius: radii.lg,
-    overflow: 'hidden',
-  },
-  header: {
-    minHeight: layout.minTouch + 8,
-    paddingHorizontal: space[4],
-    paddingVertical: space[3],
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: space[3],
-  },
-  pressed: {
-    opacity: 0.88,
-  },
-  title: {
-    flex: 1,
-    fontFamily: typography.fontFamily.semiBold,
-    fontSize: typography.scale.body.fontSize,
-    color: colors.foreground,
-  },
-  body: {
-    paddingHorizontal: space[4],
-    paddingBottom: space[4],
-    gap: space[4],
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    wrap: {
+      backgroundColor: colors.muted,
+      borderRadius: radii.lg,
+      overflow: 'hidden',
+    },
+    header: {
+      minHeight: layout.minTouch + 8,
+      paddingHorizontal: space[4],
+      paddingVertical: space[3],
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: space[3],
+    },
+    pressed: {
+      opacity: 0.88,
+    },
+    title: {
+      flex: 1,
+      fontFamily: typography.fontFamily.semiBold,
+      fontSize: typography.scale.body.fontSize,
+      color: colors.foreground,
+    },
+    body: {
+      paddingHorizontal: space[4],
+      paddingBottom: space[4],
+      gap: space[4],
+    },
+  } as const;
+}

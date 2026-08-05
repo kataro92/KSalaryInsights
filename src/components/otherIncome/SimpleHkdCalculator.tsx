@@ -1,40 +1,46 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from "react";
+import { Text, View } from "react-native";
 
-import { Button } from '@/src/components/common/Button';
-import { ChipRow } from '@/src/components/common/ChipRow';
-import { ChoiceChip } from '@/src/components/common/ChoiceChip';
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { MoneyField } from '@/src/components/common/MoneyField';
-import { ResultHero } from '@/src/components/common/ResultHero';
-import { Section } from '@/src/components/common/Section';
-import { StickyActionBar } from '@/src/components/common/StickyActionBar';
-import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
-import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { OtherIncomeBreakdownCard } from '@/src/components/otherIncome/OtherIncomeBreakdownCard';
-import { emptyCopy, miuTips } from '@/src/copy/miu';
-import type { HkdBreakdown, HkdIndustryId } from '@/src/domain/types/otherIncome';
-import { calculateHkd } from '@/src/engine/otherIncome/hkd';
-import { annualFromMonthly } from '@/src/engine/otherIncome/simpleEstimate';
-import { successHaptic } from '@/src/theme/haptics';
-import { parseMoney } from '@/src/theme/money';
-import { colors, layout, space, typography } from '@/src/theme/tokens';
+import { Button } from "@/src/components/common/Button";
+import { ChipRow } from "@/src/components/common/ChipRow";
+import { ChoiceChip } from "@/src/components/common/ChoiceChip";
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
+import { ResultHero } from "@/src/components/common/ResultHero";
+import { Section } from "@/src/components/common/Section";
+import { StickyActionBar } from "@/src/components/common/StickyActionBar";
+import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
+import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
+import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
+import { emptyCopy, miuTips } from "@/src/copy/miu";
+import type {
+  HkdBreakdown,
+  HkdIndustryId,
+} from "@/src/domain/types/otherIncome";
+import { calculateHkd } from "@/src/engine/otherIncome/hkd";
+import { annualFromMonthly } from "@/src/engine/otherIncome/simpleEstimate";
+import { successHaptic } from "@/src/theme/haptics";
+import { parseMoney } from "@/src/theme/money";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { layout, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles } from "@/src/theme/useThemedStyles";
 
 type Props = { taxYear: number };
 
-/** Three common industries for F016′ — full list stays in Đầy đủ mode. */
+/** Three common industries for F016′. Full list stays in Đầy đủ mode. */
 const SIMPLE_INDUSTRIES: { id: HkdIndustryId; label: string }[] = [
-  { id: 'distribution', label: 'Hàng hóa / tạp hóa' },
-  { id: 'services', label: 'Dịch vụ' },
-  { id: 'production_transport', label: 'Sản xuất / vận tải' },
+  { id: "distribution", label: "Hàng hóa / tạp hóa" },
+  { id: "services", label: "Dịch vụ" },
+  { id: "production_transport", label: "Sản xuất / vận tải" },
 ];
 
 /**
- * F016′ — bản đơn giản: ngành phổ biến + DT tháng ×12, không nhập chi phí.
+ * F016′. Bản đơn giản: ngành phổ biến + DT tháng ×12, không nhập chi phí.
  */
 export function SimpleHkdCalculator({ taxYear }: Props) {
-  const [industryId, setIndustryId] = useState<HkdIndustryId>('distribution');
-  const [monthlyText, setMonthlyText] = useState('125.000.000');
+  const styles = useThemedStyles(makeStyles);
+  const [industryId, setIndustryId] = useState<HkdIndustryId>("distribution");
+  const [monthlyText, setMonthlyText] = useState("125.000.000");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<HkdBreakdown | null>(null);
 
@@ -44,7 +50,7 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
     setError(null);
     const monthly = parseMoney(monthlyText);
     if (monthly == null || monthly < 0) {
-      setError('Nhập doanh thu tháng hợp lệ.');
+      setError("Nhập doanh thu tháng hợp lệ.");
       setResult(null);
       return;
     }
@@ -55,12 +61,12 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
           annualRevenue,
           industryId,
           taxYear,
-        }),
+        })
       );
       void successHaptic();
     } catch (e) {
       setResult(null);
-      setError(e instanceof Error ? e.message : 'Không tính được.');
+      setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
 
@@ -68,7 +74,7 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
     <View style={styles.root}>
       <View style={styles.body}>
         <Section
-          title="Hộ kinh doanh — ước nhanh"
+          title="Hộ kinh doanh. Ước nhanh"
           subtitle="Chọn nhóm gần đúng + doanh thu tháng. Tôi nhân ×12; không so sánh chi phí ở chế độ này."
         >
           <ChipRow>
@@ -90,7 +96,7 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
             accessibilityLabel="Doanh thu HKD mỗi tháng"
             value={monthlyText}
             onValueChange={(formatted) => {
-              setMonthlyText(formatted || '0');
+              setMonthlyText(formatted || "0");
               clearResult();
             }}
           />
@@ -100,7 +106,11 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
         </Section>
 
         {error ? (
-          <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
+          <EmptyErrorState
+            variant="error"
+            title={emptyCopy.calculateError.title}
+            body={error}
+          />
         ) : null}
 
         {result ? (
@@ -113,17 +123,27 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
             />
             <NgaiMiuTip tip={miuTips.hkdSimple} />
             <OtherIncomeBreakdownCard
-              title={`HKD — ${result.industryLabel}`}
+              title={`HKD. ${result.industryLabel}`}
               total={result.totalTax}
               formula={result.formula}
               lines={[
-                { id: 'vat', label: 'GTGT', amount: result.vat, tipId: 'other.vat' },
-                { id: 'pit', label: 'TNCN', amount: result.pit, tipId: 'other.pit' },
+                {
+                  id: "vat",
+                  label: "GTGT",
+                  amount: result.vat,
+                  tipId: "other.vat",
+                },
+                {
+                  id: "pit",
+                  label: "TNCN",
+                  amount: result.pit,
+                  tipId: "other.pit",
+                },
               ]}
               explanations={result.explanations}
               note={
                 result.exempt
-                  ? 'Miễn thuế tỷ lệ — vẫn kê khai doanh thu.'
+                  ? "Miễn thuế tỷ lệ. Vẫn kê khai doanh thu."
                   : undefined
               }
               hideTotal
@@ -145,17 +165,19 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flexGrow: 1 },
-  body: {
-    gap: space[4],
-    paddingBottom: layout.stickyBarHeight + space[8],
-  },
-  hint: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: typography.scale.caption.fontSize,
-    color: colors.foregroundMuted,
-    marginTop: space[2],
-    lineHeight: 18,
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    root: { flexGrow: 1 },
+    body: {
+      gap: space[4],
+      paddingBottom: layout.stickyBarHeight + space[8],
+    },
+    hint: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: typography.scale.caption.fontSize,
+      color: colors.foregroundMuted,
+      marginTop: space[2],
+      lineHeight: 18,
+    },
+  } as const;
+}

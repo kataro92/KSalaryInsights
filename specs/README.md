@@ -1,10 +1,10 @@
 # Spec tính năng
 
-**Cập nhật**: 2026-08-05 — toàn bộ spec dưới đây **đã triển khai** trên `master`.
+**Cập nhật**: 2026-08-05: toàn bộ spec dưới đây **đã triển khai** trên `master`.
 
-Phạm vi & trạng thái F-ID: [docs/product/scope.md](../docs/product/scope.md).
+Phạm vi & trạng thái F-ID: [docs/product/scope.md](./docs/product/scope.md).
 
-UI/UX MUST tuân [docs/product/design-system.md](../docs/product/design-system.md).
+UI/UX MUST tuân [docs/product/design-system.md](./docs/product/design-system.md).
 
 | # | Thư mục | Nội dung | Spec |
 |---|---------|----------|------|

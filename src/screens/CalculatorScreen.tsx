@@ -1,107 +1,115 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Pressable,
   ScrollView,
   Share,
-  StyleSheet,
   Switch,
   Text,
   TextInput,
   View,
-} from 'react-native';
-import { useRouter } from 'expo-router';
+} from "react-native";
+import { useRouter } from "expo-router";
 
-import { ScenarioPanel } from '@/src/components/calculator/ScenarioPanel';
-import { Button } from '@/src/components/common/Button';
-import { ChipRow } from '@/src/components/common/ChipRow';
-import { ChoiceChip } from '@/src/components/common/ChoiceChip';
-import { CollapseSection } from '@/src/components/common/CollapseSection';
-import { ColorBlock } from '@/src/components/common/ColorBlock';
-import { EmptyErrorState } from '@/src/components/common/EmptyErrorState';
-import { MoneyField } from '@/src/components/common/MoneyField';
-import { PageHero } from '@/src/components/common/PageHero';
-import { ResultHero } from '@/src/components/common/ResultHero';
-import { ScreenShell } from '@/src/components/common/ScreenShell';
-import { SeasonalBanner } from '@/src/components/common/SeasonalBanner';
-import { Section } from '@/src/components/common/Section';
-import { StickyActionBar } from '@/src/components/common/StickyActionBar';
-import { SalaryBreakdownCard } from '@/src/components/breakdown/SalaryBreakdownCard';
-import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
-import { DependentCountInput } from '@/src/components/inputs/DependentCountInput';
-import { MonthPicker } from '@/src/components/inputs/MonthPicker';
-import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
-import { brand, emptyCopy, miuTips } from '@/src/copy/miu';
-import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
+import { ScenarioPanel } from "@/src/components/calculator/ScenarioPanel";
+import { AppIcon } from "@/src/components/common/AppIcon";
+import { Button } from "@/src/components/common/Button";
+import { ChipRow } from "@/src/components/common/ChipRow";
+import { ChoiceChip } from "@/src/components/common/ChoiceChip";
+import { CollapseSection } from "@/src/components/common/CollapseSection";
+import { ColorBlock } from "@/src/components/common/ColorBlock";
+import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
+import { PageHero } from "@/src/components/common/PageHero";
+import { ResultHero } from "@/src/components/common/ResultHero";
+import { ScreenShell } from "@/src/components/common/ScreenShell";
+import { SeasonalBanner } from "@/src/components/common/SeasonalBanner";
+import { Section } from "@/src/components/common/Section";
+import { StickyActionBar } from "@/src/components/common/StickyActionBar";
+import { SalaryBreakdownCard } from "@/src/components/breakdown/SalaryBreakdownCard";
+import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
+import { DependentCountInput } from "@/src/components/inputs/DependentCountInput";
+import { MonthPicker } from "@/src/components/inputs/MonthPicker";
+import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
+import { brand, emptyCopy, miuTips } from "@/src/copy/miu";
+import {
+  REGION_OPTIONS,
+  TAX_YEAR_OPTIONS,
+} from "@/src/domain/constants/salary";
 import type {
   CalculationMode,
   RegionCode,
   SalaryBreakdown,
-} from '@/src/domain/types/salary';
+} from "@/src/domain/types/salary";
 import {
   calculateBonusMonth,
   type BonusMonthResult,
-} from '@/src/engine/bonusMonth';
-import { grossToNet } from '@/src/engine/grossToNet';
-import { netToGross } from '@/src/engine/netToGross';
+} from "@/src/engine/bonusMonth";
+import { grossToNet } from "@/src/engine/grossToNet";
+import { netToGross } from "@/src/engine/netToGross";
 import {
   calcOvertimePay,
   OT_DAY_LABELS,
   type OtDayType,
-} from '@/src/engine/overtime';
-import { usePreferences } from '@/src/hooks/usePreferences';
-import { useScenarios } from '@/src/hooks/useScenarios';
-import { useI18n } from '@/src/i18n/useI18n';
+} from "@/src/engine/overtime";
+import { usePreferences } from "@/src/hooks/usePreferences";
+import { useScenarios } from "@/src/hooks/useScenarios";
+import { useI18n } from "@/src/i18n/useI18n";
 import {
   defaultScenarioName,
   formatScenarioShareText,
   type CalculatorScenarioInputs,
   type SavedScenario,
-} from '@/src/store/scenarios';
-import { successHaptic } from '@/src/theme/haptics';
-import { formatMoneyInput, formatVnd, parseMoney } from '@/src/theme/money';
-import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
+} from "@/src/store/scenarios";
+import { successHaptic } from "@/src/theme/haptics";
+import { formatMoneyInput, formatVnd, parseMoney } from "@/src/theme/money";
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { useTheme } from "@/src/theme/ThemeProvider";
+import { layout, radii, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
 
 function asOfFromMonth(taxYear: number, month: number): string {
-  const m = String(month).padStart(2, '0');
+  const m = String(month).padStart(2, "0");
   return `${taxYear}-${m}-15`;
 }
 
 function formatAsOfVi(iso: string): string {
-  const [y, m, d] = iso.split('-');
+  const [y, m, d] = iso.split("-");
   return `${d}/${m}/${y}`;
 }
 
-const OT_TYPES: OtDayType[] = ['weekday', 'weekend', 'holiday'];
+const OT_TYPES: OtDayType[] = ["weekday", "weekend", "holiday"];
 
 export function CalculatorScreen() {
   const router = useRouter();
   const { t } = useI18n();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { preferences } = usePreferences();
-  const { scenarios, save, remove } = useScenarios('calculator');
+  const { scenarios, save, remove } = useScenarios("calculator");
   const scrollRef = useRef<ScrollView>(null);
 
-  const [mode, setMode] = useState<CalculationMode>('gross-to-net');
-  const [amountText, setAmountText] = useState('30.000.000');
+  const [mode, setMode] = useState<CalculationMode>("gross-to-net");
+  const [amountText, setAmountText] = useState("30.000.000");
   const [region, setRegion] = useState<RegionCode>(preferences.defaultRegion);
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
       ? preferences.defaultTaxYear
-      : 2026,
+      : 2026
   );
   const [month, setMonth] = useState(3);
   const [numDependents, setNumDependents] = useState(0);
   const [customBh, setCustomBh] = useState(false);
-  const [bhText, setBhText] = useState('30.000.000');
-  const [bonusText, setBonusText] = useState('0');
-  const [otHoursText, setOtHoursText] = useState('0');
-  const [otDayType, setOtDayType] = useState<OtDayType>('weekday');
+  const [bhText, setBhText] = useState("30.000.000");
+  const [bonusText, setBonusText] = useState("0");
+  const [otHoursText, setOtHoursText] = useState("0");
+  const [otDayType, setOtDayType] = useState<OtDayType>("weekday");
   const [otNight, setOtNight] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [breakdown, setBreakdown] = useState<SalaryBreakdown | null>(null);
   const [bonusMonth, setBonusMonth] = useState<BonusMonthResult | null>(null);
   const [saving, setSaving] = useState(false);
-  const [saveName, setSaveName] = useState('');
+  const [saveName, setSaveName] = useState("");
   const [scenariosOpen, setScenariosOpen] = useState(false);
   const scenariosBootstrapped = useRef(false);
 
@@ -113,7 +121,10 @@ export function CalculatorScreen() {
     }
   }, [scenarios.length]);
 
-  const asOfDate = useMemo(() => asOfFromMonth(taxYear, month), [taxYear, month]);
+  const asOfDate = useMemo(
+    () => asOfFromMonth(taxYear, month),
+    [taxYear, month]
+  );
   const seasonalHint = month === 12 || month === 1;
 
   const clearResult = () => {
@@ -137,14 +148,14 @@ export function CalculatorScreen() {
       customBh,
       bhAmount: customBh ? bhAmount : null,
       bonus: parseMoney(bonusText) ?? 0,
-      otHours: Number(otHoursText.replace(/[^\d.]/g, '') || '0') || 0,
+      otHours: Number(otHoursText.replace(/[^\d.]/g, "") || "0") || 0,
       otDayType,
       otNight,
     };
   };
 
   const applyScenario = (s: SavedScenario) => {
-    if (s.kind !== 'calculator') return;
+    if (s.kind !== "calculator") return;
     const i = s.inputs;
     setMode(i.mode);
     setAmountText(formatMoneyInput(i.amount));
@@ -154,8 +165,8 @@ export function CalculatorScreen() {
     setNumDependents(i.numDependents);
     setCustomBh(i.customBh);
     setBhText(formatMoneyInput(i.bhAmount ?? i.amount));
-    setBonusText(formatMoneyInput(i.bonus) || '0');
-    setOtHoursText(i.otHours > 0 ? String(i.otHours) : '0');
+    setBonusText(formatMoneyInput(i.bonus) || "0");
+    setOtHoursText(i.otHours > 0 ? String(i.otHours) : "0");
     setOtDayType(i.otDayType);
     setOtNight(i.otNight);
     clearResult();
@@ -165,7 +176,7 @@ export function CalculatorScreen() {
   const beginSave = () => {
     const inputs = collectInputs();
     if (!inputs || !breakdown) {
-      setError('Tính kết quả trước khi lưu kịch bản.');
+      setError("Tính kết quả trước khi lưu kịch bản.");
       return;
     }
     setSaveName(defaultScenarioName(inputs));
@@ -185,7 +196,7 @@ export function CalculatorScreen() {
       setSaving(false);
       void successHaptic();
     } catch {
-      Alert.alert('Không lưu được', 'Vui lòng thử lại.');
+      Alert.alert("Không lưu được", "Vui lòng thử lại.");
     }
   };
 
@@ -209,24 +220,26 @@ export function CalculatorScreen() {
     setError(null);
     const amount = parseMoney(amountText);
     if (amount == null || amount <= 0) {
-      setError('Vui lòng nhập số tiền hợp lệ (> 0).');
+      setError("Vui lòng nhập số tiền hợp lệ (> 0).");
       setBreakdown(null);
       setBonusMonth(null);
       return;
     }
 
-    const insuranceSalary = customBh ? parseMoney(bhText) ?? undefined : undefined;
+    const insuranceSalary = customBh
+      ? parseMoney(bhText) ?? undefined
+      : undefined;
     if (customBh && (insuranceSalary == null || insuranceSalary < 0)) {
-      setError('Mức đóng BH không hợp lệ.');
+      setError("Mức đóng BH không hợp lệ.");
       setBreakdown(null);
       setBonusMonth(null);
       return;
     }
 
     try {
-      if (mode === 'gross-to-net') {
+      if (mode === "gross-to-net") {
         const bonus = parseMoney(bonusText) ?? 0;
-        const otHours = Number(otHoursText.replace(/[^\d.]/g, '') || '0');
+        const otHours = Number(otHoursText.replace(/[^\d.]/g, "") || "0");
         let otPay = 0;
         if (otHours > 0) {
           otPay = calcOvertimePay({
@@ -260,7 +273,7 @@ export function CalculatorScreen() {
               asOfDate,
               numDependents,
               insuranceSalary,
-            }),
+            })
           );
         }
         void successHaptic();
@@ -278,7 +291,9 @@ export function CalculatorScreen() {
         if (!result.ok) {
           setBreakdown(null);
           setError(
-            `Không khả thi với vùng/tham số hiện tại. Net tối thiểu tham khảo: ${result.minFeasibleNet.toLocaleString('vi-VN')} ₫`,
+            `Không khả thi với vùng/tham số hiện tại. Net tối thiểu tham khảo: ${result.minFeasibleNet.toLocaleString(
+              "vi-VN"
+            )} ₫`
           );
           return;
         }
@@ -288,7 +303,7 @@ export function CalculatorScreen() {
     } catch (e) {
       setBreakdown(null);
       setBonusMonth(null);
-      setError(e instanceof Error ? e.message : 'Không tính được.');
+      setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
 
@@ -303,18 +318,18 @@ export function CalculatorScreen() {
   const openComparison = () => {
     const amount = parseMoney(amountText);
     if (amount == null || amount <= 0) {
-      setError('Nhập Gross hợp lệ trước khi so sánh.');
+      setError("Nhập Gross hợp lệ trước khi so sánh.");
       return;
     }
     const insuranceSalary = customBh ? parseMoney(bhText) : null;
     router.push({
-      pathname: '/comparison',
+      pathname: "/comparison",
       params: {
         gross: String(amount),
         region,
         numDependents: String(numDependents),
         month: String(month),
-        insuranceSalary: insuranceSalary != null ? String(insuranceSalary) : '',
+        insuranceSalary: insuranceSalary != null ? String(insuranceSalary) : "",
       },
     });
   };
@@ -327,10 +342,7 @@ export function CalculatorScreen() {
         decorated
         contentContainerStyle={styles.scrollContent}
       >
-        <PageHero
-          title={t('calc.title')}
-          subtitle={t('calc.subtitle')}
-        />
+        <PageHero title={t("calc.title")} subtitle={t("calc.subtitle")} />
 
         <SeasonalBanner />
 
@@ -338,7 +350,7 @@ export function CalculatorScreen() {
           title={
             scenarios.length > 0
               ? `Kịch bản đã lưu (${scenarios.length})`
-              : 'Kịch bản đã lưu'
+              : "Kịch bản đã lưu"
           }
           open={scenariosOpen}
           onOpenChange={(next) => {
@@ -367,8 +379,8 @@ export function CalculatorScreen() {
           <ChipRow equal>
             {(
               [
-                ['gross-to-net', 'Gross → Net'],
-                ['net-to-gross', 'Net → Gross'],
+                ["gross-to-net", "Gross → Net"],
+                ["net-to-gross", "Net → Gross"],
               ] as const
             ).map(([id, label]) => (
               <ChoiceChip
@@ -386,12 +398,14 @@ export function CalculatorScreen() {
         </Section>
 
         <Section
-          title={mode === 'gross-to-net' ? 'Lương Gross' : 'Net mong muốn'}
+          title={mode === "gross-to-net" ? "Lương Gross" : "Net mong muốn"}
           subtitle="Nhập số nguyên VNĐ"
         >
           <MoneyField
             accessibilityLabel={
-              mode === 'gross-to-net' ? 'Nhập lương gross' : 'Nhập net mong muốn'
+              mode === "gross-to-net"
+                ? "Nhập lương gross"
+                : "Nhập net mong muốn"
             }
             value={amountText}
             onValueChange={(formatted) => {
@@ -418,30 +432,33 @@ export function CalculatorScreen() {
           </ChipRow>
         </Section>
 
-        {mode === 'gross-to-net' ? (
+        {mode === "gross-to-net" ? (
           <CollapseSection
-            title="Thưởng tháng · OT"
+            title="Thưởng tháng · làm thêm"
             defaultOpen={seasonalHint}
           >
             <Section
               title="Thưởng / tháng 13"
               subtitle={
                 seasonalHint
-                  ? 'Gợi ý mùa Tết (T12–T1) — mô phỏng thuế tháng nhận thưởng.'
-                  : 'Cộng vào Gross tháng này để ước PIT (F009).'
+                  ? "Gợi ý mùa Tết (tháng 12–1). Mô phỏng thuế tháng nhận thưởng."
+                  : "Cộng vào Gross tháng này để ước thuế TNCN."
               }
             >
               <MoneyField
                 accessibilityLabel="Nhập thưởng tháng"
                 value={bonusText}
                 onValueChange={(formatted) => {
-                  setBonusText(formatted || '0');
+                  setBonusText(formatted || "0");
                   clearResult();
                 }}
               />
             </Section>
 
-            <Section title="Làm thêm giờ" subtitle="BLLĐ Đ.98 · NĐ 145 — ngày 150/200/300%; đêm 200/270/390% (F010).">
+            <Section
+              title="Làm thêm giờ"
+              subtitle="Ngày 150/200/300%; đêm tối thiểu 200/270/390% (Bộ luật Lao động Đ.98)."
+            >
               <ChipRow>
                 {OT_TYPES.map((t) => (
                   <ChoiceChip
@@ -456,9 +473,11 @@ export function CalculatorScreen() {
                 ))}
               </ChipRow>
               <View style={styles.switchRow}>
-                <Text style={styles.switchLabel}>OT ban đêm (22h–6h)</Text>
+                <Text style={styles.switchLabel}>
+                  Làm thêm ban đêm (22h–6h)
+                </Text>
                 <Switch
-                  accessibilityLabel="Bật OT ban đêm"
+                  accessibilityLabel="Bật làm thêm ban đêm"
                   value={otNight}
                   onValueChange={(v) => {
                     setOtNight(v);
@@ -473,7 +492,7 @@ export function CalculatorScreen() {
                 keyboardType="decimal-pad"
                 value={otHoursText}
                 onChangeText={(t) => {
-                  setOtHoursText(t.replace(/[^\d.]/g, ''));
+                  setOtHoursText(t.replace(/[^\d.]/g, ""));
                   clearResult();
                 }}
                 style={styles.hoursInput}
@@ -482,8 +501,8 @@ export function CalculatorScreen() {
           </CollapseSection>
         ) : null}
 
-        <CollapseSection title="Tùy chỉnh · vùng, tháng, NPT, BH">
-          <Section title="Vùng LTTV">
+        <CollapseSection title="Tùy chỉnh · vùng, tháng, người phụ thuộc, BH">
+          <Section title="Vùng lương tối thiểu">
             <ChipRow equal>
               {REGION_OPTIONS.map(({ code, label }) => (
                 <ChoiceChip
@@ -511,10 +530,15 @@ export function CalculatorScreen() {
                 clearResult();
               }}
             />
-            <Text style={styles.meta}>Ngày áp dụng: {formatAsOfVi(asOfDate)}</Text>
+            <Text style={styles.meta}>
+              Ngày áp dụng: {formatAsOfVi(asOfDate)}
+            </Text>
           </Section>
 
-          <Section title="Người phụ thuộc" subtitle="Chỉ nhập số lượng — không thu thập PII.">
+          <Section
+            title="Người phụ thuộc"
+            subtitle="Chỉ nhập số lượng, không thu thập PII."
+          >
             <DependentCountInput
               value={numDependents}
               onChange={(n) => {
@@ -528,7 +552,9 @@ export function CalculatorScreen() {
             <View style={styles.switchRow}>
               <View style={styles.switchText}>
                 <Text style={styles.switchLabel}>Mức đóng BH riêng</Text>
-                <Text style={styles.switchHint}>Khi lương đóng BH khác Gross</Text>
+                <Text style={styles.switchHint}>
+                  Khi lương đóng BH khác Gross
+                </Text>
               </View>
               <Switch
                 accessibilityLabel="Bật mức đóng bảo hiểm riêng"
@@ -555,26 +581,45 @@ export function CalculatorScreen() {
         </CollapseSection>
 
         {error ? (
-          <EmptyErrorState variant="error" title={emptyCopy.calculateError.title} body={error} />
+          <EmptyErrorState
+            variant="error"
+            title={emptyCopy.calculateError.title}
+            body={error}
+          />
         ) : null}
 
         {breakdown ? (
           <View style={styles.resultBlock}>
             <ResultHero
               amount={breakdown.net}
-              eyebrow={bonusMonth && bonusMonth.extrasTotal > 0 ? 'Net tháng có thưởng/OT' : undefined}
+              eyebrow={
+                bonusMonth && bonusMonth.extrasTotal > 0
+                  ? "Net tháng có thưởng/OT"
+                  : undefined
+              }
               label="Net"
-              tipId={bonusMonth && bonusMonth.extrasTotal > 0 ? 'bonus.month' : 'salary.net'}
+              tipId={
+                bonusMonth && bonusMonth.extrasTotal > 0
+                  ? "bonus.month"
+                  : "salary.net"
+              }
             />
             {bonusMonth && bonusMonth.extrasTotal > 0 ? (
-              <ColorBlock tone="primarySoft" accessibilityLabel="So sánh tháng thường và tháng thưởng">
-                <Text style={styles.compareTitle}>So với tháng lương thường</Text>
+              <ColorBlock
+                tone="primarySoft"
+                accessibilityLabel="So sánh tháng thường và tháng thưởng"
+              >
+                <Text style={styles.compareTitle}>
+                  So với tháng lương thường
+                </Text>
                 <Text style={styles.compareLine}>
                   Net thường: {formatVnd(bonusMonth.base.net)}
                 </Text>
                 <Text style={styles.compareLine}>
                   Thưởng + OT: {formatVnd(bonusMonth.extrasTotal)}
-                  {bonusMonth.otPay > 0 ? ` (OT ${formatVnd(bonusMonth.otPay)})` : ''}
+                  {bonusMonth.otPay > 0
+                    ? ` (OT ${formatVnd(bonusMonth.otPay)})`
+                    : ""}
                 </Text>
                 <Text style={styles.compareLine}>
                   Thuế tăng: {formatVnd(bonusMonth.deltaTax)}
@@ -594,7 +639,11 @@ export function CalculatorScreen() {
             <SalaryBreakdownCard breakdown={breakdown} hideNet />
             <View style={styles.resultActions}>
               <View style={styles.resultActionBtn}>
-                <Button label="Lưu kịch bản" variant="secondary" onPress={beginSave} />
+                <Button
+                  label="Lưu kịch bản"
+                  variant="secondary"
+                  onPress={beginSave}
+                />
               </View>
               <View style={styles.resultActionBtn}>
                 <Button
@@ -606,15 +655,27 @@ export function CalculatorScreen() {
                 />
               </View>
             </View>
-            <DisclaimerFooter legalSources={breakdown.legalSources} collapseSources />
-            {mode === 'gross-to-net' ? (
+            <DisclaimerFooter
+              legalSources={breakdown.legalSources}
+              collapseSources
+            />
+            {mode === "gross-to-net" ? (
               <Pressable
                 accessibilityRole="link"
                 accessibilityLabel="So sánh biểu thuế 2025 và 2026"
                 onPress={openComparison}
                 style={styles.compareLink}
               >
-                <Text style={styles.compareLinkText}>So sánh 2025 vs 2026 →</Text>
+                <View style={styles.compareLinkRow}>
+                  <Text style={styles.compareLinkText}>
+                    So sánh 2025 vs 2026
+                  </Text>
+                  <AppIcon
+                    name="chevron-right"
+                    color={colors.primary}
+                    size={16}
+                  />
+                </View>
               </Pressable>
             ) : null}
           </View>
@@ -627,89 +688,96 @@ export function CalculatorScreen() {
       </ScreenShell>
 
       <StickyActionBar>
-        <Button label={t('common.calculate')} onPress={onCalculate} />
+        <Button label={t("common.calculate")} onPress={onCalculate} />
       </StickyActionBar>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.background },
-  scrollContent: {
-    paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
-  },
-  meta: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: typography.scale.caption.fontSize,
-    color: colors.foregroundMuted,
-  },
-  fieldLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: typography.scale.caption.fontSize,
-    color: colors.foregroundMuted,
-    marginTop: space[3],
-    marginBottom: space[1],
-  },
-  hoursInput: {
-    minHeight: layout.minTouch,
-    borderWidth: 2,
-    borderColor: colors.border,
-    borderRadius: radii.md,
-    paddingHorizontal: space[3],
-    fontFamily: typography.fontFamily.medium,
-    fontSize: 16,
-    color: colors.foreground,
-    backgroundColor: colors.white,
-  },
-  switchRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: space[3],
-    minHeight: layout.minTouch,
-  },
-  switchText: { flex: 1, gap: 2 },
-  switchLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: typography.scale.body.fontSize,
-    color: colors.foreground,
-  },
-  switchHint: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: typography.scale.caption.fontSize,
-    color: colors.foregroundMuted,
-  },
-  resultBlock: {
-    gap: space[4],
-  },
-  resultActions: {
-    flexDirection: 'row',
-    gap: space[2],
-  },
-  resultActionBtn: {
-    flex: 1,
-  },
-  compareTitle: {
-    fontFamily: typography.fontFamily.bold,
-    fontSize: 16,
-    color: colors.foreground,
-    marginBottom: space[2],
-  },
-  compareLine: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 14,
-    lineHeight: 22,
-    color: colors.foreground,
-    fontVariant: ['tabular-nums'],
-  },
-  compareLink: {
-    minHeight: layout.minTouch,
-    justifyContent: 'center',
-    alignSelf: 'flex-start',
-  },
-  compareLinkText: {
-    fontFamily: typography.fontFamily.semiBold,
-    fontSize: typography.scale.body.fontSize,
-    color: colors.primary,
-  },
-});
+function makeStyles({ colors }: ThemeContextValue) {
+  return {
+    root: { flex: 1, backgroundColor: colors.background },
+    scrollContent: {
+      paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
+    },
+    meta: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: typography.scale.caption.fontSize,
+      color: colors.foregroundMuted,
+    },
+    fieldLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: typography.scale.caption.fontSize,
+      color: colors.foregroundMuted,
+      marginTop: space[3],
+      marginBottom: space[1],
+    },
+    hoursInput: {
+      minHeight: layout.minTouch,
+      borderWidth: 2,
+      borderColor: colors.border,
+      borderRadius: radii.md,
+      paddingHorizontal: space[3],
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 16,
+      color: colors.foreground,
+      backgroundColor: colors.white,
+    },
+    switchRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: space[3],
+      minHeight: layout.minTouch,
+    },
+    switchText: { flex: 1, gap: 2 },
+    switchLabel: {
+      fontFamily: typography.fontFamily.medium,
+      fontSize: typography.scale.body.fontSize,
+      color: colors.foreground,
+    },
+    switchHint: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: typography.scale.caption.fontSize,
+      color: colors.foregroundMuted,
+    },
+    resultBlock: {
+      gap: space[4],
+    },
+    resultActions: {
+      flexDirection: "row",
+      gap: space[2],
+    },
+    resultActionBtn: {
+      flex: 1,
+    },
+    compareTitle: {
+      fontFamily: typography.fontFamily.bold,
+      fontSize: 16,
+      color: colors.foreground,
+      marginBottom: space[2],
+    },
+    compareLine: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: 14,
+      lineHeight: 22,
+      color: colors.foreground,
+      fontVariant: ["tabular-nums"],
+    },
+    compareLink: {
+      minHeight: layout.minTouch,
+      justifyContent: "center",
+      alignSelf: "flex-start",
+    },
+    compareLinkRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: space[1],
+    },
+    compareLinkText: {
+      fontFamily: typography.fontFamily.semiBold,
+      fontSize: typography.scale.body.fontSize,
+      color: colors.primary,
+    },
+  } satisfies ThemedStyleSheet;
+}
