@@ -60,25 +60,28 @@ Mục tiêu: P1 Minh hoàn thành job “hiểu net và so sánh luật 2025 vs 
 
 ## Thứ tự spec (Phase 4)
 
-Khớp kế hoạch tài liệu:
+Khớp kế hoạch tài liệu. **Ánh xạ F-ID (scope) ↔ thư mục spec**: mã thư mục `00N` gộp một hoặc nhiều F-ID — không phải 1:1.
 
-1. `001-tinh-luong-gross-net` — F001, F002, F005, F006 (một phần)  
-2. `002-nguoi-phu-thuoc-gtgc` — F003  
-3. `003-so-sanh-bieu-thue` — F004  
-4. `004-quyet-toan-thue` — F007, F008  
-5. `005-quyen-loi-nghi-viec` — F011, F012  
-6. `006-thai-san-om-dau` — F013  
-7. `007-huu-tri-bhxh-mot-lan` — F015  
-8. `008-thu-nhap-khac` — F016–F018  
+| Spec dir | F-ID trong scope | Giai đoạn |
+|----------|------------------|-----------|
+| `001-tinh-luong-gross-net` | F001, F002, F005, F006 (một phần) | MVP |
+| `002-nguoi-phu-thuoc-gtgc` | F003 | MVP |
+| `003-so-sanh-bieu-thue` | F004 | MVP |
+| `004-quyet-toan-thue` | F007, F008, F007b | V1 |
+| `005-quyen-loi-nghi-viec` | F011, F012 | V1 |
+| `006-thai-san-om-dau` | F013 | V1 |
+| `007-huu-tri-bhxh-mot-lan` | F015 | V2 |
+| `008-thu-nhap-khac` | F016, F017, F018 | V2 |
 
-OT (F010) và thưởng Tết (F009) có thể gộp vào mở rộng 001 hoặc spec phụ sau MVP.
+OT (F010) và thưởng Tết (F009) có thể gộp vào mở rộng 001 hoặc spec phụ sau MVP. F016′ (HKD/cho thuê đơn giản) có thể tách epic `009` theo ADR 0003.
 
 ## Định nghĩa xong tài liệu (Definition of Ready cho code)
 
-Trước `/speckit-plan` kỹ thuật React/Expo:
-
 - [x] Constitution  
 - [x] Research + domain đủ cho MVP  
-- [x] Scope + rules-versioning  
-- [ ] Spec 001–003 (MVP) đã clarify  
-- [ ] Checklist chất lượng requirement cho MVP  
+- [x] Scope + rules-versioning + ruleset-schema  
+- [x] Spec 001–008 đã clarify (Tầng 1)  
+- [x] Checklist chất lượng requirement 001–008  
+- [x] `plan.md` + `tasks.md` cho **001–008** (2026-08-05)  
+
+**Sẵn sàng code**: bắt đầu `/speckit-implement` **001**. V1/V2 (004–008) đã có plan/tasks sẵn — triển khai sau khi MVP ổn định.

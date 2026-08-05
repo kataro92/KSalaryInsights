@@ -24,7 +24,7 @@ Ký hiệu: ✅ Tầng 1 — đã có toàn văn/trích nguyên văn từ nguồ
 | **NQ 198/2025/QH15** | Đ.10 k6 | Bỏ thuế khoán hộ KD từ 01/01/2026 | ✅ | `198_nq.pdf` — đợt 2, khớp (Đ.10 k7: cũng chấm dứt lệ phí môn bài) |
 | **NĐ 68/2026/NĐ-CP** | Đ.3–5, 8–12, 17, 18 | Khung hộ KD; doanh thu từng ngành = Đ.5 | ✅ | `68-ndcp.signed.pdf` — đợt 2; biểu tỷ lệ **dẫn chiếu** Luật GTGT Đ.12.2 + Luật 109 Đ.7 / Phụ lục NĐ 253 |
 | **NĐ 141/2026/NĐ-CP** | Đ.1, Đ.3 | Ngưỡng miễn 500tr → 1 tỷ; hiệu lực 01/01/2026 | ✅ | `141-ndcp.signed.pdf` — đợt 2; **chỉ đổi ngưỡng**, không chứa cơ chế 5%/5% |
-| **NĐ 253/2026/NĐ-CP** | Đ.50 k2–3a, 51 k1b, 54, **69, 70** | ESOP; CK 0,1%; vãng lai 5tr; miễn QT ≤15tr; **chuyển tiếp cả kỳ 2026** | ✅ | `253m-ndcp.signed.pdf` — đợt 2; Đ.69.1.a: TLTC/KD áp từ **kỳ tính thuế 2026** |
+| **NĐ 253/2026/NĐ-CP** | Đ.50 k2–3a, 51 k1b, 54, **69, 70** | ESOP; CK 0,1%; vãng lai 5tr; miễn QT ≤15tr; **chuyển tiếp cả kỳ 2026** | ✅ | `253-2026-ND-CP.pdf` (`253m-ndcp.signed.pdf`) — đợt 2; Đ.69.1.a: TLTC/KD áp từ **kỳ tính thuế 2026** |
 | **TT 87/2026/TT-BTC** | Đ.1, 3, 5, 6 | NPT thu nhập ≤3tr/tháng; CK phái sinh 0,1% | ✅ | `87-btc.signed.pdf` — đợt 2; **phạm vi hẹp** — KHÔNG hướng dẫn vãng lai/ESOP |
 | **TT 50/2026/TT-BTC** | Đ.3, Đ.4 + mẫu 01/BĐS | Mẫu thông báo doanh thu cho thuê; công thức GTGT/TNCN | ✅ | `50-btc.signed.pdf` — đợt 2; mốc 31/07/2026 là mẫu 01/BK-STK (không phải 01/BĐS) |
 | **CV 340/BHXH-CSXH** | Bảng hệ số | Hệ số trượt giá 2026 | ✅ | đợt 1 |

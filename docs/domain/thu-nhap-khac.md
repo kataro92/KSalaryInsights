@@ -1,15 +1,15 @@
 # Thu nhập khác (ngoài tiền lương HĐLĐ)
 
 **Cập nhật**: 2026-07-31 (đối chiếu bản gốc đợt 2 — `_verify_C`)  
-**Tầng xác minh**: ✅ **Tầng 1** — Luật 109/2025; Luật GTGT 2024 Đ.12.2; NQ 198/2025 Đ.10.6; NĐ 68/2026 (bản công báo); NĐ 141/2026; NĐ 253/2026 (Đ.50/51/54/69/70); TT 50/2026; TT 87/2026 (phạm vi hẹp: NPT + CK phái sinh).  
-**Nguồn khung**: NQ 198/2025/QH15 (bỏ thuế khoán); NĐ 68/2026/NĐ-CP + NĐ 141/2026/NĐ-CP (hộ KD, cho thuê — ngưỡng 1 tỷ); NĐ 253/2026/NĐ-CP (vãng lai, chứng khoán, ESOP); TT 50/2026/TT-BTC (mẫu 01/BĐS).
+**Tầng xác minh**: ✅ **Tầng 1** — Luật 109/2025; Luật GTGT 2024 Đ.12.2; NQ 198/2025 Đ.10.6; NĐ 68/2026 (bản công báo); NĐ 141/2026; NĐ 253/2026 (Đ.50/51/54/69/70); TT 50/2026[...]
+**Nguồn khung**: NQ 198/2025/QH15 (bỏ thuế khoán); NĐ 68/2026/NĐ-CP + NĐ 141/2026/NĐ-CP (hộ KD, cho thuê — ngưỡng 1 tỷ); NĐ 253/2026/NĐ-CP (vãng lai, chứng khoán, ESOP); [...]
 
 ## 1. Thu nhập vãng lai / không HĐLĐ hoặc HĐ < 3 tháng (ĐÃ KHÓA — NĐ 253/2026) ✅ Tầng 1
 
 - Khấu trừ tại nguồn **10%** với mỗi lần chi trả **từ 5.000.000 đ trở lên** (Đ.50 k.2).
 - **Miễn quyết toán phần vãng lai** nếu: thu nhập vãng lai bình quân tháng trong năm **≤ 15.000.000 đ** và đã khấu trừ 10% tại nguồn (Đ.51 k.1b).
-- **Hiệu lực / chuyển tiếp (Đ.69.1.a — đã chốt)**: nghị định hiệu lực 01/07/2026, nhưng quy định về thu nhập KD / TLTC của cá nhân cư trú (gồm ngưỡng 5tr + miễn QT 15tr) **áp dụng từ kỳ tính thuế năm 2026** (cả năm). Đ.70.2: phần đã kê khai/khấu trừ 01/01–30/06/2026 theo quy định cũ không nộp lại hồ sơ tháng/quý — điều chỉnh khi quyết toán năm 2026.
-- Nếu tổng thu nhập cả năm dưới ngưỡng chịu thuế: có thể làm cam kết để tạm không khấu trừ — điều kiện chỉ có thu nhập một nơi và đã đăng ký MST.
+- **Hiệu lực / chuyển tiếp (Đ.69.1.a — đã chốt)**: nghị định hiệu lực 01/07/2026, nhưng quy định về thu nhập KD / TLTC của cá nhân cư trú (gồm ngưỡng 5tr[...]
+- Nếu tổng thu nhập cả năm dưới ngưỡng chịu thuế: có thể làm cam kết để tạm không khấu trừ — điều kiện chỉ có thu nhập một nơi và đã đăng ký[...]
 
 ```
 tax_withholding = gross_payment >= casual_threshold ? gross_payment * 0.10 : 0
@@ -48,7 +48,7 @@ else:
 
 ### TC-RENT-01 (SỬA theo luật 2026 — thay test case cũ)
 
-Cho thuê 20.000.000/tháng → 240.000.000/năm ≤ 1 tỷ → **thuế = 0**; UI nhắc “vẫn phải thông báo doanh thu (01/BĐS)”.
+Cho thuê 20.000.000/tháng → 240.000.000/năm ≤ 1 tỷ → **thuế = 0**; UI nhắc "vẫn phải thông báo doanh thu (01/BĐS)".
 
 ### TC-RENT-02 — vượt ngưỡng
 
@@ -62,8 +62,8 @@ Doanh thu 1.000.000.000 → thuế = 0 (từ 1 tỷ trở xuống là miễn).
 ## 3. Hộ kinh doanh (ĐÃ KHÓA khung — NQ 198/2025; NĐ 68/2026 + 141/2026)
 
 - **Bỏ thuế khoán từ 01/01/2026** — tự khai, tự nộp.
-- **Ngưỡng miễn GTGT + TNCN: 1 tỷ đ/năm** (NĐ 141/2026 nâng từ 500tr trong NĐ 68/2026, áp từ 01/01/2026). Dưới ngưỡng vẫn **kê khai/thông báo doanh thu** (NĐ 68 Đ.8: trước 31/01 năm sau; cho thuê 2 lần/năm: 31/07 + 31/01).
-- Biểu tỷ lệ ngành: NĐ 68 **dẫn chiếu** Luật GTGT Đ.12.2 (GTGT) và Luật 109 Đ.7 / Phụ lục NĐ 253 (TNCN) — không ghi số % trong chính NĐ 68. Doanh thu từng ngành: **Đ.5** NĐ 68 (không phải Đ.4).
+- **Ngưỡng miễn GTGT + TNCN: 1 tỷ đ/năm** (NĐ 141/2026 nâng từ 500tr trong NĐ 68/2026, áp từ 01/01/2026). Dưới ngưỡng vẫn **kê khai/thông báo doanh thu** (NĐ 68 Đ.8: [...]
+- Biểu tỷ lệ ngành: NĐ 68 **dẫn chiếu** Luật GTGT Đ.12.2 (GTGT) và Luật 109 Đ.7 / Phụ lục NĐ 253 (TNCN) — không ghi số % trong chính NĐ 68. Doanh thu từng ngành: [...]
 - **Trên 1 tỷ đến 3 tỷ** — chọn một trong hai:
   - **Theo doanh thu**: GTGT + TNCN theo biểu tỷ lệ ngành (bảng dưới); hoặc
   - **Theo thu nhập tính thuế**: (doanh thu − chi phí) × 15%.
@@ -79,7 +79,7 @@ Doanh thu 1.000.000.000 → thuế = 0 (từ 1 tỷ trở xuống là miễn).
 | Sản xuất, vận tải, dịch vụ gắn hàng hóa, xây dựng bao thầu NVL | 3% | 1,5% |
 | Hoạt động kinh doanh khác | 2% | 1% |
 
-**ĐÃ CHỐT theo bản gốc — điểm a khoản 3 Điều 7 Luật 109/2025**: doanh thu tính thuế TNCN theo tỷ lệ = **phần doanh thu VƯỢT ngưỡng** miễn thuế (không phải toàn bộ). GTGT vẫn tính trên toàn bộ doanh thu chịu thuế (theo Luật GTGT/NĐ 68). Cách xác định doanh thu từng ngành (đại lý = hoa hồng, vận tải = toàn bộ cước, xây dựng ±NVL…) theo Điều 4 NĐ 68/2026 — đưa nguyên văn vào ruleset khi implement.
+**ĐÃ CHỐT theo bản gốc — điểm a khoản 3 Điều 7 Luật 109/2025**: doanh thu tính thuế TNCN theo tỷ lệ = **phần doanh thu VƯỢT ngưỡng** miễn thuế (không phải[...]
 
 ```
 if revenue_year <= threshold: tax = 0                     # vẫn thông báo doanh thu
@@ -116,11 +116,11 @@ Bán 100.000.000 → thuế **100.000**.
 
 ## 5. ESOP / cổ phiếu thưởng (ĐÃ KHÓA — điểm a khoản 3 Điều 50 NĐ 253/2026, từ 01/07/2026)
 
-Mâu thuẫn nguồn đã giải quyết bằng nguyên văn nghị định (đăng trên xaydungchinhsach.chinhphu.vn; khớp phân tích KPMG, RSM, HSC) — **cách đọc A đúng**, khi chuyển nhượng phát sinh **song song hai nghĩa vụ**:
+Mâu thuẫn nguồn đã giải quyết bằng nguyên văn nghị định (đăng trên xaydungchinhsach.chinhphu.vn; khớp phân tích KPMG, RSM, HSC) — **cách đọc A đúng**, khi chuyển nhượng chứng khoán từ ESOP vẫn tính 0,1% theo Đ.54.
 
 1. **Thuế TNCN từ tiền lương, tiền công** trên thu nhập chịu thuế của phần cổ phiếu thưởng/ESOP:
    - Thu nhập chịu thuế = số tiền chi cho NLĐ ghi trên **sổ sách kế toán** của tổ chức trả thu nhập tại thời điểm thưởng/phát hành.
-   - Fallback nếu không xác định được: số cổ phiếu × **mệnh giá** − số tiền NLĐ đã bỏ ra mua (ESOP); chênh lệch âm → không phát sinh thuế. (Cổ phiếu thưởng: nếu giá chuyển nhượng < mệnh giá thì lấy giá chuyển nhượng.)
+   - Fallback nếu không xác định được: số cổ phiếu × **mệnh giá** − số tiền NLĐ đã bỏ ra mua (ESOP); chênh lệch âm → không phát sinh thuế. (Cổ phiếu [...]
    - Công ty chứng khoán / ngân hàng lưu ký **khấu trừ 10%** tại nguồn; cá nhân **tổng hợp vào thu nhập TLTC để quyết toán năm** (biểu lũy tiến).
    - Bán cổ phiếu cùng loại: tính nghĩa vụ TLTC **cho tới khi hết số cổ phiếu thưởng/ESOP** (bán ra được coi là bán phần ESOP trước).
 2. **Thuế chuyển nhượng chứng khoán**: 0,1% × giá chuyển nhượng (Điều 54 NĐ 253/2026).
@@ -142,7 +142,7 @@ Breakdown MUST tách rõ hai dòng và ghi chú phần TLTC còn quyết toán l
 ## 6. Nguyên tắc product
 
 - Mỗi loại thu nhập = ruleset riêng (`income_type`, tham số, `effective_from`).
-- Ngưỡng vãng lai 5tr và miễn QT 15tr áp **cả kỳ tính thuế 2026** (NĐ 253 Đ.69.1.a) — không tách H1/H2 cho hai tham số này. CK/ESOP vẫn gắn thời điểm chuyển nhượng (sau hiệu lực nghị định).
+- Ngưỡng vãng lai 5tr và miễn QT 15tr áp **cả kỳ tính thuế 2026** (NĐ 253 Đ.69.1.a) — không tách H1/H2 cho hai tham số này. CK/ESOP vẫn gắn thời điểm chuyển nh[...]
 - TT 87/2026 chỉ quy định NPT (thu nhập ≤3tr/tháng) + CK phái sinh 0,1% — **không** hướng dẫn vãng lai/ESOP.
 - Không gộp mặc định vào gross lương HĐLĐ; module quyết toán mới gộp khi user chủ động.
 
@@ -152,6 +152,6 @@ Breakdown MUST tách rõ hai dòng và ghi chú phần TLTC còn quyết toán l
 |-----|-----------|-------|
 | Vãng lai 10%, ngưỡng 5tr, miễn QT ≤15tr/tháng | **Khóa** | NĐ 253/2026 |
 | Cho thuê: ngưỡng 1 tỷ, 5%/5% phần vượt | **Khóa** | NĐ 141/2026; TT 50/2026 |
-| Hộ KD: ngưỡng 1 tỷ, biểu tỷ lệ ngành, TNCN trên **phần vượt ngưỡng**, lịch khai | **Khóa — Tầng 1** cho cơ chế (Đ.7 Luật 109/2025 bản gốc) | Luật 109/2025 Đ.7; NQ 198/2025; NĐ 68+141/2026; Luật GTGT 2024 |
+| Hộ KD: ngưỡng 1 tỷ, biểu tỷ lệ ngành, TNCN trên **phần vượt ngưỡng**, lịch khai | **Khóa — Tầng 1** cho cơ chế (Đ.7 Luật 109/2025 bản gốc) | Luật 109/2025 Đ.7 k3a |
 | Chứng khoán 0,1%/lần | **Khóa — Tầng 1** (Đ.13 k2 Luật 109/2025 bản gốc) | Luật 109/2025 Đ.13 k2; NĐ 253/2026 (Đ.54) |
 | ESOP: TLTC (10% khấu trừ, quyết toán) + 0,1% khi bán | **Khóa** cơ chế | NĐ 253/2026 (Đ.50 k3a) |

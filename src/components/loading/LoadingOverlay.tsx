@@ -1,0 +1,61 @@
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+
+import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { colors, space, typography } from '@/src/theme/tokens';
+
+type Props = {
+  visible: boolean;
+  message?: string;
+  showMascot?: boolean;
+};
+
+export function LoadingOverlay({
+  visible,
+  message = 'Đang xử lý…',
+  showMascot = true,
+}: Props) {
+  if (!visible) return null;
+
+  return (
+    <View
+      style={styles.root}
+      accessibilityRole="progressbar"
+      accessibilityLabel={message}
+      accessibilityState={{ busy: true }}
+    >
+      {showMascot ? (
+        <NgaiMiuPlaceholder
+          size={88}
+          pose="confused"
+          accessibilityLabel="Ngài Miu đang chờ"
+        />
+      ) : null}
+      <ActivityIndicator size="large" color={colors.primary} style={styles.spinner} />
+      <Text style={styles.message}>{message}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255,255,255,0.94)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: space[6],
+    zIndex: 30,
+  },
+  spinner: {
+    marginTop: space[4],
+  },
+  message: {
+    marginTop: space[3],
+    fontFamily: typography.fontFamily.medium,
+    fontSize: 16,
+    color: colors.foreground,
+  },
+});

@@ -29,4 +29,4 @@
 
 ## Notes
 
-Checklist sinh kèm Phase 4 tài liệu. MVP (001–003) đã clarify trong spec. 004–008 giữ default và marker cần rà luật trước khi plan kỹ thuật.
+Spec MVP F004: so sánh ruleset 2025 vs 2026 trên cùng input — orchestration trên engine 001. Đã có `plan.md` + `tasks.md`. SC outcome (tỷ lệ người dùng hiểu khác biệt) giữ sau launch.

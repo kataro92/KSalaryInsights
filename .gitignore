@@ -5,3 +5,12 @@ dist/
 .DS_Store
 # Keep .cursor/skills from spec-kit tracked; ignore other local Cursor state if any
 .cursor/*.log
+
+# Expo / Metro
+web-build/
+expo-env.d.ts
+.env*
+*.jks
+*.p8
+*.p12
+*.mobileprovision

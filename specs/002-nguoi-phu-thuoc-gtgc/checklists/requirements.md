@@ -29,4 +29,4 @@
 
 ## Notes
 
-Checklist sinh kèm Phase 4 tài liệu. MVP (001–003) đã clarify trong spec. 004–008 giữ default và marker cần rà luật trước khi plan kỹ thuật.
+Spec MVP F003: NPT/GTGC theo ruleset năm; phụ thuộc engine 001. Đã có `plan.md` + `tasks.md`. Kiểm tra chặn số NPT bất thường (vd. >20) và breakdown GTGC bản thân vs phụ thuộc.

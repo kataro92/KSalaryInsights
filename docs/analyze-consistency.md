@@ -1,6 +1,6 @@
 # Báo cáo nhất quán tài liệu (Analyze thủ công)
 
-**Ngày**: 2026-07-31 (cập nhật sau 3 vòng xác minh pháp lý)  
+**Ngày**: 2026-08-05 (cập nhật lần cuối — đóng backlog review tài liệu Đợt 1–3)  
 **Phạm vi**: constitution ↔ research ↔ domain ↔ product ↔ specs 001–008
 
 ## Kết quả
@@ -13,7 +13,7 @@
 | Test case domain được dẫn trong success criteria 001–008 | OK |
 | Ruleset versioning có ADR + rules-versioning.md (đã bổ sung mô hình ruleset con giữa năm 2026-H1/H2) | OK |
 | Spec 005–008: NEEDS CLARIFICATION | **Đã giải quyết hết** — số liệu khóa với nguồn VB trong Clarifications từng spec |
-| Tech stack React/Expo chưa vào plan (đúng giai đoạn) | OK — cố ý trì hoãn `/speckit-plan` |
+| Tech stack React/Expo đã vào plan | OK — `/speckit-plan` đã chạy cho **001–003**; mỗi spec có `plan.md` + `tasks.md` |
 | Test case tính tay được kiểm lại số học (2025-01, 2026-01, BH-2026-01/02/H2-01, OT-01, UE-01, MAT-01/02, LUMPSUM-01, RENT-01/02, SEC-01) | OK — TC-RENT-01 cũ sai luật 2026, đã thay |
 
 ## Số liệu đã khóa trong 3 vòng xác minh (2026-07-31)
@@ -54,7 +54,7 @@
 
 ## Vòng speckit-analyze (2026-07-31) — phân tích chéo có cấu trúc + remediation
 
-Chạy theo detection pass của `/speckit-analyze` (chưa có plan.md/tasks.md — thay task coverage bằng test-case coverage theo Constitution IV). Kết quả: **1 CRITICAL, 3 HIGH, 5 MEDIUM, 7 LOW** — đã remediate ngay trong phiên:
+Chạy theo detection pass của `/speckit-analyze` (tại thời điểm đó chưa có plan.md/tasks.md — thay task coverage bằng test-case coverage theo Constitution IV; *cập nhật 2026-08-03: `plan.md`/`tasks.md` cho 001 đã được lập sau vòng này*). Kết quả: **1 CRITICAL, 3 HIGH, 5 MEDIUM, 7 LOW** — đã remediate ngay trong phiên:
 
 | Finding | Mức | Sửa |
 |---------|-----|-----|
@@ -86,12 +86,20 @@ Báo cáo chi tiết: `docs/legal-originals/_verify_A.md` (BHXH/thai sản), `_v
 
 `luat113-2025.pdf` (text layer, đọc toàn văn): Đ.14 k.1a xác nhận **7 tháng** cho lao động nữ sinh con thứ hai + nam 10 ngày LV; Đ.29 k.1 **sửa thẳng Đ.139 k.1 BLLĐ** (6/7 tháng, trước sinh ≤2 tháng, sinh đôi +1 tháng/con); Đ.29 k.2 sửa Đ.53 k.2c Luật BHXH (nam 10 ngày LV khi vợ sinh đôi **hoặc** con thứ hai, sinh ba +3 ngày/con); Đ.30: hiệu lực 01/07/2026 (điểm c–d k.1 Đ.14 hỗ trợ tài chính: 01/01/2027). TC-MAT-02 hết ⚠ — **toàn bộ tham số specs 001–008 đạt Tầng 1**.
 
+## Vòng bổ sung file pháp lý (2026-08-03) — `253-2026-ND-CP.pdf`
+
+Xác minh file `253-2026-ND-CP.pdf` (`docs/legal-originals/253-2026-ND-CP.pdf` — bản gốc Nghị định 253/2026/NĐ-CP):
+- Đã đồng bộ `253-2026-ND-CP.pdf` cùng bản ký điện tử `253m-ndcp.signed.pdf`.
+- Đã đăng ký và dẫn chiếu chính thức trong `docs/domain/legal-sources.md`, `docs/domain/legal-changelog.md`, `docs/domain/thu-nhap-khac.md`, `docs/domain/thue-tncn.md` và `specs/004-quyet-toan-thue/spec.md`.
+- Toàn bộ các điều khoản cốt lõi của NĐ 253 (Đ.50 k2 vãng lai ≥ 5tr, Đ.50 k3a ESOP, Đ.51 k1b miễn quyết toán ≤ 15tr, Đ.54 CK 0,1%, Đ.69.1.a áp cả kỳ 2026, Đ.70.2 xử lý giao thời 2026) đã đạt **Tầng 1** hoàn toàn.
+
 ## Nợ còn lại
 
-1. Mức trần giảm trừ y tế/giáo dục (Đ.11 k2 Luật 109/2025) chờ nghị định hướng dẫn.
-2. Chưa có JSON Schema ruleset chính thức — thuộc `/speckit-plan` 001.
+1. Mức trần giảm trừ y tế/giáo dục + hưu trí tự nguyện/nhân thọ (Đ.8 k2 / Đ.11 k2 Luật 109/2025) — **chờ nghị định hướng dẫn** (không chặn MVP; ghi trong `thue-tncn.md`).
+2. JSON Schema + plan/tasks — **đã hoàn thành** cho toàn bộ specs 001–008 (2026-08-05).
 
 ## Khuyến nghị phiên sau
 
-1. `/speckit-plan` cho `001-tinh-luong-gross-net` — không còn văn bản chặn; toàn bộ 8 specs đủ Tầng 1.
+1. **Tài liệu đủ để code** — bắt đầu `/speckit-implement` **001**, rồi 002 ∥ 003, sau đó V1 (004–006) / V2 (007–008) theo plan đã lập.
 2. Khi luật mới: cập nhật `legal-changelog.md` → domain → analyze lại.
+

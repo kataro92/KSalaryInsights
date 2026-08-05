@@ -75,6 +75,8 @@
 | Tính năng cần | Calculator cho thuê / hộ KD theo tham số năm |
 | Ưu tiên MVP | **P3** |
 
+**Ghi chú (2026-08-04)**: Xếp hạng P3/V2+ phản ánh nghiên cứu gốc (2026-07-31). [ADR 0003](../decisions/0003-ho-kd-priority.md) sau đó cân nhắc đưa nhu cầu của Chị Mai (bản đơn giản, F016′ trong [scope.md](../product/scope.md)) sớm hơn — có thể V1.1 — thay vì đợi V2+.
+
 ---
 
 ## P7 — Khoa: Đầu tư chứng khoán / nhận ESOP
@@ -100,5 +102,7 @@
 | P5 Tuấn | | | x |
 | P6 Mai | | | x |
 | P7 Khoa | | | x |
+
+**Ghi chú (2026-08-04)**: Cột V2+ của P6 Mai phản ánh xếp hạng nghiên cứu gốc; xem ghi chú tại mục "P6 — Chị Mai" phía trên về khả năng lên sớm V1.1 theo ADR 0003.
 
 **Persona thiết kế mặc định cho UX MVP**: P1 Minh; secondary path: P2 Lan (thêm 1 nguồn phụ).

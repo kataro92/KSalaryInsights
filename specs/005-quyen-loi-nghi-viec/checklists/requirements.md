@@ -29,4 +29,4 @@
 
 ## Notes
 
-Checklist sinh kèm Phase 4 tài liệu. MVP (001–003) đã clarify trong spec. 004–008 giữ default và marker cần rà luật trước khi plan kỹ thuật.
+Spec V1: thôi việc / mất việc + BHTN. Hệ số luật đã khóa. Đã có `plan.md` + `tasks.md` (14 tasks). Biến thể 3/12/36 tháng cover trong plan.
