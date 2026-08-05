@@ -18,7 +18,9 @@ import { OnboardingScreen } from '@/src/components/onboarding/OnboardingScreen';
 import { SplashView } from '@/src/components/splash/SplashView';
 import { LoadingProvider, useLoading } from '@/src/hooks/useLoading';
 import { PreferencesProvider, usePreferences } from '@/src/hooks/usePreferences';
+import { I18nProvider } from '@/src/i18n/useI18n';
 import { loadOnboardingCompleted, subscribeOnboardingReplay } from '@/src/store/onboarding';
+import { hydrateRulesetOverlaysFromCache } from '@/src/engine/rulesetUpdate';
 import { colors, motion } from '@/src/theme/tokens';
 
 export { ErrorBoundary } from 'expo-router';
@@ -50,6 +52,10 @@ function RootGate({ children }: { children: ReactNode }) {
       setOnboarding(done ? 'done' : 'show');
     });
     return subscribeOnboardingReplay(() => setOnboarding('show'));
+  }, []);
+
+  useEffect(() => {
+    void hydrateRulesetOverlaysFromCache().catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -101,45 +107,47 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <PreferencesProvider>
-        <LoadingProvider>
-          <RootGate>
-            <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen
-                name="comparison"
-                options={{ headerShown: true, title: 'So sánh 2025 vs 2026' }}
-              />
-              <Stack.Screen
-                name="filing-wizard"
-                options={{ headerShown: true, title: 'Wizard quyết toán' }}
-              />
-              <Stack.Screen
-                name="severance"
-                options={{ headerShown: true, title: 'Thôi việc / mất việc' }}
-              />
-              <Stack.Screen
-                name="unemployment"
-                options={{ headerShown: true, title: 'Trợ cấp thất nghiệp' }}
-              />
-              <Stack.Screen
-                name="maternity"
-                options={{ headerShown: true, title: 'Thai sản' }}
-              />
-              <Stack.Screen
-                name="sick-leave"
-                options={{ headerShown: true, title: 'Ốm đau' }}
-              />
-              <Stack.Screen
-                name="retirement"
-                options={{ headerShown: true, title: 'Hưu / BHXH một lần' }}
-              />
-              <Stack.Screen
-                name="other-income"
-                options={{ headerShown: true, title: 'Thu nhập khác' }}
-              />
-            </Stack>
-          </RootGate>
-        </LoadingProvider>
+        <I18nProvider>
+          <LoadingProvider>
+            <RootGate>
+              <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen
+                  name="comparison"
+                  options={{ headerShown: true, title: 'So sánh 2025 vs 2026' }}
+                />
+                <Stack.Screen
+                  name="filing-wizard"
+                  options={{ headerShown: true, title: 'Wizard quyết toán' }}
+                />
+                <Stack.Screen
+                  name="severance"
+                  options={{ headerShown: true, title: 'Thôi việc / mất việc' }}
+                />
+                <Stack.Screen
+                  name="unemployment"
+                  options={{ headerShown: true, title: 'Trợ cấp thất nghiệp' }}
+                />
+                <Stack.Screen
+                  name="maternity"
+                  options={{ headerShown: true, title: 'Thai sản' }}
+                />
+                <Stack.Screen
+                  name="sick-leave"
+                  options={{ headerShown: true, title: 'Ốm đau' }}
+                />
+                <Stack.Screen
+                  name="retirement"
+                  options={{ headerShown: true, title: 'Hưu / BHXH một lần' }}
+                />
+                <Stack.Screen
+                  name="other-income"
+                  options={{ headerShown: true, title: 'Thu nhập khác' }}
+                />
+              </Stack>
+            </RootGate>
+          </LoadingProvider>
+        </I18nProvider>
       </PreferencesProvider>
     </SafeAreaProvider>
   );

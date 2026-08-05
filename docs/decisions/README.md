@@ -9,3 +9,4 @@
 | 0005 | [0005-palette-v2-ink-cobalt-mint.md](./0005-palette-v2-ink-cobalt-mint.md) | Semantic palette v2 (superseded surfaces → 0006) | Accepted |
 | 0006 | [0006-pastel-raster-mascot.md](./0006-pastel-raster-mascot.md) | Pastel UI + mascot PNG/WebP | Accepted |
 | 0007 | [0007-brand-name-kvsalarytools.md](./0007-brand-name-kvsalarytools.md) | Brand **KVSalaryTools**, assistant **Ngài Miu** | Accepted |
+| 0008 | [0008-remote-ruleset-update.md](./0008-remote-ruleset-update.md) | F019: remote ruleset + bundle fallback | Accepted |

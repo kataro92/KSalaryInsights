@@ -1,5 +1,6 @@
 import type { InflationAdjustmentTable } from '@/src/domain/types/retirement';
 import type { Ruleset } from '@/src/domain/types/salary';
+import { compareSemver } from '@/src/engine/rulesetValidate';
 
 // Import JSON files directly (works in web/Metro bundle)
 import ruleset2025 from './rulesets/2025.json';
@@ -7,15 +8,56 @@ import ruleset2026H1 from './rulesets/2026-h1.json';
 import ruleset2026H2 from './rulesets/2026-h2.json';
 import inflation2026 from './rulesets/inflation-adjustment-2026.json';
 
-const ALL_RULESETS: Ruleset[] = [
+const BUNDLED_RULESETS: Ruleset[] = [
   ruleset2025 as Ruleset,
   ruleset2026H1 as Ruleset,
   ruleset2026H2 as Ruleset,
 ];
 
-const INFLATION_BY_YEAR: Record<number, InflationAdjustmentTable> = {
+const BUNDLED_INFLATION: Record<number, InflationAdjustmentTable> = {
   2026: inflation2026 as InflationAdjustmentTable,
 };
+
+/** Remote overlays (F019) — never remove bundled; higher version wins per id. */
+let overlayRulesets: Ruleset[] = [];
+let overlayInflation: Record<number, InflationAdjustmentTable> = {};
+
+export function setRulesetOverlays(rulesets: Ruleset[]): void {
+  overlayRulesets = [...rulesets];
+}
+
+export function setInflationOverlays(tables: InflationAdjustmentTable[]): void {
+  const next: Record<number, InflationAdjustmentTable> = {};
+  for (const t of tables) {
+    next[t.table_year] = t;
+  }
+  overlayInflation = next;
+}
+
+/** Test helper — clear overlays without touching AsyncStorage. */
+export function clearRulesetOverlays(): void {
+  overlayRulesets = [];
+  overlayInflation = {};
+}
+
+export function listBundledRulesets(): Ruleset[] {
+  return [...BUNDLED_RULESETS];
+}
+
+function mergeRulesets(bundled: Ruleset[], overlays: Ruleset[]): Ruleset[] {
+  const map = new Map<string, Ruleset>();
+  for (const r of bundled) map.set(r.id, r);
+  for (const r of overlays) {
+    const existing = map.get(r.id);
+    if (!existing || compareSemver(r.version, existing.version) > 0) {
+      map.set(r.id, r);
+    }
+  }
+  return [...map.values()].sort((a, b) => {
+    if (a.tax_year !== b.tax_year) return a.tax_year - b.tax_year;
+    return a.effective_from < b.effective_from ? -1 : 1;
+  });
+}
 
 function dateInRange(date: string, from: string, to: string): boolean {
   return date >= from && date <= to;
@@ -29,7 +71,8 @@ function dateInRange(date: string, from: string, to: string): boolean {
  * bảng hệ số trượt giá load riêng qua `getInflationAdjustment(tableYear)`.
  */
 export function getRuleset(taxYear: number, asOfDate?: string): Ruleset {
-  const yearSets = ALL_RULESETS.filter((r) => r.tax_year === taxYear);
+  const all = mergeRulesets(BUNDLED_RULESETS, overlayRulesets);
+  const yearSets = all.filter((r) => r.tax_year === taxYear);
   if (yearSets.length === 0) {
     throw new Error(`Không có ruleset cho năm thuế ${taxYear}`);
   }
@@ -50,7 +93,7 @@ export function getRuleset(taxYear: number, asOfDate?: string): Ruleset {
 }
 
 export function listRulesets(): Ruleset[] {
-  return [...ALL_RULESETS];
+  return mergeRulesets(BUNDLED_RULESETS, overlayRulesets);
 }
 
 /**
@@ -60,7 +103,7 @@ export function listRulesets(): Ruleset[] {
 export function getInflationAdjustment(
   tableYear = 2026,
 ): InflationAdjustmentTable {
-  const table = INFLATION_BY_YEAR[tableYear];
+  const table = overlayInflation[tableYear] ?? BUNDLED_INFLATION[tableYear];
   if (!table) {
     throw new Error(`Không có bảng trượt giá năm ${tableYear}`);
   }
@@ -68,7 +111,9 @@ export function getInflationAdjustment(
 }
 
 export function listInflationAdjustmentYears(): number[] {
-  return Object.keys(INFLATION_BY_YEAR)
-    .map(Number)
-    .sort((a, b) => a - b);
+  const years = new Set<number>([
+    ...Object.keys(BUNDLED_INFLATION).map(Number),
+    ...Object.keys(overlayInflation).map(Number),
+  ]);
+  return [...years].sort((a, b) => a - b);
 }

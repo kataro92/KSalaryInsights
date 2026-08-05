@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { ResultHero } from '@/src/components/common/ResultHero';
+import { InfoTip } from '@/src/components/common/InfoTip';
+import { useI18n } from '@/src/i18n/useI18n';
 import type { SettlementDelta } from '@/src/domain/types/settlement';
 import { moneyAccessibilityLabel } from '@/src/theme/money';
 import { colors, space, typography } from '@/src/theme/tokens';
@@ -11,14 +13,17 @@ type Props = {
 };
 
 export function SettlementResultCard({ delta, withheldMissingWarning }: Props) {
+  const { t } = useI18n();
+
   if (delta.kind === 'even') {
     return (
-      <View style={styles.balanced} accessibilityLabel="Khớp — không chênh lệch">
-        <Text style={styles.balancedTitle}>Khớp — không chênh lệch</Text>
+      <View style={styles.balanced} accessibilityLabel={t('settlement.evenTitle')}>
+        <View style={styles.evenRow}>
+          <Text style={styles.balancedTitle}>{t('settlement.evenTitle')}</Text>
+          <InfoTip tipId="settlement.even" size={16} />
+        </View>
         {withheldMissingWarning ? (
-          <Text style={styles.warn}>
-            Bạn chưa nhập thuế đã khấu trừ (đang dùng 0) — kết quả có thể lệch.
-          </Text>
+          <Text style={styles.warn}>{t('settlement.withheldWarn')}</Text>
         ) : null}
       </View>
     );
@@ -29,40 +34,40 @@ export function SettlementResultCard({ delta, withheldMissingWarning }: Props) {
     <View style={styles.wrap}>
       <ResultHero
         tone={isRefund ? 'positive' : 'primary'}
-        eyebrow={isRefund ? 'Ước hoàn' : 'Ước nộp thêm'}
-        label={isRefund ? 'Hoàn' : 'Nộp thêm'}
+        eyebrow={isRefund ? t('settlement.refundEyebrow') : t('settlement.payEyebrow')}
+        label={isRefund ? t('settlement.refundLabel') : t('settlement.payLabel')}
         amount={delta.amount}
+        tipId={isRefund ? 'settlement.refund' : 'settlement.pay'}
         accessibilityLabel={moneyAccessibilityLabel(
           delta.amount,
-          isRefund ? 'Ước hoàn' : 'Ước nộp thêm',
+          isRefund ? t('settlement.refundEyebrow') : t('settlement.payEyebrow'),
         )}
       />
       {withheldMissingWarning ? (
-        <Text style={styles.warn}>
-          Bạn chưa nhập thuế đã khấu trừ (đang dùng 0) — kết quả có thể lệch.
-        </Text>
+        <Text style={styles.warn}>{t('settlement.withheldWarn')}</Text>
       ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: space[2] },
+  wrap: { gap: space[3] },
   balanced: {
     backgroundColor: colors.muted,
     padding: space[5],
     borderRadius: 8,
   },
+  evenRow: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
   balancedTitle: {
-    fontFamily: typography.fontFamily.extraBold,
-    fontSize: 22,
+    fontFamily: typography.fontFamily.bold,
+    fontSize: 16,
     color: colors.foreground,
   },
   warn: {
-    marginTop: space[1],
     fontFamily: typography.fontFamily.regular,
     fontSize: 13,
-    color: colors.foreground,
-    opacity: 0.85,
+    lineHeight: 20,
+    color: colors.accent,
+    marginTop: space[2],
   },
 });

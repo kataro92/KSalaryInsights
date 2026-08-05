@@ -51,6 +51,7 @@ import {
 } from '@/src/engine/overtime';
 import { usePreferences } from '@/src/hooks/usePreferences';
 import { useScenarios } from '@/src/hooks/useScenarios';
+import { useI18n } from '@/src/i18n/useI18n';
 import {
   defaultScenarioName,
   formatScenarioShareText,
@@ -75,8 +76,9 @@ const OT_TYPES: OtDayType[] = ['weekday', 'weekend', 'holiday'];
 
 export function CalculatorScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { preferences } = usePreferences();
-  const { scenarios, save, remove } = useScenarios();
+  const { scenarios, save, remove } = useScenarios('calculator');
   const scrollRef = useRef<ScrollView>(null);
 
   const [mode, setMode] = useState<CalculationMode>('gross-to-net');
@@ -94,6 +96,7 @@ export function CalculatorScreen() {
   const [bonusText, setBonusText] = useState('0');
   const [otHoursText, setOtHoursText] = useState('0');
   const [otDayType, setOtDayType] = useState<OtDayType>('weekday');
+  const [otNight, setOtNight] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [breakdown, setBreakdown] = useState<SalaryBreakdown | null>(null);
   const [bonusMonth, setBonusMonth] = useState<BonusMonthResult | null>(null);
@@ -136,10 +139,12 @@ export function CalculatorScreen() {
       bonus: parseMoney(bonusText) ?? 0,
       otHours: Number(otHoursText.replace(/[^\d.]/g, '') || '0') || 0,
       otDayType,
+      otNight,
     };
   };
 
   const applyScenario = (s: SavedScenario) => {
+    if (s.kind !== 'calculator') return;
     const i = s.inputs;
     setMode(i.mode);
     setAmountText(formatMoneyInput(i.amount));
@@ -152,6 +157,7 @@ export function CalculatorScreen() {
     setBonusText(formatMoneyInput(i.bonus) || '0');
     setOtHoursText(i.otHours > 0 ? String(i.otHours) : '0');
     setOtDayType(i.otDayType);
+    setOtNight(i.otNight);
     clearResult();
     void successHaptic();
   };
@@ -227,6 +233,7 @@ export function CalculatorScreen() {
             monthlySalary: amount,
             hours: otHours,
             dayType: otDayType,
+            isNight: otNight,
           }).otPay;
         }
 
@@ -321,8 +328,8 @@ export function CalculatorScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         <PageHero
-          title="Tính lương"
-          subtitle="Gross ↔ Net offline · thưởng Tết · OT · biểu thuế 2025 / 2026"
+          title={t('calc.title')}
+          subtitle={t('calc.subtitle')}
         />
 
         <SeasonalBanner />
@@ -434,7 +441,7 @@ export function CalculatorScreen() {
               />
             </Section>
 
-            <Section title="Làm thêm giờ" subtitle="BLLĐ Đ.98 — 150% / 200% / 300% (F010).">
+            <Section title="Làm thêm giờ" subtitle="BLLĐ Đ.98 · NĐ 145 — ngày 150/200/300%; đêm 200/270/390% (F010).">
               <ChipRow>
                 {OT_TYPES.map((t) => (
                   <ChoiceChip
@@ -448,6 +455,18 @@ export function CalculatorScreen() {
                   />
                 ))}
               </ChipRow>
+              <View style={styles.switchRow}>
+                <Text style={styles.switchLabel}>OT ban đêm (22h–6h)</Text>
+                <Switch
+                  accessibilityLabel="Bật OT ban đêm"
+                  value={otNight}
+                  onValueChange={(v) => {
+                    setOtNight(v);
+                    clearResult();
+                  }}
+                  trackColor={{ false: colors.border, true: colors.primary }}
+                />
+              </View>
               <Text style={styles.fieldLabel}>Số giờ OT</Text>
               <TextInput
                 accessibilityLabel="Số giờ làm thêm"
@@ -545,6 +564,7 @@ export function CalculatorScreen() {
               amount={breakdown.net}
               eyebrow={bonusMonth && bonusMonth.extrasTotal > 0 ? 'Net tháng có thưởng/OT' : undefined}
               label="Net"
+              tipId={bonusMonth && bonusMonth.extrasTotal > 0 ? 'bonus.month' : 'salary.net'}
             />
             {bonusMonth && bonusMonth.extrasTotal > 0 ? (
               <ColorBlock tone="primarySoft" accessibilityLabel="So sánh tháng thường và tháng thưởng">
@@ -607,7 +627,7 @@ export function CalculatorScreen() {
       </ScreenShell>
 
       <StickyActionBar>
-        <Button label="Tính" onPress={onCalculate} />
+        <Button label={t('common.calculate')} onPress={onCalculate} />
       </StickyActionBar>
     </View>
   );

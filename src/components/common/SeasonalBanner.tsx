@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { loadScenarios } from '@/src/store/scenarios';
+import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { loadScenarios, scenariosOfKind } from '@/src/store/scenarios';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
 type Props = {
@@ -18,7 +19,8 @@ type Props = {
  */
 export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
   const router = useRouter();
-  const [scenarioCount, setScenarioCount] = useState(0);
+  const [calcCount, setCalcCount] = useState(0);
+  const [settlementCount, setSettlementCount] = useState(0);
   const month = now.getMonth() + 1; // 1–12
   const filingSeason = month >= 3 && month <= 4;
   const tetCue = month === 12;
@@ -28,7 +30,9 @@ export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
     let cancelled = false;
     (async () => {
       const { store } = await loadScenarios();
-      if (!cancelled) setScenarioCount(store.scenarios.length);
+      if (cancelled) return;
+      setCalcCount(scenariosOfKind(store.scenarios, 'calculator').length);
+      setSettlementCount(scenariosOfKind(store.scenarios, 'settlement').length);
     })();
     return () => {
       cancelled = true;
@@ -37,17 +41,23 @@ export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
 
   if (!visible) return null;
 
-  const scenarioHint =
-    scenarioCount > 0
-      ? ` Bạn có ${scenarioCount} kịch bản lương đã lưu — mở Tính lương để tải lại.`
-      : '';
+  let scenarioHint = '';
+  if (calcCount > 0 && settlementCount > 0) {
+    scenarioHint = ` Bạn có ${calcCount} kịch bản lương và ${settlementCount} quyết toán đã lưu.`;
+  } else if (calcCount > 0) {
+    scenarioHint = ` Bạn có ${calcCount} kịch bản lương đã lưu — mở Tính lương để tải lại.`;
+  } else if (settlementCount > 0) {
+    scenarioHint = ` Bạn có ${settlementCount} kịch bản quyết toán đã lưu — mở Quyết toán để tải lại.`;
+  }
+
+  const preferSettlement = filingSeason && (settlementCount > 0 || calcCount === 0);
 
   const copy = filingSeason
     ? {
         title: 'Mùa quyết toán',
         body: `T3–T4 thường là kỳ QT thuế năm trước. Ước tính trước, đối chiếu bảng lương.${scenarioHint}`,
-        cta: scenarioCount > 0 ? 'Mở Tính lương' : 'Mở quyết toán',
-        href: (scenarioCount > 0 ? '/' : '/settlement') as '/' | '/settlement',
+        cta: preferSettlement ? 'Mở quyết toán' : 'Mở Tính lương',
+        href: (preferSettlement ? '/settlement' : '/') as '/' | '/settlement',
       }
     : {
         title: 'Cuối năm · thưởng & QT',

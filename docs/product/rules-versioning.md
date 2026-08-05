@@ -85,10 +85,12 @@ Công thức (cách tính) ít đổi; **tham số** (GTGC, bậc thuế, LTTV, 
 - Bundle tối thiểu 2 ruleset: **2025** và **2026** trong app.
 - Phát hành app mới khi luật đổi (chấp nhận được giai đoạn đầu).
 
-### Sau MVP (F019)
-- Bundled fallback + **remote manifest** (JSON signed hoặc HTTPS + checksum).
-- App kiểm tra manifest khi mở (wifi); tải ruleset mới; vẫn chạy offline với bản đã cache.
-- Không gửi dữ liệu lương lên server chỉ để lấy ruleset.
+### Sau MVP (F019) — ✅ Implemented (ADR 0008)
+
+- Bundled fallback + **remote manifest** (HTTPS + SHA-256).
+- App hydrate cache khi cold start; nút **Cập nhật ruleset** trong Cài đặt.
+- Vẫn chạy offline với bundle / cache; **không** gửi dữ liệu lương lên server.
+- Host: [`docs/product/remote/`](./remote/README.md).
 
 ## Giao thời — ví dụ bắt buộc trong QA
 
@@ -116,5 +118,5 @@ Năm 2026 có ít nhất 3 tham số đổi tại **01/07/2026** (lương cơ s�
 
 ## Việc chưa làm trong tài liệu này
 
-- Chữ ký số / CDN cụ thể (kỹ thuật — để plan React/Expo).  
+- Chữ ký số PGP / CDN có chữ ký (nâng cấp ADR 0008 nếu cần).  
 - i18n keys.

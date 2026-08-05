@@ -8,6 +8,7 @@ import React, {
   type ReactNode,
 } from 'react';
 
+import type { LocaleCode } from '@/src/i18n/types';
 import {
   getDefaultPreferences,
   loadPreferences,
@@ -23,6 +24,7 @@ type PreferencesContextValue = {
   recoveredFromCorrupt: boolean;
   setDefaultRegion: (region: RegionCode) => Promise<void>;
   setDefaultTaxYear: (year: number) => Promise<void>;
+  setLocale: (locale: LocaleCode) => Promise<void>;
   resetToDefaults: () => Promise<void>;
 };
 
@@ -67,6 +69,13 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     [persist, preferences],
   );
 
+  const setLocale = useCallback(
+    async (locale: LocaleCode) => {
+      await persist({ ...preferences, locale });
+    },
+    [persist, preferences],
+  );
+
   const resetToDefaults = useCallback(async () => {
     const defaults = await resetPreferences();
     setPreferences(defaults);
@@ -80,6 +89,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       recoveredFromCorrupt,
       setDefaultRegion,
       setDefaultTaxYear,
+      setLocale,
       resetToDefaults,
     }),
     [
@@ -88,6 +98,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       recoveredFromCorrupt,
       setDefaultRegion,
       setDefaultTaxYear,
+      setLocale,
       resetToDefaults,
     ],
   );

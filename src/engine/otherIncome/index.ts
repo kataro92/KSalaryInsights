@@ -9,3 +9,4 @@ export { calculateHkd } from '@/src/engine/otherIncome/hkd';
 export { calculateSecuritiesTransfer } from '@/src/engine/otherIncome/securities';
 export { calculateEsop } from '@/src/engine/otherIncome/esop';
 export { calculateCasualWithholding } from '@/src/engine/otherIncome/casualWithholding';
+export { annualFromMonthly } from '@/src/engine/otherIncome/simpleEstimate';

@@ -1,15 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { InfoTip } from '@/src/components/common/InfoTip';
+import type { TipId } from '@/src/i18n/types';
+import { useI18n } from '@/src/i18n/useI18n';
 import type { OtherIncomeLine } from '@/src/domain/types/otherIncome';
 import { colors, space, typography } from '@/src/theme/tokens';
+
+type LineWithTip = OtherIncomeLine & { tipId?: TipId };
 
 type Props = {
   title: string;
   totalLabel?: string;
   total: number;
   formula: string;
-  lines: OtherIncomeLine[];
+  lines: LineWithTip[];
   explanations: string[];
   note?: string;
   /** When ResultHero already shows the peak total. */
@@ -18,7 +23,7 @@ type Props = {
 
 export function OtherIncomeBreakdownCard({
   title,
-  totalLabel = 'Tổng ước thuế',
+  totalLabel,
   total,
   formula,
   lines,
@@ -26,19 +31,27 @@ export function OtherIncomeBreakdownCard({
   note,
   hideTotal = false,
 }: Props) {
+  const { t } = useI18n();
+  const resolvedTotalLabel = totalLabel ?? t('other.totalTax');
+
   return (
     <ColorBlock tone="secondarySoft" accessibilityLabel={`Kết quả ${title}`}>
-      <Text style={styles.eyebrow}>{hideTotal ? `Chi tiết · ${title}` : title}</Text>
+      <Text style={styles.eyebrow}>
+        {hideTotal ? t('other.detail', { title }) : title}
+      </Text>
       {!hideTotal ? (
         <>
-          <Text style={styles.totalLabel}>{totalLabel}</Text>
+          <Text style={styles.totalLabel}>{resolvedTotalLabel}</Text>
           <Text style={styles.amount}>{total.toLocaleString('vi-VN')} ₫</Text>
         </>
       ) : null}
       <Text style={styles.formula}>{formula}</Text>
       {lines.map((line) => (
         <View key={line.id} style={styles.row}>
-          <Text style={styles.rowLabel}>{line.label}</Text>
+          <View style={styles.labelRow}>
+            <Text style={styles.rowLabel}>{line.label}</Text>
+            {line.tipId ? <InfoTip tipId={line.tipId} size={14} /> : null}
+          </View>
           <Text style={styles.rowValue}>{line.amount.toLocaleString('vi-VN')} ₫</Text>
         </View>
       ))}
@@ -83,13 +96,22 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: space[1],
+  },
+  labelRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[1],
+    paddingRight: space[2],
   },
   rowLabel: {
     fontFamily: typography.fontFamily.regular,
     fontSize: 13,
     color: colors.foreground,
     opacity: 0.75,
+    flexShrink: 1,
   },
   rowValue: {
     fontFamily: typography.fontFamily.semiBold,

@@ -17,6 +17,12 @@
       "type": "integer",
       "minimum": 2000,
       "maximum": 2100
+    },
+    "locale": {
+      "type": "string",
+      "enum": ["vi", "en", "zh", "hi", "es", "fr", "ja"],
+      "default": "vi",
+      "description": "UI language; omit → Vietnamese"
     }
   }
 }

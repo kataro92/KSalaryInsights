@@ -3,6 +3,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
 
+export { canShowRetirementAmounts } from '@/src/components/disclaimer/retirementGate';
+
 type Props = {
   acknowledged: boolean;
   onAcknowledge: () => void;
@@ -35,11 +37,6 @@ export function LumpSumDisclaimerGate({ acknowledged, onAcknowledge }: Props) {
       </Pressable>
     </ColorBlock>
   );
-}
-
-/** Pure helper — dùng cho unit test gate (T012). */
-export function canShowRetirementAmounts(acknowledged: boolean): boolean {
-  return acknowledged === true;
 }
 
 const styles = StyleSheet.create({

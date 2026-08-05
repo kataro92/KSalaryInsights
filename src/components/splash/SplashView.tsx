@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
 import { brand } from '@/src/copy/miu';
+import { useI18n } from '@/src/i18n/useI18n';
 import { colors, layout, space, typography } from '@/src/theme/tokens';
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export function SplashView({ visible }: Props) {
+  const { t } = useI18n();
   if (!visible) return null;
 
   return (
@@ -25,8 +27,8 @@ export function SplashView({ visible }: Props) {
         accessibilityLabel="Ngài Miu chào bạn"
       />
       <Text style={styles.brand}>{brand.name}</Text>
-      <Text style={styles.guide}>{brand.guideLine}</Text>
-      <Text style={styles.tagline}>{brand.tagline}</Text>
+      <Text style={styles.guide}>{t('brand.guideLine')}</Text>
+      <Text style={styles.tagline}>{t('brand.tagline')}</Text>
     </View>
   );
 }

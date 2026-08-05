@@ -79,11 +79,11 @@ export function BenefitsScreen() {
         </View>
       </Section>
 
-      <Section title="Ngoài lương" subtitle="Cho thuê, HKD, CK, ESOP, vãng lai.">
+      <Section title="Ngoài lương" subtitle="Ước nhanh cho thuê/HKD · hoặc đầy đủ CK/ESOP/vãng lai.">
         <View style={styles.cardStack}>
           <HubNavCard
             title="Thu nhập khác"
-            description="Năm calculator tách biệt · tỷ lệ từ ruleset"
+            description="Ước nhanh (F016′) hoặc đầy đủ · tỷ lệ từ ruleset"
             tone="muted"
             icon={<CircleDollarSign color={colors.foreground} size={26} strokeWidth={2.2} />}
             onPress={() => router.push('/other-income')}

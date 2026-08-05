@@ -145,6 +145,7 @@ Breakdown MUST tách rõ hai dòng và ghi chú phần TLTC còn quyết toán l
 - Ngưỡng vãng lai 5tr và miễn QT 15tr áp **cả kỳ tính thuế 2026** (NĐ 253 Đ.69.1.a) — không tách H1/H2 cho hai tham số này. CK/ESOP vẫn gắn thời điểm chuyển nh[...]
 - TT 87/2026 chỉ quy định NPT (thu nhập ≤3tr/tháng) + CK phái sinh 0,1% — **không** hướng dẫn vãng lai/ESOP.
 - Không gộp mặc định vào gross lương HĐLĐ; module quyết toán mới gộp khi user chủ động.
+- **F016′ UI**: chế độ «Ước nhanh» (cho thuê / HKD từ doanh thu tháng ×12) tách khỏi «Đầy đủ» (CK, ESOP, vãng lai, chi phí, ngành đầy đủ).
 
 ## 7. Trạng thái khóa
 

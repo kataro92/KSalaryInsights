@@ -17,17 +17,29 @@ Hệ số tối thiểu (Điều 98 BLLĐ 2019):
 | Ngày lễ, Tết, ngày nghỉ có hưởng lương | 300% (chưa kể lương ngày lễ nếu hưởng lương ngày) |
 | Làm đêm | +30% ; OT ban đêm cộng thêm 20% đơn giá ban ngày của loại ngày tương ứng |
 
-**Công thức đơn giản** (MVP chỉ 3 hệ số ngày; đêm ghi nợ V1.1):
+**Công thức đơn giản** (ngày + đêm theo Đ.98 / NĐ 145 Đ.57):
 
 ```
 ot_pay = hourly_rate * hours * multiplier
-hourly_rate = monthly_salary / (work_days_per_month * hours_per_day)   # mặc định 26 × 8, cấu hình được
+hourly_rate = monthly_salary / (work_days_per_month * hours_per_day)   # mặc định 26 × 8
+
+# Ban ngày
+multiplier = 1.5 | 2.0 | 3.0
+
+# Ban đêm (22h–6h): OT ngày + 30% đêm + 20% × đơn giá ban ngày loại ngày
+# weekday: 1.5 + 0.3 + 0.2×1.0 = 2.0
+# weekend: 2.0 + 0.3 + 0.2×2.0 = 2.7
+# holiday: 3.0 + 0.3 + 0.2×3.0 = 3.9
 ```
 
 ### TC-OT-01
 
 Lương tháng 20.000.000; 26 ngày × 8h; OT 10 giờ ngày thường  
 hourly = 20e6 / 208 ≈ 96.153,85 → ot = 96.153,85 × 10 × 1,5 ≈ **1.442.308**
+
+### TC-OT-NIGHT-01
+
+Cùng căn cứ; OT 10 giờ **ban đêm** ngày thường → × 2,0 ≈ **1.923.077**
 
 ## 2. Trợ cấp thôi việc / mất việc (ĐÃ KHÓA — Điều 46, 47 BLLĐ 2019)
 

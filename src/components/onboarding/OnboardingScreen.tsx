@@ -3,8 +3,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '@/src/components/common/Button';
-import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
-import { brand, onboardingSteps } from '@/src/copy/miu';
+import { NgaiMiuPlaceholder, type MascotPose } from '@/src/components/mascot/NgaiMiuPlaceholder';
+import { brand } from '@/src/copy/miu';
+import { useI18n } from '@/src/i18n/useI18n';
 import { saveOnboardingCompleted } from '@/src/store/onboarding';
 import { colors, layout, space, typography } from '@/src/theme/tokens';
 
@@ -12,11 +13,21 @@ type Props = {
   onDone: () => void;
 };
 
+const STEP_POSES: MascotPose[] = ['wave', 'point', 'tip', 'bow'];
+
 export function OnboardingScreen({ onDone }: Props) {
   const insets = useSafeAreaInsets();
+  const { t } = useI18n();
   const [index, setIndex] = useState(0);
-  const step = onboardingSteps[index];
-  const last = index === onboardingSteps.length - 1;
+  const last = index === STEP_POSES.length - 1;
+
+  const steps = [
+    { title: t('onboarding.s1.title'), body: t('onboarding.s1.body'), pose: STEP_POSES[0] },
+    { title: t('onboarding.s2.title'), body: t('onboarding.s2.body'), pose: STEP_POSES[1] },
+    { title: t('onboarding.s3.title'), body: t('onboarding.s3.body'), pose: STEP_POSES[2] },
+    { title: t('onboarding.s4.title'), body: t('onboarding.s4.body'), pose: STEP_POSES[3] },
+  ];
+  const step = steps[index];
 
   const finish = async () => {
     await saveOnboardingCompleted();
@@ -32,8 +43,13 @@ export function OnboardingScreen({ onDone }: Props) {
       accessibilityLabel={`Giới thiệu ${brand.name}`}
     >
       <View style={styles.decor} pointerEvents="none" />
-      <Pressable accessibilityRole="button" accessibilityLabel="Bỏ qua" onPress={() => void finish()} style={styles.skip}>
-        <Text style={styles.skipLabel}>Bỏ qua</Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('onboarding.skip')}
+        onPress={() => void finish()}
+        style={styles.skip}
+      >
+        <Text style={styles.skipLabel}>{t('onboarding.skip')}</Text>
       </Pressable>
 
       <View style={styles.center}>
@@ -44,22 +60,20 @@ export function OnboardingScreen({ onDone }: Props) {
       </View>
 
       <View style={styles.dots}>
-        {onboardingSteps.map((_, i) => (
+        {steps.map((_, i) => (
           <View key={i} style={[styles.dot, i === index && styles.dotOn]} />
         ))}
       </View>
 
       <View style={styles.actions}>
         {last ? (
-          <Button label="Bắt đầu cùng Ngài Miu" onPress={() => void finish()} />
+          <Button label={t('onboarding.start')} onPress={() => void finish()} />
         ) : (
-          <Button label="Tiếp" onPress={() => setIndex((i) => i + 1)} />
+          <Button label={t('onboarding.next')} onPress={() => setIndex((i) => i + 1)} />
         )}
       </View>
 
-      <Text style={styles.privacy}>
-        Tính toán lưu cục bộ trên thiết bị. Không yêu cầu CCCD / MST / sổ BHXH.
-      </Text>
+      <Text style={styles.privacy}>{t('onboarding.privacy')}</Text>
     </View>
   );
 }
@@ -79,8 +93,8 @@ const styles = StyleSheet.create({
     borderRadius: 130,
     backgroundColor: colors.primary,
     opacity: 0.08,
-    top: -48,
-    right: -88,
+    top: -40,
+    right: -80,
   },
   skip: {
     alignSelf: 'flex-end',
@@ -90,8 +104,8 @@ const styles = StyleSheet.create({
   },
   skipLabel: {
     fontFamily: typography.fontFamily.medium,
-    fontSize: 14,
-    color: colors.foregroundMuted,
+    fontSize: 15,
+    color: colors.primary,
   },
   center: {
     alignItems: 'center',
@@ -99,28 +113,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: space[2],
   },
   brand: {
-    marginTop: space[3],
     fontFamily: typography.fontFamily.extraBold,
-    fontSize: 12,
-    letterSpacing: 1.4,
-    textTransform: 'uppercase',
-    color: colors.primary,
+    fontSize: 22,
+    color: colors.foreground,
+    letterSpacing: -0.3,
   },
   title: {
-    fontFamily: typography.fontFamily.extraBold,
-    fontSize: typography.scale.title.fontSize,
-    lineHeight: typography.scale.title.lineHeight,
-    letterSpacing: typography.letterSpacingTight,
+    fontFamily: typography.fontFamily.bold,
+    fontSize: 22,
     color: colors.foreground,
     textAlign: 'center',
   },
   body: {
     fontFamily: typography.fontFamily.regular,
-    fontSize: typography.scale.body.fontSize,
-    lineHeight: typography.scale.body.lineHeight,
+    fontSize: 15,
+    lineHeight: 22,
     color: colors.foregroundMuted,
     textAlign: 'center',
-    maxWidth: 360,
   },
   dots: {
     flexDirection: 'row',
@@ -131,23 +140,20 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.mutedPressed,
+    backgroundColor: colors.border,
   },
   dotOn: {
     backgroundColor: colors.primary,
     width: 20,
   },
   actions: {
-    maxWidth: layout.maxContentWidth,
-    width: '100%',
-    alignSelf: 'center',
+    gap: space[2],
   },
   privacy: {
     fontFamily: typography.fontFamily.regular,
-    fontSize: typography.scale.caption.fontSize,
-    lineHeight: 16,
+    fontSize: 12,
+    lineHeight: 18,
     color: colors.foregroundMuted,
     textAlign: 'center',
-    marginTop: space[3],
   },
 });

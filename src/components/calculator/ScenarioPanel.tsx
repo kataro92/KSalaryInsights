@@ -2,8 +2,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Button } from '@/src/components/common/Button';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
-import { formatVnd } from '@/src/theme/money';
-import type { SavedScenario } from '@/src/store/scenarios';
+import { scenarioRowMeta, type SavedScenario } from '@/src/store/scenarios';
 
 type Props = {
   scenarios: SavedScenario[];
@@ -15,10 +14,13 @@ type Props = {
   onCancelSave: () => void;
   onLoad: (scenario: SavedScenario) => void;
   onDelete: (id: string) => void;
+  /** Empty-state hint; defaults to calculator copy. */
+  emptyHint?: string;
+  savePlaceholder?: string;
 };
 
 /**
- * Local calculator scenarios — list + inline save name (F014).
+ * Local saved scenarios — list + inline save name (F014).
  * Not a card chrome: flat rows on canvas.
  */
 export function ScenarioPanel({
@@ -30,6 +32,8 @@ export function ScenarioPanel({
   onCancelSave,
   onLoad,
   onDelete,
+  emptyHint = 'Chưa có kịch bản. Sau khi tính, bấm Lưu kịch bản để mở lại sau.',
+  savePlaceholder = 'VD: Lương chính T3',
 }: Props) {
   return (
     <View style={styles.root} accessibilityLabel="Kịch bản đã lưu">
@@ -40,7 +44,7 @@ export function ScenarioPanel({
             accessibilityLabel="Tên kịch bản"
             value={saveName}
             onChangeText={onSaveNameChange}
-            placeholder="VD: Lương chính T3"
+            placeholder={savePlaceholder}
             placeholderTextColor={colors.foregroundMuted}
             style={styles.nameInput}
             maxLength={80}
@@ -57,9 +61,7 @@ export function ScenarioPanel({
       ) : null}
 
       {scenarios.length === 0 && !saving ? (
-        <Text style={styles.empty}>
-          Chưa có kịch bản. Sau khi tính, bấm Lưu kịch bản để mở lại sau.
-        </Text>
+        <Text style={styles.empty}>{emptyHint}</Text>
       ) : null}
 
       {scenarios.map((s) => (
@@ -73,11 +75,7 @@ export function ScenarioPanel({
             <Text style={styles.rowName} numberOfLines={1}>
               {s.name}
             </Text>
-            <Text style={styles.rowMeta}>
-              {s.inputs.mode === 'gross-to-net' ? 'Gross' : 'Net'}{' '}
-              {formatVnd(s.inputs.amount)}
-              {s.lastNet != null ? ` · Net ${formatVnd(s.lastNet)}` : ''}
-            </Text>
+            <Text style={styles.rowMeta}>{scenarioRowMeta(s)}</Text>
           </Pressable>
           <Pressable
             accessibilityRole="button"

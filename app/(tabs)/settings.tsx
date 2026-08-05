@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, Linking, StyleSheet, Text, View } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 
 import { Button } from '@/src/components/common/Button';
 import { ChipRow } from '@/src/components/common/ChipRow';
@@ -9,14 +10,35 @@ import { PageHero } from '@/src/components/common/PageHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
 import { Section } from '@/src/components/common/Section';
 import { NgaiMiuPlaceholder } from '@/src/components/mascot/NgaiMiuPlaceholder';
-import { aboutCopy, brand } from '@/src/copy/miu';
+import { brand } from '@/src/copy/miu';
+import { listRulesets } from '@/src/engine/rulesetLoader';
+import {
+  checkAndApplyRulesetUpdates,
+  clearRemoteRulesetsAndOverlays,
+} from '@/src/engine/rulesetUpdate';
 import { usePreferences } from '@/src/hooks/usePreferences';
-import type { RegionCode } from '@/src/store/preferences';
+import { LOCALE_OPTIONS } from '@/src/i18n/types';
+import { useI18n } from '@/src/i18n/useI18n';
 import { requestOnboardingReplay } from '@/src/store/onboarding';
+import type { RegionCode } from '@/src/store/preferences';
+import { loadRemoteRulesetCache } from '@/src/store/remoteRulesets';
+import { successHaptic } from '@/src/theme/haptics';
 import { colors, radii, space, typography } from '@/src/theme/tokens';
 
 const REGIONS: RegionCode[] = ['I', 'II', 'III', 'IV'];
 const TAX_YEARS = [2025, 2026, 2027];
+
+export const AUTHOR_NAME = 'Phạm Huy Đức';
+export const AUTHOR_EMAIL = 'kataro92@gmail.com';
+
+function formatCheckTime(iso: string | null, neverLabel: string): string {
+  if (!iso) return neverLabel;
+  try {
+    return new Date(iso).toLocaleString('vi-VN');
+  } catch {
+    return iso;
+  }
+}
 
 export default function SettingsScreen() {
   const {
@@ -24,37 +46,122 @@ export default function SettingsScreen() {
     recoveredFromCorrupt,
     setDefaultRegion,
     setDefaultTaxYear,
+    setLocale,
     resetToDefaults,
   } = usePreferences();
+  const { t } = useI18n();
   const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [rulesetBusy, setRulesetBusy] = useState(false);
+  const [rulesetStatus, setRulesetStatus] = useState<string | null>(null);
+  const [lastCheckAt, setLastCheckAt] = useState<string | null>(null);
+  const [lastError, setLastError] = useState<string | null>(null);
+  const [rulesetCount, setRulesetCount] = useState(() => listRulesets().length);
+
+  const refreshMeta = useCallback(async () => {
+    const { cache } = await loadRemoteRulesetCache();
+    setLastCheckAt(cache.lastCheckAt);
+    setLastError(cache.lastError);
+    setRulesetCount(listRulesets().length);
+  }, []);
+
+  useEffect(() => {
+    void refreshMeta();
+  }, [refreshMeta]);
+
+  const onCheckRulesets = async () => {
+    setRulesetBusy(true);
+    setRulesetStatus(null);
+    try {
+      const result = await checkAndApplyRulesetUpdates();
+      setRulesetStatus(result.message);
+      setLastCheckAt(result.cache.lastCheckAt);
+      setLastError(result.cache.lastError);
+      setRulesetCount(listRulesets().length);
+      if (result.ok) void successHaptic();
+    } finally {
+      setRulesetBusy(false);
+    }
+  };
+
+  const onClearRemote = async () => {
+    setRulesetBusy(true);
+    try {
+      await clearRemoteRulesetsAndOverlays();
+      setRulesetStatus('Đã xóa cache ruleset từ xa — dùng bản kèm app.');
+      setLastError(null);
+      setRulesetCount(listRulesets().length);
+      await refreshMeta();
+    } finally {
+      setRulesetBusy(false);
+    }
+  };
+
+  const onSendFeedback = async () => {
+    const subject = encodeURIComponent(`[KVSalaryTools] Feedback`);
+    const body = encodeURIComponent(
+      `\n\n---\nApp: ${brand.name}\nLocale: ${preferences.locale}\n`,
+    );
+    const url = `mailto:${AUTHOR_EMAIL}?subject=${subject}&body=${body}`;
+    try {
+      const can = await Linking.canOpenURL(url);
+      if (!can) {
+        Alert.alert(AUTHOR_EMAIL);
+        return;
+      }
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert(AUTHOR_EMAIL);
+    }
+  };
+
+  const onCopyEmail = async () => {
+    try {
+      await Clipboard.setStringAsync(AUTHOR_EMAIL);
+      void successHaptic();
+      Alert.alert(t('common.copied'), AUTHOR_EMAIL);
+    } catch {
+      Alert.alert(AUTHOR_EMAIL);
+    }
+  };
 
   return (
-    <ScreenShell accessibilityLabel="Màn hình cài đặt" decorated>
-      <PageHero
-        title="Cài đặt"
-        subtitle="Vùng LTTV và năm thuế mặc định — lưu cục bộ trên thiết bị."
-      />
+    <ScreenShell accessibilityLabel={t('settings.title')} decorated>
+      <PageHero title={t('settings.title')} subtitle={t('settings.subtitle')} />
 
       {recoveredFromCorrupt ? (
         <ColorBlock tone="primarySoft">
-          <Text style={styles.softWarn}>
-            Không đọc được cài đặt đã lưu — đã dùng mặc định hệ thống. Bạn có thể chọn lại bên dưới.
-          </Text>
+          <Text style={styles.softWarn}>{t('settings.corruptPrefs')}</Text>
         </ColorBlock>
       ) : null}
 
-      <Section title="Về chúng tôi">
-        <View style={styles.about} accessibilityLabel={`Giới thiệu ${aboutCopy.name} và ${brand.name}`}>
+      <Section title={t('settings.about')}>
+        <View
+          style={styles.about}
+          accessibilityLabel={`${brand.name} · ${t('about.role')}`}
+        >
           <NgaiMiuPlaceholder size={88} pose="bow" accessibilityLabel="Ngài Miu" />
           <View style={styles.aboutCopy}>
-            <Text style={styles.aboutName}>{aboutCopy.name}</Text>
-            <Text style={styles.aboutRole}>{aboutCopy.role}</Text>
-            <Text style={styles.aboutBody}>{aboutCopy.body}</Text>
+            <Text style={styles.aboutName}>Ngài Miu</Text>
+            <Text style={styles.aboutRole}>{t('about.role')}</Text>
+            <Text style={styles.aboutBody}>{t('about.body')}</Text>
           </View>
         </View>
       </Section>
 
-      <Section title="Vùng LTTV mặc định" subtitle="Áp dụng khi mở công cụ tính lương.">
+      <Section title={t('settings.language')} subtitle={t('settings.languageHint')}>
+        <View style={styles.langWrap}>
+          {LOCALE_OPTIONS.map((opt) => (
+            <ChoiceChip
+              key={opt.code}
+              label={opt.label}
+              selected={preferences.locale === opt.code}
+              onPress={() => void setLocale(opt.code)}
+            />
+          ))}
+        </View>
+      </Section>
+
+      <Section title={t('settings.region')} subtitle={t('settings.regionHint')}>
         <ChipRow equal>
           {REGIONS.map((region) => (
             <ChoiceChip
@@ -68,7 +175,7 @@ export default function SettingsScreen() {
         </ChipRow>
       </Section>
 
-      <Section title="Năm thuế mặc định">
+      <Section title={t('settings.taxYear')}>
         <ChipRow equal>
           {TAX_YEARS.map((year) => (
             <ChoiceChip
@@ -82,36 +189,77 @@ export default function SettingsScreen() {
         </ChipRow>
       </Section>
 
-      <Section title="Quyền riêng tư & giới thiệu">
+      <Section title={t('settings.feedback')} subtitle={t('settings.feedbackHint')}>
+        <ColorBlock tone="secondarySoft">
+          <Text style={styles.feedbackAuthor}>
+            {t('settings.author')}: {t('settings.authorName')}
+          </Text>
+          <Text style={styles.feedbackEmail}>{AUTHOR_EMAIL}</Text>
+        </ColorBlock>
+        <Button label={t('common.sendEmail')} onPress={() => void onSendFeedback()} />
         <Button
-          label={privacyOpen ? 'Thu gọn' : 'Xem tuyên bố'}
+          label={t('common.copy')}
+          variant="outline"
+          onPress={() => void onCopyEmail()}
+        />
+      </Section>
+
+      <Section title={t('settings.ruleset')} subtitle={t('settings.rulesetHint')}>
+        <Text style={styles.metaLine}>
+          {t('settings.rulesetMeta', {
+            count: rulesetCount,
+            when: formatCheckTime(lastCheckAt, '—'),
+          })}
+        </Text>
+        {lastError ? (
+          <ColorBlock tone="muted">
+            <Text style={styles.softWarn}>{lastError}</Text>
+          </ColorBlock>
+        ) : null}
+        {rulesetStatus ? (
+          <Text style={styles.statusLine} accessibilityLiveRegion="polite">
+            {rulesetStatus}
+          </Text>
+        ) : null}
+        <Button
+          label={rulesetBusy ? t('settings.checkingRuleset') : t('settings.checkRuleset')}
+          onPress={() => void onCheckRulesets()}
+          disabled={rulesetBusy}
+        />
+        <Button
+          label={t('settings.clearRulesetCache')}
+          variant="outline"
+          onPress={() => void onClearRemote()}
+          disabled={rulesetBusy}
+        />
+      </Section>
+
+      <Section title={t('settings.privacy')}>
+        <Button
+          label={privacyOpen ? t('settings.hidePrivacy') : t('settings.showPrivacy')}
           variant="secondary"
           onPress={() => setPrivacyOpen((v) => !v)}
         />
         {privacyOpen ? (
           <ColorBlock tone="muted">
-            <Text style={styles.privacyTitle}>Quyền riêng tư</Text>
-            <Text style={styles.privacyBody}>
-              Tính toán và cài đặt được lưu cục bộ trên thiết bị. Ứng dụng không yêu cầu CCCD, MST
-              hay số sổ BHXH. Không gửi dữ liệu lương/thuế lên máy chủ trong phạm vi hiện tại.
+            <Text style={styles.privacyTitle}>{t('settings.privacy')}</Text>
+            <Text style={styles.privacyBody}>{t('settings.privacyBody')}</Text>
+            <Text style={[styles.privacyTitle, { marginTop: space[4] }]}>
+              {t('settings.disclaimer')}
             </Text>
-            <Text style={[styles.privacyTitle, { marginTop: space[4] }]}>Disclaimer</Text>
-            <Text style={styles.privacyBody}>
-              {brand.name} chỉ hỗ trợ ước tính. Kết quả không thay thế tư vấn pháp lý, kế toán hay
-              quyết định của cơ quan thuế / BHXH.
-            </Text>
+            <Text style={styles.privacyBody}>{t('settings.disclaimerBody')}</Text>
           </ColorBlock>
         ) : null}
       </Section>
 
-      <Section title="Đặt lại">
+      <Section title={t('settings.reset')}>
         <Button
-          label="Đặt lại về mặc định"
+          label={t('settings.resetDefaults')}
           variant="outline"
           onPress={() => void resetToDefaults()}
         />
         <Button
-          label="Xem lại hướng dẫn với Ngài Miu"
+          label={t('settings.replayOnboarding')}
           variant="secondary"
           onPress={() => void requestOnboardingReplay()}
         />
@@ -154,6 +302,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21,
     color: colors.foregroundMuted,
+  },
+  langWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space[2],
+  },
+  feedbackAuthor: {
+    fontFamily: typography.fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.foreground,
+    marginBottom: space[1],
+  },
+  feedbackEmail: {
+    fontFamily: typography.fontFamily.medium,
+    fontSize: 14,
+    color: colors.primary,
+    fontVariant: ['tabular-nums'],
+  },
+  metaLine: {
+    fontFamily: typography.fontFamily.regular,
+    fontSize: typography.scale.caption.fontSize,
+    color: colors.foregroundMuted,
+    marginBottom: space[2],
+  },
+  statusLine: {
+    fontFamily: typography.fontFamily.medium,
+    fontSize: 14,
+    color: colors.foreground,
+    marginBottom: space[2],
   },
   privacyTitle: {
     fontFamily: typography.fontFamily.bold,

@@ -1,4 +1,4 @@
-import { canShowRetirementAmounts } from '@/src/components/disclaimer/LumpSumDisclaimerGate';
+import { canShowRetirementAmounts } from '@/src/components/disclaimer/retirementGate';
 
 describe('LumpSumDisclaimerGate / SC-002', () => {
   it('chưa acknowledge → không hiện số', () => {

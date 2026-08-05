@@ -3,9 +3,25 @@ export { calculatePit, calculateAnnualPit } from '@/src/engine/pit';
 export {
   getRuleset,
   listRulesets,
+  listBundledRulesets,
   getInflationAdjustment,
   listInflationAdjustmentYears,
+  setRulesetOverlays,
+  setInflationOverlays,
+  clearRulesetOverlays,
 } from '@/src/engine/rulesetLoader';
+export {
+  checkAndApplyRulesetUpdates,
+  hydrateRulesetOverlaysFromCache,
+  clearRemoteRulesetsAndOverlays,
+} from '@/src/engine/rulesetUpdate';
+export {
+  validateRuleset,
+  validateInflationTable,
+  parseRulesetManifest,
+  compareSemver,
+} from '@/src/engine/rulesetValidate';
+
 export { grossToNet } from '@/src/engine/grossToNet';
 export { netToGross } from '@/src/engine/netToGross';
 export { compareRulesets } from '@/src/engine/compareRulesets';

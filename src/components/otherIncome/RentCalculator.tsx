@@ -95,8 +95,8 @@ export function RentCalculator({ taxYear }: Props) {
             total={result.totalTax}
             formula={result.formula}
             lines={[
-              { id: 'vat', label: 'GTGT', amount: result.vat },
-              { id: 'pit', label: 'TNCN', amount: result.pit },
+              { id: 'vat', label: 'GTGT', amount: result.vat, tipId: 'other.vat' },
+              { id: 'pit', label: 'TNCN', amount: result.pit, tipId: 'other.pit' },
             ]}
             explanations={result.explanations}
             note={result.reportingNote}

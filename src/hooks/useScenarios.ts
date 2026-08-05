@@ -1,16 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   clearScenarios,
   deleteScenario,
   loadScenarios,
   saveScenario,
+  scenariosOfKind,
   type CalculatorScenarioInputs,
   type SavedScenario,
   type SaveScenarioInput,
+  type ScenarioKind,
+  type SettlementScenarioInputs,
 } from '@/src/store/scenarios';
 
-export function useScenarios() {
+export function useScenarios(kind?: ScenarioKind) {
   const [scenarios, setScenarios] = useState<SavedScenario[]>([]);
   const [ready, setReady] = useState(false);
   const [recoveredFromCorrupt, setRecoveredFromCorrupt] = useState(false);
@@ -37,15 +40,12 @@ export function useScenarios() {
     };
   }, []);
 
-  const save = useCallback(
-    async (input: SaveScenarioInput) => {
-      const result = await saveScenario(input);
-      setScenarios(result.store.scenarios);
-      setRecoveredFromCorrupt(false);
-      return result;
-    },
-    [],
-  );
+  const save = useCallback(async (input: SaveScenarioInput) => {
+    const result = await saveScenario(input);
+    setScenarios(result.store.scenarios);
+    setRecoveredFromCorrupt(false);
+    return result;
+  }, []);
 
   const remove = useCallback(async (id: string) => {
     const store = await deleteScenario(id);
@@ -59,8 +59,15 @@ export function useScenarios() {
     return store.scenarios;
   }, []);
 
+  const filtered = useMemo(
+    () => (kind ? scenariosOfKind(scenarios, kind) : scenarios),
+    [scenarios, kind],
+  );
+
   return {
-    scenarios,
+    /** All kinds when `kind` omitted; otherwise filtered. */
+    scenarios: filtered,
+    allScenarios: scenarios,
     ready,
     recoveredFromCorrupt,
     refresh,
@@ -70,4 +77,8 @@ export function useScenarios() {
   };
 }
 
-export type { CalculatorScenarioInputs, SavedScenario };
+export type {
+  CalculatorScenarioInputs,
+  SavedScenario,
+  SettlementScenarioInputs,
+};

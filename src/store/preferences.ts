@@ -1,11 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { DEFAULT_LOCALE, isLocaleCode, type LocaleCode } from '@/src/i18n/types';
+
 export type RegionCode = 'I' | 'II' | 'III' | 'IV';
 
 export type AppPreferences = {
   schemaVersion: 1;
   defaultRegion: RegionCode;
   defaultTaxYear: number;
+  /** UI language — default Vietnamese. */
+  locale: LocaleCode;
 };
 
 export const PREFERENCES_STORAGE_KEY = 'kv.preferences.v1';
@@ -22,6 +26,7 @@ export function getDefaultPreferences(now = new Date()): AppPreferences {
     schemaVersion: 1,
     defaultRegion: 'I',
     defaultTaxYear: systemDefaultTaxYear(now),
+    locale: DEFAULT_LOCALE,
   };
 }
 
@@ -39,10 +44,13 @@ export function parsePreferences(raw: unknown): AppPreferences | null {
     return null;
   }
   if (obj.defaultTaxYear < 2000 || obj.defaultTaxYear > 2100) return null;
+  // Backward compatible: older saves omit locale → vi.
+  if (obj.locale != null && !isLocaleCode(obj.locale)) return null;
   return {
     schemaVersion: 1,
     defaultRegion: obj.defaultRegion,
     defaultTaxYear: obj.defaultTaxYear,
+    locale: isLocaleCode(obj.locale) ? obj.locale : DEFAULT_LOCALE,
   };
 }
 

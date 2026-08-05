@@ -7,6 +7,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { InfoTip } from '@/src/components/common/InfoTip';
+import type { TipId } from '@/src/i18n/types';
 import { formatVnd, moneyAccessibilityLabel } from '@/src/theme/money';
 import { colors, motion, radii, space, typography } from '@/src/theme/tokens';
 
@@ -21,6 +23,8 @@ type Props = {
   accessibilityLabel?: string;
   /** positive = mint Net; primary = cobalt pay-more; muted = soft surface. */
   tone?: Tone;
+  /** Optional info tip next to the eyebrow. */
+  tipId?: TipId;
 };
 
 const toneStyles: Record<
@@ -54,6 +58,7 @@ export function ResultHero({
   animate = true,
   accessibilityLabel,
   tone = 'positive',
+  tipId,
 }: Props) {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(8);
@@ -99,6 +104,8 @@ export function ResultHero({
     transform: [{ translateY: translateY.value }],
   }));
 
+  const iconColor = tone === 'muted' ? colors.foregroundMuted : colors.white;
+
   return (
     <Animated.View
       style={[styles.root, palette.root, animStyle]}
@@ -106,9 +113,12 @@ export function ResultHero({
         accessibilityLabel ?? moneyAccessibilityLabel(amount, `${eyebrow} ${label}`)
       }
     >
-      <Text style={[styles.eyebrow, palette.text, { opacity: palette.eyebrowOpacity }]}>
-        {eyebrow}
-      </Text>
+      <View style={styles.eyebrowRow}>
+        <Text style={[styles.eyebrow, palette.text, { opacity: palette.eyebrowOpacity }]}>
+          {eyebrow}
+        </Text>
+        {tipId ? <InfoTip tipId={tipId} color={iconColor} size={16} /> : null}
+      </View>
       <View style={styles.row}>
         <Text style={[styles.label, palette.text]}>{label}</Text>
         <Text style={[styles.amount, palette.text]}>{formatVnd(display)}</Text>
@@ -123,12 +133,17 @@ const styles = StyleSheet.create({
     paddingVertical: space[5],
     paddingHorizontal: space[5],
   },
+  eyebrowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[2],
+    marginBottom: space[2],
+  },
   eyebrow: {
     fontFamily: typography.fontFamily.semiBold,
     fontSize: typography.scale.caption.fontSize,
     letterSpacing: typography.letterSpacingLabel,
     textTransform: 'uppercase',
-    marginBottom: space[2],
   },
   row: {
     flexDirection: 'row',

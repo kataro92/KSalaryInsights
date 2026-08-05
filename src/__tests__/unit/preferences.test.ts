@@ -9,12 +9,13 @@ import {
 } from '@/src/store/preferences';
 
 describe('preferences', () => {
-  it('returns system defaults with region I', () => {
+  it('returns system defaults with region I and vi locale', () => {
     const prefs = getDefaultPreferences(new Date('2026-08-05'));
     expect(prefs).toEqual({
       schemaVersion: 1,
       defaultRegion: 'I',
       defaultTaxYear: 2026,
+      locale: 'vi',
     });
   });
 
@@ -29,11 +30,28 @@ describe('preferences', () => {
         schemaVersion: 1,
         defaultRegion: 'III',
         defaultTaxYear: 2025,
+        locale: 'en',
       }),
     ).toEqual({
       schemaVersion: 1,
       defaultRegion: 'III',
       defaultTaxYear: 2025,
+      locale: 'en',
+    });
+  });
+
+  it('parsePreferences defaults missing locale to vi (legacy saves)', () => {
+    expect(
+      parsePreferences({
+        schemaVersion: 1,
+        defaultRegion: 'I',
+        defaultTaxYear: 2026,
+      }),
+    ).toEqual({
+      schemaVersion: 1,
+      defaultRegion: 'I',
+      defaultTaxYear: 2026,
+      locale: 'vi',
     });
   });
 
@@ -42,6 +60,14 @@ describe('preferences', () => {
     expect(parsePreferences({ schemaVersion: 2, defaultRegion: 'I', defaultTaxYear: 2026 })).toBeNull();
     expect(parsePreferences({ schemaVersion: 1, defaultRegion: 'V', defaultTaxYear: 2026 })).toBeNull();
     expect(parsePreferences({ schemaVersion: 1, defaultRegion: 'I', defaultTaxYear: 1999 })).toBeNull();
+    expect(
+      parsePreferences({
+        schemaVersion: 1,
+        defaultRegion: 'I',
+        defaultTaxYear: 2026,
+        locale: 'de',
+      }),
+    ).toBeNull();
   });
 
   it('uses stable storage key', () => {
@@ -53,6 +79,7 @@ describe('preferences', () => {
       schemaVersion: 1,
       defaultRegion: 'II',
       defaultTaxYear: 2025,
+      locale: 'ja',
     });
     const loaded = await loadPreferences();
     expect(loaded.recoveredFromCorrupt).toBe(false);
@@ -60,6 +87,7 @@ describe('preferences', () => {
       schemaVersion: 1,
       defaultRegion: 'II',
       defaultTaxYear: 2025,
+      locale: 'ja',
     });
   });
 
@@ -68,9 +96,11 @@ describe('preferences', () => {
       schemaVersion: 1,
       defaultRegion: 'IV',
       defaultTaxYear: 2027,
+      locale: 'fr',
     });
     const reset = await resetPreferences();
     expect(reset.defaultRegion).toBe('I');
+    expect(reset.locale).toBe('vi');
     const loaded = await loadPreferences();
     expect(loaded.preferences.defaultRegion).toBe('I');
   });

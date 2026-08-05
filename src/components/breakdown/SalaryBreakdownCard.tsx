@@ -1,6 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { InfoTip } from '@/src/components/common/InfoTip';
+import type { TipId } from '@/src/i18n/types';
+import { useI18n } from '@/src/i18n/useI18n';
 import type { SalaryBreakdown } from '@/src/domain/types/salary';
 import { formatVnd } from '@/src/theme/money';
 import { colors, space, typography } from '@/src/theme/tokens';
@@ -8,15 +11,20 @@ import { colors, space, typography } from '@/src/theme/tokens';
 function Row({
   label,
   value,
+  tipId,
   emphasis,
 }: {
   label: string;
   value: string;
+  tipId?: TipId;
   emphasis?: 'muted' | 'tax' | 'subtotal';
 }) {
   return (
     <View style={styles.row}>
-      <Text style={[styles.label, emphasis === 'subtotal' && styles.subtotalLabel]}>{label}</Text>
+      <View style={styles.labelRow}>
+        <Text style={[styles.label, emphasis === 'subtotal' && styles.subtotalLabel]}>{label}</Text>
+        {tipId ? <InfoTip tipId={tipId} size={15} /> : null}
+      </View>
       <Text
         style={[
           styles.value,
@@ -47,70 +55,113 @@ type Props = {
 };
 
 export function SalaryBreakdownCard({ breakdown, hideNet = false }: Props) {
+  const { t } = useI18n();
   const { insurance, pit } = breakdown;
   return (
-    <View style={styles.wrap} accessibilityLabel="Bảng chi tiết tính lương">
+    <View style={styles.wrap} accessibilityLabel={t('salary.breakdownTitle')}>
       <ColorBlock tone="muted">
-        <Text style={styles.heading}>Chi tiết tính lương</Text>
+        <Text style={styles.heading}>{t('salary.breakdownTitle')}</Text>
 
-        <Row label="Gross" value={formatVnd(breakdown.gross)} emphasis="subtotal" />
+        <Row
+          label={t('salary.labelGross')}
+          value={formatVnd(breakdown.gross)}
+          tipId="salary.gross"
+          emphasis="subtotal"
+        />
 
         <GroupDivider />
-        <GroupTitle>Bảo hiểm</GroupTitle>
-        <Row label="BHXH (8%)" value={`− ${formatVnd(insurance.social)}`} emphasis="muted" />
-        <Row label="BHYT (1,5%)" value={`− ${formatVnd(insurance.health)}`} emphasis="muted" />
-        <Row label="BHTN (1%)" value={`− ${formatVnd(insurance.unemployment)}`} emphasis="muted" />
+        <GroupTitle>{t('salary.groupInsurance')}</GroupTitle>
         <Row
-          label="Tổng BH người lao động"
+          label={t('salary.labelBhxh')}
+          value={`− ${formatVnd(insurance.social)}`}
+          tipId="salary.bhxh"
+          emphasis="muted"
+        />
+        <Row
+          label={t('salary.labelBhyt')}
+          value={`− ${formatVnd(insurance.health)}`}
+          tipId="salary.bhyt"
+          emphasis="muted"
+        />
+        <Row
+          label={t('salary.labelBhtn')}
+          value={`− ${formatVnd(insurance.unemployment)}`}
+          tipId="salary.bhtn"
+          emphasis="muted"
+        />
+        <Row
+          label={t('salary.labelInsuranceTotal')}
           value={`− ${formatVnd(insurance.totalEmployee)}`}
+          tipId="salary.insuranceTotal"
           emphasis="subtotal"
         />
         <Row
-          label="Thu nhập sau BH"
+          label={t('salary.labelAfterInsurance')}
           value={formatVnd(pit.incomeAfterInsurance)}
+          tipId="salary.afterInsurance"
           emphasis="subtotal"
         />
 
         <GroupDivider />
-        <GroupTitle>Giảm trừ gia cảnh</GroupTitle>
+        <GroupTitle>{t('salary.groupRelief')}</GroupTitle>
         <Row
-          label="GTGC bản thân"
+          label={t('salary.labelPersonalRelief')}
           value={`− ${formatVnd(breakdown.reliefBreakdown.personal)}`}
+          tipId="salary.personalRelief"
           emphasis="muted"
         />
         <Row
-          label="GTGC người phụ thuộc"
+          label={t('salary.labelDependentRelief')}
           value={`− ${formatVnd(breakdown.reliefBreakdown.dependent)}`}
+          tipId="salary.dependentRelief"
           emphasis="muted"
         />
         <Row
-          label="Tổng giảm trừ gia cảnh"
+          label={t('salary.labelReliefTotal')}
           value={`− ${formatVnd(breakdown.reliefBreakdown.total)}`}
+          tipId="salary.reliefTotal"
           emphasis="subtotal"
         />
-        <Row label="Thu nhập tính thuế" value={formatVnd(pit.taxableIncome)} emphasis="subtotal" />
+        <Row
+          label={t('salary.labelTaxable')}
+          value={formatVnd(pit.taxableIncome)}
+          tipId="salary.taxable"
+          emphasis="subtotal"
+        />
 
         <GroupDivider />
-        <GroupTitle>Thuế TNCN</GroupTitle>
+        <GroupTitle>{t('salary.groupPit')}</GroupTitle>
         {pit.brackets.map((b) => (
           <Row
             key={b.bracket}
-            label={`Thuế bậc ${b.bracket} (${Math.round(b.rate * 100)}%)`}
+            label={t('salary.labelPitBracket', {
+              n: b.bracket,
+              pct: Math.round(b.rate * 100),
+            })}
             value={`− ${formatVnd(b.tax)}`}
+            tipId="salary.pit"
             emphasis="tax"
           />
         ))}
-        <Row label="Tổng thuế TNCN" value={`− ${formatVnd(pit.totalTax)}`} emphasis="tax" />
+        <Row
+          label={t('salary.labelPitTotal')}
+          value={`− ${formatVnd(pit.totalTax)}`}
+          tipId="salary.pit"
+          emphasis="tax"
+        />
       </ColorBlock>
 
       {!hideNet ? (
         <ColorBlock tone="secondarySoft" style={styles.netBlock}>
-          <Text style={styles.netEyebrow}>Thực nhận</Text>
+          <View style={styles.netEyebrowRow}>
+            <Text style={styles.netEyebrow}>{t('salary.eyebrowNet')}</Text>
+            <InfoTip tipId="salary.net" color={colors.white} size={16} />
+          </View>
           <View style={styles.netRow}>
-            <Text style={styles.netLabelWide}>Net</Text>
+            <Text style={styles.netLabelWide}>{t('salary.labelNet')}</Text>
             <Text
               style={styles.netValueWide}
-              accessibilityLabel={`Net thực nhận ${formatVnd(breakdown.net)}`}
+              accessibilityLabel={`${t('salary.labelNet')} ${formatVnd(breakdown.net)}`}
             >
               {formatVnd(breakdown.net)}
             </Text>
@@ -153,8 +204,14 @@ const styles = StyleSheet.create({
     minHeight: 40,
     paddingVertical: space[1],
   },
-  label: {
+  labelRow: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[1],
+  },
+  label: {
+    flexShrink: 1,
     fontFamily: typography.fontFamily.regular,
     fontSize: typography.scale.moneySm.fontSize,
     lineHeight: typography.scale.moneySm.lineHeight,
@@ -184,6 +241,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     paddingVertical: space[5],
   },
+  netEyebrowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[2],
+    marginBottom: space[2],
+  },
   netEyebrow: {
     fontFamily: typography.fontFamily.semiBold,
     fontSize: typography.scale.caption.fontSize,
@@ -191,7 +254,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: colors.white,
     opacity: 0.85,
-    marginBottom: space[2],
   },
   netRow: {
     flexDirection: 'row',

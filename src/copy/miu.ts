@@ -15,7 +15,7 @@ export const miuTips = {
   bonusMonth:
     'Thưởng/OT chịu thuế trong tháng nhận — BH mặc định vẫn theo lương căn cứ, không cộng thưởng.',
   overtime:
-    'OT 150/200/300% theo BLLĐ Đ.98 — tôi cộng vào Gross tháng; đêm chưa mô phỏng.',
+    'OT ngày 150/200/300%; đêm tối thiểu 200/270/390% (Đ.98 + NĐ 145) — tôi cộng vào Gross tháng.',
   benefitsHub:
     'Chọn một mục bên dưới. Mỗi máy tính độc lập — không cộng vào lương Gross↔Net.',
   settlement:
@@ -35,7 +35,11 @@ export const miuTips = {
   comparison:
     'Gross giữ nguyên — tôi chỉ đối chiếu Net và thuế giữa hai năm ruleset.',
   rent: 'GTGT và TNCN tách dòng bên dưới — ngưỡng miễn theo ruleset năm.',
+  rentSimple:
+    'Tôi nhân tiền thuê tháng ×12 rồi áp ngưỡng 1 tỷ — vẫn nhắc mẫu 01/BĐS nếu miễn thuế.',
   hkd: 'GTGT + TNCN theo nhóm ngành — nếu miễn tỷ lệ, vẫn cần kê khai doanh thu.',
+  hkdSimple:
+    'Ước nhanh: DT tháng ×12 theo nhóm ngành phổ biến — bật Đầy đủ nếu cần chi phí hoặc ngành khác.',
   securities:
     'Tỷ lệ theo ngày giao dịch — đọc chú thích nếu ruleset ghi hiệu lực hạn chế.',
   esop: 'TLTC khấu trừ và thuế chuyển nhượng tách dòng — đọc ghi chú quyết toán nếu có.',
@@ -84,6 +88,8 @@ export const aboutCopy = {
   role: 'Trợ lý hướng dẫn trong app',
   body:
     'KVSalaryTools giúp ước tính lương Gross↔Net, quyết toán thuế và quyền lợi BHXH — offline, minh bạch từng khoản trừ. Tôi chỉ đường; kết quả không thay thế tư vấn pháp lý.',
+  author: 'Phạm Huy Đức',
+  email: 'kataro92@gmail.com',
 } as const;
 
 export const onboardingSteps = [

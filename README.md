@@ -22,14 +22,19 @@ npx expo start
 | Store listing | [docs/store/README.md](docs/store/README.md) |
 | Constitution | [.specify/memory/constitution.md](.specify/memory/constitution.md) |
 
+```bash
+npm run qa:design    # Flat Design / token hygiene
+```
+
+
 ## Đã triển khai
 
 - **Lương**: Gross↔Net, NPT/GTGC, so sánh 2025/2026, thưởng tháng, OT, lưu kịch bản cục bộ
-- **Quyết toán**: Ước năm, đa nguồn, wizard nộp, banner mùa vụ
+- **Quyết toán**: Ước năm, đa nguồn, wizard nộp, banner mùa vụ, lưu kịch bản QT cục bộ
 - **Quyền lợi**: Thôi việc, BHTN, thai sản, ốm đau, hưu / BHXH một lần
-- **Thu nhập khác**: Cho thuê, HKD, chứng khoán, ESOP, vãng lai
-- **Shell**: Onboarding, splash, tabs, settings, preferences AsyncStorage
-- **UI**: Pastel Flat Design, mascot PNG, motion, Vietnamese money speech
+- **Thu nhập khác**: Ước nhanh cho thuê/HKD (F016′) + đầy đủ CK/ESOP/vãng lai
+- **Shell**: Onboarding, splash, tabs, settings, preferences AsyncStorage, cập nhật ruleset từ xa (F019), đa ngôn ngữ (7 locale), góp ý tác giả
+- **UI**: Pastel Flat Design, mascot PNG, motion, Vietnamese money speech, info tips trên số liệu
 
 ## Disclaimer
 

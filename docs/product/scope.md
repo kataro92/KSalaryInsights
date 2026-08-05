@@ -34,23 +34,25 @@ Không thay thế VssID, cơ quan thuế, hay tư vấn chuyên nghiệp.
 | F011 | Trợ cấp thôi việc / mất việc | ✅ Shipped |
 | F012 | Trợ cấp thất nghiệp | ✅ Shipped |
 | F013 | Thai sản / ốm đau | ✅ Shipped |
-| F014 | Lưu kịch bản cục bộ + nhắc mùa vụ | ✅ Shipped (Calculator) |
+| F014 | Lưu kịch bản cục bộ + nhắc mùa vụ | ✅ Shipped (Calculator + Quyết toán) |
 | F015 | BHXH một lần vs hưu | ✅ Shipped |
 | F016 | Cho thuê nhà | ✅ Shipped |
 | F017 | Hộ kinh doanh | ✅ Shipped |
 | F018 | Chứng khoán / ESOP | ✅ Shipped |
-| F016′ | HKD / cho thuê bản đơn giản (ADR 0003) | ⚠️ Có màn hình; chưa tách “bản đơn giản” riêng |
-| F019 | Remote update ruleset | ❌ Chưa — cần ADR |
+| F016′ | HKD / cho thuê bản đơn giản (ADR 0003) | ✅ Shipped — chế độ «Ước nhanh» (tháng ×12) tách khỏi «Đầy đủ» |
+| F019 | Remote update ruleset | ✅ Shipped (ADR 0008 — manifest HTTPS + SHA-256, Settings) |
 
 ## Backlog (V1.1+)
 
 | Hạng mục | Ghi chú |
 |----------|---------|
-| OT đêm | Ghi nợ trong engine; chưa mô phỏng |
-| F014 mở rộng | Lưu kịch bản trên Quyết toán / màn khác |
-| Store capture | 6 screenshot theo [store/README.md](../store/README.md) |
-| Design QA sign-off | [design-qa-checklist.md](./design-qa-checklist.md) |
-| F019 | Cập nhật ruleset từ xa |
+| OT đêm | ✅ Shipped — toggle trên Calculator (Đ.98 / NĐ 145: 200/270/390%) |
+| F014 mở rộng | ✅ Shipped — Quyết toán lưu/tải/chia sẻ; banner mùa vụ phân loại kind |
+| Store capture | Docs + listing copy sẵn; **6 PNG** chờ capture thiết bị → [`docs/store/`](../store/) |
+| Design QA sign-off | Checklist + `npm run qa:design`; phần visual còn chờ device |
+| Info tips trên số liệu | ✅ Shipped — icon info + modal nguồn pháp lý |
+| Đa ngôn ngữ (7 locale) | ✅ Shipped — mặc định vi; Cài đặt |
+| Góp ý tác giả | ✅ Shipped — Phạm Huy Đức · kataro92@gmail.com |
 
 ## Ánh xạ spec ↔ F-ID
 
