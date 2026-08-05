@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
+import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -10,13 +11,16 @@ import { motion } from '@/src/theme/tokens';
 
 type Props = {
   children: ReactNode;
-  style?: object;
+  style?: StyleProp<ViewStyle>;
 };
 
-/** Soft enter — opacity + slight rise (≤ transitionMs). */
+/**
+ * Soft enter — slight rise + fade.
+ * Starts near-visible so a missed animation never blanks the screen.
+ */
 export function ScreenEnter({ children, style }: Props) {
-  const opacity = useSharedValue(0);
-  const translateY = useSharedValue(8);
+  const opacity = useSharedValue(0.001);
+  const translateY = useSharedValue(6);
 
   useEffect(() => {
     opacity.value = withTiming(1, {
@@ -34,5 +38,13 @@ export function ScreenEnter({ children, style }: Props) {
     transform: [{ translateY: translateY.value }],
   }));
 
-  return <Animated.View style={[style, animStyle]}>{children}</Animated.View>;
+  return (
+    <Animated.View style={[styles.root, style, animStyle]}>{children}</Animated.View>
+  );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    width: '100%',
+  },
+});
