@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 import { SickLeaveBreakdownCard } from '@/src/components/breakdown/SickLeaveBreakdownCard';
 import { Button } from '@/src/components/common/Button';
+import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import {
   SickLeaveInputs,
@@ -12,14 +14,8 @@ import { TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { SickLeaveBreakdown } from '@/src/domain/types/benefits';
 import { calculateSickLeave } from '@/src/engine/sickLeave';
 import { usePreferences } from '@/src/hooks/usePreferences';
-import { colors, layout, space, typography } from '@/src/theme/tokens';
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
+import { parseMoney } from '@/src/theme/money';
+import { colors, typography } from '@/src/theme/tokens';
 
 export function SickLeaveCalculatorScreen() {
   const { preferences } = usePreferences();
@@ -69,47 +65,39 @@ export function SickLeaveCalculatorScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
+    <ToolScreen
+      nested
+      title="Ốm đau"
+      subtitle="75% ÷ 24 ngày · trần năm theo năm đóng BHXH."
       accessibilityLabel="Máy tính ốm đau"
+      sticky={<Button label="Tính ốm đau" onPress={onCalculate} />}
     >
-      <View style={styles.inner}>
-        <SickLeaveInputs
-          value={inputs}
-          onChange={(v) => {
-            setInputs(v);
-            setResult(null);
-          }}
-        />
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-        <Button label="Tính ốm đau" onPress={onCalculate} />
-        {result ? (
-          <>
-            <SickLeaveBreakdownCard result={result} />
-            <DisclaimerFooter legalSources={result.legalSources} />
-          </>
-        ) : null}
-      </View>
-    </ScrollView>
+      <SickLeaveInputs
+        value={inputs}
+        onChange={(v) => {
+          setInputs(v);
+          setResult(null);
+        }}
+      />
+      {error ? (
+        <ColorBlock tone="primarySoft">
+          <Text style={styles.error}>{error}</Text>
+        </ColorBlock>
+      ) : null}
+      {result ? (
+        <>
+          <SickLeaveBreakdownCard result={result} />
+          <DisclaimerFooter legalSources={result.legalSources} collapseSources />
+        </>
+      ) : null}
+    </ToolScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: space[10] },
-  inner: {
-    paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[4],
-    gap: space[5],
-    maxWidth: layout.maxContentWidth,
-    width: '100%',
-    alignSelf: 'center',
-  },
   error: {
     fontFamily: typography.fontFamily.medium,
     fontSize: 14,
-    color: '#DC2626',
+    color: colors.danger,
   },
 });

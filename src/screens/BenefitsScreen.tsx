@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { HubNavCard } from '@/src/components/common/HubNavCard';
 import { PageHero } from '@/src/components/common/PageHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
+import { SeasonalBanner } from '@/src/components/common/SeasonalBanner';
 import { Section } from '@/src/components/common/Section';
 import { OutOfScopeNote } from '@/src/components/disclaimer/OutOfScopeNote';
 import { NgaiMiuTip } from '@/src/components/mascot/NgaiMiuTip';
@@ -27,6 +28,8 @@ export function BenefitsScreen() {
         title="Quyền lợi"
         subtitle="Ước tính offline theo ruleset — không thay quyết định BHXH hay tờ khai thuế."
       />
+
+      <SeasonalBanner />
 
       <NgaiMiuTip tip="Chọn một mục bên dưới. Mỗi máy tính độc lập — không cộng vào lương Gross↔Net." />
 

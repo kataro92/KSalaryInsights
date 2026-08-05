@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 import { MaternityBreakdownCard } from '@/src/components/breakdown/MaternityBreakdownCard';
 import { Button } from '@/src/components/common/Button';
+import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { OutOfScopeNote } from '@/src/components/disclaimer/OutOfScopeNote';
 import {
@@ -11,14 +13,8 @@ import {
 } from '@/src/components/inputs/MaternityInputs';
 import type { MaternityBreakdown } from '@/src/domain/types/benefits';
 import { calculateMaternity } from '@/src/engine/maternity';
-import { colors, layout, space, typography } from '@/src/theme/tokens';
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
+import { parseMoney } from '@/src/theme/money';
+import { colors, typography } from '@/src/theme/tokens';
 
 export function MaternityCalculatorScreen() {
   const [inputs, setInputs] = useState<MaternityInputsValue>({
@@ -55,48 +51,40 @@ export function MaternityCalculatorScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
+    <ToolScreen
+      nested
+      title="Thai sản"
+      subtitle="Tháng nghỉ và trợ cấp một lần theo mức tham chiếu — ước tính offline."
       accessibilityLabel="Máy tính thai sản"
+      sticky={<Button label="Tính thai sản" onPress={onCalculate} />}
     >
-      <View style={styles.inner}>
-        <MaternityInputs
-          value={inputs}
-          onChange={(v) => {
-            setInputs(v);
-            setResult(null);
-          }}
-        />
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-        <Button label="Tính thai sản" onPress={onCalculate} />
-        {result ? (
-          <>
-            <MaternityBreakdownCard result={result} />
-            <DisclaimerFooter legalSources={result.legalSources} />
-          </>
-        ) : null}
-        <OutOfScopeNote />
-      </View>
-    </ScrollView>
+      <MaternityInputs
+        value={inputs}
+        onChange={(v) => {
+          setInputs(v);
+          setResult(null);
+        }}
+      />
+      {error ? (
+        <ColorBlock tone="primarySoft">
+          <Text style={styles.error}>{error}</Text>
+        </ColorBlock>
+      ) : null}
+      {result ? (
+        <>
+          <MaternityBreakdownCard result={result} />
+          <DisclaimerFooter legalSources={result.legalSources} collapseSources />
+        </>
+      ) : null}
+      <OutOfScopeNote />
+    </ToolScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: space[10] },
-  inner: {
-    paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[4],
-    gap: space[5],
-    maxWidth: layout.maxContentWidth,
-    width: '100%',
-    alignSelf: 'center',
-  },
   error: {
     fontFamily: typography.fontFamily.medium,
     fontSize: 14,
-    color: '#DC2626',
+    color: colors.danger,
   },
 });

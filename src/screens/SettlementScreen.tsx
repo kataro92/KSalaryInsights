@@ -9,6 +9,7 @@ import { ColorBlock } from '@/src/components/common/ColorBlock';
 import { MoneyField } from '@/src/components/common/MoneyField';
 import { PageHero } from '@/src/components/common/PageHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
+import { SeasonalBanner } from '@/src/components/common/SeasonalBanner';
 import { Section } from '@/src/components/common/Section';
 import { StickyActionBar } from '@/src/components/common/StickyActionBar';
 import { TextField } from '@/src/components/common/TextField';
@@ -95,6 +96,8 @@ export function SettlementScreen() {
         title="Quyết toán"
         subtitle="Ước tính quyết toán thuế năm — đối chiếu với bảng lương trước khi nộp."
       />
+
+      <SeasonalBanner />
 
       <Section
         title="Năm quyết toán"

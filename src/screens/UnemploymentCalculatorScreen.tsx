@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   Pressable,
-  ScrollView,
   StyleSheet,
   Switch,
   Text,
@@ -12,26 +11,18 @@ import {
 import { EligibilityChecklist } from '@/src/components/benefits/EligibilityChecklist';
 import { Button } from '@/src/components/common/Button';
 import { ColorBlock } from '@/src/components/common/ColorBlock';
+import { MoneyField } from '@/src/components/common/MoneyField';
+import { ResultHero } from '@/src/components/common/ResultHero';
 import { Section } from '@/src/components/common/Section';
+import { ToolScreen } from '@/src/components/common/ToolScreen';
 import { DisclaimerFooter } from '@/src/components/disclaimer/DisclaimerFooter';
 import { REGION_OPTIONS, TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import type { UnemploymentBreakdown } from '@/src/domain/types/benefits';
 import type { RegionCode } from '@/src/domain/types/salary';
 import { calcUnemploymentBenefit } from '@/src/engine/unemploymentBenefit';
 import { usePreferences } from '@/src/hooks/usePreferences';
+import { parseMoney } from '@/src/theme/money';
 import { colors, layout, radii, space, typography } from '@/src/theme/tokens';
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, '');
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return '';
-  return n.toLocaleString('vi-VN');
-}
 
 export function UnemploymentCalculatorScreen() {
   const { preferences } = usePreferences();
@@ -85,13 +76,13 @@ export function UnemploymentCalculatorScreen() {
   };
 
   return (
-    <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled"
+    <ToolScreen
+      nested
+      title="Trợ cấp thất nghiệp"
+      subtitle="60% · trần 5×LTTV · số tháng hưởng theo tháng đóng."
       accessibilityLabel="Máy tính trợ cấp thất nghiệp BHTN"
+      sticky={<Button label="Tính BHTN" onPress={onCalculate} />}
     >
-      <View style={styles.inner}>
         <Section title="Năm / vùng" subtitle="Trần 5×LTTV theo ruleset tại ngày cuối đóng.">
           <View style={styles.row}>
             {TAX_YEAR_OPTIONS.map((y) => {
@@ -151,16 +142,13 @@ export function UnemploymentCalculatorScreen() {
         </Section>
 
         <Section title="Lương BQ 6 tháng" subtitle="Căn cứ đóng BHTN bình quân 6 tháng cuối.">
-          <TextInput
+          <MoneyField
             accessibilityLabel="Lương bình quân BHTN 6 tháng"
-            keyboardType="number-pad"
             value={salaryText}
-            onChangeText={(t) => {
-              const n = parseMoney(t);
-              setSalaryText(n == null ? t.replace(/[^\d.]/g, '') : formatInput(n));
+            onValueChange={(formatted) => {
+              setSalaryText(formatted);
               setResult(null);
             }}
-            style={styles.input}
           />
         </Section>
 
@@ -196,22 +184,27 @@ export function UnemploymentCalculatorScreen() {
           </View>
         </Section>
 
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        <Button label="Tính BHTN" onPress={onCalculate} />
+        {error ? (
+          <ColorBlock tone="primarySoft">
+            <Text style={styles.error}>{error}</Text>
+          </ColorBlock>
+        ) : null}
 
         {result ? (
           <>
+            {result.eligible ? (
+              <ResultHero
+                eyebrow="Trợ cấp thất nghiệp"
+                label="Tổng hưởng"
+                amount={result.totalBenefit}
+              />
+            ) : null}
             <ColorBlock
               tone={result.eligible ? 'secondarySoft' : 'muted'}
               accessibilityLabel="Kết quả trợ cấp thất nghiệp"
             >
               {result.eligible ? (
                 <>
-                  <Text style={styles.eyebrow}>Trợ cấp thất nghiệp</Text>
-                  <Text style={styles.amount}>
-                    {result.totalBenefit.toLocaleString('vi-VN')} ₫
-                  </Text>
                   <Text style={styles.formula}>{result.formula}</Text>
                   <Text style={styles.meta}>
                     {result.monthlyBenefit.toLocaleString('vi-VN')} ₫/tháng ×{' '}
@@ -232,25 +225,14 @@ export function UnemploymentCalculatorScreen() {
               ))}
             </ColorBlock>
             <EligibilityChecklist items={result.checklist} />
-            <DisclaimerFooter legalSources={result.legalSources} />
+            <DisclaimerFooter legalSources={result.legalSources} collapseSources />
           </>
         ) : null}
-      </View>
-    </ScrollView>
+    </ToolScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: space[10] },
-  inner: {
-    paddingHorizontal: layout.pagePaddingX,
-    paddingTop: space[4],
-    gap: space[5],
-    maxWidth: layout.maxContentWidth,
-    width: '100%',
-    alignSelf: 'center',
-  },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2] },
   chip: {
     minHeight: layout.minTouch,
@@ -292,7 +274,7 @@ const styles = StyleSheet.create({
   error: {
     fontFamily: typography.fontFamily.medium,
     fontSize: 14,
-    color: '#DC2626',
+    color: colors.danger,
   },
   eyebrow: {
     fontFamily: typography.fontFamily.semiBold,

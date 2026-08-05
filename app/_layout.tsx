@@ -14,9 +14,11 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { LoadingOverlay } from '@/src/components/loading/LoadingOverlay';
+import { OnboardingScreen } from '@/src/components/onboarding/OnboardingScreen';
 import { SplashView } from '@/src/components/splash/SplashView';
 import { LoadingProvider, useLoading } from '@/src/hooks/useLoading';
 import { PreferencesProvider, usePreferences } from '@/src/hooks/usePreferences';
+import { loadOnboardingCompleted, subscribeOnboardingReplay } from '@/src/store/onboarding';
 import { colors, motion } from '@/src/theme/tokens';
 
 export { ErrorBoundary } from 'expo-router';
@@ -39,13 +41,21 @@ function RootGate({ children }: { children: ReactNode }) {
 
   const showBrandedSplash = !coldStartSplashConsumed;
   const [splashVisible, setSplashVisible] = useState(showBrandedSplash);
+  const [onboarding, setOnboarding] = useState<'loading' | 'show' | 'done'>('loading');
   const startedAt = useRef(Date.now());
   const finished = useRef(false);
 
   useEffect(() => {
+    void loadOnboardingCompleted().then((done) => {
+      setOnboarding(done ? 'done' : 'show');
+    });
+    return subscribeOnboardingReplay(() => setOnboarding('show'));
+  }, []);
+
+  useEffect(() => {
     if (finished.current) return;
 
-    const assetsReady = fontsLoaded && ready;
+    const assetsReady = fontsLoaded && ready && onboarding !== 'loading';
     const elapsed = Date.now() - startedAt.current;
     const minBrand = showBrandedSplash ? motion.splashBrandMs : 0;
 
@@ -72,13 +82,16 @@ function RootGate({ children }: { children: ReactNode }) {
 
     const cap = setTimeout(() => void finish(), hardCapLeft);
     return () => clearTimeout(cap);
-  }, [fontsLoaded, ready, showBrandedSplash]);
+  }, [fontsLoaded, ready, showBrandedSplash, onboarding]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar style="dark" />
       {children}
       <SplashView visible={splashVisible} />
+      {!splashVisible && onboarding === 'show' ? (
+        <OnboardingScreen onDone={() => setOnboarding('done')} />
+      ) : null}
       <LoadingOverlay visible={visible} message={message} />
     </View>
   );

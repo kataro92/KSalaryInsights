@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
+import { ChipRow } from '@/src/components/common/ChipRow';
 import { ChoiceChip } from '@/src/components/common/ChoiceChip';
+import { PageHero } from '@/src/components/common/PageHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
 import { Section } from '@/src/components/common/Section';
 import { OtherIncomeDisclaimer } from '@/src/components/disclaimer/OtherIncomeDisclaimer';
@@ -12,7 +14,7 @@ import { RentCalculator } from '@/src/components/otherIncome/RentCalculator';
 import { SecuritiesCalculator } from '@/src/components/otherIncome/SecuritiesCalculator';
 import { TAX_YEAR_OPTIONS } from '@/src/domain/constants/salary';
 import { usePreferences } from '@/src/hooks/usePreferences';
-import { colors, space, typography } from '@/src/theme/tokens';
+import { space } from '@/src/theme/tokens';
 
 type Mode = 'rent' | 'hkd' | 'securities' | 'esop' | 'casual';
 
@@ -35,27 +37,25 @@ export function OtherIncomeScreen() {
 
   return (
     <ScreenShell accessibilityLabel="Thu nhập khác" decorated>
-      <View style={styles.hero}>
-        <Text style={styles.eyebrow}>Ngoài HĐLĐ</Text>
-        <Text style={styles.title}>Thu nhập khác</Text>
-        <Text style={styles.body}>
-          Không cộng vào máy tính lương. Mỗi loại đọc tỷ lệ / ngưỡng từ ruleset năm.
-        </Text>
-      </View>
+      <PageHero
+        title="Thu nhập khác"
+        subtitle="Không cộng vào máy tính lương. Mỗi loại đọc tỷ lệ / ngưỡng từ ruleset năm."
+      />
 
       <OtherIncomeDisclaimer />
 
       <Section title="Năm ruleset">
-        <View style={styles.row}>
+        <ChipRow equal>
           {TAX_YEAR_OPTIONS.map((y) => (
             <ChoiceChip
               key={y}
+              flex
               label={String(y)}
               selected={taxYear === y}
               onPress={() => setTaxYear(y)}
             />
           ))}
-        </View>
+        </ChipRow>
       </Section>
 
       <Section title="Loại thu nhập">
@@ -84,26 +84,5 @@ export function OtherIncomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  hero: { gap: space[2] },
-  eyebrow: {
-    fontFamily: typography.fontFamily.semiBold,
-    fontSize: 12,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    color: colors.secondary,
-  },
-  title: {
-    fontFamily: typography.fontFamily.extraBold,
-    fontSize: 28,
-    letterSpacing: typography.letterSpacingTight,
-    color: colors.foreground,
-  },
-  body: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: 14,
-    lineHeight: 21,
-    color: colors.foreground,
-    opacity: 0.75,
-  },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2] },
 });

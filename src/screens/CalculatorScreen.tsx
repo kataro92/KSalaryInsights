@@ -11,6 +11,7 @@ import { MoneyField } from '@/src/components/common/MoneyField';
 import { PageHero } from '@/src/components/common/PageHero';
 import { ResultHero } from '@/src/components/common/ResultHero';
 import { ScreenShell } from '@/src/components/common/ScreenShell';
+import { SeasonalBanner } from '@/src/components/common/SeasonalBanner';
 import { Section } from '@/src/components/common/Section';
 import { StickyActionBar } from '@/src/components/common/StickyActionBar';
 import { SalaryBreakdownCard } from '@/src/components/breakdown/SalaryBreakdownCard';
@@ -158,6 +159,8 @@ export function CalculatorScreen() {
           title="Tính lương"
           subtitle="Gross ↔ Net offline · biểu thuế 2025 / 2026"
         />
+
+        <SeasonalBanner />
 
         <Section title="Chế độ tính">
           <ChipRow equal>
