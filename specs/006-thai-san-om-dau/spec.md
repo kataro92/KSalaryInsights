@@ -9,13 +9,14 @@
 ## Locked decisions
 
 - **Đã khóa**. 100% bình quân 6 tháng đóng BHXH (Đ.59 Luật BHXH 2024) × số tháng nghỉ + trợ cấp 1 lần 2× mức tham chiếu tại tháng sinh (Đ.58: 4,68tr trước / 5,06tr từ 01/07/2026 theo NĐ 161/2026).
-- **Chốt**. V1 chỉ “lao động nữ sinh con” (con đầu 6 tháng; con thứ hai từ 01/07/2026: 7 tháng; sinh đôi +1 tháng/con từ con thứ 2). Nhận nuôi, mang thai hộ, chồng nghỉ khi vợ sinh → V2.
+- **Chốt**. V1 gồm lao động nữ sinh con **và** chế độ nghỉ của chồng khi vợ sinh (Đ.53). Nhận nuôi, mang thai hộ → V2.
 - V1 mode cơ bản 75% lương tháng liền kề / 24 ngày công; bệnh dài ngày → V2.
 - **Đã thêm** TC-SICK-01 vào domain (5 ngày × 375.000 = 1.875.000); US2 có acceptance số học. Trần ngày/năm còn [thứ cấp] Tầng 2: chờ toàn văn Luật BHXH 2024.
 - **Đã thêm** TC-MAT-03 (7 tháng + trợ cấp 1 lần × 2 con = 136.120.000; mức "mỗi con" Tầng 2).
 - OK xác nhận nguyên văn Đ.58 k.4 + Đ.43 Luật BHXH 41/2024 (bản gốc). TC-MAT-03 và ốm đau hết [thứ cấp].
 - OK xác nhận nguyên văn Đ.14 k.1a Luật Dân số 113/2025 (`luat113-2025.pdf`); Đ.29 k.1 sửa thẳng Đ.139 BLLĐ; điều kiện "tại thời điểm sinh có một con đẻ còn sống" (NĐ 168 Đ.2); loại trừ Đ.52 k.2 Luật BHXH. Hiệu lực 01/07/2026.
-- Phát hiện thêm (V2: chế độ của chồng): nam nghỉ 10 ngày LV khi vợ sinh đôi **hoặc** con thứ hai (Đ.53 k.2c sửa đổi); ghi vào backlog V2.
+- Phát hiện thêm: chế độ nghỉ của chồng (Đ.53) đã tách sang feature **014-che-do-nghi-chong**.
+- **FR-004** (cập nhật): Phạm vi thai sản nữ = lao động nữ sinh con; nhận nuôi, mang thai hộ → V2. Chế độ chồng → xem spec 014.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -52,7 +53,7 @@ Nhập lương tháng liền kề và số ngày nghỉ → ước số tiền.
 - **FR-001**: MUST có mode thai sản và ốm đau.
 - **FR-002**: MUST dùng tham số từ ruleset: % hưởng, số tháng nghỉ theo thứ tự con + ngày sinh, mức tham chiếu theo `as_of_date` (2,34tr / 2,53tr).
 - **FR-003**: MUST NOT thu thập hồ sơ y tế.
-- **FR-004**: Phạm vi V1 = lao động nữ sinh con (đầu/thứ hai/sinh đôi); nhận nuôi, mang thai hộ, chế độ của chồng → V2 (ghi rõ out-of-scope trên UI).
+- **FR-004**: Phạm vi V1 thai sản nữ = lao động nữ sinh con (đầu/thứ hai/sinh đôi); nhận nuôi, mang thai hộ → V2. Chế độ nghỉ của chồng → feature 014.
 - **FR-005**: MUST hỏi ngày sinh dự kiến / thứ tự con để chọn đúng tháng nghỉ và mức tham chiếu.
 
 ## Success Criteria *(mandatory)*

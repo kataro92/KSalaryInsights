@@ -48,6 +48,13 @@ export function BenefitsScreen() {
             onPress={() => router.push("/maternity")}
           />
           <HubNavCard
+            title="Nghỉ của chồng"
+            description="Số ngày làm việc và tiền chế độ khi vợ sinh"
+            tone="secondarySoft"
+            icon={<AppIcon name="baby" color={colors.secondary} size={26} />}
+            onPress={() => router.push("/paternity-leave")}
+          />
+          <HubNavCard
             title="Nghỉ ốm"
             description="Tiền nghỉ ốm hưởng bảo hiểm xã hội"
             tone="secondarySoft"

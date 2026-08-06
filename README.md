@@ -199,7 +199,7 @@ bash scripts/capture-screenshots.sh
 Hoặc thủ công: deep link `exp://127.0.0.1:8081/--/<route>` rồi
 `xcrun simctl io booted screenshot …` và `python3 scripts/scrub-expo-fab.py <in> <out>`.
 
-Routes: `(tabs)`, `settlement`, `benefits`, `settings`, `maternity`, `sick-leave`, `severance`, `unemployment`, `retirement`, `other-income`, `comparison`, `filing-wizard`, `offer-compare`, `multi-source`.
+Routes: `(tabs)`, `settlement`, `benefits`, `settings`, `maternity`, `paternity-leave`, `sick-leave`, `severance`, `unemployment`, `retirement`, `other-income`, `comparison`, `filing-wizard`, `offer-compare`, `multi-source`.
 ## Tác giả
 
 **Phạm Huy Đức** · [kataro92@gmail.com](mailto:kataro92@gmail.com)

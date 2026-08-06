@@ -69,6 +69,20 @@ export type Ruleset = {
     second_child_extended_from: string;
     twin_bonus_from_child: number;
   };
+  /** Chế độ nghỉ của chồng khi vợ sinh (Đ.53 k.2 / Đ.59). */
+  paternity_leave?: {
+    rate: number;
+    divisor: number;
+    normal_days: number;
+    surgery_or_preterm_days: number;
+    twins_days: number;
+    twins_surgery_days: number;
+    /** Thường 3: +extra từ con thứ 3. */
+    extra_days_per_child_from: number;
+    extra_days_per_child: number;
+    second_child_extended_from: string;
+    second_child_min_days: number;
+  };
   sick_leave?: {
     rate: number;
     divisor: number;

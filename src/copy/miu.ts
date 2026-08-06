@@ -23,6 +23,8 @@ export const miuTips = {
     "App không thu giấy tờ. Tôi chỉ gợi ý hướng nộp để bạn tự chuẩn bị.",
   maternity:
     "Tiền thai sản theo tháng và khoản trợ cấp một lần được tách riêng, không gộp vào lương Gross-Net.",
+  paternityLeave:
+    "Số ngày nghỉ của chồng theo Điều 53. Tiền mỗi ngày = bình quân 6 tháng chia 24. Nghỉ trong 60 ngày kể từ ngày vợ sinh.",
   sickLeave:
     "Đây là tiền nghỉ ốm ước tính. Nếu số ngày hưởng bị giới hạn, công thức sẽ ghi rõ bên dưới.",
   severance:
@@ -59,6 +61,10 @@ export const emptyCopy = {
   maternity: {
     title: "Chưa có tiền thai sản ước tính",
     body: "Nhập lương bình quân và thông tin sinh, rồi bấm Tính thai sản.",
+  },
+  paternityLeave: {
+    title: "Chưa có tiền nghỉ của chồng ước tính",
+    body: "Nhập bình quân lương, ngày vợ sinh và tình trạng sinh, rồi bấm Tính nghỉ của chồng.",
   },
   sickLeave: {
     title: "Chưa có tiền nghỉ ốm ước tính",

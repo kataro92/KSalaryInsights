@@ -118,15 +118,28 @@ Bình quân 50.000.000, vùng I → 60% = 30e6 > trần 26.550.000 → hưởng 
 
 ### 4.1. Thai sản (Điều 53, 58, 59) Tầng 1
 
-- **Thời gian nghỉ sinh** (Đ.139 k.1 BLLĐ 2019, bản sửa đổi theo Đ.29 k.1 Luật Dân số 113/2025, hiệu lực 01/07/2026): 6 tháng; **sinh con thứ hai: 7 tháng**; trước sinh tối đa 2 tháng; sinh đôi trở lên +1 tháng/con từ con thứ 2. Điều kiện hưởng 7 tháng: "tại thời điểm sinh có một con đẻ còn sống" (NĐ 168/2026 Đ.2). Nam khi vợ **sinh đôi hoặc sinh con thứ hai**: nghỉ **10 ngày làm việc**; sinh ba trở lên +3 ngày LV/con từ con thứ ba (Đ.53 k.2c Luật BHXH, bản sửa theo Đ.29 k.2 Luật Dân số).
+- **Thời gian nghỉ sinh của nữ** (Đ.139 k.1 BLLĐ 2019, sửa theo Đ.29 k.1 Luật Dân số 113/2025, hiệu lực 01/07/2026): 6 tháng; **sinh con thứ hai: 7 tháng**; trước sinh tối đa 2 tháng; sinh đôi trở lên +1 tháng/con từ con thứ 2. Điều kiện hưởng 7 tháng: "tại thời điểm sinh có một con đẻ còn sống" (NĐ 168/2026 Đ.2).
+- Nam khi vợ sinh (Đ.53 k.2): sinh thường **5** ngày LV; phẫu thuật / dưới 32 tuần **7** ngày; sinh đôi **10** ngày (+3/con từ con thứ 3); sinh đôi phẫu thuật **14** ngày (+3/con từ con thứ 3). Từ **01/07/2026** (Luật Dân số): vợ sinh **con thứ hai** hoặc sinh đôi → tối thiểu **10** ngày LV.
+- **Mức/ngày của chồng** (Đ.59 k.2) = (100% bình quân 6 tháng) / **24**.
+- Ngày bắt đầu nghỉ phải trong **60 ngày** kể từ ngày vợ sinh (Đ.53 k.3).
 - **Điều kiện điển hình**: đóng BHXH đủ 6 tháng trong 12 tháng trước sinh. Loại trừ: trường hợp Đ.52 k.2 Luật BHXH (thai ≥22 tuần chết lưu/đình chỉ) không hưởng chế độ 7 tháng (NĐ 168 Đ.2 k.2).
-- **Mức/tháng** = **100% bình quân tiền lương đóng BHXH 6 tháng gần nhất** trước nghỉ (Đ.59).
+- **Mức/tháng** (nữ) = **100% bình quân tiền lương đóng BHXH 6 tháng gần nhất** trước nghỉ (Đ.59).
 - **Trợ cấp một lần khi sinh** = **2 × mức tham chiếu** tại tháng sinh, **cho mỗi con** (Đ.58 k.4: nguyên văn có chữ "cho mỗi con"): trước 01/07/2026 = 2 × 2,34tr = **4.680.000**/con; từ 01/07/2026 = 2 × 2,53tr = **5.060.000**/con (NĐ 161/2026).
 - **Dưỡng sức sau sinh**: 30% mức tham chiếu/ngày (Đ.60 k.3).
 
 ```
 maternity_total = 1.00 * avg_salary_6m * leave_months + 2 * reference_wage(month_of_birth) * num_children
+paternity_leave = leave_days * (1.00 * avg_salary_6m / 24)
 ```
+
+### TC-PAT-01 (đã khóa)
+
+Bình quân 6 tháng của chồng = 18.000.000; vợ sinh thường 1 con: 
+5 × (18e6 / 24) = **3.750.000**.
+
+### TC-PAT-02
+
+Bình quân 10.000.000; vợ sinh phải phẫu thuật: 7 × (10e6 / 24) = **2.916.667**.
 
 ### TC-MAT-01 (đã khóa)
 

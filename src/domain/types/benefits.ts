@@ -95,6 +95,29 @@ export type MaternityBreakdown = {
   legalSources: string[];
 };
 
+export type PaternityLeaveInput = {
+  avgSalary6m: number;
+  /** YYYY-MM-DD ngày vợ sinh. */
+  birthDate: string;
+  childOrder: ChildOrder;
+  /** Số con trong lần sinh. */
+  numChildren: number;
+  /** Phẫu thuật hoặc sinh dưới 32 tuần tuổi. */
+  surgeryOrPreterm: boolean;
+};
+
+export type PaternityLeaveBreakdown = {
+  leaveDays: number;
+  dailyRate: number;
+  amount: number;
+  leaveExplanation: string;
+  formula: string;
+  explanations: string[];
+  checklist: EligibilityChecklistItem[];
+  rulesetId: string;
+  legalSources: string[];
+};
+
 export type SickLeaveHazard = "normal" | "hazardous";
 
 export type SickLeaveInput = {

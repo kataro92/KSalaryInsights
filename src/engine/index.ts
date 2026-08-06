@@ -38,6 +38,10 @@ export {
   calculateMaternity,
   resolveMaternityLeaveMonths,
 } from "@/src/engine/maternity";
+export {
+  calculatePaternityLeave,
+  resolvePaternityLeaveDays,
+} from "@/src/engine/paternityLeave";
 export { calculateSickLeave } from "@/src/engine/sickLeave";
 export { calcLumpSum, roundContributionYears } from "@/src/engine/bhxhLumpSum";
 export {
@@ -58,4 +62,5 @@ export type {
 } from "@/src/engine/netToGross";
 export type { CompareRulesetsInput } from "@/src/engine/compareRulesets";
 export type { LeaveMonthsResult } from "@/src/engine/maternity";
+export type { PaternityLeaveDaysResult } from "@/src/engine/paternityLeave";
 export type { PensionRateResult } from "@/src/engine/pensionEstimate";

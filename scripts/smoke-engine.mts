@@ -8,6 +8,7 @@ import { calcSeverancePay, roundServiceYears } from '../src/engine/severance.ts'
 import { calcUnemploymentBenefit } from '../src/engine/unemploymentBenefit.ts';
 import { getRuleset } from '../src/engine/rulesetLoader.ts';
 import { calculateMaternity } from '../src/engine/maternity.ts';
+import { calculatePaternityLeave } from '../src/engine/paternityLeave.ts';
 import { calculateSickLeave } from '../src/engine/sickLeave.ts';
 import { calcLumpSum, roundContributionYears } from '../src/engine/bhxhLumpSum.ts';
 import { calcPensionMonthly } from '../src/engine/pensionEstimate.ts';
@@ -304,6 +305,33 @@ const matWarn = calculateMaternity({
   hasMinContribution: false,
 });
 assert(!!matWarn.eligibilityWarning, 'mat warn');
+
+const pat01 = calculatePaternityLeave({
+  avgSalary6m: 18_000_000,
+  birthDate: '2026-08-15',
+  childOrder: 'first',
+  numChildren: 1,
+  surgeryOrPreterm: false,
+});
+assert(pat01.leaveDays === 5 && pat01.amount === 3_750_000, `pat01 ${pat01.amount}`);
+
+const pat02 = calculatePaternityLeave({
+  avgSalary6m: 10_000_000,
+  birthDate: '2026-08-15',
+  childOrder: 'first',
+  numChildren: 1,
+  surgeryOrPreterm: true,
+});
+assert(pat02.leaveDays === 7 && pat02.amount === 2_916_667, `pat02 ${pat02.amount}`);
+
+const patSecond = calculatePaternityLeave({
+  avgSalary6m: 18_000_000,
+  birthDate: '2026-08-15',
+  childOrder: 'second',
+  numChildren: 1,
+  surgeryOrPreterm: false,
+});
+assert(patSecond.leaveDays === 10, `patSecond ${patSecond.leaveDays}`);
 
 const sick01 = calculateSickLeave({
   salaryLastMonth: 12_000_000,

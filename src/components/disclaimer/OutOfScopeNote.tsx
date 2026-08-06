@@ -11,8 +11,8 @@ export function OutOfScopeNote() {
     <ColorBlock tone="muted" accessibilityLabel="Phạm vi chưa hỗ trợ V2">
       <Text style={styles.title}>Chưa hỗ trợ (V2)</Text>
       <Text style={styles.body}>
-        Nhận nuôi, mang thai hộ, chế độ nghỉ của chồng khi vợ sinh (Đ.53). Sẽ bổ
-        sung ở phiên bản sau. Ước tính hiện tại chỉ cho lao động nữ sinh con.
+        Nhận nuôi và mang thai hộ sẽ bổ sung ở phiên bản sau. Chế độ nghỉ của
+        chồng khi vợ sinh đã có máy tính riêng trong hub quyền lợi.
       </Text>
     </ColorBlock>
   );
