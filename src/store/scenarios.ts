@@ -1,12 +1,35 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import type { CalculationMode, RegionCode } from "@/src/domain/types/salary";
+import type { InsuranceBasePreset } from "@/src/domain/types/insuranceBase";
+import type {
+  MultiSourceAnnualSummary,
+  MultiSourceKind,
+  MultiSourceLine,
+} from "@/src/domain/types/multiSource";
+import {
+  MAX_MULTI_SOURCE_LINES,
+  MULTI_SOURCE_KINDS,
+} from "@/src/domain/types/multiSource";
+import type {
+  OfferCompareInputs,
+  OfferSideInput,
+} from "@/src/domain/types/offerCompare";
+import {
+  insurancePresetFromLegacy,
+  legacyFromInsurancePreset,
+  parseInsurancePreset,
+} from "@/src/engine/insuranceBase";
 import type { OtDayType } from "@/src/engine/overtime";
 
 export const SCENARIOS_STORAGE_KEY = "kv.scenarios.v1";
 export const MAX_SCENARIOS = 20;
 
-export type ScenarioKind = "calculator" | "settlement";
+export type ScenarioKind =
+  | "calculator"
+  | "settlement"
+  | "offer_compare"
+  | "multi_source";
 
 export type CalculatorScenarioInputs = {
   mode: CalculationMode;
@@ -16,8 +39,13 @@ export type CalculatorScenarioInputs = {
   taxYear: number;
   month: number;
   numDependents: number;
+  /** F022 insurance base preset. */
+  insurance: InsuranceBasePreset;
+  /**
+   * @deprecated Prefer `insurance`. Kept for older saves / migration.
+   */
   customBh: boolean;
-  /** Insurance base when customBh; otherwise ignored. */
+  /** @deprecated Prefer `insurance`. */
   bhAmount: number | null;
   bonus: number;
   otHours: number;
@@ -37,6 +65,11 @@ export type SettlementScenarioInputs = {
   casualGross: number;
   casualWithheld: number;
 };
+
+export type OfferCompareScenarioInputs = OfferCompareInputs;
+
+/** F020 multi-source annual summary payload. */
+export type MultiSourceScenarioInputs = MultiSourceAnnualSummary;
 
 type ScenarioBase = {
   id: string;
@@ -59,7 +92,23 @@ export type SavedSettlementScenario = ScenarioBase & {
   lastDelta?: number;
 };
 
-export type SavedScenario = SavedCalculatorScenario | SavedSettlementScenario;
+export type SavedOfferCompareScenario = ScenarioBase & {
+  kind: "offer_compare";
+  inputs: OfferCompareScenarioInputs;
+  lastDeltaNet?: number;
+};
+
+export type SavedMultiSourceScenario = ScenarioBase & {
+  kind: "multi_source";
+  inputs: MultiSourceScenarioInputs;
+  lastDelta?: number;
+};
+
+export type SavedScenario =
+  | SavedCalculatorScenario
+  | SavedSettlementScenario
+  | SavedOfferCompareScenario
+  | SavedMultiSourceScenario;
 
 export type ScenarioStore = {
   schemaVersion: 1;
@@ -124,8 +173,17 @@ export function parseCalculatorInputs(
     return null;
   }
   if (!isNonNegInt(o.numDependents) || o.numDependents > 99) return null;
-  if (typeof o.customBh !== "boolean") return null;
-  if (o.bhAmount != null && !isNonNegInt(o.bhAmount)) return null;
+  let insurance = parseInsurancePreset(o.insurance);
+  if (!insurance) {
+    // Legacy: customBh + bhAmount
+    if (typeof o.customBh !== "boolean") return null;
+    if (o.bhAmount != null && !isNonNegInt(o.bhAmount)) return null;
+    insurance = insurancePresetFromLegacy(
+      o.customBh,
+      o.bhAmount == null ? null : o.bhAmount
+    );
+  }
+  const legacy = legacyFromInsurancePreset(insurance);
   if (!isNonNegInt(o.bonus)) return null;
   if (
     typeof o.otHours !== "number" ||
@@ -145,8 +203,9 @@ export function parseCalculatorInputs(
     taxYear: o.taxYear,
     month: o.month,
     numDependents: o.numDependents,
-    customBh: o.customBh,
-    bhAmount: o.bhAmount == null ? null : o.bhAmount,
+    insurance,
+    customBh: legacy.customBh,
+    bhAmount: legacy.bhAmount,
     bonus: o.bonus,
     otHours: o.otHours,
     otDayType: o.otDayType,
@@ -190,6 +249,139 @@ export function parseSettlementInputs(
   };
 }
 
+function parseOfferSideInput(raw: unknown): OfferSideInput | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  if (!isMode(o.mode)) return null;
+  if (!isPositiveInt(o.amount)) return null;
+  const insurance = parseInsurancePreset(o.insurance);
+  if (!insurance) return null;
+  return { mode: o.mode, amount: o.amount, insurance };
+}
+
+export function parseOfferCompareInputs(
+  raw: unknown
+): OfferCompareScenarioInputs | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  if (!o.shared || typeof o.shared !== "object") return null;
+  const s = o.shared as Record<string, unknown>;
+  if (typeof s.taxYear !== "number" || !Number.isInteger(s.taxYear))
+    return null;
+  if (s.taxYear < 2000 || s.taxYear > 2100) return null;
+  if (
+    typeof s.month !== "number" ||
+    !Number.isInteger(s.month) ||
+    s.month < 1 ||
+    s.month > 12
+  ) {
+    return null;
+  }
+  if (!isRegion(s.region)) return null;
+  if (!isNonNegInt(s.numDependents) || s.numDependents > 20) return null;
+  const offerA = parseOfferSideInput(o.offerA);
+  const offerB = parseOfferSideInput(o.offerB);
+  if (!offerA || !offerB) return null;
+  return {
+    shared: {
+      taxYear: s.taxYear,
+      month: s.month,
+      region: s.region,
+      numDependents: s.numDependents,
+    },
+    offerA,
+    offerB,
+  };
+}
+
+const MULTI_KIND_SET = new Set<string>(MULTI_SOURCE_KINDS);
+
+function parseMultiSourceLine(raw: unknown): MultiSourceLine | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  if (typeof o.id !== "string" || !o.id) return null;
+  if (o.kind === "crypto" || o.kind === "digital_asset" || o.kind === "coin") {
+    return null;
+  }
+  if (typeof o.kind !== "string" || !MULTI_KIND_SET.has(o.kind)) return null;
+  if (typeof o.label !== "string" || !o.label.trim()) return null;
+  if (!isNonNegInt(o.revenueOrIncome)) return null;
+  if (!isNonNegInt(o.estimatedVat)) return null;
+  if (!isNonNegInt(o.estimatedPit)) return null;
+  if (!isNonNegInt(o.estimatedOtherTax)) return null;
+  if (!isNonNegInt(o.estimatedTaxTotal)) return null;
+  if (!isNonNegInt(o.withheld)) return null;
+  if (!Array.isArray(o.notes) || !o.notes.every((n) => typeof n === "string"))
+    return null;
+  if (
+    !Array.isArray(o.legalSources) ||
+    !o.legalSources.every((n) => typeof n === "string")
+  ) {
+    return null;
+  }
+  if (typeof o.excluded !== "boolean") return null;
+  let sourceRef: MultiSourceLine["sourceRef"];
+  if (o.sourceRef != null) {
+    if (typeof o.sourceRef !== "object") return null;
+    const sr = o.sourceRef as Record<string, unknown>;
+    if (sr.scenarioId != null && typeof sr.scenarioId !== "string") return null;
+    if (sr.calculator != null && typeof sr.calculator !== "string") return null;
+    sourceRef = {
+      scenarioId:
+        typeof sr.scenarioId === "string" ? sr.scenarioId : undefined,
+      calculator:
+        typeof sr.calculator === "string" ? sr.calculator : undefined,
+    };
+  }
+  return {
+    id: o.id,
+    kind: o.kind as MultiSourceKind,
+    label: o.label.trim().slice(0, 80),
+    revenueOrIncome: o.revenueOrIncome,
+    estimatedVat: o.estimatedVat,
+    estimatedPit: o.estimatedPit,
+    estimatedOtherTax: o.estimatedOtherTax,
+    estimatedTaxTotal: o.estimatedTaxTotal,
+    withheld: o.withheld,
+    notes: o.notes as string[],
+    legalSources: o.legalSources as string[],
+    sourceRef,
+    excluded: o.excluded,
+  };
+}
+
+export function parseMultiSourceInputs(
+  raw: unknown
+): MultiSourceScenarioInputs | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  if (typeof o.id !== "string" || !o.id) return null;
+  if (typeof o.taxYear !== "number" || !Number.isInteger(o.taxYear))
+    return null;
+  if (o.taxYear < 2000 || o.taxYear > 2100) return null;
+  if (o.region != null && !isRegion(o.region)) return null;
+  if (o.name != null && typeof o.name !== "string") return null;
+  if (typeof o.updatedAt !== "string" || !o.updatedAt) return null;
+  if (o.createdAt != null && typeof o.createdAt !== "string") return null;
+  if (!Array.isArray(o.lines) || o.lines.length > MAX_MULTI_SOURCE_LINES)
+    return null;
+  const lines: MultiSourceLine[] = [];
+  for (const item of o.lines) {
+    const line = parseMultiSourceLine(item);
+    if (!line) return null;
+    lines.push(line);
+  }
+  return {
+    id: o.id,
+    taxYear: o.taxYear,
+    region: o.region as RegionCode | undefined,
+    name: typeof o.name === "string" ? o.name.trim().slice(0, 80) : undefined,
+    createdAt: typeof o.createdAt === "string" ? o.createdAt : undefined,
+    updatedAt: o.updatedAt,
+    lines,
+  };
+}
+
 export function parseSavedScenario(raw: unknown): SavedScenario | null {
   if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
@@ -229,6 +421,30 @@ export function parseSavedScenario(raw: unknown): SavedScenario | null {
     return { ...base, kind: "settlement", inputs, lastDelta };
   }
 
+  if (o.kind === "offer_compare") {
+    const inputs = parseOfferCompareInputs(o.inputs);
+    if (!inputs) return null;
+    const lastDeltaNet =
+      o.lastDeltaNet == null
+        ? undefined
+        : isFiniteNumber(o.lastDeltaNet)
+        ? o.lastDeltaNet
+        : undefined;
+    return { ...base, kind: "offer_compare", inputs, lastDeltaNet };
+  }
+
+  if (o.kind === "multi_source") {
+    const inputs = parseMultiSourceInputs(o.inputs);
+    if (!inputs) return null;
+    const lastDelta =
+      o.lastDelta == null
+        ? undefined
+        : isFiniteNumber(o.lastDelta)
+        ? o.lastDelta
+        : undefined;
+    return { ...base, kind: "multi_source", inputs, lastDelta };
+  }
+
   return null;
 }
 
@@ -265,7 +481,19 @@ export function defaultScenarioName(
   kind: "settlement"
 ): string;
 export function defaultScenarioName(
-  inputs: CalculatorScenarioInputs | SettlementScenarioInputs,
+  inputs: OfferCompareScenarioInputs,
+  kind: "offer_compare"
+): string;
+export function defaultScenarioName(
+  inputs: MultiSourceScenarioInputs,
+  kind: "multi_source"
+): string;
+export function defaultScenarioName(
+  inputs:
+    | CalculatorScenarioInputs
+    | SettlementScenarioInputs
+    | OfferCompareScenarioInputs
+    | MultiSourceScenarioInputs,
   kind: ScenarioKind = "calculator"
 ): string {
   if (kind === "settlement") {
@@ -274,6 +502,21 @@ export function defaultScenarioName(
     return `QT ${compactMoneyLabel(i.monthlyGross)} ×${i.monthsWorked} · ${
       i.taxYear
     }${casual}`;
+  }
+  if (kind === "offer_compare") {
+    const i = inputs as OfferCompareScenarioInputs;
+    const label = (side: OfferSideInput) =>
+      `${side.mode === "gross-to-net" ? "G" : "N"}${compactMoneyLabel(
+        side.amount
+      )}`;
+    return `Offer ${label(i.offerA)} vs ${label(i.offerB)} · T${i.shared.month}/${
+      i.shared.taxYear
+    }`;
+  }
+  if (kind === "multi_source") {
+    const i = inputs as MultiSourceScenarioInputs;
+    const active = i.lines.filter((l) => !l.excluded).length;
+    return `Tổng hợp ${active} nguồn · ${i.taxYear}`;
   }
   const i = inputs as CalculatorScenarioInputs;
   const modeLabel = i.mode === "gross-to-net" ? "Gross" : "Net";
@@ -330,6 +573,22 @@ export type SaveScenarioInput =
       lastDelta?: number;
       id?: string;
       now?: Date;
+    }
+  | {
+      kind: "offer_compare";
+      name?: string;
+      inputs: OfferCompareScenarioInputs;
+      lastDeltaNet?: number;
+      id?: string;
+      now?: Date;
+    }
+  | {
+      kind: "multi_source";
+      name?: string;
+      inputs: MultiSourceScenarioInputs;
+      lastDelta?: number;
+      id?: string;
+      now?: Date;
     };
 
 export async function saveScenario(
@@ -378,6 +637,76 @@ export async function saveScenario(
       kind: "settlement",
       inputs,
       lastDelta: settlementInput.lastDelta,
+    };
+  } else if (kind === "offer_compare") {
+    const offerInput = input as Extract<
+      SaveScenarioInput,
+      { kind: "offer_compare" }
+    >;
+    const inputs = offerCompareInputsSafe(offerInput.inputs);
+    const name = (
+      offerInput.name?.trim() || defaultScenarioName(inputs, "offer_compare")
+    ).slice(0, 80);
+    if (offerInput.id) {
+      const idx = store.scenarios.findIndex((s) => s.id === offerInput.id);
+      if (idx >= 0 && store.scenarios[idx].kind === "offer_compare") {
+        const updated: SavedOfferCompareScenario = {
+          ...store.scenarios[idx],
+          name,
+          inputs,
+          lastDeltaNet: offerInput.lastDeltaNet,
+          updatedAt: nowIso,
+        };
+        const next = [...store.scenarios];
+        next[idx] = updated;
+        const nextStore = { schemaVersion: 1 as const, scenarios: next };
+        await persistStore(nextStore);
+        return { store: nextStore, scenario: updated, replacedOldest: false };
+      }
+    }
+    scenario = {
+      id: newScenarioId(),
+      name,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      kind: "offer_compare",
+      inputs,
+      lastDeltaNet: offerInput.lastDeltaNet,
+    };
+  } else if (kind === "multi_source") {
+    const msInput = input as Extract<
+      SaveScenarioInput,
+      { kind: "multi_source" }
+    >;
+    const inputs = multiSourceInputsSafe(msInput.inputs);
+    const name = (
+      msInput.name?.trim() || defaultScenarioName(inputs, "multi_source")
+    ).slice(0, 80);
+    if (msInput.id) {
+      const idx = store.scenarios.findIndex((s) => s.id === msInput.id);
+      if (idx >= 0 && store.scenarios[idx].kind === "multi_source") {
+        const updated: SavedMultiSourceScenario = {
+          ...store.scenarios[idx],
+          name,
+          inputs,
+          lastDelta: msInput.lastDelta,
+          updatedAt: nowIso,
+        };
+        const next = [...store.scenarios];
+        next[idx] = updated;
+        const nextStore = { schemaVersion: 1 as const, scenarios: next };
+        await persistStore(nextStore);
+        return { store: nextStore, scenario: updated, replacedOldest: false };
+      }
+    }
+    scenario = {
+      id: newScenarioId(),
+      name,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      kind: "multi_source",
+      inputs,
+      lastDelta: msInput.lastDelta,
     };
   } else {
     const calcInput = input as Extract<
@@ -444,6 +773,22 @@ function settlementInputsSafe(
   return parsed;
 }
 
+function offerCompareInputsSafe(
+  inputs: OfferCompareScenarioInputs
+): OfferCompareScenarioInputs {
+  const parsed = parseOfferCompareInputs(inputs);
+  if (!parsed) throw new Error("Invalid offer compare scenario inputs");
+  return parsed;
+}
+
+function multiSourceInputsSafe(
+  inputs: MultiSourceScenarioInputs
+): MultiSourceScenarioInputs {
+  const parsed = parseMultiSourceInputs(inputs);
+  if (!parsed) throw new Error("Invalid multi-source scenario inputs");
+  return parsed;
+}
+
 export async function deleteScenario(id: string): Promise<ScenarioStore> {
   const { store } = await loadScenarios();
   const nextStore = {
@@ -480,6 +825,22 @@ export function formatScenarioShareText(args: {
   delta?: number;
   brand?: string;
 }): string;
+export function formatScenarioShareText(args: {
+  name?: string;
+  kind: "offer_compare";
+  inputs: OfferCompareScenarioInputs;
+  deltaNet?: number | null;
+  brand?: string;
+}): string;
+export function formatScenarioShareText(args: {
+  name?: string;
+  kind: "multi_source";
+  inputs: MultiSourceScenarioInputs;
+  estimatedTax?: number;
+  withheld?: number;
+  delta?: number;
+  brand?: string;
+}): string;
 export function formatScenarioShareText(
   args:
     | {
@@ -496,8 +857,24 @@ export function formatScenarioShareText(
         delta?: number;
         brand?: string;
       }
+    | {
+        name?: string;
+        kind: "offer_compare";
+        inputs: OfferCompareScenarioInputs;
+        deltaNet?: number | null;
+        brand?: string;
+      }
+    | {
+        name?: string;
+        kind: "multi_source";
+        inputs: MultiSourceScenarioInputs;
+        estimatedTax?: number;
+        withheld?: number;
+        delta?: number;
+        brand?: string;
+      }
 ): string {
-  const brand = args.brand ?? "KVSalaryTools";
+  const brand = args.brand ?? "KSalaryInsights";
   if (args.kind === "settlement") {
     const i = args.inputs;
     const lines = [
@@ -518,6 +895,58 @@ export function formatScenarioShareText(
     if (args.delta != null)
       lines.push(`Ước: ${formatDeltaPreview(args.delta)}`);
     lines.push(` - ước tính offline · ${brand}`);
+    return lines.join("\n");
+  }
+
+  if (args.kind === "offer_compare") {
+    const i = args.inputs;
+    const sideLine = (label: string, side: OfferSideInput) =>
+      `${label}: ${
+        side.mode === "gross-to-net" ? "Gross" : "Net"
+      } ${side.amount.toLocaleString("vi-VN")} ₫`;
+    const lines = [
+      args.name ? `${args.name}` : "So sánh hai offer",
+      sideLine("A", i.offerA),
+      sideLine("B", i.offerB),
+      `Năm ${i.shared.taxYear} · T${i.shared.month} · vùng ${i.shared.region} · NPT ${i.shared.numDependents}`,
+    ];
+    if (args.deltaNet != null) {
+      lines.push(
+        `ΔNet (B−A): ${args.deltaNet.toLocaleString("vi-VN")} ₫ (ước)`
+      );
+    }
+    lines.push(` - ước tính offline · không tư vấn chọn · ${brand}`);
+    return lines.join("\n");
+  }
+
+  if (args.kind === "multi_source") {
+    const i = args.inputs;
+    const active = i.lines.filter((l) => !l.excluded);
+    const lines = [
+      args.name ? `${args.name}` : "Tổng hợp QT đa nguồn",
+      `Năm ${i.taxYear} · ${active.length} dòng nguồn (ước)`,
+    ];
+    for (const line of active.slice(0, 6)) {
+      lines.push(
+        `· ${line.label}: thuế ${line.estimatedTaxTotal.toLocaleString(
+          "vi-VN"
+        )} ₫`
+      );
+    }
+    if (args.estimatedTax != null) {
+      lines.push(
+        `Tổng thuế ước: ${args.estimatedTax.toLocaleString("vi-VN")} ₫`
+      );
+    }
+    if (args.withheld != null) {
+      lines.push(`Đã nộp: ${args.withheld.toLocaleString("vi-VN")} ₫`);
+    }
+    if (args.delta != null) {
+      lines.push(`Chênh (ước): ${formatDeltaPreview(args.delta)}`);
+    }
+    lines.push(
+      ` - ước tính offline · không thay tờ khai · không ước coin · ${brand}`
+    );
     return lines.join("\n");
   }
 
@@ -546,6 +975,23 @@ export function scenarioRowMeta(scenario: SavedScenario): string {
     const base = `${formatVndCompact(i.monthlyGross)} ×${i.monthsWorked} · ${
       i.taxYear
     }`;
+    if (scenario.lastDelta == null) return base;
+    return `${base} · ${formatDeltaPreview(scenario.lastDelta)}`;
+  }
+  if (scenario.kind === "offer_compare") {
+    const i = scenario.inputs;
+    const base = `A ${formatVndCompact(i.offerA.amount)} vs B ${formatVndCompact(
+      i.offerB.amount
+    )}`;
+    if (scenario.lastDeltaNet == null) return base;
+    const d = scenario.lastDeltaNet;
+    const sign = d > 0 ? "+" : "";
+    return `${base} · ΔNet ${sign}${formatVndCompact(d)}`;
+  }
+  if (scenario.kind === "multi_source") {
+    const i = scenario.inputs;
+    const n = i.lines.filter((l) => !l.excluded).length;
+    const base = `${n} nguồn · ${i.taxYear}`;
     if (scenario.lastDelta == null) return base;
     return `${base} · ${formatDeltaPreview(scenario.lastDelta)}`;
   }

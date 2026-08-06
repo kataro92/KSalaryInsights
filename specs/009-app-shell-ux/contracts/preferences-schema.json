@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://kvsalarytools.local/schemas/preferences-v1.json",
+  "$id": "https://ksalaryinsights.local/schemas/preferences-v1.json",
   "title": "AppPreferences",
   "type": "object",
   "additionalProperties": false,

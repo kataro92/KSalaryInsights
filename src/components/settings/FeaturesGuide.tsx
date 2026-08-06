@@ -11,7 +11,7 @@ import { radii, space, typography } from "@/src/theme/tokens";
 import { useThemedStyles } from "@/src/theme/useThemedStyles";
 
 /**
- * Settings guide. What the app does, why it helps, and which tools exist.
+ * Settings guide. Situations, benefits, and tools.
  */
 export function FeaturesGuide() {
   const { locale, t } = useI18n();
@@ -22,6 +22,20 @@ export function FeaturesGuide() {
   return (
     <View style={styles.root} accessibilityRole="summary">
       <Text style={styles.intro}>{copy.intro}</Text>
+
+      <Text style={styles.groupTitle}>{copy.situationsTitle}</Text>
+      <View style={styles.situations}>
+        {copy.situations.map((s) => (
+          <View
+            key={s.id}
+            style={styles.situationCard}
+            accessibilityLabel={`${s.title}. ${s.body}`}
+          >
+            <Text style={styles.situationTitle}>{s.title}</Text>
+            <Text style={styles.situationBody}>{s.body}</Text>
+          </View>
+        ))}
+      </View>
 
       <Text style={styles.groupTitle}>{copy.benefitsTitle}</Text>
       <View style={styles.benefits}>
@@ -76,6 +90,26 @@ function makeStyles({ colors, isDark }: ThemeContextValue) {
       textTransform: "uppercase",
       color: colors.foregroundMuted,
       marginTop: space[2],
+    },
+    situations: {
+      gap: space[2],
+    },
+    situationCard: {
+      backgroundColor: colors.primarySoft,
+      borderRadius: radii.lg,
+      padding: space[4],
+      gap: space[1],
+    },
+    situationTitle: {
+      fontFamily: typography.fontFamily.bold,
+      fontSize: 15,
+      color: colors.foreground,
+    },
+    situationBody: {
+      fontFamily: typography.fontFamily.regular,
+      fontSize: 13,
+      lineHeight: 19,
+      color: colors.foregroundMuted,
     },
     benefits: {
       gap: space[2],

@@ -2,7 +2,7 @@
 
 - **Status**: Accepted (surfaces superseded by [0006](./0006-pastel-raster-mascot.md) pastel refresh; semantic roles remain) 
 - **Date**: 2026-08-05 
-- **Context**: AAA design upgrade (Slice 1). Stock Tailwind Blue 500 / Emerald 500 made KVSalaryTools visually interchangeable with generic SaaS starters. Flat Design philosophy stays; colors must be ownable.
+- **Context**: AAA design upgrade (Slice 1). Stock Tailwind Blue 500 / Emerald 500 made KSalaryInsights visually interchangeable with generic SaaS starters. Flat Design philosophy stays; colors must be ownable.
 
 ## Decision
 

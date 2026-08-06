@@ -134,7 +134,7 @@ const vi: Dict = {
   "settings.about": "Về chúng tôi",
   "settings.features": "Tính năng & công cụ",
   "settings.featuresHint":
-    "Những gì app làm được và vì sao hữu ích khi ước lương · thuế · BH.",
+    "Tình huống dùng app, lợi ích, và từng công cụ ước lương · thuế · BH.",
   "settings.featuresFootnote":
     "Mọi kết quả chỉ là ước tính tham khảo, không thay bảng lương, tờ khai hay quyết định của cơ quan thuế / BHXH.",
   "settings.region": "Vùng lương tối thiểu",
@@ -160,7 +160,7 @@ const vi: Dict = {
     "Mọi tính toán và kịch bản chỉ lưu trên máy bạn. Không cần CCCD, MST hay sổ BHXH. Không gửi lương hay thuế lên máy chủ. Mục cập nhật chỉ tải mức thuế · BH công khai.",
   "settings.disclaimer": "Lưu ý",
   "settings.disclaimerBody":
-    "KVSalaryTools chỉ ước tính. Kết quả không thay thế tư vấn pháp lý, kế toán hay quyết định của cơ quan thuế / BHXH.",
+    "KSalaryInsights chỉ ước tính. Kết quả không thay thế tư vấn pháp lý, kế toán hay quyết định của cơ quan thuế / BHXH.",
   "settings.reset": "Đặt lại",
   "settings.resetDefaults": "Về mặc định",
   "settings.replayOnboarding": "Xem lại hướng dẫn",
@@ -201,7 +201,7 @@ const vi: Dict = {
   "other.pit": "TNCN",
   "about.role": "Trợ lý trong app",
   "about.body":
-    "KVSalaryTools ước tính lương Gross–Net, quyết toán thuế và quyền lợi BHXH ngay trên máy bạn. Từng khoản trừ đều hiện rõ. Ngài Miu hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
+    "KSalaryInsights giúp bạn so offer Gross–Net, đối chiếu bảng lương và kiểm chứng mức BH · thuế theo năm — ngay trên máy bạn. Từng khoản trừ hiện rõ. Ngài Miu hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
   "brand.tagline": "Ước tính lương · thuế · bảo hiểm",
   "brand.guideLine": "Ngài Miu sẵn sàng hướng dẫn bạn",
   "onboarding.skip": "Bỏ qua",
@@ -211,10 +211,10 @@ const vi: Dict = {
     "Tính toán lưu trên máy bạn. Không cần CCCD, MST hay sổ BHXH.",
   "onboarding.s1.title": "Xin chào, tôi là Ngài Miu",
   "onboarding.s1.body":
-    "Tôi giúp bạn ước tính lương, thuế và quyền lợi BHXH từng bước, rõ ràng.",
+    "Tôi giúp bạn ước lương, thuế và BHXH khi nhận offer, đối chiếu bảng lương, hoặc khi mức đổi theo năm.",
   "onboarding.s2.title": "Từ Gross sang Net",
   "onboarding.s2.body":
-    "Tính offline theo mức thuế · BH năm 2025 và 2026. Mỗi khoản trừ hiện riêng, không bị ẩn.",
+    "Quy offer về cùng một mặt, chỉnh mức đóng BH, xem thực nhận trước khi ký. Mỗi khoản trừ hiện riêng.",
   "onboarding.s3.title": "Quyết toán thuế năm",
   "onboarding.s3.body":
     "So thuế ước tính với số đã khấu trừ. Có hướng dẫn nên ủy quyền hay tự quyết toán.",
@@ -263,7 +263,7 @@ const en: Dict = {
   "settings.about": "About",
   "settings.features": "Features & tools",
   "settings.featuresHint":
-    "What the app covers and why it helps for pay · tax · insurance estimates.",
+    "When to use the app, key benefits, and each pay · tax · insurance tool.",
   "settings.featuresFootnote":
     "All results are offline estimates, not a payslip, tax return, or official SI/tax decision.",
   "settings.region": "Default wage region",
@@ -290,7 +290,7 @@ const en: Dict = {
     "Calculations, scenarios and settings stay on device. No national ID / tax ID / SI book required. Salary data is not uploaded. Ruleset updates only fetch public parameter files.",
   "settings.disclaimer": "Disclaimer",
   "settings.disclaimerBody":
-    "KVSalaryTools is an estimate tool only. Results do not replace legal, accounting or authority decisions.",
+    "KSalaryInsights is an estimate tool only. Results do not replace legal, accounting or authority decisions.",
   "settings.reset": "Reset",
   "settings.resetDefaults": "Reset to defaults",
   "settings.replayOnboarding": "Replay guide with Ngài Miu",
@@ -331,7 +331,7 @@ const en: Dict = {
   "other.pit": "PIT",
   "about.role": "In-app guide assistant",
   "about.body":
-    "KVSalaryTools estimates Gross↔Net pay, annual tax settlement and SI benefits offline, with transparent deductions. Ngài Miu guides; results are not legal advice.",
+    "KSalaryInsights helps you compare Gross–Net offers, check payslips, and verify tax · SI rates by year — offline on your device. Deductions stay transparent. Ngài Miu guides; results are not legal advice.",
   "brand.tagline": "Estimate pay · tax · insurance",
   "brand.guideLine": "Ngài Miu is ready to guide you",
   "onboarding.skip": "Skip",
@@ -341,10 +341,10 @@ const en: Dict = {
     "Calculations stay on device. No national ID / tax ID / SI book required.",
   "onboarding.s1.title": "Hello, I am Ngài Miu",
   "onboarding.s1.body":
-    "Your guide in KVSalaryTools. I walk you through pay, tax and SI benefit estimates.",
+    "I help you estimate pay, tax and SI when comparing offers, checking a payslip, or when rates change by year.",
   "onboarding.s2.title": "Gross ↔ Net",
   "onboarding.s2.body":
-    "Offline pay estimates with 2025/2026 rulesets. Transparent deduction breakdown.",
+    "Put offers on the same footing, set the SI base, see take-home before you sign. Each deduction stays visible.",
   "onboarding.s3.title": "Annual tax settlement",
   "onboarding.s3.body":
     "Compare withheld tax with estimated liability. Includes a filing wizard.",

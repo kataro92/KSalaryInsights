@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "KVSalaryTools",
-    "slug": "kvsalarytools",
+    "name": "KSalaryInsights",
+    "slug": "ksalaryinsights",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "kvsalarytools",
+    "scheme": "ksalaryinsights",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kataro92.ksalaryinsights"
     },
     "android": {
       "adaptiveIcon": {

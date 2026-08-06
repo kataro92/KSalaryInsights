@@ -1,10 +1,10 @@
-# Store listing kit. KVSalaryTools
+# Store listing kit. KSalaryInsights
 
 ## Brand (ADR 0007)
 
 | Field | Value |
 |-------|--------|
-| Name | KVSalaryTools |
+| Name | KSalaryInsights |
 | Subtitle / short | Ước tính lương · thuế · BHXH offline |
 | Assistant | Ngài Miu. hướng dẫn breakdown & disclaimer |
 | Author | Phạm Huy Đức · kataro92@gmail.com |
@@ -28,7 +28,8 @@ Save files under [`captures/`](./captures/) using the names below.
 
 ```bash
 # Prefer production Metro so Expo overlays are quieter
-npx expo start --ios --no-dev --minify
+npm run ios:release
+# hoặc: npx expo start --ios --no-dev --minify
 
 # Or batch-capture + scrub Expo FAB:
 bash scripts/capture-screenshots.sh
@@ -45,7 +46,7 @@ Full bilingual listing: [`listing-copy.md`](./listing-copy.md).
 Ước tính Gross↔Net, quyết toán thuế và quyền lợi BHXH. offline trên thiết bị.
 
 **Full description opening (vi)** 
-KVSalaryTools giúp bạn xem rõ từng khoản trừ lương và thuế theo ruleset năm. Ngài Miu hướng dẫn từng bước; tính toán lưu cục bộ. không yêu cầu CCCD / MST.
+KSalaryInsights giúp bạn xem rõ từng khoản trừ lương và thuế theo ruleset năm. Ngài Miu hướng dẫn từng bước; tính toán lưu cục bộ. không yêu cầu CCCD / MST.
 
 ## Assets
 

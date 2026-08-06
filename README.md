@@ -1,4 +1,4 @@
-# KVSalaryTools
+# KSalaryInsights
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Expo](https://img.shields.io/badge/Expo-~57-000.svg)](https://expo.dev/)
@@ -8,55 +8,69 @@
 
 > Kết quả chỉ mang tính tham khảo. Không thay thế tư vấn pháp lý, kế toán hay quyết định của cơ quan thuế / BHXH.
 
+## Dành cho ai?
+
+App hữu ích khi bạn gặp các tình huống sau:
+
+| Tình huống | App giúp gì |
+|------------|-------------|
+| **So sánh offer Gross / Net** | Nhà tuyển dụng lúc nói Gross, lúc nói Net; đóng BH theo lương cơ bản, một phần hoặc full. Offer 28tr Net và 32tr Gross không so được nếu chưa quy cùng một mặt — đổi Gross ↔ Net, chỉnh mức BH (full / % HĐ / cố định), hoặc mở **So 2 offer**. |
+| **Bảng lương thấp hơn mức đã nghe** | Công ty báo cao, cuối tháng nhận ít hơn mà không rõ trừ vì BH, GTGC hay thuế. Tính lại, tách từng dòng, đối chiếu phiếu lương; lưu kịch bản để lần chuyển việc sau rõ hơn. |
+| **Mức BH · thuế đổi hàng năm** | Trần BH, GTGC, biểu thuế đổi theo năm (vd. 2025 → 2026). Không cần nghiệp vụ kế toán: chọn năm thuế, xem chênh Net / thuế để tự kiểm chứng mức công ty áp dụng. |
+| **Trước mùa quyết toán** | Ước hoàn / nộp thêm so với đã khấu trừ; wizard gợi ý ủy quyền công ty hay tự nộp. |
+| **Nghỉ việc, thai sản, thất nghiệp…** | Ước trợ cấp thôi việc, thất nghiệp, thai sản, ốm đau; so hưu với BHXH một lần — mỗi công cụ có điều kiện và trần. |
+| **Thu nhập ngoài lương** | Cho thuê, hộ KD / freelancer, chứng khoán, ESOP, vãng lai: ước GTGT / TNCN tách dòng. **Không** ước thuế coin / tài sản mã hóa. |
+| **Tổng hợp QT đa nguồn** | Một bảng năm: lương + các nguồn đã ước → tổng thuế / đã nộp / chênh (không nộp tờ khai). |
+
 ## Tính năng
 
 | Nhóm | Công cụ |
 |------|---------|
-| **Lương** | Gross ↔ Net, thưởng, làm thêm giờ, GTGC / NPT, so sánh biểu 2025 / 2026, lưu kịch bản |
-| **Quyết toán** | Ước hoàn / nộp thêm, wizard hướng dẫn nộp, banner mùa vụ |
+| **Lương** | Gross ↔ Net, preset mức BH (full / % / cố định), thưởng, OT, GTGC / NPT, so sánh biểu 2025 / 2026, **So 2 offer**, lưu kịch bản |
+| **Quyết toán** | Ước hoàn / nộp thêm, **tổng hợp QT đa nguồn**, wizard hướng dẫn nộp, banner mùa vụ |
 | **Quyền lợi** | Thai sản, ốm đau, hưu / BHXH một lần, thôi việc, thất nghiệp |
-| **Thu nhập khác** | Cho thuê, hộ kinh doanh, chứng khoán, ESOP, vãng lai |
+| **Thu nhập khác** | Cho thuê, hộ / cá nhân KD, chứng khoán, ESOP, vãng lai (không ước coin) |
 | **Trải nghiệm** | Dark mode (Sáng / Tối / Hệ thống), 7 ngôn ngữ, tips có công thức, cập nhật mức thuế · BH |
 
 ## Ảnh chụp màn hình
 
-Chụp trên iOS Simulator (iPhone), đã loại overlay Expo / Dev Tools.
+Gallery theo **câu chuyện sản phẩm** (có kết quả ước, không chỉ form trống). Chụp viewport iPhone + Simulator; overlay Dev Tools đã loại bỏ khi capture native.
+
+### 1 · Lương Gross → Net (tách khoản trừ)
 
 <p align="center">
-  <img src="docs/screenshots/01-calculator.png" width="180" alt="Tính lương" />
-  <img src="docs/screenshots/03-settlement.png" width="180" alt="Quyết toán" />
-  <img src="docs/screenshots/04-benefits-hub.png" width="180" alt="Quyền lợi" />
-  <img src="docs/screenshots/06-settings.png" width="180" alt="Cài đặt" />
+  <img src="docs/screenshots/01-calculator-net.png" width="200" alt="Net thực nhận sau Gross 30tr" />
+  <img src="docs/screenshots/02-calculator-breakdown.png" width="200" alt="Chi tiết BH GTGC thuế bậc" />
 </p>
+
+### 2 · So 2 offer & quyết toán năm
 
 <p align="center">
-  <img src="docs/screenshots/05-maternity.png" width="140" alt="Thai sản" />
-  <img src="docs/screenshots/07-sick-leave.png" width="140" alt="Ốm đau" />
-  <img src="docs/screenshots/08-severance.png" width="140" alt="Thôi việc" />
-  <img src="docs/screenshots/09-unemployment.png" width="140" alt="Thất nghiệp" />
-  <img src="docs/screenshots/10-retirement.png" width="140" alt="Hưu / BHXH một lần" />
+  <img src="docs/screenshots/03-offer-compare.png" width="200" alt="So 2 offer với ΔNet ΔGross" />
+  <img src="docs/screenshots/04-settlement-refund.png" width="200" alt="Quyết toán ước hoàn thuế" />
+  <img src="docs/screenshots/05-multi-source.png" width="200" alt="Tổng hợp QT đa nguồn" />
 </p>
+
+### 3 · Quyền lợi · thu nhập khác · cài đặt
 
 <p align="center">
-  <img src="docs/screenshots/11-other-income.png" width="160" alt="Thu nhập khác" />
-  <img src="docs/screenshots/12-comparison.png" width="160" alt="So sánh biểu thuế" />
-  <img src="docs/screenshots/13-filing-wizard.png" width="160" alt="Hướng dẫn quyết toán" />
+  <img src="docs/screenshots/06-benefits-hub.png" width="180" alt="Hub quyền lợi BHXH" />
+  <img src="docs/screenshots/07-maternity.png" width="180" alt="Ước thai sản" />
+  <img src="docs/screenshots/08-other-income.png" width="180" alt="Cho thuê nhà ước nhanh" />
+  <img src="docs/screenshots/09-settings.png" width="180" alt="Cài đặt và giới thiệu tính năng" />
 </p>
 
-| File | Màn hình |
-|------|----------|
-| [`01-calculator.png`](docs/screenshots/01-calculator.png) | Tính lương Gross ↔ Net |
-| [`03-settlement.png`](docs/screenshots/03-settlement.png) | Quyết toán năm |
-| [`04-benefits-hub.png`](docs/screenshots/04-benefits-hub.png) | Hub quyền lợi |
-| [`05-maternity.png`](docs/screenshots/05-maternity.png) | Thai sản |
-| [`06-settings.png`](docs/screenshots/06-settings.png) | Cài đặt · giới thiệu tính năng |
-| [`07-sick-leave.png`](docs/screenshots/07-sick-leave.png) | Ốm đau |
-| [`08-severance.png`](docs/screenshots/08-severance.png) | Thôi việc / mất việc |
-| [`09-unemployment.png`](docs/screenshots/09-unemployment.png) | Trợ cấp thất nghiệp |
-| [`10-retirement.png`](docs/screenshots/10-retirement.png) | Hưu / BHXH một lần |
-| [`11-other-income.png`](docs/screenshots/11-other-income.png) | Thu nhập khác |
-| [`12-comparison.png`](docs/screenshots/12-comparison.png) | So sánh 2025 vs 2026 |
-| [`13-filing-wizard.png`](docs/screenshots/13-filing-wizard.png) | Hướng dẫn quyết toán |
+| File | Bạn thấy gì |
+|------|-------------|
+| [`01-calculator-net.png`](docs/screenshots/01-calculator-net.png) | Gross 30tr → **Net 26,215,000 ₫** + căn cứ BH |
+| [`02-calculator-breakdown.png`](docs/screenshots/02-calculator-breakdown.png) | BHXH/BHYT/BHTN, GTGC, thuế theo bậc |
+| [`03-offer-compare.png`](docs/screenshots/03-offer-compare.png) | Net 28tr vs Gross 32tr → **ΔNet / ΔGross** |
+| [`04-settlement-refund.png`](docs/screenshots/04-settlement-refund.png) | QT năm: **ước hoàn** vs đã khấu trừ |
+| [`05-multi-source.png`](docs/screenshots/05-multi-source.png) | Tổng hợp lương + cho thuê → tổng thuế / đã nộp |
+| [`06-benefits-hub.png`](docs/screenshots/06-benefits-hub.png) | Thai sản, ốm đau, hưu, thôi việc, thất nghiệp |
+| [`07-maternity.png`](docs/screenshots/07-maternity.png) | Ước chế độ thai sản + trợ cấp một lần |
+| [`08-other-income.png`](docs/screenshots/08-other-income.png) | Cho thuê dưới ngưỡng: thuế 0 + nhắc kê khai |
+| [`09-settings.png`](docs/screenshots/09-settings.png) | Giới thiệu tính năng, ngôn ngữ, giao diện |
 
 ## Yêu cầu
 
@@ -67,9 +81,10 @@ Chụp trên iOS Simulator (iPhone), đã loại overlay Expo / Dev Tools.
 ## Cài đặt & chạy
 
 ```bash
-cd kvsalarytools
+cd ksalaryinsights
 npm install
 npx expo start
+# hoặc: npm start
 ```
 
 Mở trên iOS Simulator:
@@ -84,6 +99,28 @@ Android:
 npx expo start --android
 ```
 
+### Release / production Metro
+
+Chạy bundler ở chế độ release (`--no-dev --minify`) — gần store build hơn, ít overlay Dev Tools; hữu ích khi chụp screenshot hoặc kiểm tra performance:
+
+```bash
+npm run start:release
+# tương đương: npx expo start --no-dev --minify
+```
+
+iOS / Android với cùng cấu hình:
+
+```bash
+npm run ios:release      # npx expo start --ios --no-dev --minify
+npm run android:release  # npx expo start --android --no-dev --minify
+```
+
+Native rebuild (dev client / prebuild đã có `ios/`):
+
+```bash
+npm run ios
+npm run android
+```
 ## Kiểm thử
 
 ```bash
@@ -118,21 +155,23 @@ docs/screenshots/    # Ảnh chụp README
 | Store listing | [docs/store/README.md](docs/store/README.md) |
 | Constitution | [.specify/memory/constitution.md](.specify/memory/constitution.md) |
 
-## Chụp lại ảnh (Simulator, không Dev Tools)
+## Chụp lại ảnh (có kết quả, ít Dev Tools)
 
 ```bash
-# Metro production giúp giảm overlay; cần Expo Go + Simulator đã boot
-npx expo start --ios --no-dev --minify
+# Metro release — giảm overlay; Simulator hoặc thiết bị thật đã boot
+npm run ios:release
+# hoặc web mobile viewport: npx expo start --web
 
-# Batch capture + scrub nút Expo FAB (bánh răng xanh)
+# Batch route capture (form trống — dùng làm nền; nên bấm Tính trước khi chụp tay)
 bash scripts/capture-screenshots.sh
 ```
+
+Ưu tiên chụp **sau khi đã tính** (Net hero, ΔNet, ước hoàn, tổng hợp đa nguồn…) rồi đặt file vào [`docs/screenshots/`](docs/screenshots/) theo bảng trên. Xem [`docs/screenshots/README.md`](docs/screenshots/README.md).
 
 Hoặc thủ công: deep link `exp://127.0.0.1:8081/--/<route>` rồi
 `xcrun simctl io booted screenshot …` và `python3 scripts/scrub-expo-fab.py <in> <out>`.
 
-Routes: `(tabs)`, `settlement`, `benefits`, `settings`, `maternity`, `sick-leave`, `severance`, `unemployment`, `retirement`, `other-income`, `comparison`, `filing-wizard`.
-
+Routes: `(tabs)`, `settlement`, `benefits`, `settings`, `maternity`, `sick-leave`, `severance`, `unemployment`, `retirement`, `other-income`, `comparison`, `filing-wizard`, `offer-compare`, `multi-source`.
 ## Tác giả
 
 **Phạm Huy Đức** · [kataro92@gmail.com](mailto:kataro92@gmail.com)

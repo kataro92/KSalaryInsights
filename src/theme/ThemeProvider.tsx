@@ -50,6 +50,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   // Keep Appearance in sync so native chrome (keyboard, etc.) matches when forced.
   useEffect(() => {
+    if (typeof Appearance.setColorScheme !== "function") return;
     if (preference === "system") {
       Appearance.setColorScheme("unspecified");
     } else {

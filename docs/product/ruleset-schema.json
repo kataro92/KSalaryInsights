@@ -1,7 +1,7 @@
 {
  "$schema": "http://json-schema.org/draft-07/schema#",
- "title": "KVSalaryToolsRulesetSchema",
- "description": "JSON Schema kiểm thử tính hợp lệ của bộ tham số luật versioned cho KVSalaryTools",
+ "title": "KSalaryInsightsRulesetSchema",
+ "description": "JSON Schema kiểm thử tính hợp lệ của bộ tham số luật versioned cho KSalaryInsights",
  "type": "object",
  "required": [
  "id",

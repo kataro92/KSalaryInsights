@@ -10,7 +10,7 @@
 
 ### User Story 1 - Mở app qua splash tới khung ứng dụng (Priority: P1)
 
-Minh mở KVSalaryTools lần đầu trong ngày. Anh thấy màn splash ngắn (thương hiệu + Ngài Miu), rồi vào khung ứng dụng có điều hướng rõ ràng tới các công cụ tính và Cài đặt. không bị kẹt, không cần mạng.
+Minh mở KSalaryInsights lần đầu trong ngày. Anh thấy màn splash ngắn (thương hiệu + Ngài Miu), rồi vào khung ứng dụng có điều hướng rõ ràng tới các công cụ tính và Cài đặt. không bị kẹt, không cần mạng.
 
 **Why this priority**: Cửa vào sản phẩm; mọi tính năng 001–008 phụ thuộc khung điều hướng ổn định.
 
@@ -85,7 +85,7 @@ Trên điện thoại và tablet/web hẹp–rộng, khung app dùng token màu/
 
 ### Functional Requirements
 
-- **FR-001**: Hệ thống MUST hiển thị màn splash khi cold start, gồm nhận diện thương hiệu KVSalaryTools và Ngài Miu (pose chào), rồi chuyển vào khung ứng dụng chính.
+- **FR-001**: Hệ thống MUST hiển thị màn splash khi cold start, gồm nhận diện thương hiệu KSalaryInsights và Ngài Miu (pose chào), rồi chuyển vào khung ứng dụng chính.
 - **FR-002**: Splash MUST hoàn tất và nhường chỗ cho khung chính trong thời gian hợp lý (mục tiêu ≤3 giây cold start tới UI tương tác trên thiết bị trung bình); warm start MUST NOT bắt buộc xem lại splash đầy đủ.
 - **FR-003**: Hệ thống MUST cung cấp khung layout ứng dụng với vùng nội dung chính và điều hướng tới: (a) công cụ tính lương / home, (b) Cài đặt; có thể mở rộng thêm mục sau mà không phá layout.
 - **FR-004**: Hệ thống MUST hiển thị trạng thái loading (toàn màn hoặc theo vùng) khi thao tác kéo dài hơn phản hồi tức thì; loading MUST kết thúc khi thao tác xong hoặc lỗi được báo.

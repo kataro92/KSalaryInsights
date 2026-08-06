@@ -2,7 +2,7 @@
 
 - **Status**: Accepted 
 - **Date**: 2026-08-03 
-- **Context**: Ứng dụng KVSalaryTools hỗ trợ người lao động tính thuế, bảo hiểm và lương Gross ↔ Net với yêu cầu bảo mật quyền riêng tư tuyệt đối (Constitution V), hoạt động không cần mạng và đảm bảo độ chính xác ≤ 1 VNĐ.
+- **Context**: Ứng dụng KSalaryInsights hỗ trợ người lao động tính thuế, bảo hiểm và lương Gross ↔ Net với yêu cầu bảo mật quyền riêng tư tuyệt đối (Constitution V), hoạt động không cần mạng và đảm bảo độ chính xác ≤ 1 VNĐ.
 
 ## Decision
 

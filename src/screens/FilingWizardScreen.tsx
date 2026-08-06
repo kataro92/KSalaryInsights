@@ -25,17 +25,23 @@ function paramString(v: string | string[] | undefined): string {
 export function FilingWizardScreen() {
   const params = useLocalSearchParams();
   const year = Number(paramString(params.year) || "2025");
+  const forceSelfFile = paramString(params.hasNonSalary) === "1";
   const styles = useThemedStyles(makeStyles);
   const [answers, setAnswers] = useState<FilingWizardAnswers>({
     hasSingleEmployerFullYear: true,
-    hasOtherIncome: false,
+    hasOtherIncome: forceSelfFile,
     employerOffersAuthorization: true,
   });
   const [submitted, setSubmitted] = useState(false);
 
   const result = useMemo(
-    () => (submitted ? evaluateFilingWizard(answers, year) : null),
-    [submitted, answers, year]
+    () =>
+      submitted
+        ? evaluateFilingWizard(answers, year, {
+            forceSelfFile: forceSelfFile || answers.hasOtherIncome,
+          })
+        : null,
+    [submitted, answers, year, forceSelfFile]
   );
 
   const toggle = (key: keyof FilingWizardAnswers) => {

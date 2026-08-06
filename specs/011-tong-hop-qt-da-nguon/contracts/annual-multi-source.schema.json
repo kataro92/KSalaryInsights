@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ksalaryinsights.local/schemas/annual-multi-source.schema.json",
+  "title": "MultiSourceAnnualSummary",
+  "description": "Local-only annual multi-source tax estimate (F020). No crypto kinds.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "taxYear", "lines", "updatedAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "taxYear": { "type": "integer", "minimum": 2024 },
+    "region": { "type": "string", "enum": ["I", "II", "III", "IV"] },
+    "name": { "type": "string", "maxLength": 80 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "lines": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/MultiSourceLine" }
+    }
+  },
+  "$defs": {
+    "MultiSourceKind": {
+      "type": "string",
+      "enum": ["salary", "casual", "hkd", "rent", "securities", "esop"]
+    },
+    "MultiSourceLine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "label",
+        "revenueOrIncome",
+        "estimatedVat",
+        "estimatedPit",
+        "estimatedOtherTax",
+        "estimatedTaxTotal",
+        "withheld",
+        "notes",
+        "legalSources",
+        "excluded"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "$ref": "#/$defs/MultiSourceKind" },
+        "label": { "type": "string", "maxLength": 80 },
+        "revenueOrIncome": { "type": "integer", "minimum": 0 },
+        "estimatedVat": { "type": "integer", "minimum": 0 },
+        "estimatedPit": { "type": "integer", "minimum": 0 },
+        "estimatedOtherTax": { "type": "integer", "minimum": 0 },
+        "estimatedTaxTotal": { "type": "integer", "minimum": 0 },
+        "withheld": { "type": "integer", "minimum": 0 },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "legalSources": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sourceRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "scenarioId": { "type": "string" },
+            "calculator": { "type": "string" }
+          }
+        },
+        "excluded": { "type": "boolean" }
+      }
+    },
+    "MultiSourceTotals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["estimatedTax", "withheld", "deltaSigned", "deltaKind"],
+      "properties": {
+        "estimatedTax": { "type": "integer", "minimum": 0 },
+        "withheld": { "type": "integer", "minimum": 0 },
+        "deltaSigned": { "type": "integer" },
+        "deltaKind": {
+          "type": "string",
+          "enum": ["refund", "pay", "even"]
+        }
+      }
+    }
+  }
+}

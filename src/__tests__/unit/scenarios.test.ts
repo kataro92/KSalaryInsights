@@ -22,6 +22,7 @@ const sampleInputs = (): CalculatorScenarioInputs => ({
   taxYear: 2026,
   month: 3,
   numDependents: 1,
+  insurance: { mode: "full" },
   customBh: false,
   bhAmount: null,
   bonus: 0,
@@ -203,12 +204,12 @@ describe("scenarios store (F014)", () => {
       name: "Demo",
       inputs: sampleInputs(),
       net: 22_000_000,
-      brand: "KVSalaryTools",
+      brand: "KSalaryInsights",
     });
     expect(text).toContain("Demo");
     expect(text).toContain("30.000.000");
     expect(text).toContain("22.000.000");
-    expect(text).toContain("KVSalaryTools");
+    expect(text).toContain("KSalaryInsights");
   });
 
   it("formatScenarioShareText for settlement includes delta", () => {
@@ -217,11 +218,11 @@ describe("scenarios store (F014)", () => {
       name: "QT Demo",
       inputs: sampleSettlement(),
       delta: -4_800_000,
-      brand: "KVSalaryTools",
+      brand: "KSalaryInsights",
     });
     expect(text).toContain("QT Demo");
     expect(text).toContain("hoàn");
     expect(text).toContain("4.800.000");
-    expect(text).toContain("KVSalaryTools");
+    expect(text).toContain("KSalaryInsights");
   });
 });

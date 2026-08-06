@@ -84,7 +84,7 @@ export function BenefitsScreen() {
 
       <Section
         title="Ngoài lương"
-        subtitle="Cho thuê, hộ kinh doanh, chứng khoán, ESOP, vãng lai."
+        subtitle="Cho thuê, hộ / cá nhân KD (freelancer), chứng khoán, ESOP, vãng lai. Không ước thuế coin."
       >
         <View style={styles.cardStack}>
           <HubNavCard

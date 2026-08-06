@@ -80,6 +80,25 @@ const icons = {
     <polyline points="12,30 24,18 36,30" fill="none" stroke="${stroke}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
   `,
   bullet: `<circle cx="24" cy="24" r="5" fill="${stroke}"/>`,
+  sun: `
+    <circle cx="24" cy="24" r="7" fill="none" stroke="${stroke}" stroke-width="2.4"/>
+    <line x1="24" y1="6" x2="24" y2="11" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="24" y1="37" x2="24" y2="42" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="6" y1="24" x2="11" y2="24" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="37" y1="24" x2="42" y2="24" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="11.5" y1="11.5" x2="15" y2="15" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="33" y1="33" x2="36.5" y2="36.5" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="36.5" y1="11.5" x2="33" y2="15" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="15" y1="33" x2="11.5" y2="36.5" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+  `,
+  moon: `
+    <path d="M30 10.5a12.5 12.5 0 1 0 7.5 22.5A14 14 0 1 1 30 10.5z" fill="none" stroke="${stroke}" stroke-width="2.4" stroke-linejoin="round"/>
+  `,
+  monitor: `
+    <rect x="8" y="10" width="32" height="22" rx="3" fill="none" stroke="${stroke}" stroke-width="2.4"/>
+    <line x1="18" y1="38" x2="30" y2="38" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="24" y1="32" x2="24" y2="38" stroke="${stroke}" stroke-width="2.4" stroke-linecap="round"/>
+  `,
 };
 
 fs.mkdirSync(outDir, { recursive: true });

@@ -5,7 +5,7 @@
 
 ## 1. Giới thiệu
 
-Mọi công thức tính toán thuế TNCN, bảo hiểm (BHXH, BHYT, BHTN) và các khoản trợ cấp trong KVSalaryTools đều không được mã hóa cứng (hardcode) các hằng số tiền tệ hoặc tỷ lệ phần trăm trong code logic. Thay vào đó, toàn bộ tham số pháp lý được đóng gói thành các tệp dữ liệu dạng **Ruleset JSON** theo từng kỳ tính thuế/giai đoạn hiệu lực.
+Mọi công thức tính toán thuế TNCN, bảo hiểm (BHXH, BHYT, BHTN) và các khoản trợ cấp trong KSalaryInsights đều không được mã hóa cứng (hardcode) các hằng số tiền tệ hoặc tỷ lệ phần trăm trong code logic. Thay vào đó, toàn bộ tham số pháp lý được đóng gói thành các tệp dữ liệu dạng **Ruleset JSON** theo từng kỳ tính thuế/giai đoạn hiệu lực.
 
 ## 2. Định danh và Phạm vi hiệu lực (Versioning & Scope)
 

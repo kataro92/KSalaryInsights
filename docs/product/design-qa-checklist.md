@@ -1,4 +1,4 @@
-# Design QA checklist. KVSalaryTools
+# Design QA checklist. KSalaryInsights
 
 Use before store submission. Cross-check [`design-system.md`](./design-system.md) §1–8.
 
@@ -6,7 +6,7 @@ Use before store submission. Cross-check [`design-system.md`](./design-system.md
 
 ## Visual / brand
 
-- [x] Brand `KVSalaryTools` is hero-level on splash + first onboarding step (ADR 0007). code path
+- [x] Brand `KSalaryInsights` is hero-level on splash + first onboarding step (ADR 0007). code path
 - [x] Ngài Miu appears on splash, onboarding, About, tips. never overlays money rows. code path
 - [ ] Palette tokens only. run `npm run qa:design`; human spot-check screenshots
 - [ ] Flat Design: no shadows, no glow. run `npm run qa:design`; human spot-check

@@ -1,21 +1,23 @@
 # Spec tính năng
 
-**Cập nhật**: 2026-08-05: toàn bộ spec dưới đây **đã triển khai** trên `master`.
+**Cập nhật**: 2026-08-06
 
-Phạm vi & trạng thái F-ID: [docs/product/scope.md](./docs/product/scope.md).
+- F001–F022: **đã triển khai** trên `master` (gồm F020 tổng hợp QT đa nguồn, F021 so 2 offer, F022 preset BH).
+- Crypto ngoài phạm vi (ADR 0009).
 
-UI/UX MUST tuân [docs/product/design-system.md](./docs/product/design-system.md).
+Phạm vi: [docs/product/scope.md](../docs/product/scope.md).  
+UI: [docs/product/design-system.md](../docs/product/design-system.md).
 
-| # | Thư mục | Nội dung | Spec |
-|---|---------|----------|------|
-| 001 | tinh-luong-gross-net | Gross↔Net, vùng, trần BH, thưởng, OT | [spec.md](./001-tinh-luong-gross-net/spec.md) |
-| 002 | nguoi-phu-thuoc-gtgc | NPT & GTGC | [spec.md](./002-nguoi-phu-thuoc-gtgc/spec.md) |
-| 003 | so-sanh-bieu-thue | So sánh 2025 vs 2026 | [spec.md](./003-so-sanh-bieu-thue/spec.md) |
-| 004 | quyet-toan-thue | QT năm, đa nguồn, wizard | [spec.md](./004-quyet-toan-thue/spec.md) |
-| 005 | quyen-loi-nghi-viec | Thôi việc, BHTN | [spec.md](./005-quyen-loi-nghi-viec/spec.md) |
-| 006 | thai-san-om-dau | Thai sản, ốm đau | [spec.md](./006-thai-san-om-dau/spec.md) |
-| 007 | huu-tri-bhxh-mot-lan | Hưu vs BHXH một lần | [spec.md](./007-huu-tri-bhxh-mot-lan/spec.md) |
-| 008 | thu-nhap-khac | Cho thuê, HKD, CK, ESOP, vãng lai | [spec.md](./008-thu-nhap-khac/spec.md) |
-| 009 | app-shell-ux | Splash, tabs, settings, preferences | [spec.md](./009-app-shell-ux/spec.md) |
+| # | Thư mục | F-ID | Spec | Plan/Tasks |
+|---|---------|------|------|------------|
+| 001–010 | (shipped) | F001–F019 | xem thư mục | Shipped |
+| 011 | tong-hop-qt-da-nguon | F020 | [spec](./011-tong-hop-qt-da-nguon/spec.md) | ✅ Shipped · [plan](./011-tong-hop-qt-da-nguon/plan.md) · [tasks](./011-tong-hop-qt-da-nguon/tasks.md) |
+| 012 | so-sanh-hai-offer | F021 | [spec](./012-so-sanh-hai-offer/spec.md) | ✅ Shipped · [plan](./012-so-sanh-hai-offer/plan.md) · [tasks](./012-so-sanh-hai-offer/tasks.md) |
+| 013 | preset-muc-dong-bh | F022 | [spec](./013-preset-muc-dong-bh/spec.md) | ✅ Shipped · [plan](./013-preset-muc-dong-bh/plan.md) · [tasks](./013-preset-muc-dong-bh/tasks.md) |
 
-**Contract (009)**: [preferences-schema.json](./009-app-shell-ux/contracts/preferences-schema.json)
+**Contracts**
+
+- 009: [preferences-schema.json](./009-app-shell-ux/contracts/preferences-schema.json)
+- 011: [annual-multi-source.schema.json](./011-tong-hop-qt-da-nguon/contracts/annual-multi-source.schema.json)
+- 012: [offer-compare.schema.json](./012-so-sanh-hai-offer/contracts/offer-compare.schema.json)
+- 013: [insurance-base-preset.schema.json](./013-preset-muc-dong-bh/contracts/insurance-base-preset.schema.json)

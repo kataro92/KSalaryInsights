@@ -23,6 +23,9 @@ export const ICON_SOURCES = {
   "chevron-down": require("../../../assets/icons/chevron-down.png"),
   "chevron-up": require("../../../assets/icons/chevron-up.png"),
   bullet: require("../../../assets/icons/bullet.png"),
+  sun: require("../../../assets/icons/sun.png"),
+  moon: require("../../../assets/icons/moon.png"),
+  monitor: require("../../../assets/icons/monitor.png"),
 } as const;
 
 export type AppIconName = keyof typeof ICON_SOURCES;

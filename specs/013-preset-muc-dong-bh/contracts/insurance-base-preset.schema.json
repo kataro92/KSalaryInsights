@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ksalaryinsights.local/schemas/insurance-base-preset.schema.json",
+  "title": "InsuranceBasePreset",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "const": "full" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "percent"],
+      "properties": {
+        "mode": { "const": "percent" },
+        "percent": { "type": "integer", "minimum": 1, "maximum": 100 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "absoluteAmount"],
+      "properties": {
+        "mode": { "const": "absolute" },
+        "absoluteAmount": { "type": "integer", "minimum": 1 }
+      }
+    }
+  ]
+}

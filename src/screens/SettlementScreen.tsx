@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Share, Switch, Text, View } from "react-native";
+import { Alert, Pressable, Share, Switch, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import { ScenarioPanel } from "@/src/components/calculator/ScenarioPanel";
+import { SaveScenarioModal } from "@/src/components/calculator/SaveScenarioModal";
+import { AppIcon } from "@/src/components/common/AppIcon";
 import { Button } from "@/src/components/common/Button";
 import { ChipRow } from "@/src/components/common/ChipRow";
 import { ChoiceChip } from "@/src/components/common/ChoiceChip";
@@ -132,7 +134,6 @@ export function SettlementScreen() {
     }
     setSaveName(defaultScenarioName(inputs, "settlement"));
     setSaving(true);
-    setScenariosOpen(true);
   };
 
   const confirmSave = async () => {
@@ -220,6 +221,20 @@ export function SettlementScreen() {
 
         <SeasonalBanner />
 
+        <Pressable
+          accessibilityRole="link"
+          accessibilityLabel="Mở tổng hợp quyết toán đa nguồn"
+          onPress={() => router.push("/multi-source")}
+          style={styles.compareLink}
+        >
+          <View style={styles.compareLinkRow}>
+            <Text style={styles.compareLinkText}>
+              Tổng hợp năm · đa nguồn
+            </Text>
+            <AppIcon name="chevron-right" color={colors.primary} size={16} />
+          </View>
+        </Pressable>
+
         <CollapseSection
           title={
             scenarios.length > 0
@@ -227,26 +242,15 @@ export function SettlementScreen() {
               : "Kịch bản quyết toán"
           }
           open={scenariosOpen}
-          onOpenChange={(next) => {
-            setScenariosOpen(next);
-            if (!next) setSaving(false);
-          }}
+          onOpenChange={setScenariosOpen}
         >
           <ScenarioPanel
             scenarios={scenarios}
-            saving={saving}
-            saveName={saveName}
-            onSaveNameChange={setSaveName}
-            onConfirmSave={() => {
-              void confirmSave();
-            }}
-            onCancelSave={() => setSaving(false)}
             onLoad={applyScenario}
             onDelete={(id) => {
               void remove(id);
             }}
             emptyHint="Chưa có kịch bản QT. Sau khi ước, bấm Lưu kịch bản để mở lại mùa quyết toán."
-            savePlaceholder="VD: QT 2025 · 1 nguồn"
           />
           <NgaiMiuTip tip={miuTips.scenarios} />
         </CollapseSection>
@@ -425,6 +429,17 @@ export function SettlementScreen() {
         ) : null}
       </ScreenShell>
 
+      <SaveScenarioModal
+        visible={saving}
+        saveName={saveName}
+        onSaveNameChange={setSaveName}
+        onConfirm={() => {
+          void confirmSave();
+        }}
+        onCancel={() => setSaving(false)}
+        placeholder="VD: QT 2025 · 1 nguồn"
+      />
+
       <StickyActionBar>
         <Button label={t("settlement.cta")} onPress={onCalculate} />
         <Button
@@ -479,6 +494,22 @@ function makeStyles({ colors }: ThemeContextValue) {
     },
     resultActionBtn: {
       flex: 1,
+    },
+    compareLink: {
+      minHeight: layout.minTouch,
+      justifyContent: "center",
+      alignSelf: "flex-start",
+      marginBottom: space[2],
+    },
+    compareLinkRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: space[1],
+    },
+    compareLinkText: {
+      fontFamily: typography.fontFamily.semiBold,
+      fontSize: typography.scale.body.fontSize,
+      color: colors.primary,
     },
   } satisfies ThemedStyleSheet;
 }

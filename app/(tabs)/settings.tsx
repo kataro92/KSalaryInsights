@@ -102,7 +102,7 @@ export default function SettingsScreen() {
   };
 
   const onSendFeedback = async () => {
-    const subject = encodeURIComponent(`[KVSalaryTools] Feedback`);
+    const subject = encodeURIComponent(`[KSalaryInsights] Feedback`);
     const body = encodeURIComponent(
       `\n\n---\nApp: ${brand.name}\nLocale: ${preferences.locale}\n`
     );
@@ -173,6 +173,7 @@ export default function SettingsScreen() {
             <ChoiceChip
               key={opt.code}
               label={opt.label}
+              leading={<Text style={styles.flag}>{opt.flag}</Text>}
               selected={preferences.locale === opt.code}
               onPress={() => void setLocale(opt.code)}
             />
@@ -187,18 +188,21 @@ export default function SettingsScreen() {
         <ChipRow equal>
           <ChoiceChip
             flex
+            icon="sun"
             label={t("settings.appearanceLight")}
             selected={preferences.themePreference === "light"}
             onPress={() => void setThemePreference("light")}
           />
           <ChoiceChip
             flex
+            icon="moon"
             label={t("settings.appearanceDark")}
             selected={preferences.themePreference === "dark"}
             onPress={() => void setThemePreference("dark")}
           />
           <ChoiceChip
             flex
+            icon="monitor"
             label={t("settings.appearanceSystem")}
             selected={preferences.themePreference === "system"}
             onPress={() => void setThemePreference("system")}
@@ -370,6 +374,10 @@ function makeStyles({ colors }: ThemeContextValue) {
       flexDirection: "row",
       flexWrap: "wrap",
       gap: space[2],
+    },
+    flag: {
+      fontSize: 16,
+      lineHeight: 20,
     },
     feedbackAuthor: {
       fontFamily: typography.fontFamily.semiBold,

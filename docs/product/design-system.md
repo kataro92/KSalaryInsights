@@ -1,4 +1,4 @@
-# Design System. KVSalaryTools
+# Design System. KSalaryInsights
 
 **Cập nhật**: 2026-08-05 
 **Phạm vi**: Toàn bộ UI React Native / Expo. Mọi spec tính năng tham chiếu tài liệu này.

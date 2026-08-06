@@ -1,4 +1,4 @@
-# KVSalaryTools Constitution
+# KSalaryInsights Constitution
 
 ## Sync Impact Report
 

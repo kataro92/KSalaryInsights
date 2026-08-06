@@ -12,6 +12,7 @@ import {
 import { useRouter } from "expo-router";
 
 import { ScenarioPanel } from "@/src/components/calculator/ScenarioPanel";
+import { SaveScenarioModal } from "@/src/components/calculator/SaveScenarioModal";
 import { AppIcon } from "@/src/components/common/AppIcon";
 import { Button } from "@/src/components/common/Button";
 import { ChipRow } from "@/src/components/common/ChipRow";
@@ -19,6 +20,7 @@ import { ChoiceChip } from "@/src/components/common/ChoiceChip";
 import { CollapseSection } from "@/src/components/common/CollapseSection";
 import { ColorBlock } from "@/src/components/common/ColorBlock";
 import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { InfoTip } from "@/src/components/common/InfoTip";
 import { MoneyField } from "@/src/components/common/MoneyField";
 import { PageHero } from "@/src/components/common/PageHero";
 import { ResultHero } from "@/src/components/common/ResultHero";
@@ -29,6 +31,7 @@ import { StickyActionBar } from "@/src/components/common/StickyActionBar";
 import { SalaryBreakdownCard } from "@/src/components/breakdown/SalaryBreakdownCard";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { DependentCountInput } from "@/src/components/inputs/DependentCountInput";
+import { InsuranceBasePresetPicker } from "@/src/components/inputs/InsuranceBasePresetPicker";
 import { MonthPicker } from "@/src/components/inputs/MonthPicker";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { brand, emptyCopy, miuTips } from "@/src/copy/miu";
@@ -36,6 +39,8 @@ import {
   REGION_OPTIONS,
   TAX_YEAR_OPTIONS,
 } from "@/src/domain/constants/salary";
+import type { InsuranceBasePreset } from "@/src/domain/types/insuranceBase";
+import { DEFAULT_INSURANCE_PRESET } from "@/src/domain/types/insuranceBase";
 import type {
   CalculationMode,
   RegionCode,
@@ -46,7 +51,12 @@ import {
   type BonusMonthResult,
 } from "@/src/engine/bonusMonth";
 import { grossToNet } from "@/src/engine/grossToNet";
-import { netToGross } from "@/src/engine/netToGross";
+import {
+  legacyFromInsurancePreset,
+  netToGrossWithPreset,
+  resolveForGrossToNet,
+  validateInsurancePreset,
+} from "@/src/engine/insuranceBase";
 import {
   calcOvertimePay,
   OT_DAY_LABELS,
@@ -99,8 +109,12 @@ export function CalculatorScreen() {
   );
   const [month, setMonth] = useState(3);
   const [numDependents, setNumDependents] = useState(0);
-  const [customBh, setCustomBh] = useState(false);
-  const [bhText, setBhText] = useState("30.000.000");
+  const [insurance, setInsurance] = useState<InsuranceBasePreset>(
+    DEFAULT_INSURANCE_PRESET
+  );
+  const [insuranceBaseLabel, setInsuranceBaseLabel] = useState<string | null>(
+    null
+  );
   const [bonusText, setBonusText] = useState("0");
   const [otHoursText, setOtHoursText] = useState("0");
   const [otDayType, setOtDayType] = useState<OtDayType>("weekday");
@@ -130,14 +144,16 @@ export function CalculatorScreen() {
   const clearResult = () => {
     setBreakdown(null);
     setBonusMonth(null);
+    setInsuranceBaseLabel(null);
     setError(null);
   };
 
   const collectInputs = (): CalculatorScenarioInputs | null => {
     const amount = parseMoney(amountText);
     if (amount == null || amount <= 0) return null;
-    const bhAmount = customBh ? parseMoney(bhText) : null;
-    if (customBh && (bhAmount == null || bhAmount < 0)) return null;
+    const checked = validateInsurancePreset(insurance);
+    if (!checked.ok) return null;
+    const legacy = legacyFromInsurancePreset(checked.preset);
     return {
       mode,
       amount,
@@ -145,8 +161,9 @@ export function CalculatorScreen() {
       taxYear,
       month,
       numDependents,
-      customBh,
-      bhAmount: customBh ? bhAmount : null,
+      insurance: checked.preset,
+      customBh: legacy.customBh,
+      bhAmount: legacy.bhAmount,
       bonus: parseMoney(bonusText) ?? 0,
       otHours: Number(otHoursText.replace(/[^\d.]/g, "") || "0") || 0,
       otDayType,
@@ -163,8 +180,7 @@ export function CalculatorScreen() {
     setTaxYear(i.taxYear);
     setMonth(i.month);
     setNumDependents(i.numDependents);
-    setCustomBh(i.customBh);
-    setBhText(formatMoneyInput(i.bhAmount ?? i.amount));
+    setInsurance(i.insurance ?? DEFAULT_INSURANCE_PRESET);
     setBonusText(formatMoneyInput(i.bonus) || "0");
     setOtHoursText(i.otHours > 0 ? String(i.otHours) : "0");
     setOtDayType(i.otDayType);
@@ -181,7 +197,6 @@ export function CalculatorScreen() {
     }
     setSaveName(defaultScenarioName(inputs));
     setSaving(true);
-    setScenariosOpen(true);
   };
 
   const confirmSave = async () => {
@@ -218,6 +233,7 @@ export function CalculatorScreen() {
 
   const onCalculate = () => {
     setError(null);
+    setInsuranceBaseLabel(null);
     const amount = parseMoney(amountText);
     if (amount == null || amount <= 0) {
       setError("Vui lòng nhập số tiền hợp lệ (> 0).");
@@ -226,18 +242,22 @@ export function CalculatorScreen() {
       return;
     }
 
-    const insuranceSalary = customBh
-      ? parseMoney(bhText) ?? undefined
-      : undefined;
-    if (customBh && (insuranceSalary == null || insuranceSalary < 0)) {
-      setError("Mức đóng BH không hợp lệ.");
+    const checked = validateInsurancePreset(insurance);
+    if (!checked.ok) {
+      setError(checked.message);
       setBreakdown(null);
       setBonusMonth(null);
       return;
     }
+    const preset = checked.preset;
 
     try {
       if (mode === "gross-to-net") {
+        const resolved = resolveForGrossToNet(amount, preset);
+        const insuranceSalary = resolved.insuranceSalary;
+        setInsuranceBaseLabel(
+          `${resolved.labelVi} · ${resolved.displayBase.toLocaleString("vi-VN")} ₫`
+        );
         const bonus = parseMoney(bonusText) ?? 0;
         const otHours = Number(otHoursText.replace(/[^\d.]/g, "") || "0");
         let otPay = 0;
@@ -279,14 +299,13 @@ export function CalculatorScreen() {
         void successHaptic();
       } else {
         setBonusMonth(null);
-        const result = netToGross({
+        const result = netToGrossWithPreset({
           net: amount,
           region,
           taxYear,
           asOfDate,
           numDependents,
-          insuranceTracksGross: !customBh,
-          insuranceSalary,
+          preset,
         });
         if (!result.ok) {
           setBreakdown(null);
@@ -297,12 +316,17 @@ export function CalculatorScreen() {
           );
           return;
         }
+        const resolved = resolveForGrossToNet(result.gross, preset);
+        setInsuranceBaseLabel(
+          `${resolved.labelVi} · ${resolved.displayBase.toLocaleString("vi-VN")} ₫`
+        );
         setBreakdown(result.breakdown);
         void successHaptic();
       }
     } catch (e) {
       setBreakdown(null);
       setBonusMonth(null);
+      setInsuranceBaseLabel(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
@@ -321,7 +345,12 @@ export function CalculatorScreen() {
       setError("Nhập Gross hợp lệ trước khi so sánh.");
       return;
     }
-    const insuranceSalary = customBh ? parseMoney(bhText) : null;
+    const checked = validateInsurancePreset(insurance);
+    const resolved =
+      checked.ok && mode === "gross-to-net"
+        ? resolveForGrossToNet(amount, checked.preset)
+        : null;
+    const insuranceSalary = resolved?.insuranceSalary ?? null;
     router.push({
       pathname: "/comparison",
       params: {
@@ -355,18 +384,10 @@ export function CalculatorScreen() {
           open={scenariosOpen}
           onOpenChange={(next) => {
             setScenariosOpen(next);
-            if (!next) setSaving(false);
           }}
         >
           <ScenarioPanel
             scenarios={scenarios}
-            saving={saving}
-            saveName={saveName}
-            onSaveNameChange={setSaveName}
-            onConfirmSave={() => {
-              void confirmSave();
-            }}
-            onCancelSave={() => setSaving(false)}
             onLoad={applyScenario}
             onDelete={(id) => {
               void remove(id);
@@ -522,6 +543,7 @@ export function CalculatorScreen() {
           <Section
             title="Tháng tính lương"
             subtitle="Chọn đúng tháng để áp trần BH (2026 đổi từ 01/07)."
+            titleAccessory={<InfoTip tipId="salary.asOfMonth" size={18} />}
           >
             <MonthPicker
               value={month}
@@ -537,7 +559,7 @@ export function CalculatorScreen() {
 
           <Section
             title="Người phụ thuộc"
-            subtitle="Chỉ nhập số lượng, không thu thập PII."
+            subtitle="Chỉ nhập số lượng đã đăng ký."
           >
             <DependentCountInput
               value={numDependents}
@@ -548,36 +570,19 @@ export function CalculatorScreen() {
             />
           </Section>
 
-          <ColorBlock tone="muted">
-            <View style={styles.switchRow}>
-              <View style={styles.switchText}>
-                <Text style={styles.switchLabel}>Mức đóng BH riêng</Text>
-                <Text style={styles.switchHint}>
-                  Khi lương đóng BH khác Gross
-                </Text>
-              </View>
-              <Switch
-                accessibilityLabel="Bật mức đóng bảo hiểm riêng"
-                value={customBh}
-                onValueChange={(v) => {
-                  setCustomBh(v);
-                  clearResult();
-                }}
-                trackColor={{ false: colors.border, true: colors.primary }}
-              />
-            </View>
-            {customBh ? (
-              <MoneyField
-                accessibilityLabel="Nhập mức lương đóng bảo hiểm"
-                value={bhText}
-                onValueChange={(formatted) => {
-                  setBhText(formatted);
-                  clearResult();
-                }}
-                style={{ marginTop: space[3] }}
-              />
-            ) : null}
-          </ColorBlock>
+          <Section
+            title="Mức đóng BH"
+            subtitle="Full gross, % hợp đồng, hoặc số cố định."
+          >
+            <InsuranceBasePresetPicker
+              value={insurance}
+              netToGrossHint={mode === "net-to-gross"}
+              onChange={(next) => {
+                setInsurance(next);
+                clearResult();
+              }}
+            />
+          </Section>
         </CollapseSection>
 
         {error ? (
@@ -591,18 +596,25 @@ export function CalculatorScreen() {
         {breakdown ? (
           <View style={styles.resultBlock}>
             <ResultHero
-              amount={breakdown.net}
+              amount={
+                mode === "net-to-gross" ? breakdown.gross : breakdown.net
+              }
               eyebrow={
-                bonusMonth && bonusMonth.extrasTotal > 0
-                  ? "Net tháng có thưởng/OT"
-                  : undefined
+                mode === "net-to-gross"
+                  ? "Gross cần đạt"
+                  : bonusMonth && bonusMonth.extrasTotal > 0
+                    ? "Net tháng có thưởng/OT"
+                    : undefined
               }
-              label="Net"
+              label={mode === "net-to-gross" ? "Gross" : "Net"}
               tipId={
-                bonusMonth && bonusMonth.extrasTotal > 0
-                  ? "bonus.month"
-                  : "salary.net"
+                mode === "net-to-gross"
+                  ? "salary.gross"
+                  : bonusMonth && bonusMonth.extrasTotal > 0
+                    ? "bonus.month"
+                    : "salary.net"
               }
+              tone={mode === "net-to-gross" ? "primary" : "positive"}
             />
             {bonusMonth && bonusMonth.extrasTotal > 0 ? (
               <ColorBlock
@@ -636,7 +648,16 @@ export function CalculatorScreen() {
                   : miuTips.calculatorResult
               }
             />
-            <SalaryBreakdownCard breakdown={breakdown} hideNet />
+            {insuranceBaseLabel ? (
+              <Text style={styles.meta} accessibilityLabel="Căn cứ bảo hiểm">
+                Căn cứ BH: {insuranceBaseLabel}
+              </Text>
+            ) : null}
+            <SalaryBreakdownCard
+              breakdown={breakdown}
+              hideNet={mode === "gross-to-net"}
+              hideGross={mode === "net-to-gross"}
+            />
             <View style={styles.resultActions}>
               <View style={styles.resultActionBtn}>
                 <Button
@@ -660,16 +681,49 @@ export function CalculatorScreen() {
               collapseSources
             />
             {mode === "gross-to-net" ? (
+              <>
+                <Pressable
+                  accessibilityRole="link"
+                  accessibilityLabel="So sánh hai offer lương"
+                  onPress={() => router.push("/offer-compare")}
+                  style={styles.compareLink}
+                >
+                  <View style={styles.compareLinkRow}>
+                    <Text style={styles.compareLinkText}>So 2 offer</Text>
+                    <AppIcon
+                      name="chevron-right"
+                      color={colors.primary}
+                      size={16}
+                    />
+                  </View>
+                </Pressable>
+                <Pressable
+                  accessibilityRole="link"
+                  accessibilityLabel="So sánh biểu thuế 2025 và 2026"
+                  onPress={openComparison}
+                  style={styles.compareLink}
+                >
+                  <View style={styles.compareLinkRow}>
+                    <Text style={styles.compareLinkText}>
+                      So sánh 2025 vs 2026
+                    </Text>
+                    <AppIcon
+                      name="chevron-right"
+                      color={colors.primary}
+                      size={16}
+                    />
+                  </View>
+                </Pressable>
+              </>
+            ) : (
               <Pressable
                 accessibilityRole="link"
-                accessibilityLabel="So sánh biểu thuế 2025 và 2026"
-                onPress={openComparison}
+                accessibilityLabel="So sánh hai offer lương"
+                onPress={() => router.push("/offer-compare")}
                 style={styles.compareLink}
               >
                 <View style={styles.compareLinkRow}>
-                  <Text style={styles.compareLinkText}>
-                    So sánh 2025 vs 2026
-                  </Text>
+                  <Text style={styles.compareLinkText}>So 2 offer</Text>
                   <AppIcon
                     name="chevron-right"
                     color={colors.primary}
@@ -677,7 +731,7 @@ export function CalculatorScreen() {
                   />
                 </View>
               </Pressable>
-            ) : null}
+            )}
           </View>
         ) : !error ? (
           <EmptyErrorState
@@ -686,6 +740,16 @@ export function CalculatorScreen() {
           />
         ) : null}
       </ScreenShell>
+
+      <SaveScenarioModal
+        visible={saving}
+        saveName={saveName}
+        onSaveNameChange={setSaveName}
+        onConfirm={() => {
+          void confirmSave();
+        }}
+        onCancel={() => setSaving(false)}
+      />
 
       <StickyActionBar>
         <Button label={t("common.calculate")} onPress={onCalculate} />

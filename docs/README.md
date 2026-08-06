@@ -1,4 +1,4 @@
-# Tài liệu KVSalaryTools
+# Tài liệu KSalaryInsights
 
 **Cập nhật**: 2026-08-05
 

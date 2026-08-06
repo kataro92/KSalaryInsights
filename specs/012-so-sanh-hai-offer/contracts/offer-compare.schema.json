@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ksalaryinsights.local/schemas/offer-compare.schema.json",
+  "title": "OfferCompareInputs",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["shared", "offerA", "offerB"],
+  "properties": {
+    "shared": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taxYear", "month", "region", "numDependents"],
+      "properties": {
+        "taxYear": { "type": "integer" },
+        "month": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "region": { "type": "string", "enum": ["I", "II", "III", "IV"] },
+        "numDependents": { "type": "integer", "minimum": 0, "maximum": 20 }
+      }
+    },
+    "offerA": { "$ref": "#/$defs/OfferSideInput" },
+    "offerB": { "$ref": "#/$defs/OfferSideInput" }
+  },
+  "$defs": {
+    "OfferSideInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "amount", "insurance"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["gross-to-net", "net-to-gross"]
+        },
+        "amount": { "type": "integer", "minimum": 1 },
+        "insurance": {
+          "description": "InsuranceBasePreset — see F022 schema",
+          "type": "object"
+        }
+      }
+    }
+  }
+}

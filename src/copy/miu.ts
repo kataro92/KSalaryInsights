@@ -4,7 +4,7 @@
  */
 
 export const brand = {
-  name: "KVSalaryTools",
+  name: "KSalaryInsights",
   tagline: "Ước tính lương · thuế · bảo hiểm",
   guideLine: "Ngài Miu sẵn sàng hướng dẫn bạn",
 } as const;
@@ -84,7 +84,7 @@ export const emptyCopy = {
 export const aboutCopy = {
   name: "Ngài Miu",
   role: "Trợ lý trong app",
-  body: "KVSalaryTools ước tính lương Gross–Net, quyết toán thuế và quyền lợi BHXH ngay trên máy bạn. Từng khoản trừ đều hiện rõ. Tôi hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
+  body: "KSalaryInsights giúp bạn so offer Gross–Net, đối chiếu bảng lương và kiểm chứng mức BH · thuế theo năm — ngay trên máy bạn. Từng khoản trừ hiện rõ. Tôi hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
   author: "Phạm Huy Đức",
   email: "kataro92@gmail.com",
 } as const;
@@ -92,12 +92,12 @@ export const aboutCopy = {
 export const onboardingSteps = [
   {
     title: "Xin chào, tôi là Ngài Miu",
-    body: "Tôi giúp bạn ước tính lương, thuế và quyền lợi BHXH từng bước, rõ ràng.",
+    body: "Tôi giúp bạn ước lương, thuế và BHXH khi nhận offer, đối chiếu bảng lương, hoặc khi mức đổi theo năm.",
     pose: "wave" as const,
   },
   {
     title: "Từ Gross sang Net",
-    body: "Tính offline theo mức thuế · BH năm 2025 và 2026. Mỗi khoản trừ hiện riêng, không bị ẩn.",
+    body: "Quy offer về cùng một mặt, chỉnh mức đóng BH, xem thực nhận trước khi ký. Mỗi khoản trừ hiện riêng.",
     pose: "point" as const,
   },
   {

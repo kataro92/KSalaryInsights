@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 
+import { AppIcon } from "@/src/components/common/AppIcon";
 import { ChipRow } from "@/src/components/common/ChipRow";
 import { ChoiceChip } from "@/src/components/common/ChoiceChip";
 import { PageHero } from "@/src/components/common/PageHero";
@@ -16,7 +18,8 @@ import { SimpleHkdCalculator } from "@/src/components/otherIncome/SimpleHkdCalcu
 import { SimpleRentCalculator } from "@/src/components/otherIncome/SimpleRentCalculator";
 import { TAX_YEAR_OPTIONS } from "@/src/domain/constants/salary";
 import { usePreferences } from "@/src/hooks/usePreferences";
-import { space } from "@/src/theme/tokens";
+import { useTheme } from "@/src/theme/ThemeProvider";
+import { layout, space, typography } from "@/src/theme/tokens";
 
 type Depth = "simple" | "full";
 type SimpleMode = "rent" | "hkd";
@@ -29,18 +32,20 @@ const DEPTHS: { id: Depth; label: string }[] = [
 
 const SIMPLE_MODES: { id: SimpleMode; label: string }[] = [
   { id: "rent", label: "Cho thuê" },
-  { id: "hkd", label: "HKD" },
+  { id: "hkd", label: "Hộ / cá nhân KD" },
 ];
 
 const FULL_MODES: { id: FullMode; label: string }[] = [
   { id: "rent", label: "Cho thuê" },
-  { id: "hkd", label: "HKD" },
+  { id: "hkd", label: "Hộ / cá nhân KD" },
   { id: "securities", label: "CK" },
   { id: "esop", label: "ESOP" },
   { id: "casual", label: "Vãng lai" },
 ];
 
 export function OtherIncomeScreen() {
+  const router = useRouter();
+  const { colors } = useTheme();
   const { preferences } = usePreferences();
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
@@ -57,12 +62,26 @@ export function OtherIncomeScreen() {
         title="Thu nhập khác"
         subtitle={
           depth === "simple"
-            ? "Ước nhanh cho thuê hoặc hộ kinh doanh từ doanh thu tháng. Không gộp vào tính lương."
-            : "Chứng khoán, ESOP, vãng lai và tuỳ chọn nâng cao. Không gộp vào tính lương."
+            ? "Ước nhanh cho thuê hoặc hộ / cá nhân kinh doanh (freelancer) từ doanh thu tháng. Không gộp vào tính lương."
+            : "Chứng khoán, ESOP, vãng lai và tuỳ chọn nâng cao. Không gộp vào tính lương. Không ước thuế coin."
         }
       />
 
       <OtherIncomeDisclaimer />
+
+      <Pressable
+        accessibilityRole="link"
+        accessibilityLabel="Mở tổng hợp quyết toán đa nguồn"
+        onPress={() => router.push("/multi-source")}
+        style={styles.compareLink}
+      >
+        <View style={styles.compareLinkRow}>
+          <Text style={[styles.compareLinkText, { color: colors.primary }]}>
+            Tổng hợp năm · đa nguồn
+          </Text>
+          <AppIcon name="chevron-right" color={colors.primary} size={16} />
+        </View>
+      </Pressable>
 
       <Section
         title="Chế độ"
@@ -152,4 +171,19 @@ export function OtherIncomeScreen() {
 
 const styles = StyleSheet.create({
   row: { flexDirection: "row", flexWrap: "wrap", gap: space[2] },
+  compareLink: {
+    minHeight: layout.minTouch,
+    justifyContent: "center",
+    alignSelf: "flex-start",
+    marginBottom: space[2],
+  },
+  compareLinkRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: space[1],
+  },
+  compareLinkText: {
+    fontFamily: typography.fontFamily.semiBold,
+    fontSize: typography.scale.body.fontSize,
+  },
 });

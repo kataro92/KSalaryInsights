@@ -1,6 +1,12 @@
 import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
-import { Platform, StyleSheet, View } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  type ColorValue,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AppIcon } from "@/src/components/common/AppIcon";
@@ -8,6 +14,33 @@ import { TabBarIcon } from "@/src/components/common/TabBarIcon";
 import { useI18n } from "@/src/i18n/useI18n";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, typography } from "@/src/theme/tokens";
+
+function TabLabel({
+  label,
+  color,
+}: {
+  label: string;
+  color: ColorValue;
+}) {
+  return (
+    <Text
+      style={{
+        fontFamily: typography.fontFamily.medium,
+        fontSize: 10,
+        lineHeight: 12,
+        color,
+        textAlign: "center",
+        marginBottom: 2,
+      }}
+      numberOfLines={1}
+      adjustsFontSizeToFit
+      minimumFontScale={0.8}
+      allowFontScaling={false}
+    >
+      {label}
+    </Text>
+  );
+}
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
@@ -22,12 +55,17 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.foregroundMuted,
+        tabBarAllowFontScaling: false,
         tabBarBackground: () =>
           Platform.OS === "web" ? (
             <View
               style={[
                 StyleSheet.absoluteFill,
-                { backgroundColor: glass.fallback, borderTopWidth: StyleSheet.hairlineWidth * 2, borderTopColor: glass.border },
+                {
+                  backgroundColor: glass.fallback,
+                  borderTopWidth: StyleSheet.hairlineWidth * 2,
+                  borderTopColor: glass.border,
+                },
               ]}
             />
           ) : (
@@ -52,19 +90,15 @@ export default function TabsLayout() {
           borderTopColor: glass.border,
           height: tabBarHeight,
           paddingBottom: bottomInset,
-          paddingTop: 8,
+          paddingTop: 6,
           maxWidth: layout.maxContentWidth,
           width: "100%",
           alignSelf: "center",
           elevation: 0,
         },
-        tabBarLabelStyle: {
-          fontFamily: typography.fontFamily.medium,
-          fontSize: 11,
-          marginBottom: 2,
-        },
         tabBarItemStyle: {
-          paddingTop: 4,
+          paddingTop: 2,
+          paddingHorizontal: 0,
         },
       }}
     >
@@ -72,8 +106,10 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: t("tabs.salary"),
-          tabBarLabel: t("tabs.salary"),
           tabBarAccessibilityLabel: t("tabs.salary"),
+          tabBarLabel: ({ color }) => (
+            <TabLabel label={t("tabs.salary")} color={color} />
+          ),
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
               <AppIcon name="calculator" color={color} size={size} />
@@ -85,8 +121,10 @@ export default function TabsLayout() {
         name="settlement"
         options={{
           title: t("tabs.settlement"),
-          tabBarLabel: t("tabs.settlement"),
           tabBarAccessibilityLabel: t("tabs.settlement"),
+          tabBarLabel: ({ color }) => (
+            <TabLabel label={t("tabs.settlement")} color={color} />
+          ),
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
               <AppIcon name="file-text" color={color} size={size} />
@@ -98,8 +136,10 @@ export default function TabsLayout() {
         name="benefits"
         options={{
           title: t("tabs.benefits"),
-          tabBarLabel: t("tabs.benefits"),
           tabBarAccessibilityLabel: t("tabs.benefits"),
+          tabBarLabel: ({ color }) => (
+            <TabLabel label={t("tabs.benefits")} color={color} />
+          ),
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
               <AppIcon name="briefcase" color={color} size={size} />
@@ -111,8 +151,10 @@ export default function TabsLayout() {
         name="settings"
         options={{
           title: t("tabs.settings"),
-          tabBarLabel: t("tabs.settings"),
           tabBarAccessibilityLabel: t("tabs.settings"),
+          tabBarLabel: ({ color }) => (
+            <TabLabel label={t("tabs.settings")} color={color} />
+          ),
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
               <AppIcon name="settings" color={color} size={size} />

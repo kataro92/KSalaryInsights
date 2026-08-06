@@ -11,9 +11,7 @@ const vi: TipDict = {
     detail:
       "Trong app, Gross tháng là điểm xuất phát của luồng tính. Phụ cấp miễn thuế (nếu có) chưa tách riêng ở bản này. Nếu bảng lương có khoản miễn, đối chiếu lại với HR.\n\nVí dụ: lương thỏa thuận 28tr + thưởng 2tr → Gross 30tr trước khi trừ BH và thuế.",
     sources: [
-      "Luật Thuế TNCN 109/2025/QH15: thu nhập từ tiền lương, tiền công",
-      "docs/domain/thue-tncn.md §1 (luồng Gross → Net)",
-    ],
+      "Luật Thuế TNCN 109/2025/QH15: thu nhập từ tiền lương, tiền công"],
   },
   "salary.bhxh": {
     title: "BHXH người lao động (8%)",
@@ -23,9 +21,7 @@ const vi: TipDict = {
       "Trần BHXH/BHYT = 20 × mức tham chiếu (lương cơ sở khi còn áp dụng). Năm 2026: nửa đầu năm trần ~46,8tr; từ 01/07/2026 trần ~50,6tr. App lấy theo ngày/năm thuế.\n\nTỷ lệ 8% là quỹ hưu trí & tử tuất phía người lao động. Phần doanh nghiệp đóng không trừ khỏi Net của bạn.",
     sources: [
       "Luật BHXH 41/2024/QH15 Đ.33 khoản 1a (tỷ lệ 8%)",
-      "Luật BHXH 41/2024 Đ.31 khoản 1đ (trần 20 lần mức tham chiếu)",
-      "docs/domain/bhxh-bhyt-bhtn.md §1–2",
-    ],
+      "Luật BHXH 41/2024 Đ.31 khoản 1đ (trần 20 lần mức tham chiếu)"],
   },
   "salary.bhyt": {
     title: "BHYT người lao động (1,5%)",
@@ -34,9 +30,7 @@ const vi: TipDict = {
     detail:
       "Căn cứ và trần BHYT thường đi cùng BHXH. App dùng cùng mức đóng BHXH đã nhập/suy ra.\n\nPhần doanh nghiệp đóng BHYT không trừ khỏi lương Net.",
     sources: [
-      "Khung đóng BHYT phổ biến (NLĐ 1,5%). Tham số theo năm thuế trong app",
-      "docs/domain/bhxh-bhyt-bhtn.md §1",
-    ],
+      "Khung đóng BHYT phổ biến (NLĐ 1,5%). Tham số theo năm thuế trong app"],
   },
   "salary.bhtn": {
     title: "BHTN người lao động (1%)",
@@ -46,9 +40,7 @@ const vi: TipDict = {
       "Ví dụ 2026 vùng I: LTTV 5.310.000 × 20 = trần BHTN 106.200.000 đ. Lương dưới trần thì đóng đúng 1% trên mức đóng.\n\nVùng lương tối thiểu lấy từ Cài đặt (hoặc mặc định bạn chọn).",
     sources: [
       "Luật Việc làm 74/2025: khung đóng BHTN",
-      "NĐ mức lương tối thiểu vùng theo năm (vd. NĐ 293/2025 cho 2026)",
-      "docs/domain/bhxh-bhyt-bhtn.md §2",
-    ],
+      "NĐ mức lương tối thiểu vùng theo năm (vd. NĐ 293/2025 cho 2026)"],
   },
   "salary.insuranceTotal": {
     title: "Tổng BH người lao động",
@@ -57,10 +49,7 @@ const vi: TipDict = {
       "BH_NLĐ = BHXH_NLĐ + BHYT_NLĐ + BHTN_NLĐ\n(thường ≈ 10,5% căn cứ khi dưới cả hai trần)",
     detail:
       "App chỉ trừ phần người lao động khi ước Net. Phần doanh nghiệp (~21,5%) không hiện trên dòng này.\n\nVí dụ Gross/căn cứ 30tr dưới trần: BHXH 2,4tr + BHYT 0,45tr + BHTN 0,3tr = 3,15tr.",
-    sources: [
-      "docs/domain/bhxh-bhyt-bhtn.md §1 (tỷ lệ NLĐ ~10,5%)",
-      "docs/domain/thue-tncn.md §1",
-    ],
+    sources: ["Tham số năm thuế trong app"],
   },
   "salary.afterInsurance": {
     title: "Thu nhập sau BH",
@@ -68,7 +57,7 @@ const vi: TipDict = {
     formula: "Thu_nhập_sau_BH = Gross − BH_NLĐ",
     detail:
       "Đây chưa phải thu nhập tính thuế. Tiếp theo app trừ GTGC bản thân và người phụ thuộc rồi mới ra TNTT.\n\nVí dụ: Gross 30tr − BH 3,15tr = 26,85tr.",
-    sources: ["docs/domain/thue-tncn.md §1 (luồng tính tháng)"],
+    sources: ["Luật Thuế TNCN: luồng tính tháng Gross → Net"],
   },
   "salary.personalRelief": {
     title: "GTGC bản thân",
@@ -80,8 +69,7 @@ const vi: TipDict = {
     sources: [
       "NQ 954/2020/UBTVQH14 (GTGC 11 / 4,4: kỳ 2025)",
       "NQ 110/2025/UBTVQH15; Luật 109/2025 (GTGC 15,5 / 6,2: kỳ 2026)",
-      "CV 1296/CT-NVT. Quyết toán 2025 dùng luật cũ",
-    ],
+      "CV 1296/CT-NVT. Quyết toán 2025 dùng luật cũ"],
   },
   "salary.dependentRelief": {
     title: "GTGC người phụ thuộc",
@@ -92,9 +80,7 @@ const vi: TipDict = {
       "Người phụ thuộc phải đủ điều kiện theo luật (quan hệ, thu nhập, đăng ký…). App chỉ nhân số bạn nhập để ước tính.\n\nVí dụ 2026, 2 NPT: 2 × 6,2tr = 12,4tr/tháng.",
     sources: [
       "Luật TNCN + nghị quyết GTGC theo năm thuế",
-      "Thông tư / hướng dẫn đăng ký người phụ thuộc",
-      "docs/domain/thue-tncn.md §2",
-    ],
+      "Thông tư / hướng dẫn đăng ký người phụ thuộc"],
   },
   "salary.reliefTotal": {
     title: "Tổng giảm trừ gia cảnh",
@@ -102,7 +88,7 @@ const vi: TipDict = {
     formula: "GTGC = GTGC_bản_thân + GTGC_NPT",
     detail:
       "Trừ sau bảo hiểm, trước khi ra thu nhập tính thuế. Nếu GTGC lớn hơn thu nhập sau BH, TNTT = 0 (không âm).\n\nVí dụ 2026, 0 NPT: GTGC = 15,5tr. Có 2 NPT: 15,5 + 12,4 = 27,9tr.",
-    sources: ["docs/domain/thue-tncn.md §1–2"],
+    sources: ["Luật Thuế TNCN + nghị quyết GTGC theo năm thuế"],
   },
   "salary.taxable": {
     title: "Thu nhập tính thuế (TNTT)",
@@ -111,9 +97,7 @@ const vi: TipDict = {
     detail:
       "TNTT = 0 → thuế tháng = 0; Net ≈ Gross − BH_NLĐ.\n\nVí dụ 2026: sau BH 26,85tr − GTGC 15,5tr = TNTT 11,35tr → vào các bậc biểu thuế.",
     sources: [
-      "Luật TNCN. Thu nhập tính thuế từ tiền lương, tiền công",
-      "docs/domain/thue-tncn.md §1, §3",
-    ],
+      "Luật TNCN. Thu nhập tính thuế từ tiền lương, tiền công"],
   },
   "salary.pit": {
     title: "Thuế TNCN",
@@ -124,9 +108,7 @@ const vi: TipDict = {
       "“Lũy tiến từng phần”: chỉ phần thu nhập trong mỗi bậc chịu thuế suất của bậc đó. Không áp một thuế suất cho cả TNTT.\n\nApp chọn biểu theo năm thuế: quyết toán/thu nhập 2025 → biểu 7 bậc; 2026 → biểu 5 bậc (không tách nửa năm 2026).",
     sources: [
       "Luật TNCN 2007 (VBHN) Đ.22: biểu 7 bậc (kỳ 2025)",
-      "Luật 109/2025/QH15: biểu mới từ kỳ tính thuế 2026",
-      "docs/domain/thue-tncn.md §3",
-    ],
+      "Luật 109/2025/QH15: biểu mới từ kỳ tính thuế 2026"],
   },
   "salary.net": {
     title: "Net (thực nhận ước)",
@@ -135,10 +117,7 @@ const vi: TipDict = {
       "Net ≈ Gross − BH_NLĐ − Thuế_TNCN\n(− đoàn phí nếu có. Ngoài phạm vi mặc định)",
     detail:
       "Ước tính offline theo tham số năm thuế trong app. Chưa gồm mọi khoản miễn/khấu trừ đặc thù trên bảng lương doanh nghiệp.\n\nVí dụ Gross 30tr, 0 NPT, dưới trần BH (2026): Net ≈ 26,065,000 đ (xem test case domain).",
-    sources: [
-      "Công thức engine app. Docs/domain/thue-tncn.md §1",
-      "TC-TNCN-2026-01 trong docs/domain/thue-tncn.md",
-    ],
+    sources: ["Tham số năm thuế trong app"],
   },
   "settlement.refund": {
     title: "Ước hoàn thuế",
@@ -148,9 +127,7 @@ const vi: TipDict = {
       "Đây là ước trong app. Trước khi kê khai quyết toán, đối chiếu chứng từ khấu trừ, GTGC đã đăng ký, và thu nhập thực tế.\n\nNăm quyết toán gắn với năm phát sinh thu nhập (vd. Quyết toán 2025 dùng GTGC/biểu 2025).",
     sources: [
       "Hướng dẫn quyết toán TNCN hàng năm (Cục Thuế)",
-      "CV 1296/CT-NVT. Kỳ 2025 dùng luật cũ",
-      "docs/domain/thue-tncn.md mục quyết toán",
-    ],
+      "CV 1296/CT-NVT. Kỳ 2025 dùng luật cũ"],
   },
   "settlement.pay": {
     title: "Ước nộp thêm",
@@ -159,9 +136,7 @@ const vi: TipDict = {
     detail:
       "Chỉ là ước tính. Số chính thức phụ thuộc tờ khai, chứng từ, và quy định nộp/gia hạn của cơ quan thuế trong kỳ quyết toán.",
     sources: [
-      "Hướng dẫn quyết toán TNCN",
-      "docs/domain/thue-tncn.md mục quyết toán",
-    ],
+      "Hướng dẫn quyết toán TNCN"],
   },
   "settlement.even": {
     title: "Khớp (ước)",
@@ -169,7 +144,7 @@ const vi: TipDict = {
     formula: "Thuế_năm_ước ≈ Thuế_đã_khấu_trừ → chênh ≈ 0",
     detail:
       "Vẫn nên đối chiếu bảng lương và chứng từ trước khi nộp tờ khai. Sai số nhỏ có thể đến từ làm tròn từng tháng.",
-    sources: ["docs/domain/thue-tncn.md"],
+    sources: ["Hướng dẫn quyết toán TNCN"],
   },
   "other.vat": {
     title: "Thuế GTGT (ước)",
@@ -180,9 +155,7 @@ const vi: TipDict = {
       "App ước nhanh theo tham số năm thuế. Hộ kinh doanh / cho thuê có thể có tỷ lệ khác nhau; đối chiếu NĐ hướng dẫn theo ngành nghề.",
     sources: [
       "Luật GTGT 2024 Đ.12",
-      "NĐ 68/2026, NĐ 141/2026 (hướng dẫn liên quan)",
-      "docs/domain/thu-nhap-khac.md",
-    ],
+      "NĐ 68/2026, NĐ 141/2026 (hướng dẫn liên quan)"],
   },
   "other.pit": {
     title: "Thuế TNCN (thu nhập khác)",
@@ -193,9 +166,7 @@ const vi: TipDict = {
       "Mỗi loại thu nhập khác có tỷ lệ / ngưỡng riêng trong tham số năm thuế. Không gộp với biểu lũy tiến lương HĐLĐ trên màn Tính lương.",
     sources: [
       "Luật 109/2025 Đ.7 (các khoản thu nhập khác)",
-      "NĐ 68/141/253/2026",
-      "docs/domain/thu-nhap-khac.md",
-    ],
+      "NĐ 68/141/253/2026"],
   },
   "other.threshold": {
     title: "Ngưỡng miễn",
@@ -204,7 +175,7 @@ const vi: TipDict = {
       "Nếu Doanh_thu_năm ≤ ngưỡng (thường 1 tỷ đ) → có thể miễn thuế tỷ lệ\n(vẫn kiểm tra nghĩa vụ kê khai)",
     detail:
       "Ngưỡng và điều kiện miễn lấy theo nghị định của năm thuế. Miễn thuế ≠ miễn mọi nghĩa vụ hành chính. đọc ghi chú trên từng công cụ.",
-    sources: ["NĐ 141/2026; NĐ 68/2026", "docs/domain/thu-nhap-khac.md"],
+    sources: ["NĐ 141/2026; NĐ 68/2026"],
   },
   "ot.pay": {
     title: "Tiền làm thêm giờ",
@@ -215,9 +186,7 @@ const vi: TipDict = {
       "App dùng để ước Gross chịu thuế. Quy tắc chốt ca, nghỉ bù, trần giờ làm thêm thực tế theo nội quy DN và BLLĐ. Không thay tư vấn luật lao động.",
     sources: [
       "Bộ luật Lao động 2019 Đ.98",
-      "NĐ 145/2020 Đ.55–57",
-      "docs/domain/quyen-loi-lao-dong.md",
-    ],
+      "NĐ 145/2020 Đ.55–57"],
   },
   "bonus.month": {
     title: "Tháng có thưởng / làm thêm",
@@ -226,9 +195,17 @@ const vi: TipDict = {
       "Gross_tháng = lương_căn_cứ + thưởng + OT + …\nCăn_cứ_BH (mặc định) = lương_thỏa_thuận (không gồm thưởng/OT)",
     detail:
       "Doanh nghiệp có thể quy định khác về căn cứ đóng BH. Nếu bảng lương của bạn cộng thưởng vào căn cứ BH, chỉnh mức đóng BH cho khớp.\n\nThuế TNCN tính trên Gross tháng đã gồm thưởng/OT.",
+    sources: ["Tham số năm thuế trong app"],
+  },
+  "salary.asOfMonth": {
+    title: "Tháng tính lương",
+    body: "Tháng dùng để chọn ngày áp dụng mức BH trong năm thuế. Năm thuế chọn biểu thuế / GTGC; tháng chọn trần BH khi mức đổi giữa năm.",
+    formula: "Ngày_áp_dụng ≈ ngày 15 của (năm thuế + tháng đã chọn)",
+    detail:
+      "Vẫn cần chọn tháng ngay cả khi năm thuế là 2025: app dùng tháng để gắn ngày áp dụng (as-of), không chỉ để hiển thị.\n\nQuan trọng nhất với 2026: trần BHXH/BHYT đổi từ 01/07/2026. Chọn tháng 1–6 → mức nửa đầu năm; tháng 7–12 → mức nửa sau. Năm không đổi trần giữa năm (vd. 2025) thì tháng ít ảnh hưởng hơn nhưng vẫn giữ để kết quả khớp kỳ lương bạn đang ước.",
     sources: [
-      "docs/domain/thue-tncn.md (tháng có thưởng)",
-      "docs/domain/bhxh-bhyt-bhtn.md (căn cứ đóng)",
+      "Luật BHXH: trần đóng theo mức tham chiếu tại thời điểm",
+      "Tham số năm thuế trong app (đổi mức theo ngày)",
     ],
   },
 };
@@ -242,9 +219,7 @@ const en: TipDict = {
     detail:
       "Gross is the starting point of the monthly flow. Tax-exempt allowances are not split out in this build. Reconcile with HR if your payslip has exempt lines.\n\nExample: 28M contractual + 2M bonus → 30M Gross before insurance and tax.",
     sources: [
-      "PIT Law 109/2025: employment income",
-      "docs/domain/thue-tncn.md §1",
-    ],
+      "PIT Law 109/2025: employment income"],
   },
   "salary.bhxh": {
     title: "Employee social insurance (8%)",
@@ -254,9 +229,7 @@ const en: TipDict = {
       "SI/HI cap = 20 × reference wage (basic salary while applicable). In 2026: ~46.8M in H1; ~50.6M from 1 Jul 2026: the app uses the selected tax year / as-of rules.\n\nThe 8% is the employee pension & survivorship share. Employer contributions are not deducted from your Net.",
     sources: [
       "Social Insurance Law 41/2024 Art. 33.1a (8%)",
-      "Art. 31.1đ (20× reference cap)",
-      "docs/domain/bhxh-bhyt-bhtn.md §1–2",
-    ],
+      "Art. 31.1đ (20× reference cap)"],
   },
   "salary.bhyt": {
     title: "Employee health insurance (1.5%)",
@@ -265,9 +238,7 @@ const en: TipDict = {
     detail:
       "HI base and cap usually follow SI. Employer HI is not deducted from Net.",
     sources: [
-      "Common HI framework (employee 1.5%). Rates in app ruleset",
-      "docs/domain/bhxh-bhyt-bhtn.md §1",
-    ],
+      "Common HI framework (employee 1.5%). Rates in app ruleset"],
   },
   "salary.bhtn": {
     title: "Employee unemployment insurance (1%)",
@@ -277,9 +248,7 @@ const en: TipDict = {
       "Example 2026 Region I: min wage 5,310,000 × 20 → UI cap 106,200,000 VND.\n\nRegion comes from Settings (or your default).",
     sources: [
       "Employment Law 74/2025: UI contributions",
-      "Regional minimum-wage decrees (e.g. Decree 293/2025 for 2026)",
-      "docs/domain/bhxh-bhyt-bhtn.md §2",
-    ],
+      "Regional minimum-wage decrees (e.g. Decree 293/2025 for 2026)"],
   },
   "salary.insuranceTotal": {
     title: "Total employee insurance",
@@ -288,10 +257,7 @@ const en: TipDict = {
       "Employee_insurance = SI + HI + UI\n(often ≈ 10.5% of base when under both caps)",
     detail:
       "Only the employee share is deducted for Net. Employer share (~21.5%) is not on this line.\n\nExample base 30M under caps: 2.4M + 0.45M + 0.3M = 3.15M.",
-    sources: [
-      "docs/domain/bhxh-bhyt-bhtn.md §1",
-      "docs/domain/thue-tncn.md §1",
-    ],
+    sources: ["Tham số năm thuế trong app"],
   },
   "salary.afterInsurance": {
     title: "Income after insurance",
@@ -299,7 +265,7 @@ const en: TipDict = {
     formula: "After_insurance = Gross − Employee_insurance",
     detail:
       "Not yet taxable income. Next the app subtracts personal + dependent relief.\n\nExample: 30M − 3.15M = 26.85M.",
-    sources: ["docs/domain/thue-tncn.md §1"],
+    sources: ["PIT Law. Employment taxable income flow"],
   },
   "salary.personalRelief": {
     title: "Personal relief",
@@ -311,8 +277,7 @@ const en: TipDict = {
     sources: [
       "Resolution 954/2020 (11 / 4.4: 2025)",
       "Resolution 110/2025; Law 109/2025 (15.5 / 6.2: 2026)",
-      "Official letter 1296/CT-NVT. 2025 settlement uses prior law",
-    ],
+      "Official letter 1296/CT-NVT. 2025 settlement uses prior law"],
   },
   "salary.dependentRelief": {
     title: "Dependent relief",
@@ -323,9 +288,7 @@ const en: TipDict = {
       "Eligibility (relationship, income, registration) is your responsibility.\n\nExample 2026, 2 dependents: 2 × 6.2M = 12.4M/month.",
     sources: [
       "PIT Law + relief resolutions by tax year",
-      "Dependent registration guidance",
-      "docs/domain/thue-tncn.md §2",
-    ],
+      "Dependent registration guidance"],
   },
   "salary.reliefTotal": {
     title: "Total family relief",
@@ -333,7 +296,7 @@ const en: TipDict = {
     formula: "Total_relief = Personal + Dependent",
     detail:
       "Subtracted after insurance. If relief exceeds income after insurance, taxable income is 0 (never negative).",
-    sources: ["docs/domain/thue-tncn.md §1–2"],
+    sources: ["Luật Thuế TNCN + nghị quyết GTGC theo năm thuế"],
   },
   "salary.taxable": {
     title: "Taxable income",
@@ -342,9 +305,7 @@ const en: TipDict = {
     detail:
       "Taxable = 0 → PIT = 0; Net ≈ Gross − employee insurance.\n\nExample 2026: 26.85M − 15.5M = 11.35M taxable.",
     sources: [
-      "PIT Law. Employment taxable income",
-      "docs/domain/thue-tncn.md §1, §3",
-    ],
+      "PIT Law. Employment taxable income"],
   },
   "salary.pit": {
     title: "Personal income tax",
@@ -355,9 +316,7 @@ const en: TipDict = {
       "Marginal (slice) progressive tax: only the part of income in each bracket gets that bracket’s rate.\n\nThe app picks the schedule by tax year. No mid-2026 split.",
     sources: [
       "Prior PIT Law Art. 22: 7 brackets (2025)",
-      "Law 109/2025: new schedule from tax year 2026",
-      "docs/domain/thue-tncn.md §3",
-    ],
+      "Law 109/2025: new schedule from tax year 2026"],
   },
   "salary.net": {
     title: "Net (estimated take-home)",
@@ -366,7 +325,7 @@ const en: TipDict = {
       "Net ≈ Gross − Employee_insurance − PIT\n(− union dues if any. Out of default scope)",
     detail:
       "Offline estimate from in-app rules. Employer-specific exemptions may differ.\n\nExample 30M Gross, 0 dependents, under SI cap (2026): Net ≈ 26,065,000 VND.",
-    sources: ["Engine formula. Docs/domain/thue-tncn.md §1", "TC-TNCN-2026-01"],
+    sources: ["Engine formula (Gross − insurance − PIT)", "TC-TNCN-2026-01"],
   },
   "settlement.refund": {
     title: "Estimated refund",
@@ -376,9 +335,7 @@ const en: TipDict = {
       "In-app estimate only. Before filing, reconcile withholding certificates, registered relief, and actual income.\n\nSettlement year follows the income year (e.g. 2025 income → 2025 brackets/relief).",
     sources: [
       "Annual PIT settlement guidance",
-      "Official letter 1296/CT-NVT",
-      "docs/domain/thue-tncn.md (settlement)",
-    ],
+      "Official letter 1296/CT-NVT"],
   },
   "settlement.pay": {
     title: "Estimated extra payment",
@@ -386,7 +343,7 @@ const en: TipDict = {
     formula: "Extra_due ≈ max(0, Annual_tax_estimate − Withheld)",
     detail:
       "Estimate only. Official amounts depend on the return, documents, and filing-period rules.",
-    sources: ["Annual PIT settlement guidance", "docs/domain/thue-tncn.md"],
+    sources: ["Annual PIT settlement guidance"],
   },
   "settlement.even": {
     title: "Balanced (estimate)",
@@ -394,7 +351,7 @@ const en: TipDict = {
     formula: "Annual_tax_estimate ≈ Withheld → delta ≈ 0",
     detail:
       "Still verify payslips before filing. Small gaps can come from monthly rounding.",
-    sources: ["docs/domain/thue-tncn.md"],
+    sources: ["Hướng dẫn quyết toán TNCN"],
   },
   "other.vat": {
     title: "VAT (estimate)",
@@ -404,9 +361,7 @@ const en: TipDict = {
       "Quick estimate from the tax-year ruleset. Rentals / household businesses may use different rates. Check the decree for your activity.",
     sources: [
       "VAT Law 2024 Art. 12",
-      "Decrees 68/141/2026",
-      "docs/domain/thu-nhap-khac.md",
-    ],
+      "Decrees 68/141/2026"],
   },
   "other.pit": {
     title: "PIT (other income)",
@@ -417,9 +372,7 @@ const en: TipDict = {
       "Each other-income type has its own rate/threshold in the ruleset. Not merged with the employment progressive schedule.",
     sources: [
       "Law 109/2025 Art. 7",
-      "Decrees 68/141/253/2026",
-      "docs/domain/thu-nhap-khac.md",
-    ],
+      "Decrees 68/141/253/2026"],
   },
   "other.threshold": {
     title: "Exemption threshold",
@@ -429,9 +382,7 @@ const en: TipDict = {
     detail:
       "Thresholds follow the decree for the tax year. Tax exemption ≠ exemption from all admin duties.",
     sources: [
-      "Decree 141/2026; Decree 68/2026",
-      "docs/domain/thu-nhap-khac.md",
-    ],
+      "Decree 141/2026; Decree 68/2026"],
   },
   "ot.pay": {
     title: "Overtime pay",
@@ -442,9 +393,7 @@ const en: TipDict = {
       "Used to estimate taxable Gross. Real OT caps and compensatory leave follow your employer rules and the Labor Code.",
     sources: [
       "Labor Code 2019 Art. 98",
-      "Decree 145/2020 Arts. 55–57",
-      "docs/domain/quyen-loi-lao-dong.md",
-    ],
+      "Decree 145/2020 Arts. 55–57"],
   },
   "bonus.month": {
     title: "Bonus / OT month",
@@ -453,7 +402,18 @@ const en: TipDict = {
       "Gross_month = base_pay + bonus + OT + …\nSI_base (default) = contractual pay (excludes bonus/OT)",
     detail:
       "Some employers include bonus in the SI base. Adjust the contribution base if your payslip differs.\n\nPIT is computed on Gross including bonus/OT.",
-    sources: ["docs/domain/thue-tncn.md", "docs/domain/bhxh-bhyt-bhtn.md"],
+    sources: ["PIT Law (bonus/OT month)", "Social Insurance Law (contribution base)"],
+  },
+  "salary.asOfMonth": {
+    title: "Payroll month",
+    body: "The month sets the as-of date for insurance caps within the tax year. Tax year picks brackets/relief; month picks the SI cap when it changes mid-year.",
+    formula: "As_of ≈ the 15th of (tax year + selected month)",
+    detail:
+      "You still pick a month for 2025: the app uses it for the as-of date, not just display.\n\nMost important in 2026: the SI/HI cap changes on 1 Jul 2026. Months 1–6 use H1 caps; 7–12 use H2. For years without a mid-year cap change (e.g. 2025), month matters less but keeps the estimate aligned with the pay period you mean.",
+    sources: [
+      "Social Insurance Law: contribution caps at the applicable time",
+      "In-app tax-year ruleset (date-based parameters)",
+    ],
   },
 };
 
@@ -551,6 +511,10 @@ const zh = localizeFromEn({
     title: "奖金/加班月",
     body: "奖金与加班在收到月纳税。保险基数默认仍按合同工资。",
   },
+  "salary.asOfMonth": {
+    title: "计薪月份",
+    body: "用于在税年内选择保险上限的适用日。税年决定税率/减免，月份决定年中变更的社保上限。",
+  },
 });
 
 const hi = localizeFromEn({
@@ -630,6 +594,10 @@ const hi = localizeFromEn({
   "bonus.month": {
     title: "बोनस / OT माह",
     body: "प्राप्ति माह में कर। बीमा आधार डिफ़ॉल्ट अनुबंध वेतन पर रहता है।",
+  },
+  "salary.asOfMonth": {
+    title: "वेतन माह",
+    body: "कर वर्ष में बीमा सीमा की लागू तिथि चुनने के लिए। कर वर्ष ब्रैकेट/राहत चुनता है; माह मध्य-वर्ष सीमा बदलाव पर लागू होता है।",
   },
 });
 
@@ -714,6 +682,10 @@ const es = localizeFromEn({
     title: "Mes con bonus / extras",
     body: "Bonus y extras se gravan en el mes de cobro. La base de seguro suele ser el salario contractual.",
   },
+  "salary.asOfMonth": {
+    title: "Mes de nómina",
+    body: "Define la fecha de aplicación de topes de seguro en el año fiscal. El año elige tramos/reducciones; el mes el tope si cambia a mitad de año.",
+  },
 });
 
 const fr = localizeFromEn({
@@ -797,6 +769,10 @@ const fr = localizeFromEn({
     title: "Mois avec prime / HS",
     body: "Primes et HS imposées le mois de versement. Assiette d’assurance = salaire contractuel par défaut.",
   },
+  "salary.asOfMonth": {
+    title: "Mois de paie",
+    body: "Fixe la date d’application des plafonds d’assurance dans l’année fiscale. L’année choisit barème/abattements ; le mois le plafond en cas de changement en cours d’année.",
+  },
 });
 
 const ja = localizeFromEn({
@@ -879,6 +855,10 @@ const ja = localizeFromEn({
   "bonus.month": {
     title: "賞与・残業月",
     body: "受取月に課税。保険基礎は原則契約賃金のまま。",
+  },
+  "salary.asOfMonth": {
+    title: "給与月",
+    body: "税年内の保険上限の適用日を決めます。税年は税率・控除、月は年途中の上限変更に使います。",
   },
 });
 

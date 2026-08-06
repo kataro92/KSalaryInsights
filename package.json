@@ -1,5 +1,5 @@
 {
-  "name": "kvsalarytools",
+  "name": "ksalaryinsights",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "private": true,
@@ -7,8 +7,11 @@
   "author": "Phạm Huy Đức <kataro92@gmail.com>",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start:release": "expo start --no-dev --minify",
+    "ios": "expo run:ios",
+    "ios:release": "expo start --ios --no-dev --minify",
+    "android": "expo run:android",
+    "android:release": "expo start --android --no-dev --minify",
     "web": "expo start --web",
     "test": "npm run test:engine",
     "test:engine": "node --experimental-strip-types --import ./scripts/register.mjs ./scripts/smoke-engine.mts",

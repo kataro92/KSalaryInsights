@@ -70,9 +70,15 @@ type Props = {
   breakdown: SalaryBreakdown;
   /** When ResultHero already shows Net above. */
   hideNet?: boolean;
+  /** When ResultHero already shows Gross above (Net → Gross mode). */
+  hideGross?: boolean;
 };
 
-export function SalaryBreakdownCard({ breakdown, hideNet = false }: Props) {
+export function SalaryBreakdownCard({
+  breakdown,
+  hideNet = false,
+  hideGross = false,
+}: Props) {
   const { t } = useI18n();
   const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -82,15 +88,17 @@ export function SalaryBreakdownCard({ breakdown, hideNet = false }: Props) {
       <ColorBlock tone="muted">
         <Text style={styles.heading}>{t("salary.breakdownTitle")}</Text>
 
-        <Row
-          styles={styles}
-          label={t("salary.labelGross")}
-          value={formatVnd(breakdown.gross)}
-          tipId="salary.gross"
-          emphasis="subtotal"
-        />
+        {!hideGross ? (
+          <Row
+            styles={styles}
+            label={t("salary.labelGross")}
+            value={formatVnd(breakdown.gross)}
+            tipId="salary.gross"
+            emphasis="subtotal"
+          />
+        ) : null}
 
-        <GroupDivider styles={styles} />
+        {!hideGross ? <GroupDivider styles={styles} /> : null}
         <GroupTitle styles={styles}>{t("salary.groupInsurance")}</GroupTitle>
         <Row
           styles={styles}

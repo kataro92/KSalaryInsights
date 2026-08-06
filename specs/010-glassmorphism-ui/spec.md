@@ -2,7 +2,7 @@
 
 **Status**: Complete (5 review rounds done) 
 **Date**: 2026-08-05 
-**App**: KVSalaryTools (React Native / Expo) 
+**App**: KSalaryInsights (React Native / Expo) 
 **Supersedes (partially)**: Flat-only rules in `docs/product/design-system.md` §1, §2.4, §3.2 for chrome surfaces. Flat Color Blocks remain for dense forms and numeric results.
 
 ---

@@ -113,6 +113,21 @@ describe("filingWizard", () => {
     );
     expect(r.conclusion).toBe("self_file");
     expect(r.individualDeadlineLabel).toMatch(/tháng 5/);
+    expect(r.checklist.some((c) => /HKD|cho thuê|CK/i.test(c))).toBe(true);
+  });
+
+  it("forceSelfFile from multi-source overrides authorize path", () => {
+    const r = evaluateFilingWizard(
+      {
+        hasSingleEmployerFullYear: true,
+        hasOtherIncome: false,
+        employerOffersAuthorization: true,
+      },
+      2026,
+      { forceSelfFile: true }
+    );
+    expect(r.conclusion).toBe("self_file");
+    expect(r.notes.some((n) => /ngoài lương/i.test(n))).toBe(true);
   });
 });
 

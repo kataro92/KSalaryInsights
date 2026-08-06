@@ -1,14 +1,19 @@
 /** Supported UI locales. Default `vi`. */
 export type LocaleCode = "vi" | "en" | "zh" | "hi" | "es" | "fr" | "ja";
 
-export const LOCALE_OPTIONS: readonly { code: LocaleCode; label: string }[] = [
-  { code: "vi", label: "Tiếng Việt" },
-  { code: "en", label: "English" },
-  { code: "zh", label: "中文" },
-  { code: "hi", label: "हिंदी" },
-  { code: "es", label: "Español" },
-  { code: "fr", label: "Français" },
-  { code: "ja", label: "日本語" },
+export const LOCALE_OPTIONS: readonly {
+  code: LocaleCode;
+  label: string;
+  /** Regional flag emoji for the language picker. */
+  flag: string;
+}[] = [
+  { code: "vi", label: "Tiếng Việt", flag: "🇻🇳" },
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "zh", label: "中文", flag: "🇨🇳" },
+  { code: "hi", label: "हिंदी", flag: "🇮🇳" },
+  { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "ja", label: "日本語", flag: "🇯🇵" },
 ] as const;
 
 export const DEFAULT_LOCALE: LocaleCode = "vi";
@@ -34,6 +39,7 @@ export type TipId =
   | "salary.taxable"
   | "salary.pit"
   | "salary.net"
+  | "salary.asOfMonth"
   | "settlement.refund"
   | "settlement.pay"
   | "settlement.even"
