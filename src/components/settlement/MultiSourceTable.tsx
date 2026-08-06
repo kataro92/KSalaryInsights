@@ -17,8 +17,8 @@ type Props = {
 function deltaLabel(totals: MultiSourceTotals): string {
   if (totals.deltaKind === "even") return "Khớp (ước)";
   if (totals.deltaKind === "pay")
-    return `Nộp thêm ước ${formatVnd(totals.deltaSigned)}`;
-  return `Hoàn ước ${formatVnd(-totals.deltaSigned)}`;
+    return `Có thể cần nộp thêm ${formatVnd(totals.deltaSigned)}`;
+  return `Có thể được hoàn ${formatVnd(-totals.deltaSigned)}`;
 }
 
 export function MultiSourceTable({
@@ -47,11 +47,11 @@ export function MultiSourceTable({
             <Text style={styles.kind}>{line.kind}</Text>
           </View>
           <Text style={styles.meta}>
-            Thu nhập / DT: {formatVnd(line.revenueOrIncome)}
+            Thu nhập / doanh thu: {formatVnd(line.revenueOrIncome)}
           </Text>
           {line.estimatedVat > 0 || line.estimatedPit > 0 ? (
             <Text style={styles.meta}>
-              GTGT {formatVnd(line.estimatedVat)} · TNCN{" "}
+              Thuế giá trị gia tăng {formatVnd(line.estimatedVat)} · thuế thu nhập cá nhân{" "}
               {formatVnd(line.estimatedPit)}
               {line.estimatedOtherTax > 0
                 ? ` · khác ${formatVnd(line.estimatedOtherTax)}`
@@ -104,7 +104,7 @@ export function MultiSourceTable({
         </Text>
         <Text style={styles.totalsDelta}>{deltaLabel(totals)}</Text>
         <Text style={styles.note}>
-          Tổng = Σ thuế từng dòng − Σ đã nộp. Không suy ra một tờ khai duy nhất.
+          Tổng = thuế từng dòng − số đã nộp. Không suy ra một tờ khai duy nhất.
         </Text>
       </ColorBlock>
     </View>

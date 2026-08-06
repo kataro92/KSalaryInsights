@@ -1,4 +1,9 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -28,7 +33,8 @@ import {
 } from "@/src/store/onboarding";
 import { hydrateRulesetOverlaysFromCache } from "@/src/engine/rulesetUpdate";
 import { ThemeProvider, useTheme } from "@/src/theme/ThemeProvider";
-import { motion } from "@/src/theme/tokens";
+import { FontsReadyContext } from "@/src/theme/FontsReady";
+import { motion, typography } from "@/src/theme/tokens";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -71,12 +77,13 @@ function RootGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (finished.current) return;
 
+    // Never dismiss into UI that painted with system fallback fonts.
     const assetsReady = fontsLoaded && ready && onboarding !== "loading";
     const elapsed = Date.now() - startedAt.current;
     const minBrand = showBrandedSplash ? motion.splashBrandMs : 0;
 
     const finish = async () => {
-      if (finished.current) return;
+      if (finished.current || !fontsLoaded) return;
       finished.current = true;
       coldStartSplashConsumed = true;
       setSplashVisible(false);
@@ -99,20 +106,32 @@ function RootGate({ children }: { children: ReactNode }) {
       return () => clearTimeout(t);
     }
 
+    // Cap only applies once fonts are in; keep splash until then.
+    if (!fontsLoaded) return;
+
     const cap = setTimeout(() => void finish(), hardCapLeft);
     return () => clearTimeout(cap);
   }, [fontsLoaded, ready, showBrandedSplash, onboarding]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <StatusBar style={isDark ? "light" : "dark"} />
-      {children}
-      <SplashView visible={splashVisible} />
-      {!splashVisible && onboarding === "show" ? (
-        <OnboardingScreen onDone={() => setOnboarding("done")} />
-      ) : null}
-      <LoadingOverlay visible={visible} message={message} />
-    </View>
+    <FontsReadyContext.Provider value={fontsLoaded}>
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <StatusBar style={isDark ? "light" : "dark"} />
+        {/* Mount tabs only after ExtraBold is available so tab 1 matches other tabs. */}
+        {fontsLoaded ? (
+          <View key="app-fonts-ready" style={{ flex: 1 }}>
+            {children}
+          </View>
+        ) : (
+          <View style={{ flex: 1, backgroundColor: colors.background }} />
+        )}
+        <SplashView visible={splashVisible || !fontsLoaded} />
+        {fontsLoaded && !splashVisible && onboarding === "show" ? (
+          <OnboardingScreen onDone={() => setOnboarding("done")} />
+        ) : null}
+        <LoadingOverlay visible={visible} message={message} />
+      </View>
+    </FontsReadyContext.Provider>
   );
 }
 
@@ -144,7 +163,11 @@ function ThemedStack() {
         contentStyle: { backgroundColor: colors.background },
         headerStyle: { backgroundColor: colors.background },
         headerTintColor: colors.primary,
-        headerTitleStyle: { color: colors.foreground },
+        headerTitleStyle: {
+          fontFamily: typography.fontFamily.bold,
+          fontSize: typography.scale.subtitle.fontSize,
+          color: colors.foreground,
+        },
         headerShadowVisible: false,
       }}
     >
@@ -171,11 +194,11 @@ function ThemedStack() {
       />
       <Stack.Screen
         name="sick-leave"
-        options={{ headerShown: true, title: "Ốm đau" }}
+        options={{ headerShown: true, title: "Nghỉ ốm" }}
       />
       <Stack.Screen
         name="retirement"
-        options={{ headerShown: true, title: "Hưu / BHXH một lần" }}
+        options={{ headerShown: true, title: "Lương hưu / nhận một lần" }}
       />
       <Stack.Screen
         name="other-income"

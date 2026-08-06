@@ -61,16 +61,16 @@ export function calcSeverancePay(input: SeveranceInput): SeveranceBreakdown {
 
   const explanations: string[] = [];
   explanations.push(
-    `Thời gian tính = tổng − BHTN − đã chi trả = ${countedMonths} tháng → làm tròn ${yearsCounted} năm.`
+    `Thời gian tính = tổng thời gian làm việc − thời gian đóng bảo hiểm thất nghiệp − thời gian đã được chi trả = ${countedMonths} tháng, làm tròn thành ${yearsCounted} năm.`
   );
   if (bhtnM > 0) {
     explanations.push(
-      `Đã trừ ${bhtnM} tháng tham gia BHTN khỏi thời gian tính trợ cấp.`
+      `Đã trừ ${bhtnM} tháng tham gia bảo hiểm thất nghiệp khỏi thời gian tính trợ cấp.`
     );
   }
   if (yearsCounted <= 0) {
     explanations.push(
-      "Thời gian tính trợ cấp = 0 vì đã tham gia BHTN (và/hoặc đã được chi trả) hết thời gian làm việc. Kết quả 0 là đúng luật, không phải lỗi."
+      "Thời gian tính trợ cấp = 0 vì thời gian làm việc đã được tính vào bảo hiểm thất nghiệp (và/hoặc đã được chi trả) hết. Kết quả 0 là đúng luật, không phải lỗi."
     );
   }
   if (input.mode === "job_loss" && yearsCounted > 0 && rawMonths < minMonths) {

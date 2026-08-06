@@ -28,8 +28,8 @@ import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedSty
 const HKD_INDUSTRIES: { id: HkdIndustryId; label: string }[] = [
   { id: "services", label: "Dịch vụ" },
   { id: "distribution", label: "Phân phối" },
-  { id: "production_transport", label: "SX / VT" },
-  { id: "asset_rental_agency", label: "Cho thuê ĐV" },
+  { id: "production_transport", label: "Sản xuất / vận tải" },
+  { id: "asset_rental_agency", label: "Cho thuê tài sản / đại lý" },
   { id: "other", label: "Khác" },
 ];
 
@@ -53,7 +53,7 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
 
   const amountHint =
     kind === "salary"
-      ? "Thu nhập sau BH / năm (tóm tắt)"
+      ? "Thu nhập sau bảo hiểm trong năm"
       : kind === "casual"
         ? "Tổng chi trả vãng lai"
         : kind === "securities" || kind === "esop"
@@ -135,7 +135,7 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
 
       {kind === "hkd" ? (
         <>
-          <Text style={styles.label}>Nhóm ngành HKD</Text>
+          <Text style={styles.label}>Nhóm ngành hộ kinh doanh</Text>
           <ChipRow>
             {HKD_INDUSTRIES.map((ind) => (
               <ChoiceChip
@@ -158,9 +158,9 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
 
       {kind === "salary" ? (
         <>
-          <Text style={styles.label}>Thuế TNCN năm ước (từ QT lương)</Text>
+          <Text style={styles.label}>Thuế thu nhập cá nhân năm ước tính (từ quyết toán lương)</Text>
           <MoneyField
-            accessibilityLabel="Thuế TNCN năm ước"
+            accessibilityLabel="Thuế thu nhập cá nhân năm ước tính"
             value={taxText}
             onValueChange={setTaxText}
           />

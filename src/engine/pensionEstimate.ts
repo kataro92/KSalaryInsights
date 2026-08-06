@@ -104,7 +104,7 @@ export function calcPensionRate(
 
 export function calcPensionMonthly(input: PensionInput): PensionBreakdown {
   if (input.adjustedAvgSalary <= 0) {
-    throw new Error("MBQTL phải > 0");
+    throw new Error("Lương bình quân đã điều chỉnh phải > 0");
   }
 
   const taxYear = input.taxYear ?? 2026;
@@ -121,7 +121,7 @@ export function calcPensionMonthly(input: PensionInput): PensionBreakdown {
   const monthlyAmount = roundVnd(rate * input.adjustedAvgSalary);
 
   const estimateNote =
-    "Khoảng ước tính. MBQTL thật phụ thuộc lịch sử đóng và hệ số trượt giá; app không tính MBQTL thay bạn.";
+    "Khoảng ước tính. Lương bình quân thật phụ thuộc lịch sử đóng và hệ số trượt giá; app không tính thay bạn.";
 
   const formula =
     rate === 0
@@ -143,7 +143,7 @@ export function calcPensionMonthly(input: PensionInput): PensionBreakdown {
     rulesetId: ruleset.id,
     legalSources: [
       ...ruleset.legal_sources,
-      "Luật BHXH 41/2024 Đ.66: tỷ lệ lương hưu",
+      "Luật Bảo hiểm xã hội 41/2024 Đ.66: tỷ lệ lương hưu",
     ],
   };
 }

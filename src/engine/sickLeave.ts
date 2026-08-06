@@ -81,7 +81,7 @@ export function calculateSickLeave(input: SickLeaveInput): SickLeaveBreakdown {
     rulesetId: ruleset.id,
     legalSources: [
       ...ruleset.legal_sources,
-      "Luật BHXH 41/2024 Đ.43/45: ốm đau",
+      "Luật Bảo hiểm xã hội 41/2024 Đ.43/45: ốm đau",
     ],
   };
 }

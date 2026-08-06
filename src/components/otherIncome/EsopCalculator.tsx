@@ -10,6 +10,7 @@ import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
 import type { EsopBreakdown } from "@/src/domain/types/otherIncome";
 import { calculateEsop } from "@/src/engine/otherIncome/esop";
+import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
@@ -33,6 +34,7 @@ type Props = { taxYear: number };
 export function EsopCalculator({ taxYear }: Props) {
   const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const scroll = useOptionalScrollToResult();
   const [useBookCost, setUseBookCost] = useState(true);
   const [bookText, setBookText] = useState("100.000.000");
   const [sharesText, setSharesText] = useState("10000");
@@ -73,6 +75,7 @@ export function EsopCalculator({ taxYear }: Props) {
         })
       );
       void successHaptic();
+      scroll?.scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -81,7 +84,10 @@ export function EsopCalculator({ taxYear }: Props) {
 
   return (
     <View style={styles.wrap}>
-      <Section title="ESOP" subtitle="TLTC khấu trừ + thuế chuyển nhượng.">
+      <Section
+        title="ESOP"
+        subtitle="Tính thuế từ cổ phiếu được thưởng/mua ưu đãi và thuế khi chuyển nhượng."
+      >
         <View style={styles.switchRow}>
           <Text style={styles.switchLabel}>Dùng chi phí ghi sổ</Text>
           <Switch
@@ -182,14 +188,14 @@ export function EsopCalculator({ taxYear }: Props) {
       ) : null}
       <Button label="Tính ESOP" onPress={onCalculate} />
       {result ? (
-        <>
+        <View ref={scroll?.anchorRef} collapsable={false}>
           <ResultHero
             tone="primary"
-            eyebrow="Ước thuế ESOP"
+            eyebrow="Thuế ESOP ước tính"
             label="Tổng thuế"
             amount={result.totalTax}
           />
-          <NgaiMiuTip tip="TLTC khấu trừ và thuế chuyển nhượng tách dòng. đọc ghi chú quyết toán nếu có." />
+          <NgaiMiuTip tip="Thuế từ phần thu nhập cổ phiếu và thuế chuyển nhượng được tách dòng. Đọc ghi chú quyết toán nếu có." />
           <OtherIncomeBreakdownCard
             title="ESOP"
             total={result.totalTax}
@@ -197,7 +203,7 @@ export function EsopCalculator({ taxYear }: Props) {
             lines={[
               {
                 id: "tlcc",
-                label: "TLTC khấu trừ",
+                label: "Thuế thu nhập từ cổ phiếu",
                 amount: result.tlccWithholding,
               },
               {
@@ -211,10 +217,10 @@ export function EsopCalculator({ taxYear }: Props) {
             hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
-          title="Chưa có ước ESOP"
+          title="Chưa có thuế ESOP ước tính"
           body="Nhập chi phí / giá bán, rồi bấm Tính ESOP."
         />
       ) : null}
@@ -233,9 +239,12 @@ function makeStyles({ colors }: ThemeContextValue) {
       marginBottom: space[2],
     },
     switchLabel: {
+      flex: 1,
+      flexShrink: 1,
       fontFamily: typography.fontFamily.medium,
       fontSize: 14,
       color: colors.foreground,
+      paddingRight: space[2],
     },
     fieldLabel: {
       fontFamily: typography.fontFamily.medium,

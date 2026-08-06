@@ -36,7 +36,7 @@ function totalMonths(input: LumpSumInput): number {
  */
 export function calcLumpSum(input: LumpSumInput): LumpSumBreakdown {
   if (input.adjustedAvgSalary <= 0) {
-    throw new Error("MBQTL phải > 0");
+    throw new Error("Lương bình quân đã điều chỉnh phải > 0");
   }
 
   const taxYear = input.taxYear ?? 2026;
@@ -69,8 +69,8 @@ export function calcLumpSum(input: LumpSumInput): LumpSumBreakdown {
   const explanations: string[] = [];
   const legalSources = [
     ...ruleset.legal_sources,
-    "Luật BHXH 41/2024 Đ.70: BHXH một lần",
-    "Luật BHXH 41/2024 Đ.5 k.6: làm tròn tháng lẻ",
+    "Luật Bảo hiểm xã hội 41/2024 Đ.70: bảo hiểm xã hội một lần",
+    "Luật Bảo hiểm xã hội 41/2024 Đ.5 k.6: làm tròn tháng lẻ",
   ];
 
   // Đ.70 k.3c: chưa đủ 1 năm đóng (theo tháng thực tế, trước khi làm tròn năm)
@@ -87,7 +87,9 @@ export function calcLumpSum(input: LumpSumInput): LumpSumBreakdown {
         input
       )} tháng): mức = số đã đóng, tối đa ${
         params.under_one_year_max_months
-      } tháng MBQTL = ${maxAmount.toLocaleString("vi-VN")}.`
+      } tháng lương bình quân đã điều chỉnh = ${maxAmount.toLocaleString(
+        "vi-VN"
+      )}.`
     );
     return {
       yearsPre2014Rounded,
@@ -100,7 +102,7 @@ export function calcLumpSum(input: LumpSumInput): LumpSumBreakdown {
       underOneYear: true,
       formula: `min(đã đóng, ${
         params.under_one_year_max_months
-      } × MBQTL) = ${amount.toLocaleString("vi-VN")}`,
+      } × lương bình quân đã điều chỉnh) = ${amount.toLocaleString("vi-VN")}`,
       explanations,
       checklist,
       beforeCutoff,
@@ -121,7 +123,7 @@ export function calcLumpSum(input: LumpSumInput): LumpSumBreakdown {
     `T2 (từ 2014) = ${yearsFrom2014Rounded} năm × hệ số ${params.from_2014_coefficient}.`
   );
   explanations.push(
-    `Tổng hệ số năm = ${weightedYears} × MBQTL ${input.adjustedAvgSalary.toLocaleString(
+    `Tổng hệ số năm = ${weightedYears} × lương bình quân đã điều chỉnh ${input.adjustedAvgSalary.toLocaleString(
       "vi-VN"
     )}.`
   );

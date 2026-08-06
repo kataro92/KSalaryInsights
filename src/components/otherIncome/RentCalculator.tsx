@@ -12,6 +12,7 @@ import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherInco
 import { miuTips } from "@/src/copy/miu";
 import type { RentBreakdown } from "@/src/domain/types/otherIncome";
 import { calculateRent } from "@/src/engine/otherIncome/rent";
+import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
@@ -35,6 +36,7 @@ type Props = { taxYear: number };
 export function RentCalculator({ taxYear }: Props) {
   const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const scroll = useOptionalScrollToResult();
   const [monthlyMode, setMonthlyMode] = useState(true);
   const [amountText, setAmountText] = useState("20.000.000");
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +54,7 @@ export function RentCalculator({ taxYear }: Props) {
     try {
       setResult(calculateRent({ annualRevenue, taxYear }));
       void successHaptic();
+      scroll?.scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -94,10 +97,10 @@ export function RentCalculator({ taxYear }: Props) {
       ) : null}
       <Button label="Tính cho thuê" onPress={onCalculate} />
       {result ? (
-        <>
+        <View ref={scroll?.anchorRef} collapsable={false}>
           <ResultHero
             tone="primary"
-            eyebrow="Ước thuế cho thuê"
+            eyebrow="Thuế cho thuê ước tính"
             label="Tổng thuế"
             amount={result.totalTax}
           />
@@ -109,13 +112,13 @@ export function RentCalculator({ taxYear }: Props) {
             lines={[
               {
                 id: "vat",
-                label: "GTGT",
+                label: "Thuế giá trị gia tăng",
                 amount: result.vat,
                 tipId: "other.vat",
               },
               {
                 id: "pit",
-                label: "TNCN",
+                label: "Thuế thu nhập cá nhân",
                 amount: result.pit,
                 tipId: "other.pit",
               },
@@ -125,10 +128,10 @@ export function RentCalculator({ taxYear }: Props) {
             hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
-          title="Chưa có ước cho thuê"
+          title="Chưa có thuế cho thuê ước tính"
           body="Nhập doanh thu, rồi bấm Tính cho thuê."
         />
       ) : null}
@@ -147,9 +150,12 @@ function makeStyles({ colors }: ThemeContextValue) {
       minHeight: layout.minTouch,
     },
     switchLabel: {
+      flex: 1,
+      flexShrink: 1,
       fontFamily: typography.fontFamily.medium,
       fontSize: 14,
       color: colors.foreground,
+      paddingRight: space[2],
     },
   } as const;
 }

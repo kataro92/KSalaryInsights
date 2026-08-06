@@ -10,6 +10,7 @@ import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
 import type { CasualWithholdingBreakdown } from "@/src/domain/types/otherIncome";
 import { calculateCasualWithholding } from "@/src/engine/otherIncome/casualWithholding";
+import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
@@ -31,6 +32,7 @@ type Props = { taxYear: number; asOfDate?: string };
 
 export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
   const styles = useThemedStyles(makeStyles);
+  const scroll = useOptionalScrollToResult();
   const [amountText, setAmountText] = useState("10.000.000");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<CasualWithholdingBreakdown | null>(null);
@@ -52,6 +54,7 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
         })
       );
       void successHaptic();
+      scroll?.scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -61,8 +64,8 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
   return (
     <View style={styles.wrap}>
       <Section
-        title="Vãng lai. Khấu trừ tại nguồn"
-        subtitle="Ngưỡng 5tr (2026) / 2tr (≤2025) theo năm thuế. Miễn QT xem Quyết toán."
+        title="Thu nhập vãng lai. Khấu trừ tại nguồn"
+        subtitle="Ngưỡng 5 triệu (2026) / 2 triệu (đến 2025) theo năm thuế. Điều kiện miễn tự quyết toán xem ở mục Quyết toán."
       >
         <TextInput
           accessibilityLabel="Số tiền chi trả vãng lai"
@@ -83,16 +86,16 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
       ) : null}
       <Button label="Tính khấu trừ" onPress={onCalculate} />
       {result ? (
-        <>
+        <View ref={scroll?.anchorRef} collapsable={false}>
           <ResultHero
             tone="primary"
-            eyebrow="Khấu trừ vãng lai"
+            eyebrow="Thuế vãng lai đã khấu trừ"
             label="Đã trừ"
             amount={result.withheld}
           />
-          <NgaiMiuTip tip="Thực nhận nằm trong breakdown. Miễn QT chỉ áp khi đủ điều kiện ở Quyết toán." />
+          <NgaiMiuTip tip="Số tiền thực nhận nằm trong phần chi tiết. Miễn tự quyết toán chỉ áp khi đủ điều kiện ở mục Quyết toán." />
           <OtherIncomeBreakdownCard
-            title="Khấu trừ vãng lai"
+            title="Thu nhập vãng lai"
             total={result.withheld}
             totalLabel="Số khấu trừ"
             formula={result.formula}
@@ -105,10 +108,10 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
             hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
-          title="Chưa có ước khấu trừ"
+          title="Chưa có thuế vãng lai ước tính"
           body="Nhập số tiền chi trả, rồi bấm Tính khấu trừ."
         />
       ) : null}

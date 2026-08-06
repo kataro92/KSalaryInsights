@@ -39,7 +39,7 @@ export function SickLeaveInputs({ value, onChange }: Props) {
     <View style={styles.wrap}>
       <Section
         title="Lương tháng liền kề"
-        subtitle="Căn cứ đóng BHXH tháng gần nhất trước tháng nghỉ."
+        subtitle="Lương làm căn cứ đóng bảo hiểm xã hội tháng gần nhất trước tháng nghỉ."
       >
         <TextInput
           accessibilityLabel="Lương tháng liền kề"
@@ -69,11 +69,11 @@ export function SickLeaveInputs({ value, onChange }: Props) {
       </Section>
 
       <Section
-        title="Năm đóng BHXH"
+        title="Năm đóng bảo hiểm xã hội"
         subtitle="Chọn trần 30/40/60 (hoặc 40/50/70 nếu nặng nhọc)."
       >
         <TextInput
-          accessibilityLabel="Số năm đóng BHXH"
+          accessibilityLabel="Số năm đóng bảo hiểm xã hội"
           keyboardType="number-pad"
           value={value.yearsText}
           onChangeText={(t) => patch({ yearsText: t.replace(/[^\d]/g, "") })}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { View } from "react-native";
 
 import { SickLeaveBreakdownCard } from "@/src/components/breakdown/SickLeaveBreakdownCard";
 import { Button } from "@/src/components/common/Button";
@@ -16,11 +17,13 @@ import { TAX_YEAR_OPTIONS } from "@/src/domain/constants/salary";
 import type { SickLeaveBreakdown } from "@/src/domain/types/benefits";
 import { calculateSickLeave } from "@/src/engine/sickLeave";
 import { usePreferences } from "@/src/hooks/usePreferences";
+import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
 import { parseMoney } from "@/src/theme/money";
 
 export function SickLeaveCalculatorScreen() {
   const { preferences } = usePreferences();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
   const taxYear = (TAX_YEAR_OPTIONS as readonly number[]).includes(
     preferences.defaultTaxYear
   )
@@ -61,6 +64,7 @@ export function SickLeaveCalculatorScreen() {
       });
       setResult(next);
       void successHaptic();
+      scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -71,9 +75,11 @@ export function SickLeaveCalculatorScreen() {
     <ToolScreen
       nested
       title="Ốm đau"
-      subtitle="75% lương ngày · có trần theo số năm đóng BHXH."
+      subtitle="Tính tiền nghỉ ốm hưởng bảo hiểm xã hội. Mức thường là 75% lương ngày và có giới hạn số ngày."
       accessibilityLabel="Máy tính ốm đau"
-      sticky={<Button label="Tính ốm đau" onPress={onCalculate} />}
+      scrollRef={scrollRef}
+      onScroll={onScroll}
+      sticky={<Button label="Tính tiền nghỉ ốm" onPress={onCalculate} />}
     >
       <SickLeaveInputs
         value={inputs}
@@ -90,9 +96,9 @@ export function SickLeaveCalculatorScreen() {
         />
       ) : null}
       {result ? (
-        <>
+        <View ref={anchorRef} collapsable={false}>
           <ResultHero
-            eyebrow="Ước ốm đau"
+            eyebrow="Tiền nghỉ ốm ước tính"
             label="Trợ cấp"
             amount={result.amount}
           />
@@ -102,7 +108,7 @@ export function SickLeaveCalculatorScreen() {
             legalSources={result.legalSources}
             collapseSources
           />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
           title={emptyCopy.sickLeave.title}

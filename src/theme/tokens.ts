@@ -82,5 +82,8 @@ export const layout = {
   minTouch: 44,
   /** Extra bottom inset so content clears the translucent tab bar. */
   tabBarClearance: 56,
+  /** Single primary sticky CTA (+ glass padding). */
   stickyBarHeight: 72,
+  /** Two stacked sticky CTAs (e.g. Settlement primary + secondary). */
+  stickyBarHeightDual: 148,
 } as const;

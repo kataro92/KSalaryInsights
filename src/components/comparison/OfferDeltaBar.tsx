@@ -17,7 +17,7 @@ function signed(n: number): string {
 }
 
 /**
- * Shows ΔNet / ΔGross (B − A) when both offers succeed. No advice copy.
+ * Shows Net / Gross difference (B minus A) when both offers succeed. No advice copy.
  */
 export function OfferDeltaBar({ deltaNet, deltaGross }: Props) {
   const styles = useThemedStyles(makeStyles);
@@ -26,7 +26,7 @@ export function OfferDeltaBar({ deltaNet, deltaGross }: Props) {
     return (
       <ColorBlock tone="muted" accessibilityLabel="Chênh lệch chưa có">
         <Text style={styles.note}>
-          ΔNet / ΔGross hiện khi cả hai offer tính được.
+          Chênh Net và Gross sẽ hiện khi cả hai offer tính được.
         </Text>
       </ColorBlock>
     );
@@ -37,14 +37,28 @@ export function OfferDeltaBar({ deltaNet, deltaGross }: Props) {
       tone="primarySoft"
       accessibilityLabel="Chênh lệch Net và Gross giữa hai offer"
     >
-      <Text style={styles.title}>Chênh lệch (B − A) · ước tính</Text>
+      <Text style={styles.title}>Chênh lệch offer B so với A</Text>
       <View style={styles.row}>
-        <Text style={styles.label}>ΔNet</Text>
-        <Text style={styles.value}>{signed(deltaNet)}</Text>
+        <Text style={styles.label}>Chênh Net</Text>
+        <Text
+          style={styles.value}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+        >
+          {signed(deltaNet)}
+        </Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.label}>ΔGross</Text>
-        <Text style={styles.value}>{signed(deltaGross)}</Text>
+        <Text style={styles.label}>Chênh Gross</Text>
+        <Text
+          style={styles.value}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+        >
+          {signed(deltaGross)}
+        </Text>
       </View>
       <Text style={styles.note}>
         Chỉ số liệu ước, không phải khuyến nghị chọn offer.
@@ -69,14 +83,19 @@ function makeStyles({ colors }: ThemeContextValue) {
       marginBottom: space[1],
     },
     label: {
+      flexShrink: 1,
       fontFamily: typography.fontFamily.medium,
       fontSize: typography.scale.body.fontSize,
       color: colors.foregroundMuted,
     },
     value: {
+      flexShrink: 1,
+      minWidth: 0,
       fontFamily: typography.fontFamily.bold,
       fontSize: typography.scale.body.fontSize,
       color: colors.foreground,
+      textAlign: "right",
+      fontVariant: ["tabular-nums"],
     },
     note: {
       fontFamily: typography.fontFamily.regular,

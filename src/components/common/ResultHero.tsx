@@ -140,7 +140,14 @@ export function ResultHero({
       </View>
       <View style={styles.row}>
         <Text style={[styles.label, palette.text]}>{label}</Text>
-        <Text style={[styles.amount, palette.text]}>{formatVnd(display)}</Text>
+        <Text
+          style={[styles.amount, palette.text]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.55}
+        >
+          {formatVnd(display)}
+        </Text>
       </View>
     </Animated.View>
   );
@@ -172,11 +179,14 @@ function makeStyles(_theme: ThemeContextValue) {
       gap: space[3],
     },
     label: {
+      flexShrink: 1,
       fontFamily: typography.fontFamily.bold,
       fontSize: typography.scale.subtitle.fontSize,
     },
     amount: {
       flexShrink: 1,
+      flexGrow: 1,
+      minWidth: 0,
       fontFamily: typography.fontFamily.extraBold,
       fontSize: typography.scale.moneyLg.fontSize,
       lineHeight: typography.scale.moneyLg.lineHeight,

@@ -8,7 +8,6 @@ import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
 import { MoneyField } from "@/src/components/common/MoneyField";
 import { ResultHero } from "@/src/components/common/ResultHero";
 import { Section } from "@/src/components/common/Section";
-import { StickyActionBar } from "@/src/components/common/StickyActionBar";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
@@ -19,10 +18,11 @@ import type {
 } from "@/src/domain/types/otherIncome";
 import { calculateHkd } from "@/src/engine/otherIncome/hkd";
 import { annualFromMonthly } from "@/src/engine/otherIncome/simpleEstimate";
+import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
-import { layout, space, typography } from "@/src/theme/tokens";
+import { space, typography } from "@/src/theme/tokens";
 import { useThemedStyles } from "@/src/theme/useThemedStyles";
 
 type Props = { taxYear: number };
@@ -39,6 +39,7 @@ const SIMPLE_INDUSTRIES: { id: HkdIndustryId; label: string }[] = [
  */
 export function SimpleHkdCalculator({ taxYear }: Props) {
   const styles = useThemedStyles(makeStyles);
+  const scroll = useOptionalScrollToResult();
   const [industryId, setIndustryId] = useState<HkdIndustryId>("distribution");
   const [monthlyText, setMonthlyText] = useState("125.000.000");
   const [error, setError] = useState<string | null>(null);
@@ -64,6 +65,7 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
         })
       );
       void successHaptic();
+      scroll?.scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -72,105 +74,99 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
 
   return (
     <View style={styles.root}>
-      <View style={styles.body}>
-        <Section
-          title="Hộ kinh doanh. Ước nhanh"
-          subtitle="Chọn nhóm gần đúng + doanh thu tháng. Tôi nhân ×12; không so sánh chi phí ở chế độ này."
-        >
-          <ChipRow>
-            {SIMPLE_INDUSTRIES.map((ind) => (
-              <ChoiceChip
-                key={ind.id}
-                label={ind.label}
-                selected={industryId === ind.id}
-                tone="secondary"
-                onPress={() => {
-                  setIndustryId(ind.id);
-                  clearResult();
-                }}
-              />
-            ))}
-          </ChipRow>
-          <MoneyField
-            label="Doanh thu / tháng"
-            accessibilityLabel="Doanh thu HKD mỗi tháng"
-            value={monthlyText}
-            onValueChange={(formatted) => {
-              setMonthlyText(formatted || "0");
-              clearResult();
-            }}
-          />
-          <Text style={styles.hint}>
-            Ngành khác hoặc so sánh (DT − CP) × 15% → bật «Đầy đủ».
-          </Text>
-        </Section>
-
-        {error ? (
-          <EmptyErrorState
-            variant="error"
-            title={emptyCopy.calculateError.title}
-            body={error}
-          />
-        ) : null}
-
-        {result ? (
-          <>
-            <ResultHero
-              tone="primary"
-              eyebrow={`HKD · ${result.industryLabel}`}
-              label="Tổng thuế"
-              amount={result.totalTax}
+      <Section
+        title="Hộ kinh doanh. Tính nhanh"
+        subtitle="Chọn nhóm gần đúng và nhập doanh thu tháng. Tôi nhân ×12 để ước thuế cả năm."
+      >
+        <ChipRow>
+          {SIMPLE_INDUSTRIES.map((ind) => (
+            <ChoiceChip
+              key={ind.id}
+              label={ind.label}
+              selected={industryId === ind.id}
+              tone="secondary"
+              onPress={() => {
+                setIndustryId(ind.id);
+                clearResult();
+              }}
             />
-            <NgaiMiuTip tip={miuTips.hkdSimple} />
-            <OtherIncomeBreakdownCard
-              title={`HKD. ${result.industryLabel}`}
-              total={result.totalTax}
-              formula={result.formula}
-              lines={[
-                {
-                  id: "vat",
-                  label: "GTGT",
-                  amount: result.vat,
-                  tipId: "other.vat",
-                },
-                {
-                  id: "pit",
-                  label: "TNCN",
-                  amount: result.pit,
-                  tipId: "other.pit",
-                },
-              ]}
-              explanations={result.explanations}
-              note={
-                result.exempt
-                  ? "Miễn thuế tỷ lệ. Vẫn kê khai doanh thu."
-                  : undefined
-              }
-              hideTotal
-            />
-            <DisclaimerFooter legalSources={result.legalSources} />
-          </>
-        ) : !error ? (
-          <EmptyErrorState
-            title="Chưa có ước HKD"
-            body="Chọn nhóm ngành và doanh thu tháng, rồi bấm Ước nhanh."
-          />
-        ) : null}
-      </View>
+          ))}
+        </ChipRow>
+        <MoneyField
+          label="Doanh thu / tháng"
+          accessibilityLabel="Doanh thu hộ kinh doanh mỗi tháng"
+          value={monthlyText}
+          onValueChange={(formatted) => {
+            setMonthlyText(formatted || "0");
+            clearResult();
+          }}
+        />
+        <Text style={styles.hint}>
+          Nếu cần nhập chi phí hoặc ngành khác, bật «Đầy đủ».
+        </Text>
+      </Section>
 
-      <StickyActionBar aboveTabBar={false}>
-        <Button label="Ước nhanh" onPress={onCalculate} />
-      </StickyActionBar>
+      <Button label="Tính nhanh" onPress={onCalculate} />
+
+      {error ? (
+        <EmptyErrorState
+          variant="error"
+          title={emptyCopy.calculateError.title}
+          body={error}
+        />
+      ) : null}
+
+      {result ? (
+        <View ref={scroll?.anchorRef} collapsable={false}>
+          <ResultHero
+            tone="primary"
+            eyebrow={`Hộ kinh doanh · ${result.industryLabel}`}
+            label="Tổng thuế"
+            amount={result.totalTax}
+          />
+          <NgaiMiuTip tip={miuTips.hkdSimple} />
+          <OtherIncomeBreakdownCard
+            title={`Hộ kinh doanh. ${result.industryLabel}`}
+            total={result.totalTax}
+            formula={result.formula}
+            lines={[
+              {
+                id: "vat",
+                label: "Thuế giá trị gia tăng",
+                amount: result.vat,
+                tipId: "other.vat",
+              },
+              {
+                id: "pit",
+                label: "Thuế thu nhập cá nhân",
+                amount: result.pit,
+                tipId: "other.pit",
+              },
+            ]}
+            explanations={result.explanations}
+            note={
+              result.exempt
+                ? "Miễn thuế tỷ lệ. Vẫn kê khai doanh thu."
+                : undefined
+            }
+            hideTotal
+          />
+          <DisclaimerFooter legalSources={result.legalSources} />
+        </View>
+      ) : !error ? (
+        <EmptyErrorState
+          title="Chưa có thuế hộ kinh doanh ước tính"
+          body="Chọn nhóm ngành và doanh thu tháng, rồi bấm Tính nhanh."
+        />
+      ) : null}
     </View>
   );
 }
 
 function makeStyles({ colors }: ThemeContextValue) {
   return {
-    root: { flexGrow: 1 },
-    body: {
+    root: {
       gap: space[4],
-      paddingBottom: layout.stickyBarHeight + space[8],
     },
     hint: {
       fontFamily: typography.fontFamily.regular,

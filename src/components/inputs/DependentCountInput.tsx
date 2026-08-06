@@ -57,9 +57,9 @@ export function DependentCountInput({ value, onChange }: Props) {
           accessibilityLabel="Ngài Miu"
         />
         <Text style={styles.tip}>
-          Điều kiện NPT theo luật; mỗi NPT chỉ giảm trừ một lần. Nhập số đã đăng
-          ký. App không kiểm tra hồ sơ. Tối đa {MAX_DEPENDENTS} (giới hạn nhập
-          trên máy, không phải mức luật).
+          Người phụ thuộc phải đủ điều kiện theo luật; mỗi người chỉ được giảm
+          trừ một lần. Nhập số đã đăng ký. App không kiểm tra hồ sơ. Tối đa{" "}
+          {MAX_DEPENDENTS} (giới hạn nhập trên máy, không phải mức luật).
         </Text>
       </View>
     </View>

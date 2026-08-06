@@ -29,7 +29,7 @@ describe("i18n", () => {
 
   it("tips include title body formula detail and sources", () => {
     const tip = getTip("vi", "salary.bhxh");
-    expect(tip.title).toMatch(/BHXH/);
+    expect(tip.title).toMatch(/Bảo hiểm xã hội/);
     expect(tip.body.length).toBeGreaterThan(20);
     expect(tip.formula).toMatch(/8%/);
     expect(tip.detail?.length).toBeGreaterThan(40);

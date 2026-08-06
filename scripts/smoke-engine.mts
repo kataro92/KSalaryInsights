@@ -177,7 +177,10 @@ const sev01 = calcSeverancePay({
 });
 assert(sev01.yearsCounted === 2, `sev01 years ${sev01.yearsCounted}`);
 assert(sev01.amount === 20_000_000, `sev01 ${sev01.amount}`);
-assert(sev01.explanations.some((e) => e.includes('BHTN')), 'sev01 explain');
+assert(
+  sev01.explanations.some((e) => e.includes('bảo hiểm thất nghiệp')),
+  'sev01 explain'
+);
 
 const sev02 = calcSeverancePay({
   mode: 'resignation',

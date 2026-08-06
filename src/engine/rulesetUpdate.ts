@@ -167,14 +167,14 @@ export async function checkAndApplyRulesetUpdates(options?: {
     const message =
       appliedIds.length > 0
         ? `Đã cập nhật ${appliedIds.length} bộ tham số.`
-        : "Mức thuế · BH đã ở phiên bản mới nhất.";
+        : "Mức thuế và bảo hiểm đã ở phiên bản mới nhất.";
 
     return { ok: true, cache, appliedIds, message };
   } catch (e) {
     const message =
       e instanceof Error
         ? e.message
-        : "Không kiểm tra được cập nhật mức thuế · BH";
+        : "Không kiểm tra được cập nhật mức thuế và bảo hiểm";
     const cache: RemoteRulesetCache = {
       ...prev,
       lastError: message,

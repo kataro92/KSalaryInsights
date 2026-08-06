@@ -98,9 +98,9 @@ export function MultiSourceSummaryScreen() {
         label: `Lương từ «${s.name}»`,
         scenarioId: s.id,
         dualScenarioHint: i.includeCasual
-          ? "Có vãng lai trên QT. Kiểm DualScenario trên màn Quyết toán."
+          ? "Có thu nhập vãng lai trong quyết toán. Kiểm tra hai kịch bản trên màn Quyết toán."
           : undefined,
-        notes: [`Năm QT ${i.taxYear} · vùng ${i.region}`],
+        notes: [`Năm quyết toán ${i.taxYear} · vùng ${i.region}`],
       })
     );
     if (i.taxYear !== taxYear) setTaxYear(i.taxYear);
@@ -185,8 +185,8 @@ export function MultiSourceSummaryScreen() {
       />
       <ToolScreen
         nested
-        title="Tổng hợp QT đa nguồn"
-        subtitle="Ước thuế theo từng nguồn trong cùng năm. Không nộp tờ khai, không ước coin."
+        title="Tổng hợp thu nhập cả năm"
+        subtitle="Tính thử thuế theo từng nguồn trong cùng năm. App không nộp tờ khai và không tính thuế coin."
         showBrand={false}
         accessibilityLabel="Tổng hợp quyết toán đa nguồn"
         aboveTabBar={false}
@@ -230,7 +230,7 @@ export function MultiSourceSummaryScreen() {
         </Section>
 
         {settlementScenarios.length > 0 ? (
-          <CollapseSection title="Nhập từ QT đã lưu" defaultOpen={false}>
+          <CollapseSection title="Nhập từ quyết toán đã lưu" defaultOpen={false}>
             {settlementScenarios.slice(0, 5).map((s) => (
               <Pressable
                 key={s.id}
@@ -259,7 +259,7 @@ export function MultiSourceSummaryScreen() {
         {lines.length === 0 ? (
           <EmptyErrorState
             title="Chưa có nguồn"
-            body="Thêm lương (từ QT), cho thuê, HKD, vãng lai, CK hoặc ESOP, hoặc mở Tính lương / Thu nhập khác / Quyết toán để lấy số liệu."
+            body="Thêm lương từ quyết toán, cho thuê, hộ kinh doanh, thu nhập vãng lai, chứng khoán hoặc ESOP. Bạn cũng có thể mở Tính lương, Thu nhập khác hoặc Quyết toán để lấy số liệu."
           />
         ) : (
           <MultiSourceTable
@@ -317,8 +317,8 @@ export function MultiSourceSummaryScreen() {
             <Button
               label={
                 impact.forceSelfFile
-                  ? "Wizard (gợi ý tự QT)"
-                  : "Wizard quyết toán"
+                  ? "Gợi ý tự quyết toán"
+                  : "Hướng dẫn quyết toán"
               }
               variant="secondary"
               onPress={openWizard}
@@ -334,8 +334,8 @@ export function MultiSourceSummaryScreen() {
 
         {impact.forceSelfFile ? (
           <Text style={styles.wizardHint}>
-            Có nguồn ngoài lương HĐLĐ → wizard nghiêng tự quyết toán + checklist
-            chứng từ mở rộng.
+            Có nguồn ngoài lương hợp đồng lao động, nên phần hướng dẫn sẽ nghiêng
+            về tự quyết toán và nhắc thêm chứng từ cần chuẩn bị.
           </Text>
         ) : null}
       </ToolScreen>

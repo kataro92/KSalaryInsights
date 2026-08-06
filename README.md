@@ -118,9 +118,37 @@ npm run android:release  # npx expo start --android --no-dev --minify
 Native rebuild (dev client / prebuild đã có `ios/`):
 
 ```bash
-npm run ios
-npm run android
+npm run ios       # npx expo run:ios
+npm run android   # npx expo run:android
 ```
+
+Thiết bị thật (bundle id mới `com.kataro92.ksalaryinsights`):
+
+```bash
+# 1) Cắm iPhone, trust máy tính
+# 2) Chạy (Expo sẽ tự gắn team + tạo provisioning profile):
+npm run ios:device
+# hoặc Release:
+npm run ios:device:release
+```
+
+Nếu vẫn lỗi "No profiles for com.kataro92.ksalaryinsights":
+
+```bash
+# Mở Xcode một lần: Signing & Capabilities → Team = Huy Duc Pham, bật Automatically manage signing
+open ios/KSalaryInsights.xcworkspace
+# hoặc sync CLI (cần Apple ID đã login trong Xcode):
+DEVICE_UDID=<udid> npm run ios:sync-signing
+```
+
+Native iOS **Release** (Xcode Release configuration; gần store build hơn Debug):
+
+```bash
+npx expo run:ios --configuration Release
+# hoặc trên máy thật:
+npx expo run:ios --device --configuration Release
+```
+
 ## Kiểm thử
 
 ```bash

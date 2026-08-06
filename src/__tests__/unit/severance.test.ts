@@ -14,7 +14,7 @@ describe("roundServiceYears", () => {
 });
 
 describe("TC-SEVERANCE-01 / TC-SEVERANCE-02", () => {
-  it("TC-SEVERANCE-01: 7y − 5y BHTN, 20tr → 20.000.000", () => {
+  it("TC-SEVERANCE-01: 7y minus 5y unemployment insurance, 20tr -> 20.000.000", () => {
     const r = calcSeverancePay({
       mode: "resignation",
       totalYears: 7,
@@ -24,7 +24,9 @@ describe("TC-SEVERANCE-01 / TC-SEVERANCE-02", () => {
     });
     expect(r.yearsCounted).toBe(2);
     expect(r.amount).toBe(20_000_000);
-    expect(r.explanations.some((e) => e.includes("BHTN"))).toBe(true);
+    expect(
+      r.explanations.some((e) => e.includes("bảo hiểm thất nghiệp"))
+    ).toBe(true);
   });
 
   it("TC-SEVERANCE-02: 1y 7m → làm tròn 2y → 20.000.000", () => {
@@ -41,7 +43,7 @@ describe("TC-SEVERANCE-01 / TC-SEVERANCE-02", () => {
   });
 });
 
-describe("TC-JOBLOSS-01 + full BHTN", () => {
+describe("TC-JOBLOSS-01 + full unemployment insurance", () => {
   it("TC-JOBLOSS-01: 1 năm, 20tr → sàn 2 tháng = 40.000.000", () => {
     const r = calcJobLossPay({
       totalYears: 1,
@@ -52,7 +54,7 @@ describe("TC-JOBLOSS-01 + full BHTN", () => {
     expect(r.amount).toBe(40_000_000);
   });
 
-  it("BHTN đầy đủ → 0 + explanation", () => {
+  it("full unemployment insurance -> 0 + explanation", () => {
     const r = calcSeverancePay({
       mode: "resignation",
       totalYears: 5,

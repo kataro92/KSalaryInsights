@@ -18,7 +18,7 @@ export function SickLeaveBreakdownCard({ result, hideTotal = false }: Props) {
     <ColorBlock tone="secondarySoft" accessibilityLabel="Kết quả ốm đau">
       {!hideTotal ? (
         <>
-          <Text style={styles.eyebrow}>Ước ốm đau</Text>
+          <Text style={styles.eyebrow}>Tiền nghỉ ốm ước tính</Text>
           <Text style={styles.amount}>
             {result.amount.toLocaleString("vi-VN")} ₫
           </Text>

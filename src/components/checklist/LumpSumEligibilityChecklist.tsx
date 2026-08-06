@@ -21,7 +21,7 @@ export function LumpSumEligibilityChecklist({
   return (
     <ColorBlock
       tone="muted"
-      accessibilityLabel="Checklist điều kiện rút BHXH một lần"
+      accessibilityLabel="Checklist điều kiện nhận bảo hiểm xã hội một lần"
     >
       <Text style={styles.title}>Điều kiện rút (tham khảo)</Text>
       <Text style={styles.meta}>

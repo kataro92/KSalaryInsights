@@ -1,0 +1,28 @@
+---
+description: UI QA on real devices only; Chrome OK for calculation logic
+alwaysApply: true
+---
+
+# Testing surfaces
+
+## UI and visual QA
+
+When testing or verifying **giao diện** (layout, glass/theme, navigation, inputs, screenshots, a11y touch targets, native look):
+
+- **Must** use a **physical device** (iPhone / Android đã cắm hoặc cùng mạng).
+- Prefer: `npx expo run:ios --device` or `npx expo run:ios --device --configuration Release`.
+- Expo Go on a real phone is acceptable for quick UI checks.
+- **Do not** treat Chrome / `expo start --web` / Simulator as enough for UI sign-off.
+- Do not capture README/store screenshots from web viewport when a real-device or native Release build is available.
+
+## Calculation logic
+
+Engine, formulas, rulesets, and pure domain logic **may** be verified without a device:
+
+- `npm run test:unit` / `npm test` (preferred)
+- Chrome or web only if needed to poke numbers quickly (`npx expo start --web`), knowing layout may differ
+
+```text
+Bad:  "UI looks fine on Chrome mobile viewport" as final QA
+Good: Run UI flows on a plugged-in phone; keep Jest for Gross-Net / PIT / BH
+```

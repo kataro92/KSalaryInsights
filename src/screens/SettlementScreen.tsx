@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Pressable, Share, Switch, Text, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  Share,
+  Switch,
+  Text,
+  View,
+} from "react-native";
 import { useRouter } from "expo-router";
 
 import { ScenarioPanel } from "@/src/components/calculator/ScenarioPanel";
@@ -34,6 +43,7 @@ import type { RegionCode } from "@/src/domain/types/salary";
 import { calculateAnnualSettlement } from "@/src/engine/annualSettlement";
 import { usePreferences } from "@/src/hooks/usePreferences";
 import { useScenarios } from "@/src/hooks/useScenarios";
+import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { useI18n } from "@/src/i18n/useI18n";
 import {
   defaultScenarioName,
@@ -55,6 +65,7 @@ export function SettlementScreen() {
   const styles = useThemedStyles(makeStyles);
   const { preferences } = usePreferences();
   const { scenarios, save, remove } = useScenarios("settlement");
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
 
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
@@ -129,7 +140,7 @@ export function SettlementScreen() {
   const beginSave = () => {
     const inputs = collectInputs();
     if (!inputs || !result) {
-      setError("Ước quyết toán trước khi lưu kịch bản.");
+      setError("Tính quyết toán trước khi lưu kịch bản.");
       return;
     }
     setSaveName(defaultScenarioName(inputs, "settlement"));
@@ -201,6 +212,7 @@ export function SettlementScreen() {
       });
       setResult(next);
       void successHaptic();
+      scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -208,13 +220,20 @@ export function SettlementScreen() {
   };
 
   return (
-    <View style={styles.root}>
+    <KeyboardAvoidingView
+      style={styles.root}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
       <ScreenShell
+        ref={scrollRef}
         accessibilityLabel="Màn hình quyết toán thuế"
         decorated
         contentContainerStyle={styles.scrollContent}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       >
         <PageHero
+          showBrand
           title={t("settlement.title")}
           subtitle={t("settlement.subtitle")}
         />
@@ -229,7 +248,7 @@ export function SettlementScreen() {
         >
           <View style={styles.compareLinkRow}>
             <Text style={styles.compareLinkText}>
-              Tổng hợp năm · đa nguồn
+              Tổng hợp thu nhập cả năm
             </Text>
             <AppIcon name="chevron-right" color={colors.primary} size={16} />
           </View>
@@ -250,7 +269,7 @@ export function SettlementScreen() {
             onDelete={(id) => {
               void remove(id);
             }}
-            emptyHint="Chưa có kịch bản QT. Sau khi ước, bấm Lưu kịch bản để mở lại mùa quyết toán."
+            emptyHint="Chưa có kịch bản quyết toán. Sau khi tính, bấm Lưu kịch bản để mở lại mùa quyết toán."
           />
           <NgaiMiuTip tip={miuTips.scenarios} />
         </CollapseSection>
@@ -342,7 +361,7 @@ export function SettlementScreen() {
             <View style={styles.switchText}>
               <Text style={styles.switchLabel}>Thêm thu nhập vãng lai</Text>
               <Text style={styles.switchHint}>
-                Thu nhập ngoài lương đã khấu trừ 10%
+                Thu nhập ngoài lương đã bị khấu trừ 10%
               </Text>
             </View>
             <Switch
@@ -358,7 +377,7 @@ export function SettlementScreen() {
           {includeCasual ? (
             <View style={styles.casualFields}>
               <MoneyField
-                label="Tổng vãng lai năm"
+                label="Tổng thu nhập vãng lai trong năm"
                 value={casualGrossText}
                 onValueChange={(formatted) => {
                   setCasualGrossText(formatted);
@@ -386,7 +405,7 @@ export function SettlementScreen() {
         ) : null}
 
         {result ? (
-          <View style={styles.resultBlock}>
+          <View ref={anchorRef} collapsable={false} style={styles.resultBlock}>
             {result.casualStatus === "exempt" ? (
               <DualScenarioCard scenarios={result.scenarios} />
             ) : (
@@ -437,13 +456,13 @@ export function SettlementScreen() {
           void confirmSave();
         }}
         onCancel={() => setSaving(false)}
-        placeholder="VD: QT 2025 · 1 nguồn"
+        placeholder="VD: Quyết toán 2025 · 1 nguồn"
       />
 
       <StickyActionBar>
         <Button label={t("settlement.cta")} onPress={onCalculate} />
         <Button
-          label="Wizard ủy quyền / tự QT"
+          label="Hướng dẫn ủy quyền hoặc tự quyết toán"
           variant="secondary"
           onPress={() =>
             router.push({
@@ -453,7 +472,7 @@ export function SettlementScreen() {
           }
         />
       </StickyActionBar>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -461,7 +480,7 @@ function makeStyles({ colors }: ThemeContextValue) {
   return {
     root: { flex: 1, backgroundColor: colors.background },
     scrollContent: {
-      paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
+      paddingBottom: space[12] + layout.stickyBarHeightDual + layout.tabBarClearance,
     },
     switchRow: {
       flexDirection: "row",

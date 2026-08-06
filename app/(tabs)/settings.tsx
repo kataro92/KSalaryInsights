@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Linking, Text, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Linking,
+  Platform,
+  Text,
+  View,
+} from "react-native";
 import * as Clipboard from "expo-clipboard";
 
 import { Button } from "@/src/components/common/Button";
@@ -130,8 +137,16 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScreenShell accessibilityLabel={t("settings.title")} decorated>
-      <PageHero title={t("settings.title")} subtitle={t("settings.subtitle")} />
+    <KeyboardAvoidingView
+      style={styles.flex}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScreenShell accessibilityLabel={t("settings.title")} decorated>
+        <PageHero
+          showBrand
+          title={t("settings.title")}
+          subtitle={t("settings.subtitle")}
+        />
 
       {recoveredFromCorrupt ? (
         <ColorBlock tone="primarySoft">
@@ -330,12 +345,14 @@ export default function SettingsScreen() {
           onPress={() => void requestOnboardingReplay()}
         />
       </Section>
-    </ScreenShell>
+      </ScreenShell>
+    </KeyboardAvoidingView>
   );
 }
 
 function makeStyles({ colors }: ThemeContextValue) {
   return {
+    flex: { flex: 1 },
     softWarn: {
       fontFamily: typography.fontFamily.regular,
       fontSize: 14,

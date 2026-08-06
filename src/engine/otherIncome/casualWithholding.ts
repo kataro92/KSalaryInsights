@@ -42,7 +42,7 @@ export function calculateCasualWithholding(
       )}; thực nhận ${netReceived.toLocaleString("vi-VN")}.`
     );
     explanations.push(
-      "Khi quyết toán năm có thể tổng hợp với thu nhập khác. Xem module Quyết toán (004)."
+      "Khi quyết toán năm có thể tổng hợp với thu nhập khác. Xem mục Quyết toán."
     );
   } else {
     settlementWarning =

@@ -116,9 +116,12 @@ function makeStyles({ colors }: ThemeContextValue) {
   return {
     heading: {
       fontFamily: typography.fontFamily.bold,
-      fontSize: 18,
+      fontSize: typography.scale.subtitle.fontSize,
+      lineHeight: typography.scale.subtitle.lineHeight,
       color: colors.foreground,
       marginBottom: space[3],
+      letterSpacing: typography.letterSpacingTight,
+      paddingRight: 2,
     },
     row: {
       flexDirection: "row",
@@ -141,10 +144,13 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     value: {
+      flexShrink: 1,
+      maxWidth: "48%",
       fontFamily: typography.fontFamily.semiBold,
       fontSize: 13,
       color: colors.foreground,
       fontVariant: ["tabular-nums"],
+      textAlign: "right",
     },
   } satisfies ThemedStyleSheet;
 }

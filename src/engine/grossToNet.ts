@@ -35,7 +35,7 @@ export function grossToNet(params: GrossToNetParams): SalaryBreakdown {
   const ruleset = getRuleset(taxYear, asOfDate);
   const bhBase = insuranceSalary ?? gross;
   if (!Number.isFinite(bhBase) || bhBase < 0) {
-    throw new Error("Mức đóng BH không hợp lệ");
+    throw new Error("Mức đóng bảo hiểm không hợp lệ");
   }
 
   const insurance = calculateInsurance(bhBase, region, ruleset);

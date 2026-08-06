@@ -39,12 +39,12 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
     const excess = input.annualRevenue - threshold;
     pit = roundVnd(industry.pit_rate * excess);
     explanations.push(
-      `Nhóm «${industry.label}»: GTGT ${
+      `Nhóm «${industry.label}»: thuế giá trị gia tăng ${
         industry.vat_rate * 100
       }% × toàn bộ = ${vat.toLocaleString("vi-VN")}.`
     );
     explanations.push(
-      `TNCN ${industry.pit_rate * 100}% × phần vượt (${excess.toLocaleString(
+      `Thuế thu nhập cá nhân ${industry.pit_rate * 100}% × phần vượt (${excess.toLocaleString(
         "vi-VN"
       )}) = ${pit.toLocaleString("vi-VN")}.`
     );
@@ -63,7 +63,7 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
       taxableIncome,
       rate: params.income_method_rate,
       estimatedTax,
-      note: `Gợi ý so sánh phương pháp thu nhập: (DT − CP) × ${
+      note: `Gợi ý so sánh phương pháp thu nhập: (doanh thu − chi phí) × ${
         params.income_method_rate * 100
       }% = ${estimatedTax.toLocaleString("vi-VN")} (không thay thế tờ khai).`,
     };
@@ -72,7 +72,7 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
     explanations.push(
       `Doanh thu ≥ ${params.income_method_threshold.toLocaleString(
         "vi-VN"
-      )}. Cân nhắc so sánh với phương pháp (DT−CP)×${
+      )}. Cân nhắc so sánh với phương pháp (doanh thu − chi phí) × ${
         params.income_method_rate * 100
       }%.`
     );
@@ -81,7 +81,9 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
   const totalTax = vat + pit;
   const formula = exempt
     ? "Thuế = 0 (≤ ngưỡng)"
-    : `GTGT ${vat.toLocaleString("vi-VN")} + TNCN ${pit.toLocaleString(
+    : `Thuế giá trị gia tăng ${vat.toLocaleString(
+        "vi-VN"
+      )} + thuế thu nhập cá nhân ${pit.toLocaleString(
         "vi-VN"
       )} = ${totalTax.toLocaleString("vi-VN")}`;
 
@@ -101,8 +103,8 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
     rulesetId: ruleset.id,
     legalSources: [
       ...ruleset.legal_sources,
-      "NĐ 68/2026: biểu tỷ lệ ngành HKD",
-      "Luật 109/2025 Đ.7: ngưỡng HKD",
+      "Nghị định 68/2026: biểu tỷ lệ ngành hộ kinh doanh",
+      "Luật 109/2025 Đ.7: ngưỡng hộ kinh doanh",
     ],
   };
 }

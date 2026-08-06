@@ -29,6 +29,7 @@ import type {
 import type { RegionCode } from "@/src/domain/types/salary";
 import { compareOffers } from "@/src/engine/offerCompare";
 import { useScenarios } from "@/src/hooks/useScenarios";
+import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import {
   defaultScenarioName,
   formatScenarioShareText,
@@ -55,6 +56,7 @@ const DEFAULT_B: OfferSideInput = {
 export function OfferCompareScreen() {
   const styles = useThemedStyles(makeStyles);
   const { scenarios, save, remove } = useScenarios("offer_compare");
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
 
   const [taxYear, setTaxYear] = useState(2026);
   const [month, setMonth] = useState(3);
@@ -81,6 +83,7 @@ export function OfferCompareScreen() {
     const next = compareOffers(inputs);
     setResult(next);
     if (next.a.ok || next.b.ok) void successHaptic();
+    scrollToAnchor();
   };
 
   const beginSave = () => {
@@ -158,10 +161,12 @@ export function OfferCompareScreen() {
       <ToolScreen
         nested
         title="So sánh hai offer"
-        subtitle="Cùng năm thuế · vùng · NPT. Mỗi cột chọn Gross hoặc Net và mức BH riêng. Không gồm thưởng/OT."
+        subtitle="Dùng cùng năm thuế, vùng và số người phụ thuộc. Mỗi offer có thể chọn Gross hoặc Net và mức đóng bảo hiểm riêng. Không gồm thưởng/làm thêm."
         showBrand={false}
         accessibilityLabel="So sánh hai offer lương"
         aboveTabBar={false}
+        scrollRef={scrollRef}
+        onScroll={onScroll}
         sticky={<Button label="So sánh" onPress={onCalculate} />}
       >
         <CollapseSection
@@ -251,7 +256,7 @@ export function OfferCompareScreen() {
         </View>
 
         {result ? (
-          <View style={styles.resultBlock}>
+          <View ref={anchorRef} collapsable={false} style={styles.resultBlock}>
             <OfferDeltaBar
               deltaNet={result.deltaNet}
               deltaGross={result.deltaGross}
@@ -281,7 +286,7 @@ export function OfferCompareScreen() {
         ) : (
           <EmptyErrorState
             title="Chưa so sánh"
-            body="Nhập hai offer rồi bấm So sánh. Kết quả chỉ là ước tính, không khuyên chọn bên nào."
+            body="Nhập hai offer rồi bấm So sánh. Kết quả chỉ là ước tính, không khuyên bạn chọn bên nào."
           />
         )}
       </ToolScreen>

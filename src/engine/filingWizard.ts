@@ -24,14 +24,14 @@ export function evaluateFilingWizard(
 
   const baseSelf = [
     "Tổng hợp chứng từ thu nhập từ mọi nguồn trong năm",
-    "Chuẩn bị thông tin MST / đăng nhập eTax (không nhập vào app này)",
+    "Chuẩn bị mã số thuế / đăng nhập eTax (không nhập vào app này)",
     "Đối chiếu thuế đã khấu trừ trên chứng từ với ước tính app",
     "Nộp tờ khai quyết toán đúng hạn trên cổng thuế",
   ];
 
   const extendedNonSalary = [
-    "Giữ chứng từ HKD / cho thuê / CK / ESOP theo từng nguồn đã ước trên máy",
-    "Không gộp thuế tỷ lệ HKD·thuê·CK vào biểu lũy tiến lương trừ khi luật bắt buộc",
+    "Giữ chứng từ hộ kinh doanh, cho thuê, chứng khoán, ESOP theo từng nguồn đã ước trên máy",
+    "Không gộp thuế tỷ lệ của hộ kinh doanh, cho thuê, chứng khoán vào biểu lũy tiến lương trừ khi luật bắt buộc",
     "Đối chiếu bảng Tổng hợp năm (F020) với từng dòng nguồn trước khi kê khai",
   ];
 
@@ -39,9 +39,9 @@ export function evaluateFilingWizard(
     conclusion === "authorize"
       ? [
           "Xác nhận với kế toán công ty về ủy quyền quyết toán",
-          "Cung cấp thông tin NPT (nếu có) theo mẫu công ty yêu cầu",
+          "Cung cấp thông tin người phụ thuộc (nếu có) theo mẫu công ty yêu cầu",
           "Giữ bản sao chứng từ thu nhập / bảng lương để đối chiếu",
-          "Theo dõi thông báo kết quả ủy quyền từ NSDLĐ",
+          "Theo dõi thông báo kết quả ủy quyền từ công ty / người sử dụng lao động",
         ]
       : options?.forceSelfFile || answers.hasOtherIncome
         ? [...baseSelf, ...extendedNonSalary]
@@ -61,7 +61,7 @@ export function evaluateFilingWizard(
       "Luôn đối chiếu văn bản / cổng thuế chính thức trước khi nộp.",
       ...(options?.forceSelfFile
         ? [
-            "Có nguồn ngoài lương HĐLĐ trên Tổng hợp năm → mặc định tự quyết toán.",
+            "Có nguồn ngoài lương hợp đồng lao động trên Tổng hợp năm, mặc định tự quyết toán.",
           ]
         : []),
     ],

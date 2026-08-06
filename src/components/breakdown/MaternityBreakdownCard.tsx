@@ -19,7 +19,7 @@ export function MaternityBreakdownCard({ result, hideTotal = false }: Props) {
     <ColorBlock tone="secondarySoft" accessibilityLabel="Kết quả thai sản">
       {!hideTotal ? (
         <>
-          <Text style={styles.eyebrow}>Ước thai sản</Text>
+          <Text style={styles.eyebrow}>Tiền thai sản ước tính</Text>
           <Text style={styles.amount}>
             {result.total.toLocaleString("vi-VN")} ₫
           </Text>

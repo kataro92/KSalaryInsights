@@ -101,6 +101,8 @@ export type MessageKey =
   | "settlement.subtitle"
   | "settlement.cta"
   | "settlement.withheldWarn"
+  | "benefits.title"
+  | "benefits.subtitle"
   | "annual.heading"
   | "annual.afterInsurance"
   | "annual.casual"
@@ -134,9 +136,9 @@ const vi: Dict = {
   "settings.about": "Về chúng tôi",
   "settings.features": "Tính năng & công cụ",
   "settings.featuresHint":
-    "Tình huống dùng app, lợi ích, và từng công cụ ước lương · thuế · BH.",
+    "Tình huống dùng app, lợi ích, và từng công cụ tính lương, thuế, bảo hiểm.",
   "settings.featuresFootnote":
-    "Mọi kết quả chỉ là ước tính tham khảo, không thay bảng lương, tờ khai hay quyết định của cơ quan thuế / BHXH.",
+    "Mọi kết quả chỉ là ước tính tham khảo, không thay bảng lương, tờ khai hay quyết định của cơ quan thuế / bảo hiểm xã hội.",
   "settings.region": "Vùng lương tối thiểu",
   "settings.regionHint": "Dùng làm mặc định khi tính lương.",
   "settings.taxYear": "Năm thuế",
@@ -147,7 +149,7 @@ const vi: Dict = {
   "settings.appearanceLight": "Sáng",
   "settings.appearanceDark": "Tối",
   "settings.appearanceSystem": "Hệ thống",
-  "settings.ruleset": "Cập nhật mức thuế · BH",
+  "settings.ruleset": "Cập nhật mức thuế và bảo hiểm",
   "settings.rulesetHint":
     "Tải mức thuế và bảo hiểm mới qua mạng. Không gửi dữ liệu lương của bạn. Khi offline, app dùng bản đã cài sẵn.",
   "settings.checkRuleset": "Kiểm tra cập nhật",
@@ -157,10 +159,10 @@ const vi: Dict = {
   "settings.showPrivacy": "Xem chi tiết",
   "settings.hidePrivacy": "Thu gọn",
   "settings.privacyBody":
-    "Mọi tính toán và kịch bản chỉ lưu trên máy bạn. Không cần CCCD, MST hay sổ BHXH. Không gửi lương hay thuế lên máy chủ. Mục cập nhật chỉ tải mức thuế · BH công khai.",
+    "Mọi tính toán và kịch bản chỉ lưu trên máy bạn. Không cần CCCD, mã số thuế hay sổ bảo hiểm xã hội. Không gửi lương hay thuế lên máy chủ. Mục cập nhật chỉ tải mức thuế và bảo hiểm công khai.",
   "settings.disclaimer": "Lưu ý",
   "settings.disclaimerBody":
-    "KSalaryInsights chỉ ước tính. Kết quả không thay thế tư vấn pháp lý, kế toán hay quyết định của cơ quan thuế / BHXH.",
+    "KSalaryInsights chỉ ước tính. Kết quả không thay thế tư vấn pháp lý, kế toán hay quyết định của cơ quan thuế / bảo hiểm xã hội.",
   "settings.reset": "Đặt lại",
   "settings.resetDefaults": "Về mặc định",
   "settings.replayOnboarding": "Xem lại hướng dẫn",
@@ -175,70 +177,73 @@ const vi: Dict = {
   "salary.breakdownTitle": "Chi tiết tính lương",
   "salary.groupInsurance": "Bảo hiểm",
   "salary.groupRelief": "Giảm trừ gia cảnh",
-  "salary.groupPit": "Thuế TNCN",
+  "salary.groupPit": "Thuế thu nhập cá nhân",
   "salary.labelGross": "Gross",
-  "salary.labelBhxh": "BHXH (8%)",
-  "salary.labelBhyt": "BHYT (1,5%)",
-  "salary.labelBhtn": "BHTN (1%)",
-  "salary.labelInsuranceTotal": "Tổng BH người lao động",
-  "salary.labelAfterInsurance": "Thu nhập sau BH",
-  "salary.labelPersonalRelief": "GTGC bản thân",
-  "salary.labelDependentRelief": "GTGC người phụ thuộc",
+  "salary.labelBhxh": "Bảo hiểm xã hội (8%)",
+  "salary.labelBhyt": "Bảo hiểm y tế (1,5%)",
+  "salary.labelBhtn": "Bảo hiểm thất nghiệp (1%)",
+  "salary.labelInsuranceTotal": "Tổng bảo hiểm người lao động",
+  "salary.labelAfterInsurance": "Thu nhập sau bảo hiểm",
+  "salary.labelPersonalRelief": "Giảm trừ bản thân",
+  "salary.labelDependentRelief": "Giảm trừ người phụ thuộc",
   "salary.labelReliefTotal": "Tổng giảm trừ gia cảnh",
   "salary.labelTaxable": "Thu nhập tính thuế",
   "salary.labelPitBracket": "Thuế bậc {n} ({pct}%)",
-  "salary.labelPitTotal": "Tổng thuế TNCN",
+  "salary.labelPitTotal": "Tổng thuế thu nhập cá nhân",
   "salary.labelNet": "Net",
   "salary.eyebrowNet": "Thực nhận",
-  "settlement.refundEyebrow": "Ước hoàn",
-  "settlement.payEyebrow": "Ước nộp thêm",
+  "settlement.refundEyebrow": "Có thể được hoàn",
+  "settlement.payEyebrow": "Có thể cần nộp thêm",
   "settlement.refundLabel": "Hoàn",
   "settlement.payLabel": "Nộp thêm",
   "settlement.evenTitle": "Khớp, không chênh lệch",
   "other.detail": "Chi tiết · {title}",
   "other.totalTax": "Tổng thuế ước tính",
-  "other.vat": "GTGT",
-  "other.pit": "TNCN",
+  "other.vat": "Thuế giá trị gia tăng",
+  "other.pit": "Thuế thu nhập cá nhân",
   "about.role": "Trợ lý trong app",
   "about.body":
-    "KSalaryInsights giúp bạn so offer Gross-Net, đối chiếu bảng lương và kiểm chứng mức BH · thuế theo năm ngay trên máy bạn. Từng khoản trừ hiện rõ. Ngài Miu hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
+    "KSalaryInsights giúp bạn so offer Gross-Net, đối chiếu bảng lương và kiểm chứng mức bảo hiểm, thuế theo năm ngay trên máy bạn. Từng khoản trừ hiện rõ. Ngài Miu hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
   "brand.tagline": "Ước tính lương · thuế · bảo hiểm",
   "brand.guideLine": "Ngài Miu sẵn sàng hướng dẫn bạn",
   "onboarding.skip": "Bỏ qua",
   "onboarding.next": "Tiếp",
   "onboarding.start": "Bắt đầu",
   "onboarding.privacy":
-    "Tính toán lưu trên máy bạn. Không cần CCCD, MST hay sổ BHXH.",
+    "Tính toán lưu trên máy bạn. Không cần CCCD, mã số thuế hay sổ bảo hiểm xã hội.",
   "onboarding.s1.title": "Xin chào, tôi là Ngài Miu",
   "onboarding.s1.body":
-    "Tôi giúp bạn ước lương, thuế và BHXH khi nhận offer, đối chiếu bảng lương, hoặc khi mức đổi theo năm.",
-  "onboarding.s2.title": "Từ Gross sang Net",
+    "Tôi giúp bạn ước lương, thuế và bảo hiểm xã hội khi nhận offer, đối chiếu bảng lương, hoặc khi mức đổi theo năm.",
+  "onboarding.s2.title": "Từ Gross sang thực nhận",
   "onboarding.s2.body":
-    "Quy offer về cùng một mặt, chỉnh mức đóng BH, xem thực nhận trước khi ký. Mỗi khoản trừ hiện riêng.",
+    "Quy offer về cùng một mặt, chỉnh mức đóng bảo hiểm, xem thực nhận trước khi ký. Mỗi khoản trừ hiện riêng.",
   "onboarding.s3.title": "Quyết toán thuế năm",
   "onboarding.s3.body":
     "So thuế ước tính với số đã khấu trừ. Có hướng dẫn nên ủy quyền hay tự quyết toán.",
-  "onboarding.s4.title": "Quyền lợi BHXH",
+  "onboarding.s4.title": "Quyền lợi bảo hiểm xã hội",
   "onboarding.s4.body":
-    "Thai sản, ốm đau, thôi việc, thất nghiệp, hưu hoặc một lần: mỗi công cụ đứng riêng.",
+    "Thai sản, nghỉ ốm, thôi việc, thất nghiệp, hưu hoặc nhận một lần: mỗi công cụ đứng riêng.",
   "calc.title": "Tính lương",
   "calc.subtitle": "Gross-Net · thưởng · làm thêm giờ · biểu thuế 2025 / 2026",
   "calc.withheldWarn":
     "Bạn chưa nhập thuế đã khấu trừ (đang tính = 0). Kết quả có thể lệch.",
   "settlement.title": "Quyết toán",
   "settlement.subtitle":
-    "Ước hoàn thuế hoặc nộp thêm. đối chiếu bảng lương trước khi nộp tờ khai.",
-  "settlement.cta": "Ước quyết toán",
+    "Tính thử bạn có thể được hoàn thuế hay cần nộp thêm. Đối chiếu bảng lương trước khi nộp tờ khai.",
+  "settlement.cta": "Tính quyết toán",
   "settlement.withheldWarn":
     "Bạn chưa nhập thuế đã khấu trừ (đang tính = 0). Kết quả có thể lệch.",
+  "benefits.title": "Quyền lợi",
+  "benefits.subtitle":
+    "Tính thử theo mức thuế và bảo hiểm hiện hành. Không thay quyết định của bảo hiểm xã hội hay cơ quan thuế.",
   "annual.heading": "Chi tiết cả năm",
-  "annual.afterInsurance": "Thu nhập sau BH (năm)",
+  "annual.afterInsurance": "Thu nhập sau bảo hiểm (năm)",
   "annual.casual": "Trong đó vãng lai",
-  "annual.personalRelief": "GTGC bản thân ×12",
-  "annual.dependentRelief": "GTGC người phụ thuộc ×12",
-  "annual.reliefTotal": "Tổng GTGC năm",
+  "annual.personalRelief": "Giảm trừ bản thân ×12",
+  "annual.dependentRelief": "Giảm trừ người phụ thuộc ×12",
+  "annual.reliefTotal": "Tổng giảm trừ năm",
   "annual.taxable": "Thu nhập tính thuế (năm)",
-  "annual.pitTotal": "Thuế TNCN năm",
+  "annual.pitTotal": "Thuế thu nhập cá nhân năm",
   "annual.withheld": "Đã khấu trừ",
   "annual.delta": "Chênh lệch",
 };
@@ -362,6 +367,9 @@ const en: Dict = {
   "settlement.cta": "Estimate settlement",
   "settlement.withheldWarn":
     "You did not enter withheld tax (using 0); results may be off.",
+  "benefits.title": "Benefits",
+  "benefits.subtitle":
+    "Estimates use current tax · SI rates. Not a BHXH or tax-authority decision.",
   "annual.heading": "Annual breakdown",
   "annual.afterInsurance": "Income after SI (year)",
   "annual.casual": "Of which casual",

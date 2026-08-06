@@ -18,6 +18,7 @@ import type {
 } from "@/src/domain/types/benefits";
 import { calcSeverancePay } from "@/src/engine/severance";
 import { usePreferences } from "@/src/hooks/usePreferences";
+import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
@@ -32,6 +33,7 @@ function parseIntSafe(raw: string): number {
 
 export function SeveranceCalculatorScreen() {
   const { preferences } = usePreferences();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
   const styles = useThemedStyles(makeStyles);
   const [mode, setMode] = useState<SeveranceMode>("resignation");
   const [taxYear, setTaxYear] = useState(() =>
@@ -80,6 +82,7 @@ export function SeveranceCalculatorScreen() {
       });
       setResult(next);
       void successHaptic();
+      scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -90,13 +93,15 @@ export function SeveranceCalculatorScreen() {
     <ToolScreen
       nested
       title="Thôi việc / mất việc"
-      subtitle="Theo Bộ luật Lao động · trừ thời gian đã đóng BHTN."
+      subtitle="Tính tiền trợ cấp khi nghỉ việc, đã trừ thời gian có bảo hiểm thất nghiệp."
       accessibilityLabel="Máy tính trợ cấp thôi việc mất việc"
+      scrollRef={scrollRef}
+      onScroll={onScroll}
       sticky={<Button label="Tính trợ cấp" onPress={onCalculate} />}
     >
       <Section
         title="Loại trợ cấp"
-        subtitle="Thôi việc (Đ.46) và mất việc (Đ.47) là hai công thức riêng."
+        subtitle="Thôi việc và mất việc là hai cách tính khác nhau theo Bộ luật Lao động."
       >
         <View style={styles.row}>
           {(
@@ -165,7 +170,7 @@ export function SeveranceCalculatorScreen() {
 
       <Section
         title="Thời gian làm việc"
-        subtitle="Năm + tháng lẻ; trừ BHTN và đã chi trả."
+        subtitle="Nhập tổng thời gian làm việc, thời gian đã đóng bảo hiểm thất nghiệp và phần đã được chi trả."
       >
         <View style={styles.pair}>
           <Field
@@ -190,7 +195,7 @@ export function SeveranceCalculatorScreen() {
         <View style={styles.pair}>
           <Field
             styles={styles}
-            label="Đã đóng BHTN (năm)"
+            label="Đã đóng thất nghiệp (năm)"
             value={bhtnYears}
             onChange={(v) => {
               setBhtnYears(v);
@@ -199,7 +204,7 @@ export function SeveranceCalculatorScreen() {
           />
           <Field
             styles={styles}
-            label="Tháng lẻ BHTN"
+            label="Tháng lẻ đã đóng thất nghiệp"
             value={bhtnMonths}
             onChange={(v) => {
               setBhtnMonths(v);
@@ -252,9 +257,9 @@ export function SeveranceCalculatorScreen() {
       ) : null}
 
       {result ? (
-        <>
+        <View ref={anchorRef} collapsable={false}>
           <ResultHero
-            eyebrow="Ước trợ cấp"
+            eyebrow="Tiền trợ cấp ước tính"
             label="Tổng"
             amount={result.amount}
           />
@@ -264,7 +269,7 @@ export function SeveranceCalculatorScreen() {
             legalSources={result.legalSources}
             collapseSources
           />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
           title={emptyCopy.severance.title}

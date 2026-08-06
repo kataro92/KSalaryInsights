@@ -19,6 +19,11 @@ type Props = ScrollViewProps & {
   /** Soft geometric poster decoration behind content. */
   decorated?: boolean;
   contentStyle?: StyleProp<ViewStyle>;
+  /**
+   * Apply status-bar / notch inset as paddingTop.
+   * Set false on stack screens that already show a nav header.
+   */
+  padTopInset?: boolean;
 };
 
 /**
@@ -32,12 +37,13 @@ export const ScreenShell = forwardRef(function ScreenShell(
     style,
     contentContainerStyle,
     contentStyle,
+    padTopInset = true,
     ...rest
   }: Props,
   ref: Ref<ScrollView>
 ) {
   const insets = useSafeAreaInsets();
-  const topPad = Math.max(insets.top, space[3]);
+  const topPad = padTopInset ? Math.max(insets.top, space[3]) : space[3];
   const styles = useThemedStyles(makeStyles);
 
   return (
@@ -56,11 +62,11 @@ export const ScreenShell = forwardRef(function ScreenShell(
     >
       <View style={[styles.inner, contentStyle, style]}>
         {decorated ? (
-          <>
-            <View style={styles.blobPrimary} pointerEvents="none" />
-            <View style={styles.blobSecondary} pointerEvents="none" />
-            <View style={styles.blobAccent} pointerEvents="none" />
-          </>
+          <View style={styles.decorLayer} pointerEvents="none">
+            <View style={styles.blobPrimary} />
+            <View style={styles.blobSecondary} />
+            <View style={styles.blobAccent} />
+          </View>
         ) : null}
         <ScreenEnter style={styles.enter}>{children}</ScreenEnter>
       </View>
@@ -82,6 +88,9 @@ function makeStyles({ colors }: ThemeContextValue) {
       width: "100%",
       alignSelf: "center",
       position: "relative",
+    },
+    decorLayer: {
+      ...StyleSheetAbsoluteFill,
       overflow: "hidden",
     },
     enter: {
@@ -120,3 +129,12 @@ function makeStyles({ colors }: ThemeContextValue) {
     },
   } as const;
 }
+
+/** Local absolute-fill without importing StyleSheet just for one helper. */
+const StyleSheetAbsoluteFill = {
+  position: "absolute" as const,
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+};

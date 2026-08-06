@@ -35,7 +35,7 @@ export function evaluateCasualExemption(
       status: "exempt",
       monthlyAverage,
       reason:
-        "Vãng lai bình quân ≤ 15.000.000 đ/tháng và đã khấu trừ tại nguồn. Không bắt buộc quyết toán phần này (NĐ 253/2026).",
+        "Thu nhập vãng lai bình quân ≤ 15.000.000 đ/tháng và đã khấu trừ tại nguồn. Không bắt buộc quyết toán phần này (Nghị định 253/2026).",
     };
   }
 

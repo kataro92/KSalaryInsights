@@ -21,6 +21,7 @@ import type { UnemploymentBreakdown } from "@/src/domain/types/benefits";
 import type { RegionCode } from "@/src/domain/types/salary";
 import { calcUnemploymentBenefit } from "@/src/engine/unemploymentBenefit";
 import { usePreferences } from "@/src/hooks/usePreferences";
+import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
@@ -30,6 +31,7 @@ import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedSty
 
 export function UnemploymentCalculatorScreen() {
   const { preferences } = usePreferences();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
   const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const [taxYear, setTaxYear] = useState(() =>
@@ -50,12 +52,12 @@ export function UnemploymentCalculatorScreen() {
     const avg = parseMoney(salaryText);
     const paid = Number(monthsPaid.replace(/[^\d]/g, ""));
     if (avg == null || avg <= 0) {
-      setError("Nhập lương bình quân BHTN 6 tháng hợp lệ.");
+      setError("Nhập lương bình quân đóng bảo hiểm thất nghiệp 6 tháng hợp lệ.");
       setResult(null);
       return;
     }
     if (!Number.isInteger(paid) || paid < 0) {
-      setError("Số tháng đóng BHTN không hợp lệ.");
+      setError("Số tháng đóng bảo hiểm thất nghiệp không hợp lệ.");
       setResult(null);
       return;
     }
@@ -76,6 +78,7 @@ export function UnemploymentCalculatorScreen() {
       });
       setResult(next);
       void successHaptic();
+      scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -86,9 +89,11 @@ export function UnemploymentCalculatorScreen() {
     <ToolScreen
       nested
       title="Trợ cấp thất nghiệp"
-      subtitle="60% lương · trần 5 × lương tối thiểu vùng · số tháng theo thời gian đóng."
-      accessibilityLabel="Máy tính trợ cấp thất nghiệp BHTN"
-      sticky={<Button label="Tính BHTN" onPress={onCalculate} />}
+      subtitle="Tính khoản tiền có thể nhận khi nghỉ việc. Mức thường là 60% lương bình quân, có trần theo vùng."
+      accessibilityLabel="Máy tính trợ cấp thất nghiệp"
+      scrollRef={scrollRef}
+      onScroll={onScroll}
+      sticky={<Button label="Tính thất nghiệp" onPress={onCalculate} />}
     >
       <Section
         title="Năm / vùng"
@@ -149,11 +154,11 @@ export function UnemploymentCalculatorScreen() {
       </Section>
 
       <Section
-        title="Tháng đóng BHTN"
+        title="Tháng đã đóng bảo hiểm thất nghiệp"
         subtitle="Tối thiểu 12 tháng để đủ điều kiện."
       >
         <TextInput
-          accessibilityLabel="Số tháng đã đóng BHTN"
+          accessibilityLabel="Số tháng đã đóng bảo hiểm thất nghiệp"
           keyboardType="number-pad"
           value={monthsPaid}
           onChangeText={(t) => {
@@ -165,11 +170,11 @@ export function UnemploymentCalculatorScreen() {
       </Section>
 
       <Section
-        title="Lương BQ 6 tháng"
-        subtitle="Căn cứ đóng BHTN bình quân 6 tháng cuối."
+        title="Lương bình quân 6 tháng"
+        subtitle="Lương làm căn cứ đóng bảo hiểm thất nghiệp bình quân 6 tháng cuối."
       >
         <MoneyField
-          accessibilityLabel="Lương bình quân BHTN 6 tháng"
+          accessibilityLabel="Lương bình quân đóng bảo hiểm thất nghiệp 6 tháng"
           value={salaryText}
           onValueChange={(formatted) => {
             setSalaryText(formatted);
@@ -183,7 +188,7 @@ export function UnemploymentCalculatorScreen() {
         subtitle="Chọn ngày để áp đúng lương tối thiểu vùng (ví dụ 15/03/2026 = nửa đầu năm)."
       >
         <TextInput
-          accessibilityLabel="Ngày cuối đóng BHTN YYYY-MM-DD"
+          accessibilityLabel="Ngày cuối đóng bảo hiểm thất nghiệp YYYY-MM-DD"
           autoCapitalize="none"
           value={lastDate}
           onChangeText={(t) => {
@@ -222,7 +227,7 @@ export function UnemploymentCalculatorScreen() {
       ) : null}
 
       {result ? (
-        <>
+        <View ref={anchorRef} collapsable={false}>
           {result.eligible ? (
             <>
               <ResultHero
@@ -273,7 +278,7 @@ export function UnemploymentCalculatorScreen() {
             legalSources={result.legalSources}
             collapseSources
           />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
           title={emptyCopy.unemployment.title}

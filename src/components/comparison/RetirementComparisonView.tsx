@@ -43,7 +43,7 @@ export function RetirementComparisonView({
     return (
       <EmptyErrorState
         title="Chưa có so sánh"
-        body="Điền MBQTL và thời gian đóng, rồi bấm Tính so sánh."
+        body="Điền lương bình quân đã điều chỉnh và thời gian đóng, rồi bấm Tính so sánh."
       />
     );
   }
@@ -51,7 +51,7 @@ export function RetirementComparisonView({
   return (
     <View
       style={styles.wrap}
-      accessibilityLabel="So sánh BHXH một lần và lương hưu"
+      accessibilityLabel="So sánh bảo hiểm xã hội một lần và lương hưu"
     >
       <Text style={styles.banner}>
         Khoảng ước tính. Không phải số chính thức
@@ -59,12 +59,12 @@ export function RetirementComparisonView({
 
       <ResultHero
         tone="primary"
-        eyebrow="BHXH một lần"
+        eyebrow="Bảo hiểm xã hội một lần"
         label="Ước nhận"
         amount={lumpSum.amount}
         accessibilityLabel={moneyAccessibilityLabel(
           lumpSum.amount,
-          "BHXH một lần"
+          "Bảo hiểm xã hội một lần"
         )}
       />
       <ResultHero
@@ -83,7 +83,7 @@ export function RetirementComparisonView({
           <Text style={styles.colEyebrow}>Chi tiết · một lần</Text>
           <Text style={styles.formula}>{lumpSum.formula}</Text>
           <Text style={styles.meta}>
-            T1 {lumpSum.yearsPre2014Rounded} năm · T2{" "}
+            Trước 2014: {lumpSum.yearsPre2014Rounded} năm · từ 2014:{" "}
             {lumpSum.yearsFrom2014Rounded} năm
           </Text>
           {lumpSum.explanations.map((e) => (

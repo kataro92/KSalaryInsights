@@ -115,9 +115,12 @@ function makeStyles({ colors, isDark }: ThemeContextValue) {
     text: { flex: 1, gap: 4 },
     title: {
       fontFamily: typography.fontFamily.bold,
-      fontSize: 16,
+      fontSize: typography.scale.body.fontSize,
+      lineHeight: typography.scale.body.lineHeight,
       color: colors.foreground,
       letterSpacing: typography.letterSpacingTight,
+      paddingRight: 2,
+      flexShrink: 0,
     },
     description: {
       fontFamily: typography.fontFamily.regular,

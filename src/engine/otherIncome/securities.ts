@@ -37,7 +37,7 @@ export function calculateSecuritiesTransfer(
       rulesetId: ruleset.id,
       legalSources: [
         ...ruleset.legal_sources,
-        "NĐ 253/2026: thuế CN chứng khoán",
+        "Nghị định 253/2026: thuế chuyển nhượng chứng khoán",
       ],
     };
   }
@@ -61,7 +61,7 @@ export function calculateSecuritiesTransfer(
     rulesetId: ruleset.id,
     legalSources: [
       ...ruleset.legal_sources,
-      "NĐ 253/2026: thuế CN chứng khoán",
+      "Nghị định 253/2026: thuế chuyển nhượng chứng khoán",
     ],
   };
 }

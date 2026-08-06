@@ -222,9 +222,11 @@ function makeStyles({ colors }: ThemeContextValue) {
     heading: {
       fontFamily: typography.fontFamily.bold,
       fontSize: typography.scale.subtitle.fontSize,
+      lineHeight: typography.scale.subtitle.lineHeight,
       color: colors.foreground,
       marginBottom: space[3],
       letterSpacing: typography.letterSpacingTight,
+      paddingRight: 2,
     },
     groupTitle: {
       fontFamily: typography.fontFamily.semiBold,
@@ -261,6 +263,8 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     value: {
+      flexShrink: 1,
+      maxWidth: "48%",
       fontFamily: typography.fontFamily.semiBold,
       fontSize: typography.scale.moneySm.fontSize,
       lineHeight: typography.scale.moneySm.lineHeight,

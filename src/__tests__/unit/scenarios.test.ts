@@ -63,19 +63,19 @@ describe("scenarios store (F014)", () => {
         bonus: 10_000_000,
         otHours: 2,
       })
-    ).toBe("Net 500k · T3/2026 · thưởng · OT");
+    ).toBe("Net 500k · T3/2026 · thưởng · làm thêm");
   });
 
   it("defaultScenarioName formats settlement label", () => {
     expect(defaultScenarioName(sampleSettlement(), "settlement")).toBe(
-      "QT 30tr ×10 · 2025"
+      "Quyết toán 30tr ×10 · 2025"
     );
     expect(
       defaultScenarioName(
         { ...sampleSettlement(), includeCasual: true, casualGross: 60_000_000 },
         "settlement"
       )
-    ).toBe("QT 30tr ×10 · 2025 · vãng lai");
+    ).toBe("Quyết toán 30tr ×10 · 2025 · vãng lai");
   });
 
   it("parseCalculatorInputs rejects invalid payloads", () => {

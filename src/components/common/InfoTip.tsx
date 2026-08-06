@@ -138,10 +138,11 @@ function makeStyles({ colors }: ThemeContextValue) {
     },
     title: {
       fontFamily: typography.fontFamily.bold,
-      fontSize: 18,
-      lineHeight: 24,
+      fontSize: typography.scale.subtitle.fontSize,
+      lineHeight: typography.scale.subtitle.lineHeight,
       color: colors.foreground,
       marginBottom: space[3],
+      paddingRight: 2,
     },
     scroll: {
       maxHeight: 420,

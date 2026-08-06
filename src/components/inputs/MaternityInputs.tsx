@@ -42,7 +42,7 @@ export function MaternityInputs({ value, onChange }: Props) {
     <View style={styles.wrap}>
       <Section
         title="Bình quân 6 tháng"
-        subtitle="Tiền lương đóng BHXH bình quân 6 tháng trước nghỉ."
+        subtitle="Tiền lương đóng bảo hiểm xã hội bình quân 6 tháng trước nghỉ."
       >
         <TextInput
           accessibilityLabel="Bình quân lương 6 tháng"
@@ -138,7 +138,7 @@ export function MaternityInputs({ value, onChange }: Props) {
 
       <Section
         title="Điều kiện đóng"
-        subtitle="Đủ 6 tháng BHXH trong 12 tháng trước sinh."
+        subtitle="Đủ 6 tháng bảo hiểm xã hội trong 12 tháng trước sinh."
       >
         <View style={styles.switchRow}>
           <Text style={styles.switchLabel}>Đủ điều kiện 6/12 tháng đóng</Text>

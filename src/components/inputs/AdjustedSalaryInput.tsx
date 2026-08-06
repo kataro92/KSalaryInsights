@@ -40,7 +40,7 @@ export function AdjustedSalaryInput({
   return (
     <View style={styles.wrap}>
       <TextInput
-        accessibilityLabel="MBQTL đã trượt giá"
+        accessibilityLabel="Lương bình quân đã điều chỉnh"
         keyboardType="number-pad"
         value={mbqtlText}
         onChangeText={(t) => {

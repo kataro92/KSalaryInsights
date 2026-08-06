@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
-  ScrollView,
   Share,
   Switch,
   Text,
@@ -64,6 +65,7 @@ import {
 } from "@/src/engine/overtime";
 import { usePreferences } from "@/src/hooks/usePreferences";
 import { useScenarios } from "@/src/hooks/useScenarios";
+import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { useI18n } from "@/src/i18n/useI18n";
 import {
   defaultScenarioName,
@@ -97,7 +99,7 @@ export function CalculatorScreen() {
   const styles = useThemedStyles(makeStyles);
   const { preferences } = usePreferences();
   const { scenarios, save, remove } = useScenarios("calculator");
-  const scrollRef = useRef<ScrollView>(null);
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
 
   const [mode, setMode] = useState<CalculationMode>("gross-to-net");
   const [amountText, setAmountText] = useState("30.000.000");
@@ -297,6 +299,7 @@ export function CalculatorScreen() {
           );
         }
         void successHaptic();
+        scrollToAnchor();
       } else {
         setBonusMonth(null);
         const result = netToGrossWithPreset({
@@ -322,6 +325,7 @@ export function CalculatorScreen() {
         );
         setBreakdown(result.breakdown);
         void successHaptic();
+        scrollToAnchor();
       }
     } catch (e) {
       setBreakdown(null);
@@ -330,14 +334,6 @@ export function CalculatorScreen() {
       setError(e instanceof Error ? e.message : "Không tính được.");
     }
   };
-
-  useEffect(() => {
-    if (!breakdown) return;
-    const t = setTimeout(() => {
-      scrollRef.current?.scrollToEnd({ animated: true });
-    }, 120);
-    return () => clearTimeout(t);
-  }, [breakdown]);
 
   const openComparison = () => {
     const amount = parseMoney(amountText);
@@ -364,14 +360,23 @@ export function CalculatorScreen() {
   };
 
   return (
-    <View style={styles.root}>
+    <KeyboardAvoidingView
+      style={styles.root}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
       <ScreenShell
         ref={scrollRef}
         accessibilityLabel="Máy tính lương gross net"
         decorated
         contentContainerStyle={styles.scrollContent}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       >
-        <PageHero title={t("calc.title")} subtitle={t("calc.subtitle")} />
+        <PageHero
+          showBrand
+          title={t("calc.title")}
+          subtitle={t("calc.subtitle")}
+        />
 
         <SeasonalBanner />
 
@@ -400,8 +405,8 @@ export function CalculatorScreen() {
           <ChipRow equal>
             {(
               [
-                ["gross-to-net", "Gross → Net"],
-                ["net-to-gross", "Net → Gross"],
+                ["gross-to-net", "Từ Gross sang Net"],
+                ["net-to-gross", "Từ Net sang Gross"],
               ] as const
             ).map(([id, label]) => (
               <ChoiceChip
@@ -419,7 +424,7 @@ export function CalculatorScreen() {
         </Section>
 
         <Section
-          title={mode === "gross-to-net" ? "Lương Gross" : "Net mong muốn"}
+          title={mode === "gross-to-net" ? "Lương Gross" : "Net muốn nhận"}
           subtitle="Nhập số nguyên VNĐ"
         >
           <MoneyField
@@ -463,7 +468,7 @@ export function CalculatorScreen() {
               subtitle={
                 seasonalHint
                   ? "Gợi ý mùa Tết (tháng 12-1). Mô phỏng thuế tháng nhận thưởng."
-                  : "Cộng vào Gross tháng này để ước thuế TNCN."
+                  : "Cộng vào lương Gross tháng này để ước thuế thu nhập cá nhân."
               }
             >
               <MoneyField
@@ -494,9 +499,11 @@ export function CalculatorScreen() {
                 ))}
               </ChipRow>
               <View style={styles.switchRow}>
-                <Text style={styles.switchLabel}>
-                  Làm thêm ban đêm (22h-6h)
-                </Text>
+                <View style={styles.switchText}>
+                  <Text style={styles.switchLabel}>
+                    Làm thêm ban đêm (22h-6h)
+                  </Text>
+                </View>
                 <Switch
                   accessibilityLabel="Bật làm thêm ban đêm"
                   value={otNight}
@@ -507,7 +514,7 @@ export function CalculatorScreen() {
                   trackColor={{ false: colors.border, true: colors.primary }}
                 />
               </View>
-              <Text style={styles.fieldLabel}>Số giờ OT</Text>
+              <Text style={styles.fieldLabel}>Số giờ làm thêm</Text>
               <TextInput
                 accessibilityLabel="Số giờ làm thêm"
                 keyboardType="decimal-pad"
@@ -522,7 +529,7 @@ export function CalculatorScreen() {
           </CollapseSection>
         ) : null}
 
-        <CollapseSection title="Tùy chỉnh · vùng, tháng, người phụ thuộc, BH">
+        <CollapseSection title="Tùy chỉnh vùng, tháng, người phụ thuộc, bảo hiểm">
           <Section title="Vùng lương tối thiểu">
             <ChipRow equal>
               {REGION_OPTIONS.map(({ code, label }) => (
@@ -542,7 +549,7 @@ export function CalculatorScreen() {
 
           <Section
             title="Tháng tính lương"
-            subtitle="Chọn đúng tháng để áp trần BH (2026 đổi từ 01/07)."
+            subtitle="Chọn đúng tháng để áp trần bảo hiểm (2026 đổi từ 01/07)."
             titleAccessory={<InfoTip tipId="salary.asOfMonth" size={18} />}
           >
             <MonthPicker
@@ -571,8 +578,8 @@ export function CalculatorScreen() {
           </Section>
 
           <Section
-            title="Mức đóng BH"
-            subtitle="Full gross, % hợp đồng, hoặc số cố định."
+            title="Mức đóng bảo hiểm"
+            subtitle="Có thể chọn đóng theo toàn bộ Gross, theo % hợp đồng, hoặc một số cố định."
           >
             <InsuranceBasePresetPicker
               value={insurance}
@@ -594,16 +601,16 @@ export function CalculatorScreen() {
         ) : null}
 
         {breakdown ? (
-          <View style={styles.resultBlock}>
+          <View ref={anchorRef} collapsable={false} style={styles.resultBlock}>
             <ResultHero
               amount={
                 mode === "net-to-gross" ? breakdown.gross : breakdown.net
               }
               eyebrow={
                 mode === "net-to-gross"
-                  ? "Gross cần đạt"
+                  ? "Lương Gross cần đạt"
                   : bonusMonth && bonusMonth.extrasTotal > 0
-                    ? "Net tháng có thưởng/OT"
+                    ? "Net tháng có thưởng/làm thêm"
                     : undefined
               }
               label={mode === "net-to-gross" ? "Gross" : "Net"}
@@ -625,12 +632,12 @@ export function CalculatorScreen() {
                   So với tháng lương thường
                 </Text>
                 <Text style={styles.compareLine}>
-                  Net thường: {formatVnd(bonusMonth.base.net)}
+                  Net tháng thường: {formatVnd(bonusMonth.base.net)}
                 </Text>
                 <Text style={styles.compareLine}>
-                  Thưởng + OT: {formatVnd(bonusMonth.extrasTotal)}
+                  Thưởng + làm thêm: {formatVnd(bonusMonth.extrasTotal)}
                   {bonusMonth.otPay > 0
-                    ? ` (OT ${formatVnd(bonusMonth.otPay)})`
+                    ? ` (làm thêm ${formatVnd(bonusMonth.otPay)})`
                     : ""}
                 </Text>
                 <Text style={styles.compareLine}>
@@ -650,7 +657,7 @@ export function CalculatorScreen() {
             />
             {insuranceBaseLabel ? (
               <Text style={styles.meta} accessibilityLabel="Căn cứ bảo hiểm">
-                Căn cứ BH: {insuranceBaseLabel}
+                Lương làm căn cứ đóng bảo hiểm: {insuranceBaseLabel}
               </Text>
             ) : null}
             <SalaryBreakdownCard
@@ -754,7 +761,7 @@ export function CalculatorScreen() {
       <StickyActionBar>
         <Button label={t("common.calculate")} onPress={onCalculate} />
       </StickyActionBar>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -796,6 +803,7 @@ function makeStyles({ colors }: ThemeContextValue) {
     },
     switchText: { flex: 1, gap: 2 },
     switchLabel: {
+      flexShrink: 1,
       fontFamily: typography.fontFamily.medium,
       fontSize: typography.scale.body.fontSize,
       color: colors.foreground,

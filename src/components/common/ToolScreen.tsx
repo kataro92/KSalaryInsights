@@ -1,5 +1,12 @@
 import type { ReactNode, Ref } from "react";
-import { Text, View, type ScrollView } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  View,
+  type ScrollView,
+  type ScrollViewProps,
+} from "react-native";
 
 import { PageHero } from "@/src/components/common/PageHero";
 import { ScreenShell } from "@/src/components/common/ScreenShell";
@@ -22,6 +29,9 @@ type Props = {
   /** When opened from stack (no tab bar), reduce sticky bottom inset. */
   aboveTabBar?: boolean;
   scrollRef?: Ref<ScrollView>;
+  /** Forwarded to ScreenShell for scroll-to-result. */
+  onScroll?: ScrollViewProps["onScroll"];
+  scrollEventThrottle?: number;
 };
 
 /**
@@ -38,15 +48,24 @@ export function ToolScreen({
   sticky,
   aboveTabBar = false,
   scrollRef,
+  onScroll,
+  scrollEventThrottle = 16,
 }: Props) {
   const styles = useThemedStyles(makeStyles);
   return (
-    <View style={styles.root}>
+    <KeyboardAvoidingView
+      style={styles.root}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={nested ? 64 : 0}
+    >
       <ScreenShell
         ref={scrollRef}
         accessibilityLabel={accessibilityLabel ?? title}
         decorated={decorated}
+        padTopInset={!nested}
         contentContainerStyle={sticky ? styles.scrollWithSticky : undefined}
+        onScroll={onScroll}
+        scrollEventThrottle={scrollEventThrottle}
       >
         {nested ? (
           subtitle ? (
@@ -60,7 +79,7 @@ export function ToolScreen({
       {sticky ? (
         <StickyActionBar aboveTabBar={aboveTabBar}>{sticky}</StickyActionBar>
       ) : null}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

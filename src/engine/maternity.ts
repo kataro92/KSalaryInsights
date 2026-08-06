@@ -119,7 +119,7 @@ export function calculateMaternity(input: MaternityInput): MaternityBreakdown {
   let eligibilityWarning: string | undefined;
   if (!input.hasMinContribution) {
     eligibilityWarning =
-      "Có thể không đủ điều kiện hưởng nếu chưa đóng đủ 6 tháng BHXH trong 12 tháng trước sinh. đây chỉ là ước tính.";
+      "Có thể không đủ điều kiện hưởng nếu chưa đóng đủ 6 tháng bảo hiểm xã hội trong 12 tháng trước sinh. Đây chỉ là ước tính.";
   }
 
   const formula = `${monthlyBenefitTotal.toLocaleString(
@@ -143,7 +143,7 @@ export function calculateMaternity(input: MaternityInput): MaternityBreakdown {
     rulesetId: ruleset.id,
     legalSources: [
       ...ruleset.legal_sources,
-      "Luật BHXH 41/2024 Đ.53/58/59: thai sản",
+      "Luật Bảo hiểm xã hội 41/2024 Đ.53/58/59: thai sản",
       "Luật Dân số 113/2025 Đ.14/29: tháng nghỉ con thứ hai",
       "NĐ 161/2026: mức tham chiếu",
     ],

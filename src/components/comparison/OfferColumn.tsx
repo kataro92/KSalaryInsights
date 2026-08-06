@@ -32,19 +32,19 @@ export function OfferColumn({ title, value, onChange, result }: Props) {
       <ChipRow equal>
         <ChoiceChip
           flex
-          label="Gross→Net"
+          label="Gross sang Net"
           selected={value.mode === "gross-to-net"}
           onPress={() => setMode("gross-to-net")}
         />
         <ChoiceChip
           flex
-          label="Net→Gross"
+          label="Net sang Gross"
           selected={value.mode === "net-to-gross"}
           onPress={() => setMode("net-to-gross")}
         />
       </ChipRow>
       <Text style={styles.fieldLabel}>
-        {value.mode === "gross-to-net" ? "Gross" : "Net mục tiêu"}
+        {value.mode === "gross-to-net" ? "Lương Gross" : "Net muốn nhận"}
       </Text>
       <MoneyField
         accessibilityLabel={`${title} số tiền`}
@@ -67,13 +67,13 @@ export function OfferColumn({ title, value, onChange, result }: Props) {
             <Text style={styles.resultLine}>Gross: {formatVnd(result.gross)}</Text>
             <Text style={styles.resultLine}>Net: {formatVnd(result.net)}</Text>
             <Text style={styles.resultLine}>
-              BH NLĐ: {formatVnd(result.insuranceEmployeeTotal)}
+              Bảo hiểm người lao động: {formatVnd(result.insuranceEmployeeTotal)}
             </Text>
             <Text style={styles.resultLine}>
-              Thuế TNCN: {formatVnd(result.pitTotal)}
+              Thuế thu nhập cá nhân: {formatVnd(result.pitTotal)}
             </Text>
             <Text style={styles.meta}>
-              Căn cứ BH: {result.insuranceBaseLabel} ·{" "}
+              Lương làm căn cứ đóng bảo hiểm: {result.insuranceBaseLabel} ·{" "}
               {formatVnd(result.insuranceBaseUsed)}
             </Text>
           </View>
@@ -96,8 +96,11 @@ function makeStyles({ colors }: ThemeContextValue) {
   return {
     title: {
       fontFamily: typography.fontFamily.bold,
-      fontSize: typography.scale.body.fontSize,
+      fontSize: typography.scale.subtitle.fontSize,
+      lineHeight: typography.scale.subtitle.lineHeight,
       color: colors.foreground,
+      letterSpacing: typography.letterSpacingTight,
+      paddingRight: 2,
     },
     fieldLabel: {
       fontFamily: typography.fontFamily.medium,

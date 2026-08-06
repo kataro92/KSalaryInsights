@@ -72,10 +72,10 @@ export function calcOvertimePay(input: OvertimeInput): OvertimeBreakdown {
   } = input;
 
   if (!Number.isFinite(monthlySalary) || monthlySalary <= 0) {
-    throw new Error("Lương tháng căn cứ OT phải > 0");
+    throw new Error("Lương tháng làm căn cứ tính làm thêm phải > 0");
   }
   if (!Number.isFinite(hours) || hours < 0) {
-    throw new Error("Số giờ OT không hợp lệ");
+    throw new Error("Số giờ làm thêm không hợp lệ");
   }
   if (workDaysPerMonth <= 0 || hoursPerDay <= 0) {
     throw new Error("Ngày công / giờ ngày không hợp lệ");
@@ -99,18 +99,20 @@ export function calcOvertimePay(input: OvertimeInput): OvertimeBreakdown {
     const dayOt = OT_MULTIPLIERS[dayType];
     const daytimeUnitForExtra = dayType === "weekday" ? 1 : dayOt;
     explanations.push(
-      `OT ban đêm ${OT_DAY_LABELS[dayType]} → ${pct}% = ${
+      `Làm thêm ban đêm ${OT_DAY_LABELS[dayType]}: ${pct}% = ${
         dayOt * 100
-      }% (OT ngày) + ${NIGHT_WORK_PREMIUM * 100}% (đêm) + ${
+      }% (làm thêm ban ngày) + ${NIGHT_WORK_PREMIUM * 100}% (đêm) + ${
         NIGHT_OT_EXTRA * 100
       }%×${daytimeUnitForExtra * 100}% (Đ.98 k.2-3 / NĐ 145 Đ.57).`
     );
   } else {
-    explanations.push(`Hệ số ${OT_DAY_LABELS[dayType]}. BLLĐ 2019 Đ.98.`);
+    explanations.push(
+      `Hệ số ${OT_DAY_LABELS[dayType]}. Bộ luật Lao động 2019 Đ.98.`
+    );
   }
 
   explanations.push(
-    "OT cộng vào Gross tháng để ước PIT; mức đóng BH mặc định giữ theo lương căn cứ (không cộng OT)."
+    "Tiền làm thêm cộng vào lương Gross tháng để ước thuế thu nhập cá nhân; mức đóng bảo hiểm mặc định giữ theo lương căn cứ (không cộng làm thêm)."
   );
 
   return {

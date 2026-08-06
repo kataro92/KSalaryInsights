@@ -15,7 +15,7 @@ function taxTotal(vat: number, pit: number, other = 0): number {
   return vat + pit + other;
 }
 
-/** Manual salary / QT line - amounts already estimated by annual settlement. */
+/** Manual salary / settlement line - amounts already estimated by annual settlement. */
 export function mapSalaryLine(args: {
   taxYear: number;
   revenueOrIncome: number;
@@ -64,7 +64,7 @@ export function mapHkdLine(args: {
   if (r.exempt) {
     notes.push("Miễn thuế tỷ lệ; vẫn có thể phải kê khai / thông báo doanh thu.");
   }
-  notes.push("Không gộp vào biểu lũy tiến lương HĐLĐ.");
+  notes.push("Không gộp vào biểu lũy tiến của lương hợp đồng lao động.");
   return {
     id: newLineId(),
     kind: "hkd",
@@ -94,7 +94,7 @@ export function mapRentLine(args: {
   });
   const notes = [...r.explanations];
   if (r.reportingNote) notes.push(r.reportingNote);
-  notes.push("Không gộp vào biểu lũy tiến lương HĐLĐ.");
+  notes.push("Không gộp vào biểu lũy tiến của lương hợp đồng lao động.");
   return {
     id: newLineId(),
     kind: "rent",
@@ -128,10 +128,10 @@ export function mapCasualLine(args: {
   const notes = [...r.explanations];
   if (r.settlementWarning) notes.push(r.settlementWarning);
   if (args.mandatoryMerge) {
-    notes.push("Gợi ý DualScenario: bắt buộc gộp khi thuộc diện.");
+    notes.push("Gợi ý hai kịch bản: bắt buộc gộp khi thuộc diện.");
   } else {
     notes.push(
-      "Vãng lai miễn / dưới ngưỡng: xem DualScenario trên Quyết toán lương."
+      "Thu nhập vãng lai miễn / dưới ngưỡng: xem hai kịch bản trên Quyết toán lương."
     );
   }
   return {
@@ -165,7 +165,7 @@ export function mapSecuritiesLine(args: {
     asOfDate: asOf,
   });
   const notes = [...r.explanations];
-  notes.push("Không gộp vào biểu lũy tiến lương HĐLĐ.");
+  notes.push("Không gộp vào biểu lũy tiến của lương hợp đồng lao động.");
   return {
     id: newLineId(),
     kind: "securities",
@@ -201,7 +201,7 @@ export function mapEsopLine(args: {
   const notes = [...r.explanations];
   if (r.settlementNote) notes.push(r.settlementNote);
   notes.push(
-    "ESOP: phần TLTC không tự gộp vào dòng lương. Nhập tay nếu cần."
+    "ESOP: phần thu nhập từ cổ phiếu không tự gộp vào dòng lương. Nhập tay nếu cần."
   );
   return {
     id: newLineId(),

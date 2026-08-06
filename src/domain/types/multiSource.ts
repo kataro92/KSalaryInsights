@@ -60,10 +60,10 @@ export type FilingWizardImpact = {
 export const MAX_MULTI_SOURCE_LINES = 20;
 
 export const DEFAULT_KIND_LABELS_VI: Record<MultiSourceKind, string> = {
-  salary: "Lương HĐLĐ",
-  casual: "Vãng lai",
-  hkd: "Hộ / cá nhân KD",
-  rent: "Cho thuê BĐS",
+  salary: "Lương hợp đồng lao động",
+  casual: "Thu nhập vãng lai",
+  hkd: "Hộ / cá nhân kinh doanh",
+  rent: "Cho thuê bất động sản",
   securities: "Chứng khoán",
   esop: "ESOP",
 };

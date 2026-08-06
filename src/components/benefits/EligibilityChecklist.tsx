@@ -15,7 +15,7 @@ export function EligibilityChecklist({ items }: Props) {
   return (
     <ColorBlock
       tone="muted"
-      accessibilityLabel="Checklist điều kiện hưởng BHTN"
+      accessibilityLabel="Checklist điều kiện hưởng bảo hiểm thất nghiệp"
     >
       <Text style={styles.title}>Điều kiện cần nhớ</Text>
       {items.map((item) => (

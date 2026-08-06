@@ -46,7 +46,9 @@ export function CollapseSection({
         onPress={() => setOpen(!open)}
         style={({ pressed }) => [styles.header, pressed && styles.pressed]}
       >
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {title}
+        </Text>
         {open ? (
           <AppIcon name="chevron-up" color={colors.foregroundMuted} size={20} />
         ) : (
@@ -79,9 +81,13 @@ function makeStyles({ colors }: ThemeContextValue) {
     },
     title: {
       flex: 1,
+      flexShrink: 1,
+      minWidth: 0,
       fontFamily: typography.fontFamily.semiBold,
       fontSize: typography.scale.body.fontSize,
+      lineHeight: typography.scale.body.lineHeight,
       color: colors.foreground,
+      paddingRight: 2,
     },
     body: {
       paddingHorizontal: space[4],

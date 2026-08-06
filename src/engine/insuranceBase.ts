@@ -20,7 +20,7 @@ export function validateInsurancePreset(
   raw: unknown
 ): InsurancePresetValidation {
   if (!raw || typeof raw !== "object") {
-    return { ok: false, message: "Preset BH không hợp lệ." };
+    return { ok: false, message: "Thiết lập mức đóng bảo hiểm không hợp lệ." };
   }
   const o = raw as Record<string, unknown>;
   if (o.mode === "full") {
@@ -34,7 +34,7 @@ export function validateInsurancePreset(
       percent < 1 ||
       percent > 100
     ) {
-      return { ok: false, message: "Tỷ lệ BH phải là số nguyên 1-100." };
+      return { ok: false, message: "Tỷ lệ đóng bảo hiểm phải là số nguyên 1-100." };
     }
     return { ok: true, preset: { mode: "percent", percent } };
   }
@@ -45,11 +45,11 @@ export function validateInsurancePreset(
       !Number.isInteger(absoluteAmount) ||
       absoluteAmount <= 0
     ) {
-      return { ok: false, message: "Mức đóng BH tuyệt đối phải > 0." };
+      return { ok: false, message: "Mức đóng bảo hiểm cố định phải > 0." };
     }
     return { ok: true, preset: { mode: "absolute", absoluteAmount } };
   }
-  return { ok: false, message: "Chế độ BH không hỗ trợ." };
+  return { ok: false, message: "Chế độ đóng bảo hiểm này chưa được hỗ trợ." };
 }
 
 export function parseInsurancePreset(raw: unknown): InsuranceBasePreset | null {

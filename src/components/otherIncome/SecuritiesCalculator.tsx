@@ -10,6 +10,7 @@ import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
 import type { SecuritiesBreakdown } from "@/src/domain/types/otherIncome";
 import { calculateSecuritiesTransfer } from "@/src/engine/otherIncome/securities";
+import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
@@ -31,6 +32,7 @@ type Props = { taxYear: number };
 
 export function SecuritiesCalculator({ taxYear }: Props) {
   const styles = useThemedStyles(makeStyles);
+  const scroll = useOptionalScrollToResult();
   const [priceText, setPriceText] = useState("100.000.000");
   const [asOfDate, setAsOfDate] = useState("2026-08-15");
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +56,7 @@ export function SecuritiesCalculator({ taxYear }: Props) {
         calculateSecuritiesTransfer({ transferPrice, taxYear, asOfDate })
       );
       void successHaptic();
+      scroll?.scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -93,20 +96,20 @@ export function SecuritiesCalculator({ taxYear }: Props) {
       {error ? (
         <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
-      <Button label="Tính CK" onPress={onCalculate} />
+      <Button label="Tính chứng khoán" onPress={onCalculate} />
       {result ? (
-        <>
+        <View ref={scroll?.anchorRef} collapsable={false}>
           <ResultHero
             tone="primary"
-            eyebrow="Chuyển nhượng CK"
-            label="Thuế CN"
+            eyebrow="Thuế chuyển nhượng chứng khoán"
+            label="Thuế"
             amount={result.tax}
           />
-          <NgaiMiuTip tip="Tỷ lệ theo ngày giao dịch. đọc chú thích nếu mức đang áp dụng có hiệu lực hạn chế." />
+          <NgaiMiuTip tip="Tỷ lệ thuế theo ngày giao dịch. Đọc chú thích nếu mức đang áp dụng có hiệu lực hạn chế." />
           <OtherIncomeBreakdownCard
-            title="Chuyển nhượng CK"
+            title="Chuyển nhượng chứng khoán"
             total={result.tax}
-            totalLabel="Thuế CN"
+            totalLabel="Thuế"
             formula={result.formula}
             lines={[
               { id: "tax", label: "Thuế chuyển nhượng", amount: result.tax },
@@ -116,11 +119,11 @@ export function SecuritiesCalculator({ taxYear }: Props) {
             hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
-          title="Chưa có ước thuế CK"
-          body="Nhập giá bán và ngày giao dịch, rồi bấm Tính CK."
+          title="Chưa có thuế chứng khoán ước tính"
+          body="Nhập giá bán và ngày giao dịch, rồi bấm Tính chứng khoán."
         />
       ) : null}
     </View>

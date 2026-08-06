@@ -16,13 +16,15 @@ type Props = {
 
 /**
  * Soft enter. Slight rise + fade.
- * Starts near-visible so a missed animation never blanks the screen.
+ * Starts fully opaque so the first tab never looks washed out if timing races.
  */
 export function ScreenEnter({ children, style }: Props) {
-  const opacity = useSharedValue(0.001);
-  const translateY = useSharedValue(6);
+  const opacity = useSharedValue(1);
+  const translateY = useSharedValue(8);
 
   useEffect(() => {
+    opacity.value = 0.92;
+    translateY.value = 8;
     opacity.value = withTiming(1, {
       duration: motion.transitionMs,
       easing: Easing.out(Easing.cubic),

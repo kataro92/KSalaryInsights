@@ -53,7 +53,7 @@ export function calculateBonusMonth(
     throw new Error("Thưởng không hợp lệ");
   }
   if (!Number.isFinite(otPay) || otPay < 0) {
-    throw new Error("OT không hợp lệ");
+    throw new Error("Tiền làm thêm không hợp lệ");
   }
 
   const extrasTotal = bonus + otPay;
@@ -90,9 +90,9 @@ export function calculateBonusMonth(
     deltaTax: withExtras.pit.totalTax - base.pit.totalTax,
     explanations: [
       extrasTotal > 0
-        ? "Thuế tháng có thưởng/OT tính trên tổng Gross; mức đóng BH giữ theo lương căn cứ (trừ khi bạn bật mức BH riêng)."
-        : "Không có thưởng/OT. Kết quả trùng tháng lương thường.",
-      "Ước tính. Chính sách BH trên thưởng/OT có thể khác theo HĐLĐ và nội quy công ty.",
+        ? "Thuế tháng có thưởng/làm thêm tính trên tổng Gross; mức đóng bảo hiểm giữ theo lương căn cứ (trừ khi bạn bật mức bảo hiểm riêng)."
+        : "Không có thưởng/làm thêm. Kết quả trùng tháng lương thường.",
+      "Ước tính. Chính sách bảo hiểm trên thưởng/làm thêm có thể khác theo hợp đồng lao động và nội quy công ty.",
     ],
   };
 }

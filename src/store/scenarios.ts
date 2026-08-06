@@ -499,7 +499,7 @@ export function defaultScenarioName(
   if (kind === "settlement") {
     const i = inputs as SettlementScenarioInputs;
     const casual = i.includeCasual && i.casualGross > 0 ? " · vãng lai" : "";
-    return `QT ${compactMoneyLabel(i.monthlyGross)} ×${i.monthsWorked} · ${
+    return `Quyết toán ${compactMoneyLabel(i.monthlyGross)} ×${i.monthsWorked} · ${
       i.taxYear
     }${casual}`;
   }
@@ -522,7 +522,7 @@ export function defaultScenarioName(
   const modeLabel = i.mode === "gross-to-net" ? "Gross" : "Net";
   let suffix = "";
   if (i.bonus > 0) suffix += " · thưởng";
-  if (i.otHours > 0) suffix += " · OT";
+  if (i.otHours > 0) suffix += " · làm thêm";
   return `${modeLabel} ${compactMoneyLabel(i.amount)} · T${i.month}/${
     i.taxYear
   }${suffix}`;
@@ -882,7 +882,7 @@ export function formatScenarioShareText(
       `Lương ${i.monthlyGross.toLocaleString("vi-VN")} ₫ × ${
         i.monthsWorked
       } tháng`,
-      `Năm QT ${i.taxYear} · vùng ${i.region} · NPT ${i.numDependents}`,
+      `Năm quyết toán ${i.taxYear} · vùng ${i.region} · người phụ thuộc ${i.numDependents}`,
       `Đã khấu trừ lương: ${i.salaryWithheld.toLocaleString("vi-VN")} ₫`,
     ];
     if (i.includeCasual) {
@@ -893,7 +893,7 @@ export function formatScenarioShareText(
       );
     }
     if (args.delta != null)
-      lines.push(`Ước: ${formatDeltaPreview(args.delta)}`);
+      lines.push(`Kết quả ước tính: ${formatDeltaPreview(args.delta)}`);
     lines.push(` - ước tính offline · ${brand}`);
     return lines.join("\n");
   }
@@ -908,11 +908,11 @@ export function formatScenarioShareText(
       args.name ? `${args.name}` : "So sánh hai offer",
       sideLine("A", i.offerA),
       sideLine("B", i.offerB),
-      `Năm ${i.shared.taxYear} · T${i.shared.month} · vùng ${i.shared.region} · NPT ${i.shared.numDependents}`,
+      `Năm ${i.shared.taxYear} · tháng ${i.shared.month} · vùng ${i.shared.region} · người phụ thuộc ${i.shared.numDependents}`,
     ];
     if (args.deltaNet != null) {
       lines.push(
-        `ΔNet (B−A): ${args.deltaNet.toLocaleString("vi-VN")} ₫ (ước)`
+        `Chênh Net (B so với A): ${args.deltaNet.toLocaleString("vi-VN")} ₫ (ước tính)`
       );
     }
     lines.push(` - ước tính offline · không tư vấn chọn · ${brand}`);
@@ -923,8 +923,8 @@ export function formatScenarioShareText(
     const i = args.inputs;
     const active = i.lines.filter((l) => !l.excluded);
     const lines = [
-      args.name ? `${args.name}` : "Tổng hợp QT đa nguồn",
-      `Năm ${i.taxYear} · ${active.length} dòng nguồn (ước)`,
+      args.name ? `${args.name}` : "Tổng hợp thu nhập cả năm",
+      `Năm ${i.taxYear} · ${active.length} dòng nguồn thu nhập (ước tính)`,
     ];
     for (const line of active.slice(0, 6)) {
       lines.push(
@@ -935,7 +935,7 @@ export function formatScenarioShareText(
     }
     if (args.estimatedTax != null) {
       lines.push(
-        `Tổng thuế ước: ${args.estimatedTax.toLocaleString("vi-VN")} ₫`
+        `Tổng thuế ước tính: ${args.estimatedTax.toLocaleString("vi-VN")} ₫`
       );
     }
     if (args.withheld != null) {
@@ -945,7 +945,7 @@ export function formatScenarioShareText(
       lines.push(`Chênh (ước): ${formatDeltaPreview(args.delta)}`);
     }
     lines.push(
-      ` - ước tính offline · không thay tờ khai · không ước coin · ${brand}`
+      ` - ước tính offline · không thay tờ khai · không tính thuế coin · ${brand}`
     );
     return lines.join("\n");
   }
@@ -956,12 +956,12 @@ export function formatScenarioShareText(
     `${
       i.mode === "gross-to-net" ? "Gross" : "Net mục tiêu"
     }: ${i.amount.toLocaleString("vi-VN")} ₫`,
-    `Năm thuế ${i.taxYear} · tháng ${i.month} · vùng ${i.region} · NPT ${i.numDependents}`,
+    `Năm thuế ${i.taxYear} · tháng ${i.month} · vùng ${i.region} · người phụ thuộc ${i.numDependents}`,
   ];
   if (i.bonus > 0) lines.push(`Thưởng: ${i.bonus.toLocaleString("vi-VN")} ₫`);
   if (i.otHours > 0) {
     const night = i.otNight ? " · đêm" : "";
-    lines.push(`OT: ${i.otHours} giờ (${i.otDayType}${night})`);
+    lines.push(`Làm thêm: ${i.otHours} giờ (${i.otDayType}${night})`);
   }
   if (args.net != null)
     lines.push(`Net ước: ${args.net.toLocaleString("vi-VN")} ₫`);
@@ -986,7 +986,7 @@ export function scenarioRowMeta(scenario: SavedScenario): string {
     if (scenario.lastDeltaNet == null) return base;
     const d = scenario.lastDeltaNet;
     const sign = d > 0 ? "+" : "";
-    return `${base} · ΔNet ${sign}${formatVndCompact(d)}`;
+    return `${base} · chênh Net ${sign}${formatVndCompact(d)}`;
   }
   if (scenario.kind === "multi_source") {
     const i = scenario.inputs;

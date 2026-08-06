@@ -22,27 +22,27 @@ export const miuTips = {
   filingWizard:
     "App không thu giấy tờ. Tôi chỉ gợi ý hướng nộp để bạn tự chuẩn bị.",
   maternity:
-    "Chế độ theo tháng và trợ cấp một lần hiện riêng bên dưới, không gộp vào Gross-Net.",
+    "Tiền thai sản theo tháng và khoản trợ cấp một lần được tách riêng, không gộp vào lương Gross-Net.",
   sickLeave:
-    "Có trần ngày theo năm đóng. Nếu bị cắt, công thức ghi rõ bên dưới.",
+    "Đây là tiền nghỉ ốm ước tính. Nếu số ngày hưởng bị giới hạn, công thức sẽ ghi rõ bên dưới.",
   severance:
-    "Đã trừ thời gian đóng BHTN và phần đã chi trả. Xem chi tiết bên dưới.",
+    "Đã trừ thời gian đã đóng bảo hiểm thất nghiệp và phần công ty từng chi trả. Xem chi tiết bên dưới.",
   unemployment:
-    "Trần trợ cấp = 5 × lương tối thiểu vùng. Điều kiện hưởng nằm dưới phần chi tiết.",
+    "Trợ cấp thất nghiệp có trần bằng 5 × lương tối thiểu vùng. Điều kiện hưởng nằm dưới phần chi tiết.",
   retirement:
-    "Hai kịch bản chỉ để so sánh; tôi không khuyên rút hay giữ. Đọc điều kiện bên dưới.",
+    "Hai kịch bản chỉ để so sánh tiền hưu và tiền bảo hiểm xã hội một lần. Tôi không khuyên rút hay giữ.",
   comparison: "Gross giữ nguyên. Tôi chỉ so Net và thuế giữa hai năm.",
-  rent: "GTGT và TNCN hiện riêng. Ngưỡng miễn theo năm thuế đang chọn.",
+  rent: "Thuế giá trị gia tăng và thuế thu nhập cá nhân hiện riêng. Ngưỡng miễn theo năm thuế đang chọn.",
   rentSimple:
-    "Tôi nhân tiền thuê tháng ×12 rồi áp ngưỡng 1 tỷ. Nếu miễn thuế, vẫn nhắc mẫu 01/BĐS.",
-  hkd: "GTGT + TNCN theo nhóm ngành. Miễn tỷ lệ vẫn cần kê khai doanh thu.",
+    "Tôi nhân tiền thuê tháng ×12 rồi áp ngưỡng 1 tỷ. Nếu miễn thuế, vẫn nhắc mẫu kê khai cho thuê.",
+  hkd: "Thuế giá trị gia tăng và thuế thu nhập cá nhân theo nhóm ngành. Nếu được miễn, vẫn cần kê khai doanh thu.",
   hkdSimple:
-    "Ước nhanh: doanh thu tháng ×12 theo nhóm ngành phổ biến. Bật Đầy đủ nếu cần chi phí hoặc ngành khác.",
+    "Tính nhanh: doanh thu tháng ×12 theo nhóm ngành phổ biến. Bật Đầy đủ nếu cần nhập chi phí hoặc ngành khác.",
   securities:
     "Tỷ lệ theo ngày giao dịch. Đọc chú thích nếu mức đang áp dụng có hiệu lực hạn chế.",
   esop: "Thuế từ thu nhập chịu thuế và thuế chuyển nhượng hiện riêng. Đọc ghi chú quyết toán nếu có.",
   casual:
-    "Thực nhận nằm trong chi tiết. Miễn quyết toán chỉ áp khi đủ điều kiện ở mục Quyết toán.",
+    "Số tiền thực nhận nằm trong phần chi tiết. Miễn tự quyết toán chỉ áp khi đủ điều kiện ở mục Quyết toán.",
   scenarios:
     "Kịch bản lưu trên máy bạn, không gửi lên máy chủ. Tải lại khi cần so sánh hoặc quyết toán.",
 } as const;
@@ -53,24 +53,24 @@ export const emptyCopy = {
     body: "Nhập Gross hoặc Net, rồi bấm Tính.",
   },
   settlement: {
-    title: "Chưa có ước quyết toán",
-    body: "Nhập lương tháng, số tháng và thuế đã khấu trừ, rồi bấm Ước quyết toán.",
+    title: "Chưa có kết quả quyết toán",
+    body: "Nhập lương tháng, số tháng và thuế đã khấu trừ, rồi bấm Tính quyết toán.",
   },
   maternity: {
-    title: "Chưa có ước thai sản",
-    body: "Nhập lương bình quân và thông tin sinh, rồi bấm Tính.",
+    title: "Chưa có tiền thai sản ước tính",
+    body: "Nhập lương bình quân và thông tin sinh, rồi bấm Tính thai sản.",
   },
   sickLeave: {
-    title: "Chưa có ước ốm đau",
-    body: "Nhập lương liền kề và số ngày nghỉ, rồi bấm Tính.",
+    title: "Chưa có tiền nghỉ ốm ước tính",
+    body: "Nhập lương tháng liền kề và số ngày nghỉ, rồi bấm Tính nghỉ ốm.",
   },
   severance: {
-    title: "Chưa có ước trợ cấp",
+    title: "Chưa có tiền trợ cấp ước tính",
     body: "Chọn thôi việc hoặc mất việc, nhập thời gian và lương, rồi bấm Tính.",
   },
   unemployment: {
-    title: "Chưa có ước BHTN",
-    body: "Nhập số tháng đóng và lương bình quân, rồi bấm Tính.",
+    title: "Chưa có trợ cấp thất nghiệp ước tính",
+    body: "Nhập số tháng đã đóng bảo hiểm thất nghiệp và lương bình quân, rồi bấm Tính thất nghiệp.",
   },
   filing: {
     title: "Chưa có kết luận",
@@ -84,7 +84,7 @@ export const emptyCopy = {
 export const aboutCopy = {
   name: "Ngài Miu",
   role: "Trợ lý trong app",
-  body: "KSalaryInsights giúp bạn so offer Gross-Net, đối chiếu bảng lương và kiểm chứng mức BH · thuế theo năm ngay trên máy bạn. Từng khoản trừ hiện rõ. Tôi hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
+  body: "KSalaryInsights giúp bạn so offer Gross-Net, đối chiếu bảng lương và kiểm chứng mức bảo hiểm, thuế theo năm ngay trên máy bạn. Từng khoản trừ hiện rõ. Tôi hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
   author: "Phạm Huy Đức",
   email: "kataro92@gmail.com",
 } as const;
@@ -92,12 +92,12 @@ export const aboutCopy = {
 export const onboardingSteps = [
   {
     title: "Xin chào, tôi là Ngài Miu",
-    body: "Tôi giúp bạn ước lương, thuế và BHXH khi nhận offer, đối chiếu bảng lương, hoặc khi mức đổi theo năm.",
+    body: "Tôi giúp bạn ước lương, thuế và bảo hiểm xã hội khi nhận offer, đối chiếu bảng lương, hoặc khi mức đổi theo năm.",
     pose: "wave" as const,
   },
   {
-    title: "Từ Gross sang Net",
-    body: "Quy offer về cùng một mặt, chỉnh mức đóng BH, xem thực nhận trước khi ký. Mỗi khoản trừ hiện riêng.",
+    title: "Từ lương Gross sang thực nhận",
+    body: "Quy offer về cùng một mặt, chỉnh mức đóng bảo hiểm, xem thực nhận trước khi ký. Mỗi khoản trừ hiện riêng.",
     pose: "point" as const,
   },
   {
@@ -106,8 +106,8 @@ export const onboardingSteps = [
     pose: "tip" as const,
   },
   {
-    title: "Quyền lợi BHXH",
-    body: "Thai sản, ốm đau, thôi việc, thất nghiệp, hưu hoặc một lần: mỗi công cụ đứng riêng.",
+    title: "Quyền lợi bảo hiểm xã hội",
+    body: "Thai sản, nghỉ ốm, thôi việc, thất nghiệp, hưu hoặc nhận một lần: mỗi công cụ đứng riêng.",
     pose: "bow" as const,
   },
 ] as const;

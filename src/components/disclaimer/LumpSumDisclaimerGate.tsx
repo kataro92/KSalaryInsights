@@ -27,9 +27,9 @@ export function LumpSumDisclaimerGate({ acknowledged, onAcknowledge }: Props) {
     >
       <Text style={styles.title}>Đọc trước khi xem số</Text>
       <Text style={styles.body}>
-        Quyết định rút BHXH một lần thường không thể đảo ngược. Kết quả dưới đây
-        chỉ là khoảng ước tính. Hãy xác nhận với cơ quan BHXH / VssID trước khi
-        quyết định.
+        Quyết định nhận bảo hiểm xã hội một lần thường không thể đảo ngược. Kết
+        quả dưới đây chỉ là khoảng ước tính. Hãy xác nhận với cơ quan bảo hiểm
+        xã hội / VssID trước khi quyết định.
       </Text>
       <Text style={styles.body}>
         Ứng dụng không tư vấn nên rút hay nên chờ; chỉ trình bày hai kịch bản

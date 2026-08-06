@@ -31,7 +31,7 @@ export function calculateEsop(input: EsopInput): EsopBreakdown {
 
   const { bookCost, usedFallback } = resolveBookCost(input);
   const settlementNote =
-    "Phần tiền lương từ vốn (TLTC) quyết toán theo biểu lũy tiến cuối năm. Mức khấu trừ 10% tại nguồn chỉ là tạm tính.";
+    "Phần thu nhập từ cổ phiếu quyết toán theo biểu lũy tiến cuối năm. Mức khấu trừ 10% tại nguồn chỉ là tạm tính.";
 
   if (input.asOfDate < params.effective_from) {
     return {
@@ -48,7 +48,10 @@ export function calculateEsop(input: EsopInput): EsopBreakdown {
         `as_of_date ${input.asOfDate} < ${params.effective_from}.`,
       ],
       rulesetId: ruleset.id,
-      legalSources: [...ruleset.legal_sources, "NĐ 253/2026 Đ.50: ESOP / TLTC"],
+      legalSources: [
+        ...ruleset.legal_sources,
+        "Nghị định 253/2026 Đ.50: ESOP / thu nhập từ cổ phiếu",
+      ],
     };
   }
 
@@ -58,16 +61,16 @@ export function calculateEsop(input: EsopInput): EsopBreakdown {
 
   const explanations: string[] = [
     usedFallback
-      ? `Chi phí ghi sổ (fallback mệnh giá): max(0, shares×par − đã trả) = ${bookCost.toLocaleString(
+      ? `Chi phí ghi sổ (tính từ mệnh giá): max(0, số cổ phiếu × mệnh giá − đã trả) = ${bookCost.toLocaleString(
           "vi-VN"
         )}.`
       : `Chi phí ghi sổ tại trao = ${bookCost.toLocaleString("vi-VN")}.`,
-    `TLTC khấu trừ = ${
+    `Thuế thu nhập từ cổ phiếu đã khấu trừ = ${
       params.tlcc_withholding_rate * 100
     }% × ${bookCost.toLocaleString("vi-VN")} = ${tlccWithholding.toLocaleString(
       "vi-VN"
     )}.`,
-    `Thuế CN = ${
+    `Thuế chuyển nhượng = ${
       params.transfer_rate * 100
     }% × ${input.salePrice.toLocaleString(
       "vi-VN"
@@ -83,13 +86,18 @@ export function calculateEsop(input: EsopInput): EsopBreakdown {
     totalTax,
     effective: true,
     settlementNote,
-    formula: `TLTC ${tlccWithholding.toLocaleString(
+    formula: `Thuế thu nhập từ cổ phiếu ${tlccWithholding.toLocaleString(
       "vi-VN"
-    )} + CN ${transferTax.toLocaleString("vi-VN")} = ${totalTax.toLocaleString(
+    )} + thuế chuyển nhượng ${transferTax.toLocaleString(
+      "vi-VN"
+    )} = ${totalTax.toLocaleString(
       "vi-VN"
     )}`,
     explanations,
     rulesetId: ruleset.id,
-    legalSources: [...ruleset.legal_sources, "NĐ 253/2026 Đ.50: ESOP / TLTC"],
+    legalSources: [
+      ...ruleset.legal_sources,
+      "Nghị định 253/2026 Đ.50: ESOP / thu nhập từ cổ phiếu",
+    ],
   };
 }

@@ -5,165 +5,165 @@ type TipDict = Record<TipId, TipContent>;
 const vi: TipDict = {
   "salary.gross": {
     title: "Lương Gross",
-    body: "Tổng thu nhập trước khi trừ bảo hiểm bắt buộc và thuế TNCN. Đây là số bạn nhập (hoặc suy ra khi chế độ Net → Gross).",
+    body: "Tổng thu nhập trước khi trừ bảo hiểm bắt buộc và thuế thu nhập cá nhân. Đây là số bạn nhập (hoặc suy ra khi tính từ Net sang Gross).",
     formula:
       "Gross = lương thỏa thuận + thưởng tháng + tiền làm thêm giờ + khoản chịu thuế khác trong tháng",
     detail:
-      "Trong app, Gross tháng là điểm xuất phát của luồng tính. Phụ cấp miễn thuế (nếu có) chưa tách riêng ở bản này. Nếu bảng lương có khoản miễn, đối chiếu lại với HR.\n\nVí dụ: lương thỏa thuận 28tr + thưởng 2tr → Gross 30tr trước khi trừ BH và thuế.",
+      "Trong app, Gross tháng là điểm xuất phát của luồng tính. Phụ cấp miễn thuế (nếu có) chưa tách riêng ở bản này. Nếu bảng lương có khoản miễn, đối chiếu lại với nhân sự.\n\nVí dụ: lương thỏa thuận 28tr + thưởng 2tr = Gross 30tr trước khi trừ bảo hiểm và thuế.",
     sources: [
-      "Luật Thuế TNCN 109/2025/QH15: thu nhập từ tiền lương, tiền công"],
+      "Luật Thuế thu nhập cá nhân 109/2025/QH15: thu nhập từ tiền lương, tiền công"],
   },
   "salary.bhxh": {
-    title: "BHXH người lao động (8%)",
-    body: "Phần bảo hiểm xã hội bạn đóng mỗi tháng trên mức lương làm căn cứ đóng BHXH (đã áp trần nếu vượt).",
-    formula: "BHXH_NLĐ = min(lương_đóng_BHXH, trần_BHXH) × 8%",
+    title: "Bảo hiểm xã hội người lao động (8%)",
+    body: "Phần bảo hiểm xã hội bạn đóng mỗi tháng trên mức lương làm căn cứ đóng bảo hiểm xã hội (đã áp trần nếu vượt).",
+    formula: "Bảo_hiểm_xã_hội = min(lương_đóng_bảo_hiểm, trần_bảo_hiểm) × 8%",
     detail:
-      "Trần BHXH/BHYT = 20 × mức tham chiếu (lương cơ sở khi còn áp dụng). Năm 2026: nửa đầu năm trần ~46,8tr; từ 01/07/2026 trần ~50,6tr. App lấy theo ngày/năm thuế.\n\nTỷ lệ 8% là quỹ hưu trí & tử tuất phía người lao động. Phần doanh nghiệp đóng không trừ khỏi Net của bạn.",
+      "Trần bảo hiểm xã hội / y tế = 20 × mức tham chiếu (lương cơ sở khi còn áp dụng). Năm 2026: nửa đầu năm trần khoảng 46,8tr; từ 01/07/2026 trần khoảng 50,6tr. App lấy theo ngày/năm thuế.\n\nTỷ lệ 8% là quỹ hưu trí và tử tuất phía người lao động. Phần doanh nghiệp đóng không trừ khỏi Net của bạn.",
     sources: [
-      "Luật BHXH 41/2024/QH15 Đ.33 khoản 1a (tỷ lệ 8%)",
-      "Luật BHXH 41/2024 Đ.31 khoản 1đ (trần 20 lần mức tham chiếu)"],
+      "Luật Bảo hiểm xã hội 41/2024/QH15 Đ.33 khoản 1a (tỷ lệ 8%)",
+      "Luật Bảo hiểm xã hội 41/2024 Đ.31 khoản 1đ (trần 20 lần mức tham chiếu)"],
   },
   "salary.bhyt": {
-    title: "BHYT người lao động (1,5%)",
-    body: "Phần bảo hiểm y tế bạn đóng trên cùng nhóm căn cứ với BHXH (cùng trần đóng).",
-    formula: "BHYT_NLĐ = min(lương_đóng_BHXH, trần_BHXH) × 1,5%",
+    title: "Bảo hiểm y tế người lao động (1,5%)",
+    body: "Phần bảo hiểm y tế bạn đóng trên cùng nhóm căn cứ với bảo hiểm xã hội (cùng trần đóng).",
+    formula: "Bảo_hiểm_y_tế = min(lương_đóng_bảo_hiểm, trần_bảo_hiểm) × 1,5%",
     detail:
-      "Căn cứ và trần BHYT thường đi cùng BHXH. App dùng cùng mức đóng BHXH đã nhập/suy ra.\n\nPhần doanh nghiệp đóng BHYT không trừ khỏi lương Net.",
+      "Căn cứ và trần bảo hiểm y tế thường đi cùng bảo hiểm xã hội. App dùng cùng mức đóng bảo hiểm xã hội đã nhập/suy ra.\n\nPhần doanh nghiệp đóng bảo hiểm y tế không trừ khỏi lương Net.",
     sources: [
       "Khung đóng BHYT phổ biến (NLĐ 1,5%). Tham số theo năm thuế trong app"],
   },
   "salary.bhtn": {
-    title: "BHTN người lao động (1%)",
-    body: "Phần bảo hiểm thất nghiệp bạn đóng. Trần BHTN khác trần BHXH. Theo lương tối thiểu vùng × hệ số.",
-    formula: "BHTN_NLĐ = min(lương_đóng_BHTN, LTTV_vùng × hệ_số) × 1%",
+    title: "Bảo hiểm thất nghiệp người lao động (1%)",
+    body: "Phần bảo hiểm thất nghiệp bạn đóng. Trần bảo hiểm thất nghiệp khác trần bảo hiểm xã hội. Theo lương tối thiểu vùng × hệ số.",
+    formula: "Bảo_hiểm_thất_nghiệp = min(lương_đóng_thất_nghiệp, lương_tối_thiểu_vùng × hệ_số) × 1%",
     detail:
-      "Ví dụ 2026 vùng I: LTTV 5.310.000 × 20 = trần BHTN 106.200.000 đ. Lương dưới trần thì đóng đúng 1% trên mức đóng.\n\nVùng lương tối thiểu lấy từ Cài đặt (hoặc mặc định bạn chọn).",
+      "Ví dụ 2026 vùng I: lương tối thiểu vùng 5.310.000 × 20 = trần bảo hiểm thất nghiệp 106.200.000 đ. Lương dưới trần thì đóng đúng 1% trên mức đóng.\n\nVùng lương tối thiểu lấy từ Cài đặt (hoặc mặc định bạn chọn).",
     sources: [
-      "Luật Việc làm 74/2025: khung đóng BHTN",
+      "Luật Việc làm 74/2025: khung đóng bảo hiểm thất nghiệp",
       "NĐ mức lương tối thiểu vùng theo năm (vd. NĐ 293/2025 cho 2026)"],
   },
   "salary.insuranceTotal": {
-    title: "Tổng BH người lao động",
-    body: "Tổng ba khoản bạn đóng trong tháng: BHXH + BHYT + BHTN. Đây là số trừ khỏi Gross trước khi tính giảm trừ gia cảnh và thuế.",
+    title: "Tổng bảo hiểm người lao động",
+    body: "Tổng ba khoản bạn đóng trong tháng: bảo hiểm xã hội + bảo hiểm y tế + bảo hiểm thất nghiệp. Đây là số trừ khỏi Gross trước khi tính giảm trừ gia cảnh và thuế.",
     formula:
-      "BH_NLĐ = BHXH_NLĐ + BHYT_NLĐ + BHTN_NLĐ\n(thường ≈ 10,5% căn cứ khi dưới cả hai trần)",
+      "Bảo_hiểm_người_lao_động = bảo_hiểm_xã_hội + bảo_hiểm_y_tế + bảo_hiểm_thất_nghiệp\n(thường khoảng 10,5% căn cứ khi dưới cả hai trần)",
     detail:
-      "App chỉ trừ phần người lao động khi ước Net. Phần doanh nghiệp (~21,5%) không hiện trên dòng này.\n\nVí dụ Gross/căn cứ 30tr dưới trần: BHXH 2,4tr + BHYT 0,45tr + BHTN 0,3tr = 3,15tr.",
+      "App chỉ trừ phần người lao động khi ước Net. Phần doanh nghiệp (khoảng 21,5%) không hiện trên dòng này.\n\nVí dụ Gross/căn cứ 30tr dưới trần: bảo hiểm xã hội 2,4tr + bảo hiểm y tế 0,45tr + bảo hiểm thất nghiệp 0,3tr = 3,15tr.",
     sources: ["Tham số năm thuế trong app"],
   },
   "salary.afterInsurance": {
-    title: "Thu nhập sau BH",
+    title: "Thu nhập sau bảo hiểm",
     body: "Gross sau khi đã trừ tổng bảo hiểm người lao động. Bước trung gian trước giảm trừ gia cảnh.",
-    formula: "Thu_nhập_sau_BH = Gross − BH_NLĐ",
+    formula: "Thu_nhập_sau_bảo_hiểm = Gross − bảo_hiểm_người_lao_động",
     detail:
-      "Đây chưa phải thu nhập tính thuế. Tiếp theo app trừ GTGC bản thân và người phụ thuộc rồi mới ra TNTT.\n\nVí dụ: Gross 30tr − BH 3,15tr = 26,85tr.",
-    sources: ["Luật Thuế TNCN: luồng tính tháng Gross → Net"],
+      "Đây chưa phải thu nhập tính thuế. Tiếp theo app trừ giảm trừ bản thân và người phụ thuộc rồi mới ra thu nhập tính thuế.\n\nVí dụ: Gross 30tr − bảo hiểm 3,15tr = 26,85tr.",
+    sources: ["Luật Thuế thu nhập cá nhân: luồng tính tháng Gross sang Net"],
   },
   "salary.personalRelief": {
-    title: "GTGC bản thân",
+    title: "Giảm trừ bản thân",
     body: "Khoản giảm trừ cố định cho bản thân theo năm thuế đang chọn. Không phụ thuộc mức lương.",
     formula:
-      "GTGC_bản_thân (tháng) = mức_quy_định_năm_thuế\n• 2025: 11.000.000 đ/tháng\n• 2026: 15.500.000 đ/tháng",
+      "Giảm_trừ_bản_thân (tháng) = mức_quy_định_năm_thuế\n• 2025: 11.000.000 đ/tháng\n• 2026: 15.500.000 đ/tháng",
     detail:
-      "Quyết toán thu nhập năm 2025 vẫn dùng mức 11tr/tháng dù bạn quyết toán vào 2026. Thu nhập năm 2026 dùng 15,5tr. App gắn theo năm thuế bạn chọn.\n\nGTGC năm (khi quyết toán) = mức tháng × 12, kể cả năm làm không trọn tháng đủ điều kiện.",
+      "Quyết toán thu nhập năm 2025 vẫn dùng mức 11tr/tháng dù bạn quyết toán vào 2026. Thu nhập năm 2026 dùng 15,5tr. App gắn theo năm thuế bạn chọn.\n\nGiảm trừ năm (khi quyết toán) = mức tháng × 12, kể cả năm làm không trọn tháng đủ điều kiện.",
     sources: [
-      "NQ 954/2020/UBTVQH14 (GTGC 11 / 4,4: kỳ 2025)",
-      "NQ 110/2025/UBTVQH15; Luật 109/2025 (GTGC 15,5 / 6,2: kỳ 2026)",
+      "NQ 954/2020/UBTVQH14 (giảm trừ 11 / 4,4: kỳ 2025)",
+      "NQ 110/2025/UBTVQH15; Luật 109/2025 (giảm trừ 15,5 / 6,2: kỳ 2026)",
       "CV 1296/CT-NVT. Quyết toán 2025 dùng luật cũ"],
   },
   "salary.dependentRelief": {
-    title: "GTGC người phụ thuộc",
+    title: "Giảm trừ người phụ thuộc",
     body: "Giảm trừ thêm cho mỗi người phụ thuộc bạn khai. App nhân mức quy định với số người bạn nhập. Không kiểm tra hồ sơ.",
     formula:
-      "GTGC_NPT = số_NPT × mức_NPT_năm_thuế\n• 2025: 4.400.000 đ/người/tháng\n• 2026: 6.200.000 đ/người/tháng",
+      "Giảm_trừ_người_phụ_thuộc = số_người_phụ_thuộc × mức_người_phụ_thuộc_năm_thuế\n• 2025: 4.400.000 đ/người/tháng\n• 2026: 6.200.000 đ/người/tháng",
     detail:
-      "Người phụ thuộc phải đủ điều kiện theo luật (quan hệ, thu nhập, đăng ký…). App chỉ nhân số bạn nhập để ước tính.\n\nVí dụ 2026, 2 NPT: 2 × 6,2tr = 12,4tr/tháng.",
+      "Người phụ thuộc phải đủ điều kiện theo luật (quan hệ, thu nhập, đăng ký…). App chỉ nhân số bạn nhập để ước tính.\n\nVí dụ 2026, 2 người phụ thuộc: 2 × 6,2tr = 12,4tr/tháng.",
     sources: [
-      "Luật TNCN + nghị quyết GTGC theo năm thuế",
+      "Luật Thuế thu nhập cá nhân + nghị quyết giảm trừ theo năm thuế",
       "Thông tư / hướng dẫn đăng ký người phụ thuộc"],
   },
   "salary.reliefTotal": {
     title: "Tổng giảm trừ gia cảnh",
-    body: "Tổng GTGC bản thân và người phụ thuộc trong tháng (hoặc quy đổi năm khi quyết toán).",
-    formula: "GTGC = GTGC_bản_thân + GTGC_NPT",
+    body: "Tổng giảm trừ bản thân và người phụ thuộc trong tháng (hoặc quy đổi năm khi quyết toán).",
+    formula: "Giảm_trừ_gia_cảnh = giảm_trừ_bản_thân + giảm_trừ_người_phụ_thuộc",
     detail:
-      "Trừ sau bảo hiểm, trước khi ra thu nhập tính thuế. Nếu GTGC lớn hơn thu nhập sau BH, TNTT = 0 (không âm).\n\nVí dụ 2026, 0 NPT: GTGC = 15,5tr. Có 2 NPT: 15,5 + 12,4 = 27,9tr.",
-    sources: ["Luật Thuế TNCN + nghị quyết GTGC theo năm thuế"],
+      "Trừ sau bảo hiểm, trước khi ra thu nhập tính thuế. Nếu giảm trừ lớn hơn thu nhập sau bảo hiểm, thu nhập tính thuế = 0 (không âm).\n\nVí dụ 2026, không có người phụ thuộc: giảm trừ = 15,5tr. Có 2 người phụ thuộc: 15,5 + 12,4 = 27,9tr.",
+    sources: ["Luật Thuế thu nhập cá nhân + nghị quyết giảm trừ theo năm thuế"],
   },
   "salary.taxable": {
-    title: "Thu nhập tính thuế (TNTT)",
-    body: "Phần thu nhập còn lại sau BH và GTGC. Căn cứ áp biểu thuế lũy tiến từng phần.",
-    formula: "TNTT = max(0, Thu_nhập_sau_BH − GTGC)",
+    title: "Thu nhập tính thuế",
+    body: "Phần thu nhập còn lại sau bảo hiểm và giảm trừ gia cảnh. Đây là căn cứ áp biểu thuế lũy tiến từng phần.",
+    formula: "Thu_nhập_tính_thuế = max(0, thu_nhập_sau_bảo_hiểm − giảm_trừ_gia_cảnh)",
     detail:
-      "TNTT = 0 → thuế tháng = 0; Net ≈ Gross − BH_NLĐ.\n\nVí dụ 2026: sau BH 26,85tr − GTGC 15,5tr = TNTT 11,35tr → vào các bậc biểu thuế.",
+      "Nếu thu nhập tính thuế = 0 thì thuế tháng = 0; Net khoảng bằng Gross trừ bảo hiểm người lao động.\n\nVí dụ 2026: sau bảo hiểm 26,85tr − giảm trừ 15,5tr = thu nhập tính thuế 11,35tr, rồi chia vào các bậc biểu thuế.",
     sources: [
-      "Luật TNCN. Thu nhập tính thuế từ tiền lương, tiền công"],
+      "Luật Thuế thu nhập cá nhân. Thu nhập tính thuế từ tiền lương, tiền công"],
   },
   "salary.pit": {
-    title: "Thuế TNCN",
+    title: "Thuế thu nhập cá nhân",
     body: "Thuế thu nhập cá nhân theo biểu lũy tiến từng phần của năm thuế. Chi tiết từng bậc hiện ngay dưới dòng này.",
     formula:
-      "Thuế = Σ (phần_TNTT_trong_bậc_i × thuế_suất_i)\n\n2025: biểu 7 bậc (5%→35%)\n2026: biểu 5 bậc (theo Luật 109/2025)",
+      "Thuế = tổng (phần thu nhập trong từng bậc × thuế suất của bậc đó)\n\n2025: biểu 7 bậc (5% đến 35%)\n2026: biểu 5 bậc (theo Luật 109/2025)",
     detail:
-      "“Lũy tiến từng phần”: chỉ phần thu nhập trong mỗi bậc chịu thuế suất của bậc đó. Không áp một thuế suất cho cả TNTT.\n\nApp chọn biểu theo năm thuế: quyết toán/thu nhập 2025 → biểu 7 bậc; 2026 → biểu 5 bậc (không tách nửa năm 2026).",
+      "“Lũy tiến từng phần”: chỉ phần thu nhập trong mỗi bậc chịu thuế suất của bậc đó. Không áp một thuế suất cho toàn bộ thu nhập tính thuế.\n\nApp chọn biểu theo năm thuế: quyết toán/thu nhập 2025 dùng biểu 7 bậc; 2026 dùng biểu 5 bậc (không tách nửa năm 2026).",
     sources: [
-      "Luật TNCN 2007 (VBHN) Đ.22: biểu 7 bậc (kỳ 2025)",
+      "Luật Thuế thu nhập cá nhân 2007 (VBHN) Đ.22: biểu 7 bậc (kỳ 2025)",
       "Luật 109/2025/QH15: biểu mới từ kỳ tính thuế 2026"],
   },
   "salary.net": {
     title: "Net (thực nhận ước)",
-    body: "Số tiền ước tính bạn nhận sau khi trừ bảo hiểm người lao động và thuế TNCN. Không thay bảng lương / phiếu chi chính thức.",
+    body: "Số tiền ước tính bạn nhận sau khi trừ bảo hiểm người lao động và thuế thu nhập cá nhân. Không thay bảng lương / phiếu chi chính thức.",
     formula:
-      "Net ≈ Gross − BH_NLĐ − Thuế_TNCN\n(− đoàn phí nếu có. Ngoài phạm vi mặc định)",
+      "Net ≈ Gross − bảo_hiểm_người_lao_động − thuế_thu_nhập_cá_nhân\n(− đoàn phí nếu có. Ngoài phạm vi mặc định)",
     detail:
-      "Ước tính offline theo tham số năm thuế trong app. Chưa gồm mọi khoản miễn/khấu trừ đặc thù trên bảng lương doanh nghiệp.\n\nVí dụ Gross 30tr, 0 NPT, dưới trần BH (2026): Net ≈ 26,065,000 đ (xem test case domain).",
+      "Ước tính offline theo tham số năm thuế trong app. Chưa gồm mọi khoản miễn/khấu trừ đặc thù trên bảng lương doanh nghiệp.\n\nVí dụ Gross 30tr, không có người phụ thuộc, dưới trần bảo hiểm (2026): Net khoảng 26,065,000 đ.",
     sources: ["Tham số năm thuế trong app"],
   },
   "settlement.refund": {
-    title: "Ước hoàn thuế",
+    title: "Có thể được hoàn thuế",
     body: "Thuế cả năm ước tính thấp hơn tổng đã khấu trừ qua các tháng → phần chênh mang dấu hoàn.",
-    formula: "Hoàn ≈ max(0, Thuế_đã_khấu_trừ − Thuế_năm_ước)",
+    formula: "Hoàn ≈ max(0, thuế_đã_khấu_trừ − thuế_năm_ước_tính)",
     detail:
-      "Đây là ước trong app. Trước khi kê khai quyết toán, đối chiếu chứng từ khấu trừ, GTGC đã đăng ký, và thu nhập thực tế.\n\nNăm quyết toán gắn với năm phát sinh thu nhập (vd. Quyết toán 2025 dùng GTGC/biểu 2025).",
+      "Đây là số ước tính trong app. Trước khi kê khai quyết toán, đối chiếu chứng từ khấu trừ, giảm trừ đã đăng ký, và thu nhập thực tế.\n\nNăm quyết toán gắn với năm phát sinh thu nhập (ví dụ Quyết toán 2025 dùng mức giảm trừ/biểu thuế 2025).",
     sources: [
-      "Hướng dẫn quyết toán TNCN hàng năm (Cục Thuế)",
+      "Hướng dẫn quyết toán thuế thu nhập cá nhân hàng năm (Cục Thuế)",
       "CV 1296/CT-NVT. Kỳ 2025 dùng luật cũ"],
   },
   "settlement.pay": {
-    title: "Ước nộp thêm",
+    title: "Có thể cần nộp thêm",
     body: "Thuế cả năm ước tính cao hơn số đã khấu trừ → cần nộp thêm phần còn thiếu.",
-    formula: "Nộp_thêm ≈ max(0, Thuế_năm_ước − Thuế_đã_khấu_trừ)",
+    formula: "Nộp_thêm ≈ max(0, thuế_năm_ước_tính − thuế_đã_khấu_trừ)",
     detail:
       "Chỉ là ước tính. Số chính thức phụ thuộc tờ khai, chứng từ, và quy định nộp/gia hạn của cơ quan thuế trong kỳ quyết toán.",
     sources: [
-      "Hướng dẫn quyết toán TNCN"],
+      "Hướng dẫn quyết toán thuế thu nhập cá nhân"],
   },
   "settlement.even": {
     title: "Khớp (ước)",
     body: "Thuế năm ước tính bằng (hoặc sát) số đã khấu trừ. Trong phạm vi sai số làm tròn.",
-    formula: "Thuế_năm_ước ≈ Thuế_đã_khấu_trừ → chênh ≈ 0",
+    formula: "Thuế_năm_ước_tính ≈ thuế_đã_khấu_trừ, nên chênh lệch gần 0",
     detail:
       "Vẫn nên đối chiếu bảng lương và chứng từ trước khi nộp tờ khai. Sai số nhỏ có thể đến từ làm tròn từng tháng.",
-    sources: ["Hướng dẫn quyết toán TNCN"],
+    sources: ["Hướng dẫn quyết toán thuế thu nhập cá nhân"],
   },
   "other.vat": {
-    title: "Thuế GTGT (ước)",
-    body: "Thuế giá trị gia tăng ước theo tỷ lệ ngành / loại thu nhập. Tách biệt với thuế TNCN.",
+    title: "Thuế giá trị gia tăng (ước)",
+    body: "Thuế giá trị gia tăng ước theo tỷ lệ ngành / loại thu nhập. Tách biệt với thuế thu nhập cá nhân.",
     formula:
-      "GTGT ≈ Doanh_thu × tỷ_lệ_GTGT_ngành\n(hoặc theo phương pháp kê khai nếu áp dụng)",
+      "Thuế_giá_trị_gia_tăng ≈ doanh_thu × tỷ_lệ_theo_ngành\n(hoặc theo phương pháp kê khai nếu áp dụng)",
     detail:
-      "App ước nhanh theo tham số năm thuế. Hộ kinh doanh / cho thuê có thể có tỷ lệ khác nhau; đối chiếu NĐ hướng dẫn theo ngành nghề.",
+      "App ước nhanh theo tham số năm thuế. Hộ kinh doanh / cho thuê có thể có tỷ lệ khác nhau; đối chiếu nghị định hướng dẫn theo ngành nghề.",
     sources: [
-      "Luật GTGT 2024 Đ.12",
+      "Luật Thuế giá trị gia tăng 2024 Đ.12",
       "NĐ 68/2026, NĐ 141/2026 (hướng dẫn liên quan)"],
   },
   "other.pit": {
-    title: "Thuế TNCN (thu nhập khác)",
-    body: "TNCN trên doanh thu hoặc phần vượt ngưỡng. Không cộng vào Gross lương hợp đồng lao động.",
+    title: "Thuế thu nhập cá nhân (thu nhập khác)",
+    body: "Thuế thu nhập cá nhân trên doanh thu hoặc phần vượt ngưỡng. Không cộng vào Gross lương hợp đồng lao động.",
     formula:
-      "TNCN ≈ Doanh_thu (hoặc phần vượt) × tỷ_lệ_TNCN\n(tỷ lệ theo loại: thuê nhà, HKD, CK…)",
+      "Thuế_thu_nhập_cá_nhân ≈ doanh_thu (hoặc phần vượt) × tỷ_lệ_theo_loại_thu_nhập\n(ví dụ: thuê nhà, hộ kinh doanh, chứng khoán)",
     detail:
-      "Mỗi loại thu nhập khác có tỷ lệ / ngưỡng riêng trong tham số năm thuế. Không gộp với biểu lũy tiến lương HĐLĐ trên màn Tính lương.",
+      "Mỗi loại thu nhập khác có tỷ lệ / ngưỡng riêng trong tham số năm thuế. Không gộp với biểu lũy tiến lương hợp đồng lao động trên màn Tính lương.",
     sources: [
       "Luật 109/2025 Đ.7 (các khoản thu nhập khác)",
       "NĐ 68/141/253/2026"],
@@ -181,30 +181,30 @@ const vi: TipDict = {
     title: "Tiền làm thêm giờ",
     body: "Tiền làm thêm theo hệ số ngày thường / nghỉ / lễ hoặc ban đêm. Cộng vào Gross tháng để ước thuế.",
     formula:
-      "OT_ngày = lương_giờ × giờ × hệ_số\nHệ số ngày: 150% / 200% / 300%\nBan đêm: 200% / 270% / 390% (theo loại ngày)",
+      "Tiền_làm_thêm = lương_giờ × giờ × hệ_số\nHệ số ngày: 150% / 200% / 300%\nBan đêm: 200% / 270% / 390% (theo loại ngày)",
     detail:
-      "App dùng để ước Gross chịu thuế. Quy tắc chốt ca, nghỉ bù, trần giờ làm thêm thực tế theo nội quy DN và BLLĐ. Không thay tư vấn luật lao động.",
+      "App dùng để ước Gross chịu thuế. Quy tắc chốt ca, nghỉ bù, trần giờ làm thêm thực tế theo nội quy doanh nghiệp và Bộ luật Lao động. Không thay tư vấn luật lao động.",
     sources: [
       "Bộ luật Lao động 2019 Đ.98",
       "NĐ 145/2020 Đ.55-57"],
   },
   "bonus.month": {
     title: "Tháng có thưởng / làm thêm",
-    body: "Thưởng và làm thêm giờ thường chịu thuế trong tháng bạn nhận. Bảo hiểm mặc định vẫn theo lương căn cứ (không cộng thưởng/OT).",
+    body: "Thưởng và làm thêm giờ thường chịu thuế trong tháng bạn nhận. Bảo hiểm mặc định vẫn theo lương căn cứ (không cộng thưởng/làm thêm).",
     formula:
-      "Gross_tháng = lương_căn_cứ + thưởng + OT + …\nCăn_cứ_BH (mặc định) = lương_thỏa_thuận (không gồm thưởng/OT)",
+      "Gross_tháng = lương_căn_cứ + thưởng + làm_thêm + ...\nCăn_cứ_bảo_hiểm (mặc định) = lương_thỏa_thuận (không gồm thưởng/làm thêm)",
     detail:
-      "Doanh nghiệp có thể quy định khác về căn cứ đóng BH. Nếu bảng lương của bạn cộng thưởng vào căn cứ BH, chỉnh mức đóng BH cho khớp.\n\nThuế TNCN tính trên Gross tháng đã gồm thưởng/OT.",
+      "Doanh nghiệp có thể quy định khác về căn cứ đóng bảo hiểm. Nếu bảng lương của bạn cộng thưởng vào căn cứ bảo hiểm, chỉnh mức đóng bảo hiểm cho khớp.\n\nThuế thu nhập cá nhân tính trên Gross tháng đã gồm thưởng/làm thêm.",
     sources: ["Tham số năm thuế trong app"],
   },
   "salary.asOfMonth": {
     title: "Tháng tính lương",
-    body: "Tháng dùng để chọn ngày áp dụng mức BH trong năm thuế. Năm thuế chọn biểu thuế / GTGC; tháng chọn trần BH khi mức đổi giữa năm.",
+    body: "Tháng dùng để chọn ngày áp dụng mức bảo hiểm trong năm thuế. Năm thuế chọn biểu thuế / giảm trừ; tháng chọn trần bảo hiểm khi mức đổi giữa năm.",
     formula: "Ngày_áp_dụng ≈ ngày 15 của (năm thuế + tháng đã chọn)",
     detail:
-      "Vẫn cần chọn tháng ngay cả khi năm thuế là 2025: app dùng tháng để gắn ngày áp dụng (as-of), không chỉ để hiển thị.\n\nQuan trọng nhất với 2026: trần BHXH/BHYT đổi từ 01/07/2026. Chọn tháng 1-6 → mức nửa đầu năm; tháng 7-12 → mức nửa sau. Năm không đổi trần giữa năm (vd. 2025) thì tháng ít ảnh hưởng hơn nhưng vẫn giữ để kết quả khớp kỳ lương bạn đang ước.",
+      "Vẫn cần chọn tháng ngay cả khi năm thuế là 2025: app dùng tháng để gắn ngày áp dụng, không chỉ để hiển thị.\n\nQuan trọng nhất với 2026: trần bảo hiểm xã hội / y tế đổi từ 01/07/2026. Chọn tháng 1-6 dùng mức nửa đầu năm; tháng 7-12 dùng mức nửa sau. Năm không đổi trần giữa năm (ví dụ 2025) thì tháng ít ảnh hưởng hơn nhưng vẫn giữ để kết quả khớp kỳ lương bạn đang ước.",
     sources: [
-      "Luật BHXH: trần đóng theo mức tham chiếu tại thời điểm",
+      "Luật Bảo hiểm xã hội: trần đóng theo mức tham chiếu tại thời điểm",
       "Tham số năm thuế trong app (đổi mức theo ngày)",
     ],
   },

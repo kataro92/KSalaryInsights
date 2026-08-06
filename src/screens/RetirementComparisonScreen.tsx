@@ -27,6 +27,7 @@ import {
   getInflationAdjustment,
   listInflationAdjustmentYears,
 } from "@/src/engine/rulesetLoader";
+import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
@@ -42,6 +43,7 @@ function parseIntSafe(raw: string): number {
 
 export function RetirementComparisonScreen() {
   const { colors } = useTheme();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
   const styles = useThemedStyles(makeStyles);
   const [ack, setAck] = useState<DisclaimerAckState>({ acknowledged: false });
   const [sex, setSex] = useState<Sex>("female");
@@ -69,7 +71,7 @@ export function RetirementComparisonScreen() {
     setError(null);
     const mbqtl = parseMoney(mbqtlText);
     if (mbqtl == null || mbqtl <= 0) {
-      setError("Nhập MBQTL hợp lệ.");
+      setError("Nhập lương bình quân đã điều chỉnh hợp lệ.");
       setLumpSum(null);
       setPension(null);
       return;
@@ -91,6 +93,7 @@ export function RetirementComparisonScreen() {
       setLumpSum(nextLump);
       setPension(nextPension);
       void successHaptic();
+      scrollToAnchor();
     } catch (e) {
       setLumpSum(null);
       setPension(null);
@@ -107,9 +110,11 @@ export function RetirementComparisonScreen() {
   return (
     <ToolScreen
       nested
-      title="Hưu / BHXH một lần"
-      subtitle="So sánh hai hướng. đọc cảnh báo trước khi xem số."
-      accessibilityLabel="So sánh hưu trí và BHXH một lần"
+      title="Lương hưu / nhận một lần"
+      subtitle="So sánh tiền hưu hàng tháng với khoản bảo hiểm xã hội một lần. Đọc cảnh báo trước khi xem số."
+      accessibilityLabel="So sánh lương hưu và bảo hiểm xã hội một lần"
+      scrollRef={scrollRef}
+      onScroll={onScroll}
       sticky={<Button label="Tính so sánh" onPress={onCalculate} />}
     >
       <LumpSumDisclaimerGate
@@ -122,7 +127,7 @@ export function RetirementComparisonScreen() {
         }
       />
 
-      <Section title="Giới tính" subtitle="Chọn nhánh tỷ lệ lương hưu Đ.66.">
+      <Section title="Giới tính" subtitle="Dùng để chọn tỷ lệ tính lương hưu theo luật hiện hành.">
         <View style={styles.row}>
           {(
             [
@@ -158,13 +163,13 @@ export function RetirementComparisonScreen() {
       </Section>
 
       <Section
-        title="Năm đóng BHXH một lần"
-        subtitle="T1 trước 2014 · T2 từ 2014 (tháng lẻ Đ.5 k.6)."
+        title="Thời gian đóng để nhận một lần"
+        subtitle="Tách thời gian trước 2014 và từ 2014 vì hai giai đoạn có hệ số khác nhau."
       >
         <View style={styles.pair}>
           <Field
             styles={styles}
-            label="T1 năm"
+            label="Trước 2014 (năm)"
             value={t1Years}
             onChange={setT1Years}
             clear={() => {
@@ -174,7 +179,7 @@ export function RetirementComparisonScreen() {
           />
           <Field
             styles={styles}
-            label="T1 tháng lẻ"
+            label="Trước 2014 (tháng lẻ)"
             value={t1Months}
             onChange={setT1Months}
             clear={() => {
@@ -186,7 +191,7 @@ export function RetirementComparisonScreen() {
         <View style={styles.pair}>
           <Field
             styles={styles}
-            label="T2 năm"
+            label="Từ 2014 (năm)"
             value={t2Years}
             onChange={setT2Years}
             clear={() => {
@@ -196,7 +201,7 @@ export function RetirementComparisonScreen() {
           />
           <Field
             styles={styles}
-            label="T2 tháng lẻ"
+            label="Từ 2014 (tháng lẻ)"
             value={t2Months}
             onChange={setT2Months}
             clear={() => {
@@ -209,7 +214,7 @@ export function RetirementComparisonScreen() {
 
       <Section
         title="Năm đóng cho lương hưu"
-        subtitle="Tổng năm đóng dùng cho tỷ lệ Đ.66."
+        subtitle="Tổng số năm đóng dùng để ước tính tỷ lệ hưởng lương hưu."
       >
         <Field
           styles={styles}
@@ -224,11 +229,11 @@ export function RetirementComparisonScreen() {
       </Section>
 
       <Section
-        title="MBQTL đã trượt giá"
-        subtitle={`Nhập thủ công hoặc tham chiếu bảng CV ${inflation.table_year}.`}
+        title="Lương bình quân đã điều chỉnh"
+        subtitle={`Nhập thủ công hoặc tham chiếu bảng hệ số ${inflation.table_year}.`}
       >
         <MoneyField
-          accessibilityLabel="MBQTL đã trượt giá"
+          accessibilityLabel="Lương bình quân đã điều chỉnh"
           value={mbqtlText}
           onValueChange={(formatted) => {
             setMbqtlText(formatted);
@@ -271,7 +276,7 @@ export function RetirementComparisonScreen() {
         subtitle="Chỉ ảnh hưởng checklist điều kiện rút (không đổi số tiền)."
       >
         <TextInput
-          accessibilityLabel="Ngày tham gia BHXH YYYY-MM-DD"
+          accessibilityLabel="Ngày tham gia bảo hiểm xã hội YYYY-MM-DD"
           autoCapitalize="none"
           value={participationDate}
           onChangeText={(t) => {
@@ -289,29 +294,31 @@ export function RetirementComparisonScreen() {
         <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
 
-      {showAmounts && lumpSum && pension ? (
-        <NgaiMiuTip tip={miuTips.retirement} />
-      ) : null}
+      <View ref={anchorRef} collapsable={false}>
+        {showAmounts && lumpSum && pension ? (
+          <NgaiMiuTip tip={miuTips.retirement} />
+        ) : null}
 
-      <RetirementComparisonView
-        lumpSum={lumpSum}
-        pension={pension}
-        showAmounts={showAmounts}
-      />
-
-      {showAmounts && lumpSum ? (
-        <LumpSumEligibilityChecklist
-          items={lumpSum.checklist}
-          beforeCutoff={lumpSum.beforeCutoff}
+        <RetirementComparisonView
+          lumpSum={lumpSum}
+          pension={pension}
+          showAmounts={showAmounts}
         />
-      ) : null}
 
-      {showAmounts && lumpSum && pension ? (
-        <DisclaimerFooter
-          legalSources={[...new Set(legalSources)]}
-          collapseSources
-        />
-      ) : null}
+        {showAmounts && lumpSum ? (
+          <LumpSumEligibilityChecklist
+            items={lumpSum.checklist}
+            beforeCutoff={lumpSum.beforeCutoff}
+          />
+        ) : null}
+
+        {showAmounts && lumpSum && pension ? (
+          <DisclaimerFooter
+            legalSources={[...new Set(legalSources)]}
+            collapseSources
+          />
+        ) : null}
+      </View>
     </ToolScreen>
   );
 }

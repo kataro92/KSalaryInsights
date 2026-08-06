@@ -46,13 +46,13 @@ export function calcUnemploymentBenefit(
       id: "paid_min",
       label: `Đóng đủ ít nhất ${
         params.min_paid_months
-      } tháng BHTN trong ${lookback} tháng trước khi thất nghiệp${
-        input.shortTermContract ? " (HĐ ngắn → lookback 36 tháng)" : ""
+      } tháng bảo hiểm thất nghiệp trong ${lookback} tháng trước khi thất nghiệp${
+        input.shortTermContract ? " (hợp đồng ngắn: xét 36 tháng)" : ""
       }.`,
     },
     {
       id: "file_deadline",
-      label: `Nộp hồ sơ hưởng trong ${params.filing_deadline_months} tháng kể từ ngày chấm dứt HĐLĐ.`,
+      label: `Nộp hồ sơ hưởng trong ${params.filing_deadline_months} tháng kể từ ngày chấm dứt hợp đồng lao động.`,
     },
     {
       id: "waiting",
@@ -67,13 +67,13 @@ export function calcUnemploymentBenefit(
   const explanations: string[] = [];
   const legalSources = [
     ...ruleset.legal_sources,
-    "Luật Việc làm. Trợ cấp thất nghiệp BHTN",
+    "Luật Việc làm. Trợ cấp thất nghiệp",
   ];
 
   if (input.monthsPaid < params.min_paid_months) {
     return {
       eligible: false,
-      ineligibilityReason: `Chưa đủ ${params.min_paid_months} tháng đóng BHTN (đang có ${input.monthsPaid} tháng).`,
+      ineligibilityReason: `Chưa đủ ${params.min_paid_months} tháng đóng bảo hiểm thất nghiệp (đang có ${input.monthsPaid} tháng).`,
       monthlyBenefit: 0,
       benefitMonths: 0,
       totalBenefit: 0,

@@ -113,7 +113,9 @@ describe("filingWizard", () => {
     );
     expect(r.conclusion).toBe("self_file");
     expect(r.individualDeadlineLabel).toMatch(/tháng 5/);
-    expect(r.checklist.some((c) => /HKD|cho thuê|CK/i.test(c))).toBe(true);
+    expect(
+      r.checklist.some((c) => /hộ kinh doanh|cho thuê|chứng khoán/i.test(c))
+    ).toBe(true);
   });
 
   it("forceSelfFile from multi-source overrides authorize path", () => {

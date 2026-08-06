@@ -10,40 +10,46 @@ import { Section } from "@/src/components/common/Section";
 import { OutOfScopeNote } from "@/src/components/disclaimer/OutOfScopeNote";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { miuTips } from "@/src/copy/miu";
+import { useI18n } from "@/src/i18n/useI18n";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { space } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
 
-/** Hub quyền lợi. Nhóm theo việc làm / BHXH / thu nhập khác. */
+/** Hub quyền lợi. Nhóm theo việc làm / bảo hiểm xã hội / thu nhập khác. */
 export function BenefitsScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
 
   return (
-    <ScreenShell accessibilityLabel="Quyền lợi BHXH và nghỉ việc" decorated>
+    <ScreenShell accessibilityLabel={t("benefits.title")} decorated>
       <PageHero
-        title="Quyền lợi"
-        subtitle="Ước tính theo mức thuế · BH hiện hành. Không thay quyết định của BHXH hay cơ quan thuế."
+        showBrand
+        title={t("benefits.title")}
+        subtitle={t("benefits.subtitle")}
       />
 
       <SeasonalBanner />
 
       <NgaiMiuTip tip={miuTips.benefitsHub} />
 
-      <Section title="BHXH" subtitle="Thai sản, ốm đau, hưu hoặc rút một lần.">
+      <Section
+        title="Bảo hiểm xã hội"
+        subtitle="Thai sản, nghỉ ốm, lương hưu hoặc nhận một lần."
+      >
         <View style={styles.cardStack}>
           <HubNavCard
             title="Thai sản"
-            description="Số tháng nghỉ và trợ cấp một lần"
+            description="Tiền thai sản theo tháng nghỉ và khoản một lần"
             tone="secondarySoft"
             icon={<AppIcon name="baby" color={colors.secondary} size={26} />}
             onPress={() => router.push("/maternity")}
           />
           <HubNavCard
-            title="Ốm đau"
-            description="75% lương ngày · có trần theo năm đóng"
+            title="Nghỉ ốm"
+            description="Tiền nghỉ ốm hưởng bảo hiểm xã hội"
             tone="secondarySoft"
             icon={
               <AppIcon name="heart-pulse" color={colors.secondary} size={26} />
@@ -51,8 +57,8 @@ export function BenefitsScreen() {
             onPress={() => router.push("/sick-leave")}
           />
           <HubNavCard
-            title="Hưu / BHXH một lần"
-            description="So sánh hai hướng. đọc cảnh báo trước"
+            title="Lương hưu / nhận một lần"
+            description="So sánh lương hưu với khoản bảo hiểm xã hội một lần"
             tone="accentSoft"
             icon={<AppIcon name="landmark" color={colors.accent} size={26} />}
             onPress={() => router.push("/retirement")}
@@ -67,7 +73,7 @@ export function BenefitsScreen() {
         <View style={styles.cardStack}>
           <HubNavCard
             title="Thôi việc / mất việc"
-            description="Theo Bộ luật Lao động · trừ thời gian đã đóng BHTN"
+            description="Tiền trợ cấp khi nghỉ việc, đã trừ thời gian đóng thất nghiệp"
             tone="primarySoft"
             icon={<AppIcon name="briefcase" color={colors.primary} size={26} />}
             onPress={() => router.push("/severance")}
@@ -84,12 +90,12 @@ export function BenefitsScreen() {
 
       <Section
         title="Ngoài lương"
-        subtitle="Cho thuê, hộ / cá nhân KD (freelancer), chứng khoán, ESOP, vãng lai. Không ước thuế coin."
+        subtitle="Cho thuê, hộ kinh doanh / freelancer, chứng khoán, ESOP, thu nhập vãng lai. Không tính thuế coin."
       >
         <View style={styles.cardStack}>
           <HubNavCard
             title="Thu nhập khác"
-            description="Ước nhanh hoặc đầy đủ · theo năm thuế"
+            description="Tính nhanh hoặc nhập đầy đủ theo năm thuế"
             tone="muted"
             icon={
               <AppIcon

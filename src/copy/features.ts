@@ -26,49 +26,49 @@ type FeaturesCopy = {
 
 const vi: FeaturesCopy = {
   intro:
-    "KSalaryInsights giúp bạn tự ước lương Gross-Net, quyết toán TNCN và quyền lợi BHXH khi nhận offer, đối chiếu bảng lương, hoặc khi mức thuế · BH đổi theo năm. Mọi bước hiện công thức và căn cứ, không hộp đen.",
+    "KSalaryInsights giúp bạn tự tính thử lương Gross-Net, quyết toán thuế thu nhập cá nhân và quyền lợi bảo hiểm xã hội khi nhận offer, đối chiếu bảng lương, hoặc khi mức thuế, bảo hiểm đổi theo năm. Mọi bước hiện công thức và căn cứ, không hộp đen.",
   situationsTitle: "Khi nào nên dùng",
   situations: [
     {
       id: "offer",
       title: "So sánh offer Gross và Net",
-      body: "Nhà tuyển dụng lúc nói Gross, lúc nói Net; mức đóng BH theo lương cơ bản, một phần, hoặc full lương. Hai offer 28 triệu Net và 32 triệu Gross không so được nếu chưa quy về cùng một mặt. App đổi Gross ↔ Net và chỉnh mức BH riêng để bạn thấy thực nhận gần đúng trước khi ký.",
+      body: "Nhà tuyển dụng lúc nói Gross, lúc nói Net; mức đóng bảo hiểm có thể theo lương cơ bản, một phần, hoặc toàn bộ lương. Hai offer 28 triệu Net và 32 triệu Gross không so được nếu chưa quy về cùng một mặt. App đổi Gross và Net, chỉnh mức đóng bảo hiểm riêng để bạn thấy thực nhận gần đúng trước khi ký.",
     },
     {
       id: "payslip",
       title: "Bảng lương thấp hơn mức đã nghe",
-      body: "Công ty báo mức cao, cuối tháng nhận ít hơn mà không rõ trừ vì BH, GTGC hay thuế bậc nào. Tính lại trên máy, tách từng dòng trừ, rồi đối chiếu phiếu lương và lưu kịch bản để lần chuyển việc sau không bị bất ngờ.",
+      body: "Công ty báo mức cao, cuối tháng nhận ít hơn mà không rõ bị trừ vì bảo hiểm, giảm trừ gia cảnh hay thuế bậc nào. Tính lại trên máy, tách từng dòng trừ, rồi đối chiếu phiếu lương và lưu kịch bản để lần chuyển việc sau không bị bất ngờ.",
     },
     {
       id: "rules-change",
-      title: "Mức BH · thuế đổi hàng năm",
-      body: "Trần BH, GTGC và biểu thuế đổi theo năm (vd. 2025 → 2026). Không cần nghiệp vụ kế toán: chọn năm thuế, nhập số liệu, xem chênh Net / thuế giữa hai kỳ để tự kiểm chứng mức công ty áp dụng.",
+      title: "Mức bảo hiểm và thuế đổi hàng năm",
+      body: "Trần bảo hiểm, giảm trừ gia cảnh và biểu thuế đổi theo năm (ví dụ 2025 sang 2026). Không cần nghiệp vụ kế toán: chọn năm thuế, nhập số liệu, xem chênh Net / thuế giữa hai kỳ để tự kiểm chứng mức công ty áp dụng.",
     },
     {
       id: "settlement",
       title: "Trước mùa quyết toán",
-      body: "Ước thuế cả năm so với đã khấu trừ để biết sớm khả năng hoàn hoặc nộp thêm, rồi xem wizard nên ủy quyền công ty hay tự nộp.",
+      body: "Tính thử thuế cả năm so với số đã khấu trừ để biết sớm khả năng hoàn hoặc nộp thêm, rồi xem hướng dẫn nên ủy quyền công ty hay tự nộp.",
     },
     {
       id: "benefits",
       title: "Nghỉ việc, thai sản, thất nghiệp…",
-      body: "Khi cần ước trợ cấp thôi việc, thất nghiệp, thai sản, ốm đau hay so hưu với BHXH một lần. Mỗi công cụ đứng riêng, có điều kiện và trần hiện rõ.",
+      body: "Khi cần tính thử trợ cấp thôi việc, thất nghiệp, tiền thai sản, tiền nghỉ ốm hoặc so lương hưu với bảo hiểm xã hội một lần. Mỗi công cụ đứng riêng, có điều kiện và trần hiện rõ.",
     },
     {
       id: "side-income",
       title: "Có thu nhập ngoài lương",
-      body: "Cho thuê, hộ / cá nhân kinh doanh (freelancer), chứng khoán, ESOP hoặc vãng lai: ước GTGT / TNCN tách dòng, kèm ngưỡng miễn theo năm thuế. App không ước thuế coin / tài sản mã hóa.",
+      body: "Cho thuê, hộ kinh doanh / freelancer, chứng khoán, ESOP hoặc thu nhập vãng lai: thuế giá trị gia tăng và thuế thu nhập cá nhân được tách dòng, kèm ngưỡng miễn theo năm thuế. App không tính thuế coin / tài sản mã hóa.",
     },
     {
       id: "multi-source",
       title: "Tự quyết toán nhiều nguồn",
-      body: "Bảng tổng hợp năm: gộp lương và các ước thu nhập khác trên máy để thấy tổng thuế / đã nộp / chênh. Vẫn không nộp tờ khai thay bạn. Không ước thuế coin.",
+      body: "Bảng tổng hợp năm: gộp lương và các thu nhập khác trên máy để thấy tổng thuế, số đã nộp và chênh lệch. App không nộp tờ khai thay bạn và không tính thuế coin.",
     },
   ],
   benefitsTitle: "Lợi ích chính",
   benefits: [
-    "Thấy rõ từng khoản trừ (BH, GTGC, thuế theo bậc) để dễ đối chiếu bảng lương.",
-    "Gắn năm thuế 2025 / 2026 (biểu & GTGC đúng kỳ), giảm rủi ro dùng nhầm mức.",
+    "Thấy rõ từng khoản trừ như bảo hiểm, giảm trừ gia cảnh và thuế theo bậc để dễ đối chiếu bảng lương.",
+    "Gắn năm thuế 2025 / 2026 để dùng đúng biểu thuế và mức giảm trừ, giảm rủi ro dùng nhầm mức.",
     "Dữ liệu và kịch bản lưu trên máy, không bắt buộc tài khoản hay gửi lên máy chủ.",
     "Bấm biểu tượng thông tin để xem công thức, ví dụ và căn cứ pháp lý.",
   ],
@@ -79,70 +79,70 @@ const vi: FeaturesCopy = {
       icon: "calculator",
       title: "Tính lương",
       benefit:
-        "Gross ↔ Net theo tháng: bảo hiểm (full / % HĐ / số cố định), giảm trừ gia cảnh, biểu lũy tiến. Có thưởng và làm thêm giờ.",
+        "Tính Gross sang Net hoặc Net sang Gross theo tháng: bảo hiểm, giảm trừ gia cảnh, biểu thuế lũy tiến. Có thưởng và làm thêm giờ.",
     },
     {
       id: "offer-compare",
       icon: "circle-dollar",
       title: "So 2 offer",
       benefit:
-        "Hai cột Gross/Net độc lập, cùng năm thuế · vùng · NPT; hiện ΔNet / ΔGross ước. Không khuyên chọn.",
+        "Hai cột Gross/Net độc lập, cùng năm thuế, vùng và số người phụ thuộc. Hiện chênh Net / Gross ước tính, không khuyên chọn.",
     },
     {
       id: "multi-source",
       icon: "file-text",
       title: "Tổng hợp năm",
       benefit:
-        "Gộp lương + HKD/thuê/CK/ESOP/vãng lai thành bảng thuế năm ước; không coin, không nộp tờ khai.",
+        "Gộp lương, cho thuê, hộ kinh doanh, chứng khoán, ESOP và thu nhập vãng lai thành bảng thuế năm ước tính; không coin, không nộp tờ khai.",
     },
     {
       id: "settlement",
       icon: "file-text",
       title: "Quyết toán năm",
       benefit:
-        "Ước thuế cả năm so với đã khấu trừ để biết sớm khả năng hoàn hoặc nộp thêm trước khi kê khai.",
+        "Tính thử thuế cả năm so với số đã khấu trừ để biết sớm khả năng hoàn hoặc nộp thêm trước khi kê khai.",
     },
     {
       id: "maternity",
       icon: "baby",
       title: "Thai sản",
       benefit:
-        "Ước trợ cấp theo tháng nghỉ và khoản một lần, tách khỏi lương Gross-Net.",
+        "Tính tiền thai sản theo tháng nghỉ và khoản một lần, tách khỏi lương Gross-Net.",
     },
     {
       id: "sick",
       icon: "heart-pulse",
-      title: "Ốm đau",
+      title: "Nghỉ ốm",
       benefit:
-        "Ước trợ cấp ốm theo ngày, có trần theo năm đóng; công thức cắt trần hiện rõ.",
+        "Tính tiền nghỉ ốm theo ngày, có giới hạn theo năm đóng; công thức cắt trần hiện rõ.",
     },
     {
       id: "retirement",
       icon: "landmark",
-      title: "Hưu / BHXH một lần",
+      title: "Lương hưu / nhận một lần",
       benefit:
-        "So hai hướng (lương hưu vs rút một lần) để tự cân nhắc. App không khuyên chọn bên nào.",
+        "So hai hướng (lương hưu và nhận bảo hiểm xã hội một lần) để tự cân nhắc. App không khuyên chọn bên nào.",
     },
     {
       id: "severance",
       icon: "briefcase",
       title: "Thôi việc / mất việc",
       benefit:
-        "Ước trợ cấp theo Bộ luật Lao động, đã trừ thời gian đóng BHTN và phần đã chi.",
+        "Tính tiền trợ cấp theo Bộ luật Lao động, đã trừ thời gian đóng bảo hiểm thất nghiệp và phần đã chi.",
     },
     {
       id: "unemployment",
       icon: "coins",
       title: "Trợ cấp thất nghiệp",
       benefit:
-        "Ước 60% lương với trần 5 × lương tối thiểu vùng, kèm điều kiện hưởng.",
+        "Tính khoản trợ cấp theo mức 60% lương bình quân, có trần 5 × lương tối thiểu vùng và điều kiện hưởng.",
     },
     {
       id: "other",
       icon: "circle-dollar",
       title: "Thu nhập khác",
       benefit:
-        "Cho thuê, hộ kinh doanh, chứng khoán, ESOP, vãng lai: GTGT và TNCN tách dòng, có ngưỡng miễn.",
+        "Cho thuê, hộ kinh doanh, chứng khoán, ESOP, thu nhập vãng lai: thuế giá trị gia tăng và thuế thu nhập cá nhân tách dòng, có ngưỡng miễn.",
     },
   ],
 };

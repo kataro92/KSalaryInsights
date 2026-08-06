@@ -14,6 +14,7 @@ import type {
 } from "@/src/domain/types/otherIncome";
 import { calculateHkd } from "@/src/engine/otherIncome/hkd";
 import { getRuleset } from "@/src/engine/rulesetLoader";
+import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
@@ -35,6 +36,7 @@ type Props = { taxYear: number };
 
 export function HkdCalculator({ taxYear }: Props) {
   const styles = useThemedStyles(makeStyles);
+  const scroll = useOptionalScrollToResult();
   const industries = getRuleset(taxYear).other_income?.hkd.industry_rates ?? [];
   const [industryId, setIndustryId] = useState<HkdIndustryId>("distribution");
   const [revenueText, setRevenueText] = useState("1.500.000.000");
@@ -60,6 +62,7 @@ export function HkdCalculator({ taxYear }: Props) {
         })
       );
       void successHaptic();
+      scroll?.scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -100,7 +103,7 @@ export function HkdCalculator({ taxYear }: Props) {
         </View>
         <Text style={styles.fieldLabel}>Doanh thu năm</Text>
         <TextInput
-          accessibilityLabel="Doanh thu HKD năm"
+          accessibilityLabel="Doanh thu hộ kinh doanh năm"
           keyboardType="number-pad"
           value={revenueText}
           onChangeText={(t) => {
@@ -116,7 +119,7 @@ export function HkdCalculator({ taxYear }: Props) {
           Chi phí (tuỳ chọn. Gợi ý PP thu nhập)
         </Text>
         <TextInput
-          accessibilityLabel="Chi phí HKD"
+          accessibilityLabel="Chi phí hộ kinh doanh"
           keyboardType="number-pad"
           value={costText}
           onChangeText={(t) => {
@@ -130,30 +133,30 @@ export function HkdCalculator({ taxYear }: Props) {
       {error ? (
         <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
-      <Button label="Tính HKD" onPress={onCalculate} />
+      <Button label="Tính hộ kinh doanh" onPress={onCalculate} />
       {result ? (
-        <>
+        <View ref={scroll?.anchorRef} collapsable={false}>
           <ResultHero
             tone="primary"
-            eyebrow={`HKD · ${result.industryLabel}`}
+            eyebrow={`Hộ kinh doanh · ${result.industryLabel}`}
             label="Tổng thuế"
             amount={result.totalTax}
           />
-          <NgaiMiuTip tip="GTGT + TNCN theo nhóm ngành. Nếu miễn tỷ lệ, vẫn cần kê khai doanh thu." />
+          <NgaiMiuTip tip="Thuế giá trị gia tăng và thuế thu nhập cá nhân theo nhóm ngành. Nếu được miễn, vẫn cần kê khai doanh thu." />
           <OtherIncomeBreakdownCard
-            title={`HKD. ${result.industryLabel}`}
+            title={`Hộ kinh doanh. ${result.industryLabel}`}
             total={result.totalTax}
             formula={result.formula}
             lines={[
               {
                 id: "vat",
-                label: "GTGT",
+                label: "Thuế giá trị gia tăng",
                 amount: result.vat,
                 tipId: "other.vat",
               },
               {
                 id: "pit",
-                label: "TNCN",
+                label: "Thuế thu nhập cá nhân",
                 amount: result.pit,
                 tipId: "other.pit",
               },
@@ -167,11 +170,11 @@ export function HkdCalculator({ taxYear }: Props) {
             hideTotal
           />
           <DisclaimerFooter legalSources={result.legalSources} />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
-          title="Chưa có ước HKD"
-          body="Chọn ngành và doanh thu năm, rồi bấm Tính HKD."
+          title="Chưa có thuế hộ kinh doanh ước tính"
+          body="Chọn ngành và doanh thu năm, rồi bấm Tính hộ kinh doanh."
         />
       ) : null}
     </View>

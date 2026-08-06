@@ -5,7 +5,7 @@ import { space } from "@/src/theme/tokens";
 
 type Props = ViewProps & {
   children: ReactNode;
-  /** Stretch children evenly across the row (good for 2-4 options). */
+  /** Stretch children evenly; still wraps on narrow widths. */
   equal?: boolean;
 };
 
@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
     gap: space[2],
   },
   equal: {
-    flexWrap: "nowrap",
+    // Keep wrap so 3–4 labeled chips fit on ~320pt; children use flex + minWidth.
   },
 });

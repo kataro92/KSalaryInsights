@@ -57,14 +57,14 @@ export function FilingWizardScreen() {
   return (
     <>
       <Stack.Screen
-        options={{ title: "Wizard quyết toán", headerShown: true }}
+        options={{ title: "Hướng dẫn quyết toán", headerShown: true }}
       />
       <ToolScreen
         nested
         title="Hướng dẫn quyết toán"
         subtitle={`Năm ${year}. Trả lời ngắn để chọn ủy quyền hoặc tự quyết toán.`}
         showBrand={false}
-        accessibilityLabel="Wizard quyết toán thuế"
+        accessibilityLabel="Hướng dẫn quyết toán thuế"
         sticky={<Button label="Xem kết luận" onPress={onSubmit} />}
         aboveTabBar={false}
       >
@@ -73,7 +73,7 @@ export function FilingWizardScreen() {
         <Section title="Điều kiện">
           {(
             [
-              ["hasSingleEmployerFullYear", "Chỉ một NSDLĐ trong cả năm?"],
+              ["hasSingleEmployerFullYear", "Chỉ một công ty trả lương trong cả năm?"],
               ["hasOtherIncome", "Có thu nhập khác ngoài lương (vãng lai…)?"],
               [
                 "employerOffersAuthorization",

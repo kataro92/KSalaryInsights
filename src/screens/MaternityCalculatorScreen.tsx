@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { View } from "react-native";
 
 import { MaternityBreakdownCard } from "@/src/components/breakdown/MaternityBreakdownCard";
 import { Button } from "@/src/components/common/Button";
@@ -15,10 +16,12 @@ import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { emptyCopy, miuTips } from "@/src/copy/miu";
 import type { MaternityBreakdown } from "@/src/domain/types/benefits";
 import { calculateMaternity } from "@/src/engine/maternity";
+import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
 import { parseMoney } from "@/src/theme/money";
 
 export function MaternityCalculatorScreen() {
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
   const [inputs, setInputs] = useState<MaternityInputsValue>({
     avgText: "18.000.000",
     birthDate: "2026-08-15",
@@ -47,6 +50,7 @@ export function MaternityCalculatorScreen() {
       });
       setResult(next);
       void successHaptic();
+      scrollToAnchor();
     } catch (e) {
       setResult(null);
       setError(e instanceof Error ? e.message : "Không tính được.");
@@ -57,8 +61,10 @@ export function MaternityCalculatorScreen() {
     <ToolScreen
       nested
       title="Thai sản"
-      subtitle="Số tháng nghỉ và trợ cấp một lần theo mức tham chiếu."
+      subtitle="Tính tiền thai sản theo tháng nghỉ và khoản trợ cấp một lần."
       accessibilityLabel="Máy tính thai sản"
+      scrollRef={scrollRef}
+      onScroll={onScroll}
       sticky={<Button label="Tính thai sản" onPress={onCalculate} />}
     >
       <MaternityInputs
@@ -76,9 +82,9 @@ export function MaternityCalculatorScreen() {
         />
       ) : null}
       {result ? (
-        <>
+        <View ref={anchorRef} collapsable={false}>
           <ResultHero
-            eyebrow="Ước thai sản"
+            eyebrow="Tiền thai sản ước tính"
             label="Tổng"
             amount={result.total}
           />
@@ -88,7 +94,7 @@ export function MaternityCalculatorScreen() {
             legalSources={result.legalSources}
             collapseSources
           />
-        </>
+        </View>
       ) : !error ? (
         <EmptyErrorState
           title={emptyCopy.maternity.title}
