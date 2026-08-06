@@ -193,6 +193,10 @@ function ThemedStack() {
         options={{ headerShown: true, title: "Thai sản" }}
       />
       <Stack.Screen
+        name="paternity-leave"
+        options={{ headerShown: true, title: "Nghỉ của chồng" }}
+      />
+      <Stack.Screen
         name="sick-leave"
         options={{ headerShown: true, title: "Nghỉ ốm" }}
       />
@@ -203,6 +207,14 @@ function ThemedStack() {
       <Stack.Screen
         name="other-income"
         options={{ headerShown: true, title: "Thu nhập khác" }}
+      />
+      <Stack.Screen
+        name="offer-compare"
+        options={{ headerShown: true, title: "So sánh hai offer" }}
+      />
+      <Stack.Screen
+        name="multi-source"
+        options={{ headerShown: true, title: "Tổng hợp thu nhập cả năm" }}
       />
     </Stack>
   );
