@@ -105,7 +105,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontFamily: typography.fontFamily.medium,
       fontSize: 16,
       color: colors.foreground,
-      backgroundColor: colors.white,
+      backgroundColor: colors.muted,
     },
     actions: {
       flexDirection: "row",

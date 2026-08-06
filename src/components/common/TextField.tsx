@@ -54,7 +54,7 @@ export function TextField({
   );
 }
 
-function makeStyles({ colors }: ThemeContextValue) {
+function makeStyles({ colors, isDark }: ThemeContextValue) {
   return {
     wrap: { gap: space[1] },
     label: {
@@ -76,7 +76,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       backgroundColor: colors.muted,
     },
     inputFocused: {
-      backgroundColor: colors.white,
+      backgroundColor: isDark ? colors.mutedPressed : colors.white,
       borderColor: colors.primary,
     },
     inputError: {

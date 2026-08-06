@@ -11,6 +11,12 @@ Cartoon raster illustrations (PNG + WebP). **Do not replace with SVG** - brand c
 | `miu-bow` | Bow | About Us, completion |
 | `miu-docs` | Holding docs | Filing season, settlement disclaimer |
 | `miu-icon` | Portrait | App icon source |
-| `miu-splash` | Full welcome | In-app splash |
+| `miu-splash` | Full welcome | Legacy square pose (tips / fallback) |
 
-App store / Expo icons live in `../images/` (derived from icon/splash).
+Full-bleed cold-start splash (Ngài Miu introducing the app) lives in
+`../images/splash-full.png` (1125×2436, iPhone XS @3x) and is wired via
+`expo-splash-screen` + `SplashView`. Rebuild with:
+
+`node scripts/compose-splash.mjs`
+
+(uses `splash-scene.png` + Plus Jakarta Sans for crisp type).

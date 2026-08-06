@@ -108,7 +108,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 16,
       color: colors.foreground,
       fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
+      backgroundColor: colors.muted,
     },
   } satisfies ThemedStyleSheet;
 }
