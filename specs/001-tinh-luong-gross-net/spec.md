@@ -1,4 +1,4 @@
-# Feature Specification: Tính lương Gross–Net
+# Feature Specification: Tính lương Gross-Net
 
 **Status**: Implemented
 
@@ -25,7 +25,7 @@ Minh nhập gross, chọn năm 2026 và vùng I, xem net và từng khoản tr�
 
 **Acceptance Scenarios**:
 
-1. **Given** ruleset 2026-H1 (tháng 01–06/2026), **When** nhập gross 30.000.000, 0 NPT, vùng I, mức BH = gross, **Then** BH NLĐ = 3.150.000, thuế = 635.000, net = 26.065.000 và breakdown hiển thị đủ các dòng.
+1. **Given** ruleset 2026-H1 (tháng 01-06/2026), **When** nhập gross 30.000.000, 0 NPT, vùng I, mức BH = gross, **Then** BH NLĐ = 3.150.000, thuế = 635.000, net = 26.065.000 và breakdown hiển thị đủ các dòng.
 2. **Given** cùng input với ruleset 2025, **When** tính, **Then** khớp TC-TNCN-2025-01 (thuế 1.627.500, net 25.222.500).
 3. **Given** mức BH 60.000.000 vùng I, **When** đổi tháng tính từ 03/2026 sang 08/2026, **Then** tổng BH NLĐ đổi từ 5.046.000 sang 5.407.000 (trần 46,8tr → 50,6tr theo NĐ 161/2026: TC-BH-2026H2-01).
 4. **Given** bất kỳ kết quả nào, **When** xem màn hình, **Then** có disclaimer ước tính + liệt kê nguồn pháp lý của ruleset đang dùng.
@@ -77,7 +77,7 @@ Khoa nhập mức đóng trên trần BHXH để kiểm tra không bị trừ v�
 - **FR-005**: Hệ thống MUST hiển thị breakdown từng bước và net/gross kết quả.
 - **FR-006**: Hệ thống MUST hiển thị disclaimer và `legal_sources` của ruleset.
 - **FR-007**: Hệ thống MUST NOT yêu cầu CCCD/MST/sổ BHXH.
-- **FR-008**: Hệ thống MUST hỗ trợ chọn vùng I–IV.
+- **FR-008**: Hệ thống MUST hỗ trợ chọn vùng I-IV.
 - **FR-009**: Hệ thống MUST cho phép chỉnh mức lương đóng BH độc lập với gross.
 - **FR-010**: Kết quả MUST khớp các test case domain được liệt kê trong Success Criteria (sai số ≤ 1 đồng).
 
@@ -92,7 +92,7 @@ Khoa nhập mức đóng trên trần BHXH để kiểm tra không bị trừ v�
 ### Measurable Outcomes
 
 - **SC-001**: 100% test case TC-TNCN-2025-01, TC-TNCN-2026-01, TC-BH-2026-01, TC-BH-2026-02, TC-BH-2026H2-01 pass.
-- **SC-002**: Net→gross→net khép kín với sai số ≤ 1 đồng trên ít nhất 10 mức lương mẫu (10–80 triệu).
+- **SC-002**: Net→gross→net khép kín với sai số ≤ 1 đồng trên ít nhất 10 mức lương mẫu (10-80 triệu).
 - **SC-003**: Người dùng mới hoàn thành tính gross→net lần đầu trong ≤ 1 phút (đo UX sau).
 - **SC-004**: Mọi màn kết quả có disclaimer + nguồn pháp lý nhìn thấy không cần cuộn quá 1 màn hình điện thoại thông dụng.
 

@@ -26,7 +26,7 @@ export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
   const styles = useThemedStyles(makeStyles);
   const [calcCount, setCalcCount] = useState(0);
   const [settlementCount, setSettlementCount] = useState(0);
-  const month = now.getMonth() + 1; // 1–12
+  const month = now.getMonth() + 1; // 1-12
   const filingSeason = month >= 3 && month <= 4;
   const tetCue = month === 12;
   const visible = forceShow ?? (filingSeason || tetCue);
@@ -61,7 +61,7 @@ export function SeasonalBanner({ forceShow, now = new Date() }: Props) {
   const copy = filingSeason
     ? {
         title: "Mùa quyết toán",
-        body: `Tháng 3–4 thường là kỳ quyết toán thuế năm trước. Ước trước, đối chiếu bảng lương.${scenarioHint}`,
+        body: `Tháng 3-4 thường là kỳ quyết toán thuế năm trước. Ước trước, đối chiếu bảng lương.${scenarioHint}`,
         cta: preferSettlement ? "Mở quyết toán" : "Mở Tính lương",
         href: (preferSettlement ? "/settlement" : "/") as "/" | "/settlement",
       }

@@ -47,7 +47,7 @@ export function OfferDeltaBar({ deltaNet, deltaGross }: Props) {
         <Text style={styles.value}>{signed(deltaGross)}</Text>
       </View>
       <Text style={styles.note}>
-        Chỉ số liệu ước — không phải khuyến nghị chọn offer.
+        Chỉ số liệu ước, không phải khuyến nghị chọn offer.
       </Text>
     </ColorBlock>
   );

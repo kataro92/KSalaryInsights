@@ -3,7 +3,7 @@
 ## Sync Impact Report
 
 - **Version change**: 1.0.0 → 1.1.0
-- **Modified principles**: I — bổ sung phân tầng xác minh nguồn (văn bản gốc vs thứ cấp) và nghĩa vụ yêu cầu product owner cung cấp văn bản không tự tìm được
+- **Modified principles**: I - bổ sung phân tầng xác minh nguồn (văn bản gốc vs thứ cấp) và nghĩa vụ yêu cầu product owner cung cấp văn bản không tự tìm được
 - **Added sections**: không (mở rộng nguyên tắc I)
 - **Added docs**: `docs/domain/legal-sources.md` (sổ đăng ký văn bản pháp lý + trạng thái xác minh)
 - **Follow-up TODOs**: thu thập văn bản gốc theo danh sách trong `legal-sources.md` trước khi ship tính năng tương ứng
@@ -11,17 +11,17 @@
 
 ## Core Principles
 
-### I. Trích dẫn pháp lý bắt buộc — phân tầng xác minh
+### I. Trích dẫn pháp lý bắt buộc - phân tầng xác minh
 Mọi công thức tính thuế, bảo hiểm hoặc quyền lợi lao động MUST gắn với văn bản pháp lý nguồn (Luật, Nghị định, Thông tư) và ngày hiệu lực. Không được đưa số liệu “theo kinh nghiệm” mà không có nguồn. Khi luật thay đổi, MUST cập nhật `docs/domain/legal-changelog.md` trước khi sửa công thức hoặc tham số.
 
 Nguồn xác minh chia hai tầng, ghi trong `docs/domain/legal-sources.md`:
 
-- **Tầng 1 — Văn bản gốc** (toàn văn Luật/NĐ/TT/CV từ cổng chính thức hoặc bản product owner cung cấp): điều kiện BẮT BUỘC trước khi **ship** bất kỳ công thức/tham số nào ra người dùng.
-- **Tầng 2 — Nguồn thứ cấp** (thuvienphapluat, báo chí, hãng tư vấn): chỉ đủ cho giai đoạn **spec/draft**; tham số ở tầng này MUST đánh dấu `⚠ thứ cấp` trong domain docs.
+- **Tầng 1 - Văn bản gốc** (toàn văn Luật/NĐ/TT/CV từ cổng chính thức hoặc bản product owner cung cấp): điều kiện BẮT BUỘC trước khi **ship** bất kỳ công thức/tham số nào ra người dùng.
+- **Tầng 2 - Nguồn thứ cấp** (thuvienphapluat, báo chí, hãng tư vấn): chỉ đủ cho giai đoạn **spec/draft**; tham số ở tầng này MUST đánh dấu `[thứ cấp]` trong domain docs.
 
-Khi không tự tìm được văn bản gốc, MUST **yêu cầu product owner cung cấp** (liệt kê trong `legal-sources.md`, mục "Cần cung cấp") — KHÔNG được nâng tầng xác minh dựa trên nhiều nguồn thứ cấp trùng nhau.
+Khi không tự tìm được văn bản gốc, MUST **yêu cầu product owner cung cấp** (liệt kê trong `legal-sources.md`, mục "Cần cung cấp") - KHÔNG được nâng tầng xác minh dựa trên nhiều nguồn thứ cấp trùng nhau.
 
-**Rationale**: Đây là ứng dụng tài chính — sai một tham số là mất niềm tin vĩnh viễn. Nguồn thứ cấp ở Việt Nam thường chép lại nhau nên "nhiều nguồn khớp nhau" không tương đương văn bản gốc.
+**Rationale**: Đây là ứng dụng tài chính - sai một tham số là mất niềm tin vĩnh viễn. Nguồn thứ cấp ở Việt Nam thường chép lại nhau nên "nhiều nguồn khớp nhau" không tương đương văn bản gốc.
 
 ### II. Tách công thức khỏi tham số theo năm
 Logic tính toán (công thức) MUST tách khỏi bộ tham số theo giai đoạn hiệu lực (ruleset versioned: `effective_from`, `effective_to`, nguồn pháp lý). Tham số năm mới MUST có thể cập nhật mà không viết lại công thức. Mọi quy tắc nghiệp vụ trong `docs/domain/` MUST ghi rõ năm/giai đoạn áp dụng.
@@ -52,7 +52,7 @@ Tính năng mới MUST đi qua chu trình Spec Kit (`specify` → `clarify` khi 
 
 - Đối tượng: người lao động Việt Nam và các nhóm thu nhập liên quan (làm công ăn lương, freelance/vãng lai, hộ kinh doanh, cho thuê, chứng khoán) theo `docs/product/scope.md`.
 - Ứng dụng là công cụ hỗ trợ ước tính, KHÔNG thay thế tư vấn pháp lý/kế toán chính thức. UI và tài liệu MUST ghi disclaimer phù hợp.
-- Khi có giai đoạn giao thời giữa hai bộ luật, hệ thống MUST cho phép chọn hoặc tự xác định ruleset theo kỳ tính thuế / ngày phát sinh thu nhập — hành vi cụ thể ghi trong `docs/product/rules-versioning.md`.
+- Khi có giai đoạn giao thời giữa hai bộ luật, hệ thống MUST cho phép chọn hoặc tự xác định ruleset theo kỳ tính thuế / ngày phát sinh thu nhập - hành vi cụ thể ghi trong `docs/product/rules-versioning.md`.
 
 ## Ngôn ngữ & tài liệu
 
@@ -73,7 +73,7 @@ Tính năng mới MUST đi qua chu trình Spec Kit (`specify` → `clarify` khi 
 
 - Constitution có hiệu lực cao hơn convention không thành văn và ghi chú tạm thời.
 - Sửa đổi nguyên tắc: cập nhật file này, tăng phiên bản (MAJOR = đổi/xóa nguyên tắc; MINOR = thêm nguyên tắc/mở rộng; PATCH = làm rõ wording), ghi Sync Impact Report, cập nhật `Last Amended`.
-- Mọi PR/phiên làm việc liên quan nghiệp vụ MUST kiểm tra tuân thủ các nguyên tắc I–IV (nguồn pháp lý, versioning tham số, breakdown, test case).
+- Mọi PR/phiên làm việc liên quan nghiệp vụ MUST kiểm tra tuân thủ các nguyên tắc I-IV (nguồn pháp lý, versioning tham số, breakdown, test case).
 - Review định kỳ khi có thay đổi luật lớn (thường cuối năm) hoặc trước khi mở rộng scope đáng kể.
 
 **Version**: 1.1.0 | **Ratified**: 2026-07-31 | **Last Amended**: 2026-07-31

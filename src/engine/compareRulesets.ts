@@ -7,7 +7,7 @@ export type CompareRulesetsInput = {
   gross: number;
   region: RegionCode;
   numDependents?: number;
-  /** Month 1–12 used for mid-year insurance caps within each tax year. */
+  /** Month 1-12 used for mid-year insurance caps within each tax year. */
   month?: number;
   insuranceSalary?: number;
   year1?: number;

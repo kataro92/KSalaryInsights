@@ -201,7 +201,7 @@ const vi: Dict = {
   "other.pit": "TNCN",
   "about.role": "Trợ lý trong app",
   "about.body":
-    "KSalaryInsights giúp bạn so offer Gross–Net, đối chiếu bảng lương và kiểm chứng mức BH · thuế theo năm — ngay trên máy bạn. Từng khoản trừ hiện rõ. Ngài Miu hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
+    "KSalaryInsights giúp bạn so offer Gross-Net, đối chiếu bảng lương và kiểm chứng mức BH · thuế theo năm ngay trên máy bạn. Từng khoản trừ hiện rõ. Ngài Miu hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
   "brand.tagline": "Ước tính lương · thuế · bảo hiểm",
   "brand.guideLine": "Ngài Miu sẵn sàng hướng dẫn bạn",
   "onboarding.skip": "Bỏ qua",
@@ -222,7 +222,7 @@ const vi: Dict = {
   "onboarding.s4.body":
     "Thai sản, ốm đau, thôi việc, thất nghiệp, hưu hoặc một lần: mỗi công cụ đứng riêng.",
   "calc.title": "Tính lương",
-  "calc.subtitle": "Gross–Net · thưởng · làm thêm giờ · biểu thuế 2025 / 2026",
+  "calc.subtitle": "Gross-Net · thưởng · làm thêm giờ · biểu thuế 2025 / 2026",
   "calc.withheldWarn":
     "Bạn chưa nhập thuế đã khấu trừ (đang tính = 0). Kết quả có thể lệch.",
   "settlement.title": "Quyết toán",
@@ -331,7 +331,7 @@ const en: Dict = {
   "other.pit": "PIT",
   "about.role": "In-app guide assistant",
   "about.body":
-    "KSalaryInsights helps you compare Gross–Net offers, check payslips, and verify tax · SI rates by year — offline on your device. Deductions stay transparent. Ngài Miu guides; results are not legal advice.",
+    "KSalaryInsights helps you compare Gross-Net offers, check payslips, and verify tax · SI rates by year offline on your device. Deductions stay transparent. Ngài Miu guides; results are not legal advice.",
   "brand.tagline": "Estimate pay · tax · insurance",
   "brand.guideLine": "Ngài Miu is ready to guide you",
   "onboarding.skip": "Skip",

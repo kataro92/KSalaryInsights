@@ -24,11 +24,11 @@ Màn so sánh 2 offer (Gross/Net độc lập) với context thuế/vùng/NPT ch
 
 | Principle | Status |
 |-----------|--------|
-| I–II | Pass — reuse engines |
-| III | Pass — per-offer BH/tax/net + delta |
-| IV | Pass — SC-002 |
-| V | Pass — no PII |
-| VI | Pass — after F022 plan |
+| I-II | Pass - reuse engines |
+| III | Pass - per-offer BH/tax/net + delta |
+| IV | Pass - SC-002 |
+| V | Pass - no PII |
+| VI | Pass - after F022 plan |
 
 ## Project Structure
 

@@ -14,11 +14,11 @@ App hữu ích khi bạn gặp các tình huống sau:
 
 | Tình huống | App giúp gì |
 |------------|-------------|
-| **So sánh offer Gross / Net** | Nhà tuyển dụng lúc nói Gross, lúc nói Net; đóng BH theo lương cơ bản, một phần hoặc full. Offer 28tr Net và 32tr Gross không so được nếu chưa quy cùng một mặt — đổi Gross ↔ Net, chỉnh mức BH (full / % HĐ / cố định), hoặc mở **So 2 offer**. |
+| **So sánh offer Gross / Net** | Nhà tuyển dụng lúc nói Gross, lúc nói Net; đóng BH theo lương cơ bản, một phần hoặc full. Offer 28tr Net và 32tr Gross không so được nếu chưa quy cùng một mặt - đổi Gross ↔ Net, chỉnh mức BH (full / % HĐ / cố định), hoặc mở **So 2 offer**. |
 | **Bảng lương thấp hơn mức đã nghe** | Công ty báo cao, cuối tháng nhận ít hơn mà không rõ trừ vì BH, GTGC hay thuế. Tính lại, tách từng dòng, đối chiếu phiếu lương; lưu kịch bản để lần chuyển việc sau rõ hơn. |
 | **Mức BH · thuế đổi hàng năm** | Trần BH, GTGC, biểu thuế đổi theo năm (vd. 2025 → 2026). Không cần nghiệp vụ kế toán: chọn năm thuế, xem chênh Net / thuế để tự kiểm chứng mức công ty áp dụng. |
 | **Trước mùa quyết toán** | Ước hoàn / nộp thêm so với đã khấu trừ; wizard gợi ý ủy quyền công ty hay tự nộp. |
-| **Nghỉ việc, thai sản, thất nghiệp…** | Ước trợ cấp thôi việc, thất nghiệp, thai sản, ốm đau; so hưu với BHXH một lần — mỗi công cụ có điều kiện và trần. |
+| **Nghỉ việc, thai sản, thất nghiệp…** | Ước trợ cấp thôi việc, thất nghiệp, thai sản, ốm đau; so hưu với BHXH một lần - mỗi công cụ có điều kiện và trần. |
 | **Thu nhập ngoài lương** | Cho thuê, hộ KD / freelancer, chứng khoán, ESOP, vãng lai: ước GTGT / TNCN tách dòng. **Không** ước thuế coin / tài sản mã hóa. |
 | **Tổng hợp QT đa nguồn** | Một bảng năm: lương + các nguồn đã ước → tổng thuế / đã nộp / chênh (không nộp tờ khai). |
 
@@ -101,7 +101,7 @@ npx expo start --android
 
 ### Release / production Metro
 
-Chạy bundler ở chế độ release (`--no-dev --minify`) — gần store build hơn, ít overlay Dev Tools; hữu ích khi chụp screenshot hoặc kiểm tra performance:
+Chạy bundler ở chế độ release (`--no-dev --minify`) - gần store build hơn, ít overlay Dev Tools; hữu ích khi chụp screenshot hoặc kiểm tra performance:
 
 ```bash
 npm run start:release
@@ -158,11 +158,11 @@ docs/screenshots/    # Ảnh chụp README
 ## Chụp lại ảnh (có kết quả, ít Dev Tools)
 
 ```bash
-# Metro release — giảm overlay; Simulator hoặc thiết bị thật đã boot
+# Metro release - giảm overlay; Simulator hoặc thiết bị thật đã boot
 npm run ios:release
 # hoặc web mobile viewport: npx expo start --web
 
-# Batch route capture (form trống — dùng làm nền; nên bấm Tính trước khi chụp tay)
+# Batch route capture (form trống - dùng làm nền; nên bấm Tính trước khi chụp tay)
 bash scripts/capture-screenshots.sh
 ```
 

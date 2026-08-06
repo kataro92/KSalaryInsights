@@ -32,7 +32,7 @@
         },
         "amount": { "type": "integer", "minimum": 1 },
         "insurance": {
-          "description": "InsuranceBasePreset — see F022 schema",
+          "description": "InsuranceBasePreset - see F022 schema",
           "type": "object"
         }
       }

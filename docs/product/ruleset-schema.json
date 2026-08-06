@@ -98,7 +98,7 @@
  },
  "casual_income": {
  "type": "object",
- "description": "Optional. chỉ bắt buộc khi ruleset dùng cho module vãng lai (spec 004/008). Ruleset MVP 001–003 có thể bỏ qua; engine fallback: withholding_threshold=2_000_000 (trước 2026-07) / 5_000_000 (từ kỳ 2026 theo NĐ 253), withholding_rate=0.10, exemption_settlement_monthly_avg=15_000_000.",
+ "description": "Optional. chỉ bắt buộc khi ruleset dùng cho module vãng lai (spec 004/008). Ruleset MVP 001-003 có thể bỏ qua; engine fallback: withholding_threshold=2_000_000 (trước 2026-07) / 5_000_000 (từ kỳ 2026 theo NĐ 253), withholding_rate=0.10, exemption_settlement_monthly_avg=15_000_000.",
  "required": [
  "withholding_threshold",
  "withholding_rate",

@@ -1,4 +1,4 @@
-/** Pure engine Jest (no jest-expo / reanimated — those hang in this environment). */
+/** Pure engine Jest (no jest-expo / reanimated - those hang in this environment). */
 module.exports = {
   testEnvironment: 'node',
   watchman: false,

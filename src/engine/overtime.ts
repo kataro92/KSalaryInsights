@@ -1,5 +1,5 @@
 /**
- * OT pay. BLLĐ 2019 Đ.98 + NĐ 145/2020 Đ.55–57 (ban ngày & ban đêm).
+ * OT pay. BLLĐ 2019 Đ.98 + NĐ 145/2020 Đ.55-57 (ban ngày & ban đêm).
  * @see docs/domain/quyen-loi-lao-dong.md §1
  */
 
@@ -43,7 +43,7 @@ export type OvertimeInput = {
   monthlySalary: number;
   hours: number;
   dayType: OtDayType;
-  /** OT trong khung 22h–6h (Đ.106). Áp Đ.98 k.2 + k.3. */
+  /** OT trong khung 22h-6h (Đ.106). Áp Đ.98 k.2 + k.3. */
   isNight?: boolean;
   /** Mặc định 26 ngày công × 8 giờ. */
   workDaysPerMonth?: number;
@@ -103,7 +103,7 @@ export function calcOvertimePay(input: OvertimeInput): OvertimeBreakdown {
         dayOt * 100
       }% (OT ngày) + ${NIGHT_WORK_PREMIUM * 100}% (đêm) + ${
         NIGHT_OT_EXTRA * 100
-      }%×${daytimeUnitForExtra * 100}% (Đ.98 k.2–3 / NĐ 145 Đ.57).`
+      }%×${daytimeUnitForExtra * 100}% (Đ.98 k.2-3 / NĐ 145 Đ.57).`
     );
   } else {
     explanations.push(`Hệ số ${OT_DAY_LABELS[dayType]}. BLLĐ 2019 Đ.98.`);

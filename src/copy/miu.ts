@@ -16,13 +16,13 @@ export const miuTips = {
   overtime:
     "Làm thêm ngày: 150/200/300%. Ban đêm tối thiểu 200/270/390% (Đ.98, NĐ 145). Tôi cộng vào Gross tháng.",
   benefitsHub:
-    "Chọn một mục bên dưới. Mỗi công cụ tính riêng, không gộp vào lương Gross–Net.",
+    "Chọn một mục bên dưới. Mỗi công cụ tính riêng, không gộp vào lương Gross-Net.",
   settlement:
     "Đối chiếu bảng lương và chứng từ khấu trừ trước khi nộp. Đây chỉ là ước tính.",
   filingWizard:
     "App không thu giấy tờ. Tôi chỉ gợi ý hướng nộp để bạn tự chuẩn bị.",
   maternity:
-    "Chế độ theo tháng và trợ cấp một lần hiện riêng bên dưới, không gộp vào Gross–Net.",
+    "Chế độ theo tháng và trợ cấp một lần hiện riêng bên dưới, không gộp vào Gross-Net.",
   sickLeave:
     "Có trần ngày theo năm đóng. Nếu bị cắt, công thức ghi rõ bên dưới.",
   severance:
@@ -84,7 +84,7 @@ export const emptyCopy = {
 export const aboutCopy = {
   name: "Ngài Miu",
   role: "Trợ lý trong app",
-  body: "KSalaryInsights giúp bạn so offer Gross–Net, đối chiếu bảng lương và kiểm chứng mức BH · thuế theo năm — ngay trên máy bạn. Từng khoản trừ hiện rõ. Tôi hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
+  body: "KSalaryInsights giúp bạn so offer Gross-Net, đối chiếu bảng lương và kiểm chứng mức BH · thuế theo năm ngay trên máy bạn. Từng khoản trừ hiện rõ. Tôi hướng dẫn; kết quả không thay thế tư vấn pháp lý.",
   author: "Phạm Huy Đức",
   email: "kataro92@gmail.com",
 } as const;

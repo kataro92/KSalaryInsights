@@ -15,7 +15,7 @@ function taxTotal(vat: number, pit: number, other = 0): number {
   return vat + pit + other;
 }
 
-/** Manual salary / QT line — amounts already estimated by annual settlement. */
+/** Manual salary / QT line - amounts already estimated by annual settlement. */
 export function mapSalaryLine(args: {
   taxYear: number;
   revenueOrIncome: number;
@@ -201,7 +201,7 @@ export function mapEsopLine(args: {
   const notes = [...r.explanations];
   if (r.settlementNote) notes.push(r.settlementNote);
   notes.push(
-    "ESOP: phần TLTC không tự gộp vào dòng lương — nhập tay nếu cần."
+    "ESOP: phần TLTC không tự gộp vào dòng lương. Nhập tay nếu cần."
   );
   return {
     id: newLineId(),

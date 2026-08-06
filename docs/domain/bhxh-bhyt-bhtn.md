@@ -1,7 +1,7 @@
 # Bảo hiểm bắt buộc: BHXH, BHYT, BHTN
 
 **Cập nhật**: 2026-07-31 
-**Tầng xác minh**: LTTV 2026 = ✅ Tầng 1 (NĐ 293/2025 Đ.3); lương cơ sở 2,53tr từ 01/07/2026 = ✅ Tầng 1 (NĐ 161/2026 Đ.3 k2); lương cơ sở 2,34tr đến 30/06/2026 = ✅ Tầng 1 (NĐ 73/2024 Đ.3 k2); LTTV 2025 = ✅ Tầng 1 (NĐ 74/2024 Đ.3). **Tỷ lệ đóng NLĐ 8% HT-TT = ✅ Tầng 1** (Luật BHXH 41/2024 Đ.33 k.1a); **trần căn cứ đóng = 20 lần mức tham chiếu = ✅ Tầng 1** (Đ.31 k.1đ); mức tham chiếu = lương cơ sở khi chưa bãi bỏ = ✅ Tầng 1 (Đ.7 + Đ.141 k.13). BHYT 1,5% / BHTN 1% NLĐ vẫn theo khung tổng hợp phổ biến (chưa đối chiếu riêng Luật BHYT / Luật Việc làm phần đóng. rủi ro thấp). 
+**Tầng xác minh**: LTTV 2026 = Tầng 1 (NĐ 293/2025 Đ.3); lương cơ sở 2,53tr từ 01/07/2026 = Tầng 1 (NĐ 161/2026 Đ.3 k2); lương cơ sở 2,34tr đến 30/06/2026 = Tầng 1 (NĐ 73/2024 Đ.3 k2); LTTV 2025 = Tầng 1 (NĐ 74/2024 Đ.3). **Tỷ lệ đóng NLĐ 8% HT-TT = Tầng 1** (Luật BHXH 41/2024 Đ.33 k.1a); **trần căn cứ đóng = 20 lần mức tham chiếu = Tầng 1** (Đ.31 k.1đ); mức tham chiếu = lương cơ sở khi chưa bãi bỏ = Tầng 1 (Đ.7 + Đ.141 k.13). BHYT 1,5% / BHTN 1% NLĐ vẫn theo khung tổng hợp phổ biến (chưa đối chiếu riêng Luật BHYT / Luật Việc làm phần đóng. rủi ro thấp). 
 **Liên quan**: Luật BHXH 41/2024/QH15; Luật Việc làm; NĐ lương tối thiểu vùng; NĐ/thông tư BHYT.
 
 > Số liệu trần phụ thuộc “mức tham chiếu / lương cơ sở” và lương tối thiểu vùng. MUST lấy từ ruleset theo ngày.
@@ -27,9 +27,9 @@ Khi tính **net lương**, chỉ trừ phần **NLĐ (10,5%)** (trừ khi produc
 
 - Căn cứ: tiền lương tháng đóng BHXH theo quy định (lương + phụ cấp thường xuyên…. đơn giản hóa MVP: user nhập “mức đóng BH”).
 - **Trần**: tối đa **20 × mức tham chiếu** (Luật BHXH 2024; mức tham chiếu = lương cơ sở khi chưa bãi bỏ).
- - **01/01–30/06/2026**: lương cơ sở 2.340.000 (NĐ 73/2024) → trần **46.800.000**.
+ - **01/01-30/06/2026**: lương cơ sở 2.340.000 (NĐ 73/2024) → trần **46.800.000**.
  - **Từ 01/07/2026**: lương cơ sở **2.530.000** (NĐ 161/2026/NĐ-CP) → trần **50.600.000**.
- - ⚠️ **Trần đổi giữa năm 2026** → ruleset 2026 phải tách 2 giai đoạn cho tham số này (xem rules-versioning).
+ - **Lưu ý: Trần đổi giữa năm 2026** → ruleset 2026 phải tách 2 giai đoạn cho tham số này (xem rules-versioning).
 - **Sàn**: không thấp hơn lương tối thiểu vùng (với công việc giản đơn điều kiện bình thường). chi tiết theo hướng dẫn BHXH.
 
 ### 2.2. BHTN

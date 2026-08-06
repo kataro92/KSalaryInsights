@@ -13,9 +13,9 @@
 | Field | Type |
 |-------|------|
 | taxYear | number |
-| month | 1–12 |
+| month | 1-12 |
 | region | RegionCode |
-| numDependents | 0–20 |
+| numDependents | 0-20 |
 
 ## OfferSideResult
 

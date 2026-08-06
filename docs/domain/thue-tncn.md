@@ -1,6 +1,6 @@
 # Thuế thu nhập cá nhân (TNCN). tiền lương, tiền công
 
-**Trạng thái**: ✅ **Tầng 1**. đối chiếu văn bản gốc đợt 1+2: Luật 109/2025 + NQ 110/2025 (biểu 5 bậc, GTGC 15,5/6,2); **Luật TNCN 2007 VBHN 15** (biểu 7 bậc Đ.22); **NQ 954/2020** (GTGC 11/4,4); **CV 1296/CT-NVT** (quyết toán 2025 dùng luật cũ). 
+**Trạng thái**: **Tầng 1**. đối chiếu văn bản gốc đợt 1+2: Luật 109/2025 + NQ 110/2025 (biểu 5 bậc, GTGC 15,5/6,2); **Luật TNCN 2007 VBHN 15** (biểu 7 bậc Đ.22); **NQ 954/2020** (GTGC 11/4,4); **CV 1296/CT-NVT** (quyết toán 2025 dùng luật cũ). 
 **Cập nhật**: 2026-07-31 
 **Phạm vi**: Cá nhân cư trú, thu nhập từ tiền lương tiền công. Thu nhập khác xem [thu-nhap-khac.md](./thu-nhap-khac.md).
 
@@ -8,7 +8,7 @@
 
 ## 1. Khái niệm
 
-Luồng tính thuế tháng (khấu trừ tại nguồn điển hình). **đúng thuật ngữ pháp lý** (Luật TNCN Đ.7–11; khớp [glossary.md](./glossary.md)):
+Luồng tính thuế tháng (khấu trừ tại nguồn điển hình). **đúng thuật ngữ pháp lý** (Luật TNCN Đ.7-11; khớp [glossary.md](./glossary.md)):
 
 ```
 Gross
@@ -109,7 +109,7 @@ Chênh lệch = Thuế năm − tổng thuế đã khấu trừ (>0 nộp thêm;
 - Người phụ thuộc: mỗi NPT chỉ giảm trừ một lần cho một NNT (Đ.10 k3 Luật 109/2025: nguyên văn xác nhận).
 - **Giảm trừ mới trong Luật 109/2025 (phát hiện khi đối chiếu bản gốc, chưa mô hình hóa)**:
  - Đ.8 k2: được trừ cả bảo hiểm trách nhiệm nghề nghiệp bắt buộc, **hưu trí bổ sung/hưu trí tự nguyện, bảo hiểm nhân thọ** (không vượt mức Chính phủ quy định).
- - Đ.11 k2: **chi y tế, giáo dục – đào tạo** của người nộp thuế và người phụ thuộc được giảm trừ theo mức Chính phủ quy định. hoàn toàn mới so với luật cũ, chờ nghị định hướng dẫn mức trần → ghi nợ backlog (ảnh hưởng spec 002 khi có NĐ).
+ - Đ.11 k2: **chi y tế, giáo dục - đào tạo** của người nộp thuế và người phụ thuộc được giảm trừ theo mức Chính phủ quy định. hoàn toàn mới so với luật cũ, chờ nghị định hướng dẫn mức trần → ghi nợ backlog (ảnh hưởng spec 002 khi có NĐ).
  - Đ.11 k1: giảm trừ từ thiện, nhân đạo (như luật cũ).
 - Cá nhân không cư trú: ngoài phạm vi MVP (thuế suất khác).
 

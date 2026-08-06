@@ -21,5 +21,5 @@
 
 ## Alternatives rejected
 
-- Keep display name `KVSalaryTools` while only renaming the repo folder — brand mismatch.
-- Keep old bundle id for continuity — no prior App Store listing under that id in this project phase.
+- Keep display name `KVSalaryTools` while only renaming the repo folder - brand mismatch.
+- Keep old bundle id for continuity - no prior App Store listing under that id in this project phase.

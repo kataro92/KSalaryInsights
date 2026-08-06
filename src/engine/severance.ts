@@ -5,7 +5,7 @@ import type {
 } from "@/src/domain/types/benefits";
 import { getRuleset } from "@/src/engine/rulesetLoader";
 
-/** Lẻ 1–<6 tháng → ½ năm; ≥6 tháng → 1 năm. */
+/** Lẻ 1-<6 tháng → ½ năm; ≥6 tháng → 1 năm. */
 export function roundServiceYears(wholeYears: number, extraMonths = 0): number {
   const y = Math.max(0, Math.trunc(wholeYears));
   const m = Math.max(0, Math.trunc(extraMonths));

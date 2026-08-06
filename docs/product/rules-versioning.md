@@ -85,7 +85,7 @@ Công thức (cách tính) ít đổi; **tham số** (GTGC, bậc thuế, LTTV, 
 - Bundle tối thiểu 2 ruleset: **2025** và **2026** trong app.
 - Phát hành app mới khi luật đổi (chấp nhận được giai đoạn đầu).
 
-### Sau MVP (F019). ✅ Implemented (ADR 0008)
+### Sau MVP (F019). OK Implemented (ADR 0008)
 
 - Bundled fallback + **remote manifest** (HTTPS + SHA-256).
 - App hydrate cache khi cold start; nút **Cập nhật ruleset** trong Cài đặt.

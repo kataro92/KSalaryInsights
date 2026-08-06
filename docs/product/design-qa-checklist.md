@@ -1,6 +1,6 @@
 # Design QA checklist. KSalaryInsights
 
-Use before store submission. Cross-check [`design-system.md`](./design-system.md) §1–8.
+Use before store submission. Cross-check [`design-system.md`](./design-system.md) §1-8.
 
 **Automated (CI/local):** `npm run qa:design`. fails on shadow/elevation or off-token hex under `src/` (except `theme/tokens.ts`).
 

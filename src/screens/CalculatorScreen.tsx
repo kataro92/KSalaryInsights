@@ -462,7 +462,7 @@ export function CalculatorScreen() {
               title="Thưởng / tháng 13"
               subtitle={
                 seasonalHint
-                  ? "Gợi ý mùa Tết (tháng 12–1). Mô phỏng thuế tháng nhận thưởng."
+                  ? "Gợi ý mùa Tết (tháng 12-1). Mô phỏng thuế tháng nhận thưởng."
                   : "Cộng vào Gross tháng này để ước thuế TNCN."
               }
             >
@@ -495,7 +495,7 @@ export function CalculatorScreen() {
               </ChipRow>
               <View style={styles.switchRow}>
                 <Text style={styles.switchLabel}>
-                  Làm thêm ban đêm (22h–6h)
+                  Làm thêm ban đêm (22h-6h)
                 </Text>
                 <Switch
                   accessibilityLabel="Bật làm thêm ban đêm"

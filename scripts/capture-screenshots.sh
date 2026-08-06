@@ -41,7 +41,7 @@ capture() {
   "$SCRUB_PY" "$SCRIPT" "$raw" "$OUT/${name}.png"
 }
 
-# Core story routes (empty until user calculates — replace with result shots for README)
+# Core story routes (empty until user calculates - replace with result shots for README)
 capture "01-calculator-net" "" 4
 capture "03-offer-compare" "offer-compare" 3.5
 capture "04-settlement-refund" "settlement" 3.5

@@ -31,7 +31,7 @@ const DIGITS = [
   "chín",
 ] as const;
 
-/** Read 0–999. When `forceHundreds`, always emit trăm (for mid groups). */
+/** Read 0-999. When `forceHundreds`, always emit trăm (for mid groups). */
 function readTriple(n: number, forceHundreds: boolean): string {
   const hundreds = Math.floor(n / 100);
   const tens = Math.floor((n % 100) / 10);

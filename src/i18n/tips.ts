@@ -186,7 +186,7 @@ const vi: TipDict = {
       "App dùng để ước Gross chịu thuế. Quy tắc chốt ca, nghỉ bù, trần giờ làm thêm thực tế theo nội quy DN và BLLĐ. Không thay tư vấn luật lao động.",
     sources: [
       "Bộ luật Lao động 2019 Đ.98",
-      "NĐ 145/2020 Đ.55–57"],
+      "NĐ 145/2020 Đ.55-57"],
   },
   "bonus.month": {
     title: "Tháng có thưởng / làm thêm",
@@ -202,7 +202,7 @@ const vi: TipDict = {
     body: "Tháng dùng để chọn ngày áp dụng mức BH trong năm thuế. Năm thuế chọn biểu thuế / GTGC; tháng chọn trần BH khi mức đổi giữa năm.",
     formula: "Ngày_áp_dụng ≈ ngày 15 của (năm thuế + tháng đã chọn)",
     detail:
-      "Vẫn cần chọn tháng ngay cả khi năm thuế là 2025: app dùng tháng để gắn ngày áp dụng (as-of), không chỉ để hiển thị.\n\nQuan trọng nhất với 2026: trần BHXH/BHYT đổi từ 01/07/2026. Chọn tháng 1–6 → mức nửa đầu năm; tháng 7–12 → mức nửa sau. Năm không đổi trần giữa năm (vd. 2025) thì tháng ít ảnh hưởng hơn nhưng vẫn giữ để kết quả khớp kỳ lương bạn đang ước.",
+      "Vẫn cần chọn tháng ngay cả khi năm thuế là 2025: app dùng tháng để gắn ngày áp dụng (as-of), không chỉ để hiển thị.\n\nQuan trọng nhất với 2026: trần BHXH/BHYT đổi từ 01/07/2026. Chọn tháng 1-6 → mức nửa đầu năm; tháng 7-12 → mức nửa sau. Năm không đổi trần giữa năm (vd. 2025) thì tháng ít ảnh hưởng hơn nhưng vẫn giữ để kết quả khớp kỳ lương bạn đang ước.",
     sources: [
       "Luật BHXH: trần đóng theo mức tham chiếu tại thời điểm",
       "Tham số năm thuế trong app (đổi mức theo ngày)",
@@ -393,7 +393,7 @@ const en: TipDict = {
       "Used to estimate taxable Gross. Real OT caps and compensatory leave follow your employer rules and the Labor Code.",
     sources: [
       "Labor Code 2019 Art. 98",
-      "Decree 145/2020 Arts. 55–57"],
+      "Decree 145/2020 Arts. 55-57"],
   },
   "bonus.month": {
     title: "Bonus / OT month",
@@ -409,7 +409,7 @@ const en: TipDict = {
     body: "The month sets the as-of date for insurance caps within the tax year. Tax year picks brackets/relief; month picks the SI cap when it changes mid-year.",
     formula: "As_of ≈ the 15th of (tax year + selected month)",
     detail:
-      "You still pick a month for 2025: the app uses it for the as-of date, not just display.\n\nMost important in 2026: the SI/HI cap changes on 1 Jul 2026. Months 1–6 use H1 caps; 7–12 use H2. For years without a mid-year cap change (e.g. 2025), month matters less but keeps the estimate aligned with the pay period you mean.",
+      "You still pick a month for 2025: the app uses it for the as-of date, not just display.\n\nMost important in 2026: the SI/HI cap changes on 1 Jul 2026. Months 1-6 use H1 caps; 7-12 use H2. For years without a mid-year cap change (e.g. 2025), month matters less but keeps the estimate aligned with the pay period you mean.",
     sources: [
       "Social Insurance Law: contribution caps at the applicable time",
       "In-app tax-year ruleset (date-based parameters)",

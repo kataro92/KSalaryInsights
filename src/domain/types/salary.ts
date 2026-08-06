@@ -72,7 +72,7 @@ export type Ruleset = {
   sick_leave?: {
     rate: number;
     divisor: number;
-    /** Trần ngày/năm theo nhóm năm đóng: [ <15, 15–<30, ≥30 ]. */
+    /** Trần ngày/năm theo nhóm năm đóng: [ <15, 15-<30, ≥30 ]. */
     annual_day_caps_normal: [number, number, number];
     annual_day_caps_hazardous: [number, number, number];
     /** Ngưỡng năm đóng tương ứng bậc trần: [15, 30]. */

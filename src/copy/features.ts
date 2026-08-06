@@ -26,7 +26,7 @@ type FeaturesCopy = {
 
 const vi: FeaturesCopy = {
   intro:
-    "KSalaryInsights giúp bạn tự ước lương Gross–Net, quyết toán TNCN và quyền lợi BHXH khi nhận offer, đối chiếu bảng lương, hoặc khi mức thuế · BH đổi theo năm — mọi bước hiện công thức và căn cứ, không hộp đen.",
+    "KSalaryInsights giúp bạn tự ước lương Gross-Net, quyết toán TNCN và quyền lợi BHXH khi nhận offer, đối chiếu bảng lương, hoặc khi mức thuế · BH đổi theo năm. Mọi bước hiện công thức và căn cứ, không hộp đen.",
   situationsTitle: "Khi nào nên dùng",
   situations: [
     {
@@ -37,7 +37,7 @@ const vi: FeaturesCopy = {
     {
       id: "payslip",
       title: "Bảng lương thấp hơn mức đã nghe",
-      body: "Công ty báo mức cao, cuối tháng nhận ít hơn mà không rõ trừ vì BH, GTGC hay thuế bậc nào. Tính lại trên máy, tách từng dòng trừ, rồi đối chiếu phiếu lương — và lưu kịch bản để lần chuyển việc sau không bị bất ngờ.",
+      body: "Công ty báo mức cao, cuối tháng nhận ít hơn mà không rõ trừ vì BH, GTGC hay thuế bậc nào. Tính lại trên máy, tách từng dòng trừ, rồi đối chiếu phiếu lương và lưu kịch bản để lần chuyển việc sau không bị bất ngờ.",
     },
     {
       id: "rules-change",
@@ -52,7 +52,7 @@ const vi: FeaturesCopy = {
     {
       id: "benefits",
       title: "Nghỉ việc, thai sản, thất nghiệp…",
-      body: "Khi cần ước trợ cấp thôi việc, thất nghiệp, thai sản, ốm đau hay so hưu với BHXH một lần — mỗi công cụ đứng riêng, có điều kiện và trần hiện rõ.",
+      body: "Khi cần ước trợ cấp thôi việc, thất nghiệp, thai sản, ốm đau hay so hưu với BHXH một lần. Mỗi công cụ đứng riêng, có điều kiện và trần hiện rõ.",
     },
     {
       id: "side-income",
@@ -62,7 +62,7 @@ const vi: FeaturesCopy = {
     {
       id: "multi-source",
       title: "Tự quyết toán nhiều nguồn",
-      body: "Bảng tổng hợp năm: gộp lương và các ước thu nhập khác trên máy để thấy tổng thuế / đã nộp / chênh — vẫn không nộp tờ khai thay bạn. Không ước thuế coin.",
+      body: "Bảng tổng hợp năm: gộp lương và các ước thu nhập khác trên máy để thấy tổng thuế / đã nộp / chênh. Vẫn không nộp tờ khai thay bạn. Không ước thuế coin.",
     },
   ],
   benefitsTitle: "Lợi ích chính",
@@ -86,7 +86,7 @@ const vi: FeaturesCopy = {
       icon: "circle-dollar",
       title: "So 2 offer",
       benefit:
-        "Hai cột Gross/Net độc lập, cùng năm thuế · vùng · NPT; hiện ΔNet / ΔGross ước — không khuyên chọn.",
+        "Hai cột Gross/Net độc lập, cùng năm thuế · vùng · NPT; hiện ΔNet / ΔGross ước. Không khuyên chọn.",
     },
     {
       id: "multi-source",
@@ -107,7 +107,7 @@ const vi: FeaturesCopy = {
       icon: "baby",
       title: "Thai sản",
       benefit:
-        "Ước trợ cấp theo tháng nghỉ và khoản một lần, tách khỏi lương Gross–Net.",
+        "Ước trợ cấp theo tháng nghỉ và khoản một lần, tách khỏi lương Gross-Net.",
     },
     {
       id: "sick",
@@ -149,7 +149,7 @@ const vi: FeaturesCopy = {
 
 const en: FeaturesCopy = {
   intro:
-    "KSalaryInsights helps you estimate Gross–Net pay, annual PIT settlement, and SI benefits when comparing offers, checking a payslip, or when tax and insurance rates change by year — every step shows formulas and legal bases, with no black box.",
+    "KSalaryInsights helps you estimate Gross-Net pay, annual PIT settlement, and SI benefits when comparing offers, checking a payslip, or when tax and insurance rates change by year. Every step shows formulas and legal bases, with no black box.",
   situationsTitle: "When to use it",
   situations: [
     {
@@ -160,7 +160,7 @@ const en: FeaturesCopy = {
     {
       id: "payslip",
       title: "Payslip lower than expected",
-      body: "You heard a high figure, then received much less without knowing what was deducted. Recalculate on your device, see each insurance, relief, and tax line, match the payslip — and save the scenario so the next job change is clearer.",
+      body: "You heard a high figure, then received much less without knowing what was deducted. Recalculate on your device, see each insurance, relief, and tax line, match the payslip, then save the scenario so the next job change is clearer.",
     },
     {
       id: "rules-change",
@@ -175,7 +175,7 @@ const en: FeaturesCopy = {
     {
       id: "benefits",
       title: "Leave, job loss, maternity…",
-      body: "Estimate severance, unemployment, maternity, sick leave, or compare pension vs lump-sum SI — each tool stands alone with conditions and caps shown.",
+      body: "Estimate severance, unemployment, maternity, sick leave, or compare pension vs lump-sum SI. Each tool stands alone with conditions and caps shown.",
     },
     {
       id: "side-income",
@@ -185,7 +185,7 @@ const en: FeaturesCopy = {
     {
       id: "multi-source",
       title: "Self-file with several sources",
-      body: "Annual summary: combine salary and other on-device estimates to see tax / withheld / delta — still does not file for you. Crypto tax is out of scope.",
+      body: "Annual summary: combine salary and other on-device estimates to see tax / withheld / delta. Still does not file for you. Crypto tax is out of scope.",
     },
   ],
   benefitsTitle: "Key benefits",
@@ -209,7 +209,7 @@ const en: FeaturesCopy = {
       icon: "circle-dollar",
       title: "Compare 2 offers",
       benefit:
-        "Two independent Gross/Net columns with shared tax year · region · dependents; shows estimated ΔNet / ΔGross — no advice on which to pick.",
+        "Two independent Gross/Net columns with shared tax year · region · dependents; shows estimated ΔNet / ΔGross. No advice on which to pick.",
     },
     {
       id: "multi-source",
@@ -230,7 +230,7 @@ const en: FeaturesCopy = {
       icon: "baby",
       title: "Maternity",
       benefit:
-        "Estimate monthly leave pay and lump-sum aid, separate from Gross–Net salary.",
+        "Estimate monthly leave pay and lump-sum aid, separate from Gross-Net salary.",
     },
     {
       id: "sick",

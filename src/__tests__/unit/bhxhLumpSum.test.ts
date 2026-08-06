@@ -4,7 +4,7 @@ describe("roundContributionYears (Đ.5 k.6)", () => {
   it("4 năm 8 tháng → 5 năm", () => {
     expect(roundContributionYears(4, 8)).toBe(5);
   });
-  it("1–6 tháng → ½ năm", () => {
+  it("1-6 tháng → ½ năm", () => {
     expect(roundContributionYears(0, 6)).toBe(0.5);
     expect(roundContributionYears(0, 1)).toBe(0.5);
   });

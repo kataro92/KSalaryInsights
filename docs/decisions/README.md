@@ -3,7 +3,7 @@
 | # | File | Quyết định | Status |
 |---|------|------------|--------|
 | 0001 | [0001-ruleset-versioning.md](./0001-ruleset-versioning.md) | Ruleset theo `effective_from` / `effective_to` | Accepted |
-| 0002 | [0002-mvp-scope.md](./0002-mvp-scope.md) | MVP = F001–F006 | Accepted |
+| 0002 | [0002-mvp-scope.md](./0002-mvp-scope.md) | MVP = F001-F006 | Accepted |
 | 0003 | [0003-ho-kd-priority.md](./0003-ho-kd-priority.md) | Ưu tiên HKD / cho thuê sớm (V1.1) | Accepted |
 | 0004 | [0004-offline-calculation-engine.md](./0004-offline-calculation-engine.md) | Engine TS offline; làm tròn từng bước | Accepted |
 | 0005 | [0005-palette-v2-ink-cobalt-mint.md](./0005-palette-v2-ink-cobalt-mint.md) | Semantic palette v2 (superseded surfaces → 0006) | Accepted |

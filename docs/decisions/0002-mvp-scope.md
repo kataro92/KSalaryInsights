@@ -6,7 +6,7 @@
 
 ## Decision
 
-MVP = F001–F006 (gross⇄net, phụ thuộc, so sánh biểu thuế, vùng/trần BH, ruleset). Quyết toán và quyền lợi để V1; thu nhập khác & hưu để V2+.
+MVP = F001-F006 (gross⇄net, phụ thuộc, so sánh biểu thuế, vùng/trần BH, ruleset). Quyết toán và quyền lợi để V1; thu nhập khác & hưu để V2+.
 
 ## Consequences
 

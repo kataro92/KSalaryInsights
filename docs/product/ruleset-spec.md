@@ -85,7 +85,7 @@ Mỗi file ruleset đại diện cho một bộ tham số pháp lý trong khoả
 
 ## 4. Trường tùy chọn `casual_income`
 
-`casual_income` **không** nằm trong `required` của schema vì MVP (specs 001–003) chỉ cần lương/công + BH + GTGC. Khi thiếu:
+`casual_income` **không** nằm trong `required` của schema vì MVP (specs 001-003) chỉ cần lương/công + BH + GTGC. Khi thiếu:
 
 | Trường | Fallback engine | Ghi chú |
 |--------|-----------------|--------|

@@ -7,7 +7,7 @@
 
 ## Summary
 
-F020 thêm **bảng ước thuế năm đa nguồn** trên thiết bị: orchestration kết quả từ engine lương (F007/F008) và thu nhập khác (F016–F018), không viết lại công thức từng loại, không crypto, không nộp tờ khai. UI gắn tab Quyết toán (mở rộng) hoặc route con; lưu kịch bản local (F014).
+F020 thêm **bảng ước thuế năm đa nguồn** trên thiết bị: orchestration kết quả từ engine lương (F007/F008) và thu nhập khác (F016-F018), không viết lại công thức từng loại, không crypto, không nộp tờ khai. UI gắn tab Quyết toán (mở rộng) hoặc route con; lưu kịch bản local (F014).
 
 ## Technical Context
 
@@ -15,17 +15,17 @@ F020 thêm **bảng ước thuế năm đa nguồn** trên thiết bị: orchest
 
 **Primary Dependencies**: Expo Router, AsyncStorage (scenarios), engine hiện có (`annualSettlement`, `otherIncome/*`), i18n tips  
 
-**Storage**: Local only — mở rộng `src/store/scenarios.ts` (kind mới hoặc payload tổng hợp); không server  
+**Storage**: Local only - mở rộng `src/store/scenarios.ts` (kind mới hoặc payload tổng hợp); không server  
 
-**Testing**: Jest unit (`src/__tests__/unit/`) — fixture tổng hợp + regression DualScenario; không E2E bắt buộc ở phase spec  
+**Testing**: Jest unit (`src/__tests__/unit/`) - fixture tổng hợp + regression DualScenario; không E2E bắt buộc ở phase spec  
 
 **Target Platform**: iOS / Android / web (Expo); offline-first  
 
-**Project Type**: Mobile app (Expo Router `app/` + `src/`)  
+**Project Type**: Mobile app (Expo Router `app/` + `src/`) 
 
 **Performance Goals**: Tổng hợp ≤ 6 nguồn, tính < 100ms trên thiết bị tầm trung; UI scroll mượt  
 
-**Constraints**: Constitution I–V; MUST NOT crypto path; MUST NOT gộp HKD/thuê/CK vào PIT lũy tiến lương; breakdown từng dòng nguồn; privacy — không MST/CCCD  
+**Constraints**: Constitution I-V; MUST NOT crypto path; MUST NOT gộp HKD/thuê/CK vào PIT lũy tiến lương; breakdown từng dòng nguồn; privacy - không MST/CCCD  
 
 **Scale/Scope**: 1 màn tổng hợp + engine orchestrator + 1 loại scenario; wizard F007b chỉnh nhẹ  
 
@@ -42,7 +42,7 @@ F020 thêm **bảng ước thuế năm đa nguồn** trên thiết bị: orchest
 | V. Privacy | Pass | Không MST/CCCD; local scenarios |
 | VI. Spec before code | Pass | Plan/tasks trước implement |
 
-**Post-design re-check**: Pass — contracts chỉ TypeScript domain types + UI contract; không API mạng.
+**Post-design re-check**: Pass - contracts chỉ TypeScript domain types + UI contract; không API mạng.
 
 ## Project Structure
 
@@ -59,7 +59,7 @@ specs/011-tong-hop-qt-da-nguon/
 └── tasks.md
 ```
 
-### Source Code (planned — implement later)
+### Source Code (planned - implement later)
 
 ```text
 src/

@@ -12,7 +12,7 @@ export type PensionRateResult = {
 };
 
 /**
- * Tỷ lệ lương hưu Đ.66: ba nhánh nữ / nam ≥20 / nam 15–<20.
+ * Tỷ lệ lương hưu Đ.66: ba nhánh nữ / nam ≥20 / nam 15-<20.
  */
 export function calcPensionRate(
   sex: PensionInput["sex"],
@@ -88,7 +88,7 @@ export function calcPensionRate(
   const rate =
     params.male_short_base_rate + params.male_short_increment_per_year * extra;
   steps.push(
-    `Nam ${params.male_short_base_years}–<${params.male_long_base_years} năm: ${
+    `Nam ${params.male_short_base_years}-<${params.male_long_base_years} năm: ${
       params.male_short_base_rate * 100
     }% @ ${params.male_short_base_years} năm`
   );

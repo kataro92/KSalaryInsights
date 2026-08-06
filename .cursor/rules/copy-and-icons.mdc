@@ -1,0 +1,35 @@
+---
+description: No em dash (U+2014); no emoji; use PNG icons via AppIcon
+alwaysApply: true
+---
+
+# Copy and icon conventions
+
+## No em dash
+
+Do not use the Unicode em dash `—` (U+2014) anywhere: UI copy, i18n, docs, comments, commit messages, or rules.
+
+Prefer one of these instead:
+
+- Hyphen / en range: `Gross-Net`, `2025-2026`
+- Colon or period for a break: `Ước tính offline. Không thay tư vấn.`
+- Rewrite the sentence so a dash is unnecessary
+- Middle dot already used in brand copy: `lương · thuế · bảo hiểm` (keep if intentional)
+
+```text
+Bad:  So offer Gross–Net — ngay trên máy bạn.
+Good: So offer Gross-Net ngay trên máy bạn.
+Good: So offer Gross-Net. Kết quả hiện ngay trên máy bạn.
+```
+
+## No emoji
+
+Do not use emoji characters in UI, copy, docs, or code.
+
+When a visual mark is needed:
+
+1. Add or extend an SVG path in `scripts/generate-ui-icons.mjs`
+2. Run `node scripts/generate-ui-icons.mjs` to write `assets/icons/<name>.png`
+3. Register the asset in `src/components/common/AppIcon.tsx` and render `<AppIcon name="..." />`
+
+Do not use emoji as icons, list bullets, status badges, or empty-state decoration.

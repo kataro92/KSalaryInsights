@@ -8,7 +8,7 @@
 
 ## Locked decisions
 
-- MVP chỉ nhập **số lượng** NPT (0–20); không lưu PII.
+- MVP chỉ nhập **số lượng** NPT (0-20); không lưu PII.
 - Không validate pháp lý sâu ở MVP; có tooltip “điều kiện NPT theo luật, mỗi NPT chỉ giảm trừ một lần”.
 
 ## User Scenarios & Testing *(mandatory)*

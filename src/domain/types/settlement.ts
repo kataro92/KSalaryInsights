@@ -14,7 +14,7 @@ export type AnnualSettlementInput = {
   numDependents: number;
   /** Gross/tháng khi dùng chế độ trung bình × số tháng. */
   monthlyGross?: number;
-  /** Số tháng có lương (1–12). */
+  /** Số tháng có lương (1-12). */
   monthsWorked?: number;
   /** 12 ô tháng. Null/0 = không có lương tháng đó. */
   monthlyGrosses?: (number | null)[];

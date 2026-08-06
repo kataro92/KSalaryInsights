@@ -58,7 +58,7 @@ export function DependentCountInput({ value, onChange }: Props) {
         />
         <Text style={styles.tip}>
           Điều kiện NPT theo luật; mỗi NPT chỉ giảm trừ một lần. Nhập số đã đăng
-          ký — app không kiểm tra hồ sơ. Tối đa {MAX_DEPENDENTS} (giới hạn nhập
+          ký. App không kiểm tra hồ sơ. Tối đa {MAX_DEPENDENTS} (giới hạn nhập
           trên máy, không phải mức luật).
         </Text>
       </View>

@@ -13,7 +13,7 @@ KSalaryInsights
 
 **Full description**
 
-KSalaryInsights giúp bạn tự ước lương, thuế và bảo hiểm khi nhận offer, đối chiếu bảng lương, hoặc khi mức thuế · BH đổi theo năm — mọi bước hiện công thức, không hộp đen.
+KSalaryInsights giúp bạn tự ước lương, thuế và bảo hiểm khi nhận offer, đối chiếu bảng lương, hoặc khi mức thuế · BH đổi theo năm. Mọi bước hiện công thức, không hộp đen.
 
 **Khi nào dùng**
 • So sánh offer Gross và Net (vd. 28tr Net vs 32tr Gross), kể cả khi đóng BH theo lương cơ bản / một phần / full 
@@ -55,7 +55,7 @@ Estimate Gross↔Net pay, annual PIT settlement and SI benefits. offline on devi
 
 **Full description**
 
-KSalaryInsights helps you estimate pay, tax and insurance when comparing job offers, checking a payslip, or when rates change by year — every step shows the formula, with no black box.
+KSalaryInsights helps you estimate pay, tax and insurance when comparing job offers, checking a payslip, or when rates change by year. Every step shows the formula, with no black box.
 
 **When to use it**
 • Compare Gross vs Net offers (e.g. 28M Net vs 32M Gross), including SI on base / partial / full pay 

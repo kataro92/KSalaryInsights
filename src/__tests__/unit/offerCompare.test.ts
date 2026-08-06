@@ -52,7 +52,7 @@ describe("offerCompare F021", () => {
     expect(result.deltaGross).toBe(result.b.gross - result.a.gross);
   });
 
-  it("US2: full vs 70% — BH(A)>BH(B), Net(B)>Net(A), bases 30tr vs 21tr", () => {
+  it("US2: full vs 70% - BH(A)>BH(B), Net(B)>Net(A), bases 30tr vs 21tr", () => {
     const result = compareOffers({
       shared: SHARED,
       offerA: {

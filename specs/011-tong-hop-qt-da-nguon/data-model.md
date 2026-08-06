@@ -35,7 +35,7 @@ Một dòng nguồn.
 | sourceRef | optional | `{ scenarioId?: string; calculator?: string }` |
 | excluded | boolean | soft-delete / ẩn khỏi tổng |
 
-`estimatedTaxTotal` MUST NOT được tự ý tính rate trong orchestrator khi đã có breakdown từ engine — orchestrator gọi engine rồi gán.
+`estimatedTaxTotal` MUST NOT được tự ý tính rate trong orchestrator khi đã có breakdown từ engine - orchestrator gọi engine rồi gán.
 
 ### MultiSourceKind (enum)
 

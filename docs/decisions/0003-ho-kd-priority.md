@@ -7,7 +7,7 @@
 ## Decision
 
 - **Không mở rộng MVP** ngay (tránh phình scope trước khi engine lương/ruleset ổn định).
-- Đưa **F007/F008 + wizard thủ tục quyết toán** và **module hộ KD/cho thuê** lên đầu backlog V1 (có thể song song sau khi 001–003 pass).
+- Đưa **F007/F008 + wizard thủ tục quyết toán** và **module hộ KD/cho thuê** lên đầu backlog V1 (có thể song song sau khi 001-003 pass).
 - Nếu cửa sổ thị trường hộ KD 2026 cần tận dụng sớm: tách epic `009-ho-kinh-doanh` và cân nhắc release V1.1 trước quyền lợi nghỉ việc.
 
 ## Consequences
@@ -18,6 +18,6 @@
 
 ## Alternatives rejected
 
-- **Đưa hộ kinh doanh (F007/F008 + module hộ KD/cho thuê) vào ngay MVP**: bị từ chối vì phình scope MVP trước khi engine lương/ruleset (ADR 0001) ổn định. mâu thuẫn trực tiếp với ADR 0002 (MVP = F001–F006).
+- **Đưa hộ kinh doanh (F007/F008 + module hộ KD/cho thuê) vào ngay MVP**: bị từ chối vì phình scope MVP trước khi engine lương/ruleset (ADR 0001) ổn định. mâu thuẫn trực tiếp với ADR 0002 (MVP = F001-F006).
 - **Giữ nguyên lộ trình gốc, để hộ kinh doanh tận V2+**: bị từ chối vì research (`user-needs.md`, `personas.md`) cho thấy nhu cầu N14/N15 (cho thuê, hộ KD) rất cao. điểm ngang quyết toán đa nguồn. và việc bỏ thuế khoán 2026 tạo cửa sổ thị trường có hạn; để tận V2 có nguy cơ mất lợi thế thời điểm.
 - **Gộp chung hộ kinh doanh vào epic quyết toán (F007/008) thay vì tách riêng**: bị từ chối vì phạm vi nghiệp vụ khác biệt đáng kể (ngưỡng doanh thu, biểu tỷ lệ ngành, cho thuê vs lương). nếu cần release sớm thì tách epic riêng `009-ho-kinh-doanh` sẽ rõ ràng và dễ ưu tiên độc lập hơn.

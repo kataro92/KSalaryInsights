@@ -57,7 +57,7 @@ Quy ước ngữ nghĩa cho domain: tiền **hoàn/net/quyền lợi** dùng `se
 ### 2.4. Bóng & hiệu ứng
 
 - **Drop shadow: KHÔNG.** (RN: không `elevation` trang trí, không `shadowColor` trên card nội dung.)
-- **Glass blur**: chỉ qua `GlassSurface` / tab `BlurView`. intensity 16–20; tối đa 2–3 lớp blur/màn.
+- **Glass blur**: chỉ qua `GlassSurface` / tab `BlurView`. intensity 16-20; tối đa 2-3 lớp blur/màn.
 - Gradient: chỉ blob trang trí nền; không trên nút primary.
 - Fallback: Reduce Transparency / web → fill đặc `#FFFFFF`.
 
@@ -71,7 +71,7 @@ Xem `glass` trong `src/theme/tokens.ts` và bảng vật liệu trong spec 010.
 
 | Loại | Style | Trạng thái nhấn (mobile. thay cho hover) |
 |------|-------|--------------------------------------------|
-| Primary | Nền `primary`, chữ trắng, radius md, cao **56–64px** (touch target) | Pressed: nền đậm hơn (Blue 600) + scale 0.97 |
+| Primary | Nền `primary`, chữ trắng, radius md, cao **56-64px** (touch target) | Pressed: nền đậm hơn (Blue 600) + scale 0.97 |
 | Secondary | Nền `muted`, chữ đậm | Pressed: Gray 200 + scale 0.97 |
 | Outline | Viền solid **4px** màu chủ đạo, nền trong suốt, chữ cùng màu viền | Pressed: fill màu viền, chữ trắng |
 
@@ -99,12 +99,12 @@ Transition 200ms, dùng `Pressable` + Reanimated; không ripple Android mặc đ
 
 - **PNG monochrome** trong `assets/icons/`. dùng `AppIcon` + `tintColor`. Không emoji, không icon font/SVG trong nội dung UI.
 - Tái tạo bộ icon: `node scripts/generate-ui-icons.mjs`.
-- Thường đặt trong hình tròn màu đặc (56–64px) trên hub card.
+- Thường đặt trong hình tròn màu đặc (56-64px) trên hub card.
 - Animation: scale 1.08 tab active; đổi cường độ màu.
 
 ## 5. Layout & Motion
 
-- Container: full-width mobile, padding ngang 16–24px; màn tablet/web giới hạn `max-w-7xl`.
+- Container: full-width mobile, padding ngang 16-24px; màn tablet/web giới hạn `max-w-7xl`.
 - Grid cứng, khoảng cách bội số 4. Mật độ trung bình, "functional".
 - Motion: "digital, snappy". 200ms cho tương tác, 300ms cho chuyển đổi lớn. Số kết quả có thể count-up ngắn (≤400ms), không animation lê thê.
 
@@ -146,7 +146,7 @@ Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal tex
 
 | Thuộc tính | Đặc tả |
 |-----------|--------|
-| Loài | Mèo tuxedo **đen–trắng** (lông đen, ức + mõm + bàn chân trắng. như mặc sẵn áo đuôi tôm) |
+| Loài | Mèo tuxedo **đen-trắng** (lông đen, ức + mõm + bàn chân trắng. như mặc sẵn áo đuôi tôm) |
 | Tuổi | **Trung niên**. dáng đậm người một chút, điềm đạm, không phải mèo con dễ thương kiểu trẻ em |
 | Kính | **Đeo kính** gọng tròn, đơn giản (không monocle). biểu tượng "người xem sổ sách" |
 | Khí chất | **Bá tước (Earl)**. quý tộc kiểu cũ: chỉn chu, lịch lãm, đáng tin; phụ kiện tối giản: nơ cổ (bow tie) hoặc cà vạt nhỏ. Không đội mũ, không gậy. tránh rườm rà |
@@ -174,7 +174,7 @@ Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal tex
 | Tooltip "vì sao bị trừ khoản này" trong breakdown | Có. icon nhỏ mở giải thích | ② ③ |
 | Disclaimer & nguồn pháp lý | Có. Ngài Miu là người phát ngôn disclaimer | ③ |
 | Empty state (chưa có kịch bản lưu) | Có | ⑤ |
-| Nhắc hạn mùa vụ (quyết toán T3–T4, thưởng Tết T12) | Có. notification + banner | ④ |
+| Nhắc hạn mùa vụ (quyết toán T3-T4, thưởng Tết T12) | Có. notification + banner | ④ |
 | **Màn hình kết quả / con số** | **Không che, không chen giữa các dòng số**. tối đa 1 icon nhỏ ở tooltip |
 | Màn hình cảnh báo nghiêm trọng (BHXH một lần) | Không dùng nét dí dỏm; chỉ pose nghiêm ③ |
 
@@ -182,7 +182,7 @@ Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal tex
 
 - Không animation lặp vô hạn gây xao nhãng; motion của mascot theo chuẩn mục 5 (ngắn, snappy).
 - Không dùng mascot để làm mềm thông tin pháp lý sai lệch hoặc thay thế trích dẫn nguồn.
-- Không đổi màu lông theo theme/mùa (giữ nhận diện đen–trắng).
+- Không đổi màu lông theo theme/mùa (giữ nhận diện đen-trắng).
 
 ## 9. Ship checklist
 

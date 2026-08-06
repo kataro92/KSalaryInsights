@@ -50,7 +50,7 @@ export type CalculatorScenarioInputs = {
   bonus: number;
   otHours: number;
   otDayType: OtDayType;
-  /** OT trong khung 22h–6h (Đ.106). Missing on older saves → false. */
+  /** OT trong khung 22h-6h (Đ.106). Missing on older saves → false. */
   otNight: boolean;
 };
 

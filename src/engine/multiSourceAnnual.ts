@@ -37,7 +37,7 @@ function makeDelta(
 }
 
 /**
- * Sum active lines. Does not recompute tax rates — engines already filled line amounts.
+ * Sum active lines. Does not recompute tax rates - engines already filled line amounts.
  */
 export function summarizeMultiSource(
   summary: Pick<MultiSourceAnnualSummary, "lines">
@@ -67,7 +67,7 @@ const NON_SALARY_FORCE: ReadonlySet<MultiSourceKind> = new Set([
 /**
  * Wizard impact from active lines (FR-009).
  * Casual mandatory-merge is user-flagged via notes containing "bắt buộc gộp"
- * or kind casual with note tag — for MVP, any non-excluded casual counts as
+ * or kind casual with note tag - for MVP, any non-excluded casual counts as
  * other income for wizard tilt; forceSelfFile when HKD/rent/CK/ESOP present.
  */
 export function filingWizardImpactFromLines(

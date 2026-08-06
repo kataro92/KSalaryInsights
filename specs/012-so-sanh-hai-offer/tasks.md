@@ -1,7 +1,7 @@
 # Tasks: So sánh hai offer (F021)
 
-**Input**: `specs/012-so-sanh-hai-offer/`  
-**Prerequisites**: **F022** T004–T005 (helpers) + picker component  
+**Input**: `specs/012-so-sanh-hai-offer/` 
+**Prerequisites**: **F022** T004-T005 (helpers) + picker component 
 **Tests**: Yes (SC-002)
 
 ## Phase 1: Setup
@@ -18,7 +18,7 @@
 
 **Checkpoint**: Engine compare ready
 
-## Phase 3: US1 — Net vs Gross columns (P1) 🎯 MVP
+## Phase 3: US1 - Net vs Gross columns (P1) MVP
 
 - [x] T007 [US1] `OfferColumn` UI in `src/components/comparison/OfferColumn.tsx` (mode, amount, F022 picker)
 - [x] T008 [US1] `OfferDeltaBar` in `src/components/comparison/OfferDeltaBar.tsx`
@@ -28,7 +28,7 @@
 - [x] T012 [US1] Disclaimer + forbid advice copy
 - [x] T013 [US1] Quickstart A + C
 
-## Phase 4: US2 — BH khác nhau (P1)
+## Phase 4: US2 - BH khác nhau (P1)
 
 - [x] T014 [US2] Ensure each column uses independent InsuranceBasePreset
 - [x] T015 [US2] Show per-column insurance base label
@@ -37,9 +37,9 @@
 ## Phase 5: Polish
 
 - [x] T017 Save/load/share offer_compare scenarios
-- [x] T018 [P] i18n VI/EN in `src/i18n/messages.ts` — screen copy inline VI; FeaturesGuide EN
+- [x] T018 [P] i18n VI/EN in `src/i18n/messages.ts` - screen copy inline VI; FeaturesGuide EN
 - [x] T019 [P] features/README CTA copy when shipped
-- [x] T020 Mark F021 ✅ in `docs/product/scope.md`; `npm run test:unit`
+- [x] T020 Mark F021 OK in `docs/product/scope.md`; `npm run test:unit`
 
 ## Dependencies
 
@@ -50,7 +50,7 @@ US1 ∥ US2 after T004 (US2 mostly UI verification)
 
 ## MVP
 
-Phase 2 + Phase 3. US2 trivial if F022 picker already on columns — include in MVP.
+Phase 2 + Phase 3. US2 trivial if F022 picker already on columns - include in MVP.
 
 ## Parallel
 

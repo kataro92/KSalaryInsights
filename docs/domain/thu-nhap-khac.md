@@ -1,10 +1,10 @@
 # Thu nhập khác (ngoài tiền lương HĐLĐ)
 
 **Cập nhật**: 2026-08-05 
-**Tầng xác minh**: ✅ **Tầng 1**. Luật 109/2025; Luật GTGT 2024 Đ.12.2; NQ 198/2025 Đ.10.6; NĐ 68/2026 (bản công báo); NĐ 141/2026; NĐ 253/2026 (Đ.50/51/54/69/70); TT 50/2026[.]
+**Tầng xác minh**: **Tầng 1**. Luật 109/2025; Luật GTGT 2024 Đ.12.2; NQ 198/2025 Đ.10.6; NĐ 68/2026 (bản công báo); NĐ 141/2026; NĐ 253/2026 (Đ.50/51/54/69/70); TT 50/2026[.]
 **Nguồn khung**: NQ 198/2025/QH15 (bỏ thuế khoán); NĐ 68/2026/NĐ-CP + NĐ 141/2026/NĐ-CP (hộ KD, cho thuê. ngưỡng 1 tỷ); NĐ 253/2026/NĐ-CP (vãng lai, chứng khoán, ESOP); [.]
 
-## 1. Thu nhập vãng lai / không HĐLĐ hoặc HĐ < 3 tháng (ĐÃ KHÓA. NĐ 253/2026) ✅ Tầng 1
+## 1. Thu nhập vãng lai / không HĐLĐ hoặc HĐ < 3 tháng (ĐÃ KHÓA. NĐ 253/2026) Tầng 1
 
 - Khấu trừ tại nguồn **10%** với mỗi lần chi trả **từ 5.000.000 đ trở lên** (Đ.50 k.2).
 - **Miễn quyết toán phần vãng lai** nếu: thu nhập vãng lai bình quân tháng trong năm **≤ 15.000.000 đ** và đã khấu trừ 10% tại nguồn (Đ.51 k.1b).
@@ -28,7 +28,7 @@ Chi trả 4.000.000 trong kỳ 2026 (< 5tr) → **không khấu trừ** tại ng
 
 Vãng lai cả năm 120.000.000 (bình quân 10tr/tháng ≤ 15tr), đã khấu trừ 10% đủ → phần này **không bắt buộc quyết toán lại**.
 
-## 2. Cho thuê bất động sản (ĐÃ KHÓA. NĐ 68 + 141 + TT 50) ✅ Tầng 1
+## 2. Cho thuê bất động sản (ĐÃ KHÓA. NĐ 68 + 141 + TT 50) Tầng 1
 
 - **Doanh thu ≤ 1 tỷ đ/năm**: **miễn thuế GTGT + TNCN** (NĐ 141 Đ.1 nâng ngưỡng từ 500tr trong NĐ 68), nhưng **vẫn phải thông báo doanh thu + số tài khoản/ví**.
  - Mẫu **01/BĐS** (TT 50): hạn theo NĐ 68 Đ.8: chậm nhất **31/01** năm sau; cho thuê khai 2 lần/năm: **31/07** năm tính thuế và **31/01** năm sau.
@@ -67,9 +67,9 @@ Doanh thu 1.000.000.000 → thuế = 0 (từ 1 tỷ trở xuống là miễn).
 - **Trên 1 tỷ đến 3 tỷ**. chọn một trong hai:
  - **Theo doanh thu**: GTGT + TNCN theo biểu tỷ lệ ngành (bảng dưới); hoặc
  - **Theo thu nhập tính thuế**: (doanh thu − chi phí) × 15%.
-- **Trên 3 tỷ**: theo thu nhập tính thuế, 17% (3–50 tỷ) hoặc 20% (>50 tỷ); sổ sách + hóa đơn đầy đủ.
+- **Trên 3 tỷ**: theo thu nhập tính thuế, 17% (3-50 tỷ) hoặc 20% (>50 tỷ); sổ sách + hóa đơn đầy đủ.
 
-### Biểu tỷ lệ ngành (ĐÃ KHÓA. Luật GTGT 2024 Đ.12 k2; Luật TNCN 109/2025 Đ.7 k3; NĐ 68/2026 Đ.3–4)
+### Biểu tỷ lệ ngành (ĐÃ KHÓA. Luật GTGT 2024 Đ.12 k2; Luật TNCN 109/2025 Đ.7 k3; NĐ 68/2026 Đ.3-4)
 
 | Nhóm ngành | GTGT | TNCN |
 |------------|------|------|

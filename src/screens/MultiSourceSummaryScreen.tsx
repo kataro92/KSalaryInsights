@@ -98,7 +98,7 @@ export function MultiSourceSummaryScreen() {
         label: `Lương từ «${s.name}»`,
         scenarioId: s.id,
         dualScenarioHint: i.includeCasual
-          ? "Có vãng lai trên QT — kiểm DualScenario trên màn Quyết toán."
+          ? "Có vãng lai trên QT. Kiểm DualScenario trên màn Quyết toán."
           : undefined,
         notes: [`Năm QT ${i.taxYear} · vùng ${i.region}`],
       })
@@ -132,7 +132,7 @@ export function MultiSourceSummaryScreen() {
       if (replacedOldest) {
         Alert.alert(
           "Đã lưu",
-          "Đã đạt giới hạn 20 kịch bản — kịch bản cũ nhất đã bị thay."
+          "Đã đạt giới hạn 20 kịch bản. Kịch bản cũ nhất đã bị thay."
         );
       }
     } catch (e) {
@@ -186,7 +186,7 @@ export function MultiSourceSummaryScreen() {
       <ToolScreen
         nested
         title="Tổng hợp QT đa nguồn"
-        subtitle="Ước thuế theo từng nguồn trong cùng năm — không nộp tờ khai, không ước coin."
+        subtitle="Ước thuế theo từng nguồn trong cùng năm. Không nộp tờ khai, không ước coin."
         showBrand={false}
         accessibilityLabel="Tổng hợp quyết toán đa nguồn"
         aboveTabBar={false}
@@ -259,7 +259,7 @@ export function MultiSourceSummaryScreen() {
         {lines.length === 0 ? (
           <EmptyErrorState
             title="Chưa có nguồn"
-            body="Thêm lương (từ QT), cho thuê, HKD, vãng lai, CK hoặc ESOP — hoặc mở Tính lương / Thu nhập khác / Quyết toán để lấy số liệu."
+            body="Thêm lương (từ QT), cho thuê, HKD, vãng lai, CK hoặc ESOP, hoặc mở Tính lương / Thu nhập khác / Quyết toán để lấy số liệu."
           />
         ) : (
           <MultiSourceTable

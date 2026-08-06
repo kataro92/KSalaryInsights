@@ -9,10 +9,10 @@
 ## Locked decisions
 
 - Thay / bổ sung toggle “Mức đóng BH riêng” bằng preset rõ nghĩa trên Calculator **và** API dùng chung cho F021:
-  1. **full** — căn cứ = gross (gross→net) hoặc tracks candidate gross (net→gross, `insuranceTracksGross=true`)
-  2. **percent** — user nhập % (1–100) × base pay
-  3. **absolute** — nhập mức đóng tuyệt đối (`insuranceSalary` cố định; net→gross: `insuranceTracksGross=false`)
-- **Percent + Net→Gross (MVP)**: % áp trên **gross đang giải** mỗi bước binary search (tracks × rate) — ghi chú UI.
+  1. **full** - căn cứ = gross (gross→net) hoặc tracks candidate gross (net→gross, `insuranceTracksGross=true`)
+  2. **percent** - user nhập % (1-100) × base pay
+  3. **absolute** - nhập mức đóng tuyệt đối (`insuranceSalary` cố định; net→gross: `insuranceTracksGross=false`)
+- **Percent + Net→Gross (MVP)**: % áp trên **gross đang giải** mỗi bước binary search (tracks × rate) - ghi chú UI.
 - Hiển thị **căn cứ BH đã dùng** trên meta / breakdown (FR-002).
 - Trần BH theo vùng/năm giữ nguyên (F005).
 - Không lưu CCCD; chỉ mode + % / số tiền.

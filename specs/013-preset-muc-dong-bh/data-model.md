@@ -11,7 +11,7 @@
 | Field | Type | Rules |
 |-------|------|-------|
 | mode | InsuranceBaseMode | required |
-| percent | number? | required if percent; integer 1–100 |
+| percent | number? | required if percent; integer 1-100 |
 | absoluteAmount | number? | required if absolute; integer > 0 |
 
 ## ResolvedInsuranceParams (derived)
@@ -20,7 +20,7 @@
 |-------|------|---------|
 | insuranceTracksGross | boolean | true for full; for percent wrapper may still track via per-step salary |
 | insuranceSalary | number \| undefined | absolute amount, or undefined when full |
-| insurancePercent | number \| undefined | 1–100 when percent |
+| insurancePercent | number \| undefined | 1-100 when percent |
 | resolvedBaseForDisplay | number \| null | after calc: base used |
 | labelVi | string | e.g. "Full gross", "70% × gross", "Tuyệt đối 15.000.000" |
 

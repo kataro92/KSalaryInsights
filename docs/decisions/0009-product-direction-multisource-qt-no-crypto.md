@@ -1,4 +1,4 @@
-# ADR 0009: Hướng sản phẩm — QT đa nguồn (1c) · crypto ngoài phạm vi (2a)
+# ADR 0009: Hướng sản phẩm - QT đa nguồn (1c) · crypto ngoài phạm vi (2a)
 
 - **Status**: Accepted  
 - **Date**: 2026-08-06  
@@ -6,7 +6,7 @@
 
 ## Decision
 
-1. **Trọng tâm 6–12 tháng**: giữ USP lương Gross↔Net + QT lương; mở rộng **F020 — tổng hợp thuế năm đa nguồn** (lương + vãng lai + HKD + cho thuê + CK/ESOP đã ước) thành một bảng ước trên máy. Không nộp tờ khai.
+1. **Trọng tâm 6-12 tháng**: giữ USP lương Gross↔Net + QT lương; mở rộng **F020 - tổng hợp thuế năm đa nguồn** (lương + vãng lai + HKD + cho thuê + CK/ESOP đã ước) thành một bảng ước trên máy. Không nộp tờ khai.
 2. **Crypto / tài sản mã hóa (TT 32/2026, thí điểm VASP)**: **ngoài phạm vi tính toán**. UI MUST có một dòng disclaimer rõ. Không ước 0,1%, không nhật ký trade, không import sàn ngoại.
 3. Freelancer / hộ KD: tiếp tục qua module HKD hiện có; F020 chỉ **gộp kết quả ước** người dùng đã nhập/tính, không thay wizard kê khai 02/CNKD hay hóa đơn điện tử.
 

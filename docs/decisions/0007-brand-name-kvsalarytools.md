@@ -17,4 +17,4 @@
 
 ## Alternatives rejected
 
-- “Lương Việt” / “Miu Lương” at that time — stronger consumer pull but renames mid-polish and conflicts with existing slug/`scheme`.
+- “Lương Việt” / “Miu Lương” at that time - stronger consumer pull but renames mid-polish and conflicts with existing slug/`scheme`.

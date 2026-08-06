@@ -1,7 +1,7 @@
 # Quyền lợi người lao động (ước tính)
 
 **Cập nhật**: 2026-08-01 (đối chiếu bản gốc đợt 3: Luật Dân số 113/2025) 
-**Tầng xác minh**: ✅ **Tầng 1 toàn bộ**. BLLĐ 2019; Luật Việc làm 74/2025; Luật BHXH 41/2024; Luật Dân số 113/2025 (`luat113-2025.pdf`. số "7 tháng" = Đ.14 k.1a + Đ.29 k.1 sửa Đ.139 BLLĐ); NĐ 158/161/168; CV 340/4860. 
+**Tầng xác minh**: **Tầng 1 toàn bộ**. BLLĐ 2019; Luật Việc làm 74/2025; Luật BHXH 41/2024; Luật Dân số 113/2025 (`luat113-2025.pdf`. số "7 tháng" = Đ.14 k.1a + Đ.29 k.1 sửa Đ.139 BLLĐ); NĐ 158/161/168; CV 340/4860. 
 **Phạm vi**: Calculator ước tính có disclaimer. không thay quyết định cơ quan BHXH / Tòa án / thanh tra LĐ.
 
 Nguồn khung: Bộ luật Lao động 45/2019/QH14; Luật Việc làm 74/2025/QH15 (hiệu lực 01/01/2026); Luật BHXH 41/2024/QH15; NĐ 161/2026/NĐ-CP (lương cơ sở 2,53tr từ 01/07/2026).
@@ -26,7 +26,7 @@ hourly_rate = monthly_salary / (work_days_per_month * hours_per_day) # mặc đ�
 # Ban ngày
 multiplier = 1.5 | 2.0 | 3.0
 
-# Ban đêm (22h–6h): OT ngày + 30% đêm + 20% × đơn giá ban ngày loại ngày
+# Ban đêm (22h-6h): OT ngày + 30% đêm + 20% × đơn giá ban ngày loại ngày
 # weekday: 1.5 + 0.3 + 0.2×1.0 = 2.0
 # weekend: 2.0 + 0.3 + 0.2×2.0 = 2.7
 # holiday: 3.0 + 0.3 + 0.2×3.0 = 3.9
@@ -84,7 +84,7 @@ Thời gian tính = 1 năm 7 tháng → 2 năm (lẻ ≥6 tháng) → 0,5 × 2 �
 
 Thời gian tính = 1 năm; lương 20e6 → 1 × 1 × 20e6 = 20e6 < 2 tháng → **40.000.000** (sàn).
 
-## 3. Trợ cấp thất nghiệp (ĐÃ KHÓA. Điều 38, 39 Luật Việc làm 74/2025/QH15, từ 01/01/2026) ✅ Tầng 1
+## 3. Trợ cấp thất nghiệp (ĐÃ KHÓA. Điều 38, 39 Luật Việc làm 74/2025/QH15, từ 01/01/2026) Tầng 1
 
 - **Điều kiện chính** (Đ.38 k.1):
  - Chấm dứt HĐLĐ hợp pháp (loại trừ đơn phương trái luật / nghỉ hưu).
@@ -92,7 +92,7 @@ Thời gian tính = 1 năm; lương 20e6 → 1 × 1 × 20e6 = 20e6 < 2 tháng �
  - Nộp đủ hồ sơ trong **03 tháng** kể từ ngày chấm dứt.
  - Trong **10 ngày làm việc** kể từ ngày nộp đủ hồ sơ mà chưa thuộc trường hợp có việc làm / nghĩa vụ QS-CA / học >12 tháng /… (Đ.38 k.1.d). **không còn là 15 ngày** như Luật 2013.
 - **Mức hằng tháng** (Đ.39 k.1) = **60% × bình quân tiền lương tháng đóng BHTN của 6 tháng gần nhất**, **trần duy nhất = 5 × lương tối thiểu vùng** tại tháng cuối đóng (luật 2025 **bỏ** nhánh trần 5× lương cơ sở cho khu vực Nhà nước).
-- **Số tháng hưởng** (Đ.39 k.2): đóng đủ 12–36 tháng → **3 tháng**; sau đó cứ đủ thêm 12 tháng → **+1 tháng**; **tối đa 12 tháng**.
+- **Số tháng hưởng** (Đ.39 k.2): đóng đủ 12-36 tháng → **3 tháng**; sau đó cứ đủ thêm 12 tháng → **+1 tháng**; **tối đa 12 tháng**.
 - **Thời điểm hưởng** (Đ.39 k.3): **ngày làm việc thứ 11** kể từ ngày nộp đủ hồ sơ (luật 2013: ngày thứ 16).
 - Thời gian đóng trước 2026 được **cộng dồn** theo Đ.35; không có điều khoản bảo lưu riêng.
 
@@ -116,7 +116,7 @@ Bình quân 50.000.000, vùng I → 60% = 30e6 > trần 26.550.000 → hưởng 
 
 ## 4. Thai sản / ốm đau (ĐÃ KHÓA khung. Luật BHXH 2024)
 
-### 4.1. Thai sản (Điều 53, 58, 59) ✅ Tầng 1
+### 4.1. Thai sản (Điều 53, 58, 59) Tầng 1
 
 - **Thời gian nghỉ sinh** (Đ.139 k.1 BLLĐ 2019, bản sửa đổi theo Đ.29 k.1 Luật Dân số 113/2025, hiệu lực 01/07/2026): 6 tháng; **sinh con thứ hai: 7 tháng**; trước sinh tối đa 2 tháng; sinh đôi trở lên +1 tháng/con từ con thứ 2. Điều kiện hưởng 7 tháng: "tại thời điểm sinh có một con đẻ còn sống" (NĐ 168/2026 Đ.2). Nam khi vợ **sinh đôi hoặc sinh con thứ hai**: nghỉ **10 ngày làm việc**; sinh ba trở lên +3 ngày LV/con từ con thứ ba (Đ.53 k.2c Luật BHXH, bản sửa theo Đ.29 k.2 Luật Dân số).
 - **Điều kiện điển hình**: đóng BHXH đủ 6 tháng trong 12 tháng trước sinh. Loại trừ: trường hợp Đ.52 k.2 Luật BHXH (thai ≥22 tuần chết lưu/đình chỉ) không hưởng chế độ 7 tháng (NĐ 168 Đ.2 k.2).
@@ -135,19 +135,19 @@ Tiền chế độ = 18e6 × 6 = 108.000.000; trợ cấp 1 lần = 5.060.000 �
 
 ### TC-MAT-02: con thứ hai sau 01/07/2026
 
-Cùng bình quân; nghỉ 7 tháng → 18e6 × 7 + 5.060.000 = **131.060.000**. (✅ số "7 tháng" đối chiếu nguyên văn Đ.14 k.1a + Đ.29 k.1 Luật Dân số 113/2025.)
+Cùng bình quân; nghỉ 7 tháng → 18e6 × 7 + 5.060.000 = **131.060.000**. (OK số "7 tháng" đối chiếu nguyên văn Đ.14 k.1a + Đ.29 k.1 Luật Dân số 113/2025.)
 
 ### TC-MAT-03: sinh đôi lần đầu, tháng 08/2026
 
-Cùng bình quân 18tr; nghỉ = 6 + 1 (con thứ 2 của lần sinh đôi) = **7 tháng**; trợ cấp 1 lần = 5.060.000 × 2 con = 10.120.000 (Đ.58 k.4 ✅). 
+Cùng bình quân 18tr; nghỉ = 6 + 1 (con thứ 2 của lần sinh đôi) = **7 tháng**; trợ cấp 1 lần = 5.060.000 × 2 con = 10.120.000 (Đ.58 k.4 OK). 
 Tổng = 18e6 × 7 + 10.120.000 = **136.120.000**.
 
-### 4.2. Ốm đau (ĐÃ KHÓA. Đ.43, Đ.45 Luật BHXH 41/2024) ✅ Tầng 1
+### 4.2. Ốm đau (ĐÃ KHÓA. Đ.43, Đ.45 Luật BHXH 41/2024) Tầng 1
 
 - Mức: **75%** tiền lương làm căn cứ đóng BHXH của **tháng gần nhất trước tháng nghỉ** (Đ.45 k.1a + k.2).
 - Mức/ngày = mức tháng / **24** (Đ.45 k.5); nghỉ dưới nửa ngày = ½ ngày; từ nửa ngày đến dưới 1 ngày = 1 ngày.
 - **Trần ngày/năm** (tính theo ngày làm việc, không kể lễ/tết/nghỉ tuần. Đ.43 k.1):
- - Điều kiện bình thường: **30 / 40 / 60** ngày (<15 / 15–<30 / ≥30 năm đóng).
+ - Điều kiện bình thường: **30 / 40 / 60** ngày (<15 / 15-<30 / ≥30 năm đóng).
  - Nặng nhọc, độc hại hoặc vùng đặc biệt khó khăn: **40 / 50 / 70** ngày.
 - V1 mode cơ bản: ngày nghỉ × (75% × lương tháng / 24). Bệnh dài ngày → V2.
 
@@ -162,16 +162,16 @@ Mức/ngày = 12e6 × 75% / 24 = 375.000 → tổng = **1.875.000**.
 
 ## 5. Lương hưu & BHXH một lần
 
-### 5.1. BHXH một lần (ĐÃ KHÓA. Điều 70 Luật BHXH 2024) ✅ Tầng 1
+### 5.1. BHXH một lần (ĐÃ KHÓA. Điều 70 Luật BHXH 2024) Tầng 1
 
 - **Mức hưởng** = `(1,5 × T1 + 2 × T2) × MBQTL`
  - T1 = số năm đóng **trước 2014**; T2 = số năm đóng **từ 2014**; tháng lẻ của T1 chuyển sang T2.
- - **Tháng lẻ** (Đ.5 k.6: nguyên tắc chung, không nằm trong Đ.70): 1–6 tháng = ½ năm; 7–11 tháng = 1 năm.
+ - **Tháng lẻ** (Đ.5 k.6: nguyên tắc chung, không nằm trong Đ.70): 1-6 tháng = ½ năm; 7-11 tháng = 1 năm.
  - MBQTL = bình quân tiền lương đóng **đã nhân hệ số trượt giá** (bảng dưới; công thức hệ số = NĐ 158/2025 Đ.16 k.1a).
  - Đóng chưa đủ 1 năm: bằng số đã đóng, tối đa 2 tháng MBQTL (Đ.70 k.3c).
 - **Điều kiện rút** tách theo mốc tham gia trước/từ **01/07/2025** (Đ.70 k.1): diện "sau 12 tháng không thuộc đối tượng" chỉ cho người có thời gian đóng trước ngày Luật có hiệu lực; người bắt đầu từ 01/07/2025 chỉ còn các diện đặc biệt (đủ tuổi hưu chưa đủ 15 năm, định cư NN, bệnh hiểm nghèo, suy giảm ≥81%…).
 
-#### Bảng hệ số điều chỉnh tiền lương đã đóng BHXH. năm 2026 (✅ Tầng 1)
+#### Bảng hệ số điều chỉnh tiền lương đã đóng BHXH. năm 2026 (Tầng 1)
 
 Nguồn: **CV 340/BHXH-CSXH ngày 03/02/2026**; căn cứ NĐ 158/2025/NĐ-CP Đ.16 k1a, NĐ 159/2025/NĐ-CP Đ.10 k2. Áp cho BHXH bắt buộc (cột thu nhập tự nguyện giống từ 2008).
 
@@ -207,7 +207,7 @@ T1 = 4 năm; T2 = 10 năm; MBQTL (đã trượt giá) = 12.000.000
 - **Tỷ lệ hưởng** (trên mức bình quân tiền lương làm căn cứ đóng, Điều 72):
  - **Nữ**: 45% cho 15 năm đầu; **+2%/năm** tiếp theo; tối đa **75%** (đạt tại 30 năm).
  - **Nam ≥ 20 năm**: 45% cho 20 năm đầu; **+2%/năm** tiếp theo; tối đa **75%** (đạt tại 35 năm).
- - **Nam 15 – dưới 20 năm**: 40% cho 15 năm đầu; **+1%/năm** tiếp theo (19 năm = 44%).
+ - **Nam 15 - dưới 20 năm**: 40% cho 15 năm đầu; **+1%/năm** tiếp theo (19 năm = 44%).
 
 ```
 rate_female = min(0.45 + 0.02 * max(0, years - 15), 0.75)
@@ -223,7 +223,7 @@ pension_monthly = rate * avg_salary_adjusted
 Nữ, 25 năm đóng, MBQTL giả định 10.000.000: 
 rate = 45% + 10×2% = 65% → lương hưu ước **6.500.000/tháng**.
 
-### TC-PENSION-02: nam 15–<20 năm
+### TC-PENSION-02: nam 15-<20 năm
 
 Nam, 17 năm, MBQTL 10.000.000: rate = 40% + 2×1% = 42% → **4.200.000/tháng**.
 
@@ -234,8 +234,8 @@ Nam, 17 năm, MBQTL 10.000.000: rate = 40% + 2×1% = 42% → **4.200.000/tháng*
 | Mục | Trạng thái | Nguồn |
 |-----|-----------|-------|
 | OT | Khóa (3 hệ số ngày) | Đ.98 BLLĐ 2019 |
-| Thôi việc / mất việc | **Khóa** | Đ.46–47 BLLĐ 2019 |
-| Thất nghiệp | **Khóa** | Đ.38–39 Luật Việc làm 2025 |
+| Thôi việc / mất việc | **Khóa** | Đ.46-47 BLLĐ 2019 |
+| Thất nghiệp | **Khóa** | Đ.38-39 Luật Việc làm 2025 |
 | Thai sản | **Khóa** (khung chính) | Đ.53/58/59 Luật BHXH 2024; NĐ 161/2026; NĐ 168/2026 |
 | Ốm đau | Khung (75%). chi tiết V2 | Luật BHXH 2024 |
 | BHXH một lần | **Khóa** công thức | Đ.70 Luật BHXH 2024 |

@@ -4,7 +4,7 @@
 
 **Input**: User description: "implement the specification for splash screen, loading screen, settings, application layout, … UI/UX, non functional requirement"
 
-**Tham chiếu**: `docs/product/design-system.md`, `docs/product/scope.md`, Constitution V–VI, ADR 0004 (offline)
+**Tham chiếu**: `docs/product/design-system.md`, `docs/product/scope.md`, Constitution V-VI, ADR 0004 (offline)
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -12,7 +12,7 @@
 
 Minh mở KSalaryInsights lần đầu trong ngày. Anh thấy màn splash ngắn (thương hiệu + Ngài Miu), rồi vào khung ứng dụng có điều hướng rõ ràng tới các công cụ tính và Cài đặt. không bị kẹt, không cần mạng.
 
-**Why this priority**: Cửa vào sản phẩm; mọi tính năng 001–008 phụ thuộc khung điều hướng ổn định.
+**Why this priority**: Cửa vào sản phẩm; mọi tính năng 001-008 phụ thuộc khung điều hướng ổn định.
 
 **Independent Test**: Cold start → splash → home/layout; kiểm tra điều hướng tới ít nhất một màn placeholder tính lương và màn Cài đặt.
 
@@ -50,7 +50,7 @@ Minh mở Cài đặt để chọn vùng LTTV mặc định, năm thuế mặc �
 
 **Acceptance Scenarios**:
 
-1. **Given** đang ở Cài đặt, **When** chọn vùng mặc định (I–IV) và năm thuế mặc định (trong các năm có ruleset), **Then** lựa chọn được lưu cục bộ trên thiết bị.
+1. **Given** đang ở Cài đặt, **When** chọn vùng mặc định (I-IV) và năm thuế mặc định (trong các năm có ruleset), **Then** lựa chọn được lưu cục bộ trên thiết bị.
 2. **Given** đã lưu preference, **When** mở lại app và vào công cụ tính (hoặc đọc store preference), **Then** vùng/năm mặc định khớp lựa chọn đã lưu.
 3. **Given** màn Cài đặt, **When** xem mục Quyền riêng tư / Giới thiệu, **Then** thấy tuyên bố: tính toán cục bộ, không yêu cầu CCCD/MST/sổ BHXH, kết quả chỉ mang tính ước tính. không có form thu thập PII.
 4. **Given** Cài đặt, **When** bấm “Đặt lại về mặc định”, **Then** vùng/năm (và các preference trong phạm vi feature này) trở về giá trị mặc định hệ thống và được lưu.
@@ -59,7 +59,7 @@ Minh mở Cài đặt để chọn vùng LTTV mặc định, năm thuế mặc �
 
 ### User Story 4 - Layout & UI/UX nhất quán Flat Design + Ngài Miu (Priority: P2)
 
-Trên điện thoại và tablet/web hẹp–rộng, khung app dùng token màu/typography/spacing của design system; Ngài Miu chỉ xuất hiện đúng ngữ cảnh (splash, empty/loading nhẹ, disclaimer). không che số liệu kết quả.
+Trên điện thoại và tablet/web hẹp-rộng, khung app dùng token màu/typography/spacing của design system; Ngài Miu chỉ xuất hiện đúng ngữ cảnh (splash, empty/loading nhẹ, disclaimer). không che số liệu kết quả.
 
 **Why this priority**: Nhận diện thương hiệu và tin cậy; ràng buộc mọi màn sau này.
 
@@ -89,7 +89,7 @@ Trên điện thoại và tablet/web hẹp–rộng, khung app dùng token màu/
 - **FR-002**: Splash MUST hoàn tất và nhường chỗ cho khung chính trong thời gian hợp lý (mục tiêu ≤3 giây cold start tới UI tương tác trên thiết bị trung bình); warm start MUST NOT bắt buộc xem lại splash đầy đủ.
 - **FR-003**: Hệ thống MUST cung cấp khung layout ứng dụng với vùng nội dung chính và điều hướng tới: (a) công cụ tính lương / home, (b) Cài đặt; có thể mở rộng thêm mục sau mà không phá layout.
 - **FR-004**: Hệ thống MUST hiển thị trạng thái loading (toàn màn hoặc theo vùng) khi thao tác kéo dài hơn phản hồi tức thì; loading MUST kết thúc khi thao tác xong hoặc lỗi được báo.
-- **FR-005**: Hệ thống MUST cung cấp màn Cài đặt cho phép đặt: vùng LTTV mặc định (I–IV), năm thuế mặc định (các năm có ruleset), và xem mục Quyền riêng tư / Giới thiệu / Disclaimer ước tính.
+- **FR-005**: Hệ thống MUST cung cấp màn Cài đặt cho phép đặt: vùng LTTV mặc định (I-IV), năm thuế mặc định (các năm có ruleset), và xem mục Quyền riêng tư / Giới thiệu / Disclaimer ước tính.
 - **FR-006**: Preference Cài đặt MUST được lưu cục bộ trên thiết bị và khôi phục ở lần mở sau.
 - **FR-007**: Hệ thống MUST cho phép đặt lại preference về mặc định từ Cài đặt.
 - **FR-008**: Hệ thống MUST NOT yêu cầu hoặc thu thập CCCD, MST, số sổ BHXH, hay thông tin ngân hàng ở bất kỳ màn thuộc feature này.
@@ -105,7 +105,7 @@ Trên điện thoại và tablet/web hẹp–rộng, khung app dùng token màu/
 - **NFR-003 Accessibility**: Touch target tối thiểu 44×44; tương phản chữ/nền đạt WCAG AA với cặp màu token chính; trạng thái pressed/focus rõ (viền solid, không glow); nhãn điều hướng và Cài đặt đọc được bởi trình đọc màn hình (accessibilityLabel tiếng Việt).
 - **NFR-004 Privacy**: Không gửi preference hay dữ liệu người dùng lên máy chủ trong phạm vi feature này; lưu trữ chỉ cục bộ.
 - **NFR-005 Reliability**: Lỗi đọc/ghi preference không làm crash app; fallback về mặc định.
-- **NFR-006 Consistency**: Spacing bội số 4; radius 6–8px; motion tương tác ~200ms, chuyển màn ~300ms; font Outfit với fallback hệ thống.
+- **NFR-006 Consistency**: Spacing bội số 4; radius 6-8px; motion tương tác ~200ms, chuyển màn ~300ms; font Outfit với fallback hệ thống.
 - **NFR-007 Responsiveness**: Layout dùng được trên điện thoại portrait; trên viewport rộng hơn, nội dung không kéo full-bleed vô hạn. giới hạn bề rộng đọc được (theo design-system max container).
 
 ### Key Entities
@@ -132,4 +132,4 @@ Trên điện thoại và tablet/web hẹp–rộng, khung app dùng token màu/
 - Vùng mặc định hệ thống = Vùng I (có thể đổi trong Cài đặt).
 - Không gồm: đăng nhập tài khoản, đồng bộ đám mây, theme tối, đa ngôn ngữ (Anh/…), remote config ruleset (F019), onboarding wizard nhiều bước đầy đủ (chỉ splash ngắn + mascot chào).
 - Asset Ngài Miu v1 có thể là placeholder vector phẳng đạt style guide nếu bộ pose cuối chưa sẵn; MUST không dùng ảnh tả thực/gradient.
-- “Thiết bị trung bình” cho SC/NFR: điện thoại tầm trung 2–3 năm tuổi hoặc simulator tương đương khi đo cold start.
+- “Thiết bị trung bình” cho SC/NFR: điện thoại tầm trung 2-3 năm tuổi hoặc simulator tương đương khi đo cold start.

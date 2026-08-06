@@ -9,7 +9,7 @@
 ## Locked decisions
 
 - Hai cột Offer A / Offer B trên **route riêng** `offer-compare` + CTA từ Calculator (“So 2 offer”).
-- Shared context: `taxYear`, `month` (as-of), `region`, `numDependents` — một lần cho cả hai; mỗi offer chỉ khác mode / amount / BH preset.
+- Shared context: `taxYear`, `month` (as-of), `region`, `numDependents` - một lần cho cả hai; mỗi offer chỉ khác mode / amount / BH preset.
 - Mỗi offer: mode Gross→Net hoặc Net→Gross; amount; BH via **F022 preset** (full / percent / absolute).
 - Kết quả: Gross ước, Net ước, BH NLĐ, thuế TNCN từng offer; **ΔNet** và **ΔGross** (signed); không copy “nên chọn”.
 - Tái dùng `grossToNet` / `netToGross`; không engine song song.
@@ -34,7 +34,7 @@
 ### Edge Cases
 
 - Đổi shared taxYear/month → clear/recompute cả hai.
-- Percent BH ngoài 1–100 → validate.
+- Percent BH ngoài 1-100 → validate.
 - Absolute BH > trần → vẫn áp trần như Calculator.
 
 ## Requirements *(mandatory)*

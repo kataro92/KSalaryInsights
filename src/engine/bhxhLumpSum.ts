@@ -7,7 +7,7 @@ import type {
 import { getRuleset } from "@/src/engine/rulesetLoader";
 
 /**
- * Tháng lẻ Đ.5 k.6: 1–6 tháng = ½ năm; 7–11 tháng = 1 năm.
+ * Tháng lẻ Đ.5 k.6: 1-6 tháng = ½ năm; 7-11 tháng = 1 năm.
  * (Khác làm tròn thôi việc: ≥6 tháng → 1 năm.)
  */
 export function roundContributionYears(

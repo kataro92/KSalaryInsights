@@ -16,18 +16,18 @@ Chuẩn hóa 3 preset căn cứ BH (`full` / `percent` / `absolute`) thành help
 **Testing**: Jest unit helper + existing salary tests  
 **Target Platform**: Expo iOS/Android/web  
 **Project Type**: Mobile app  
-**Performance Goals**: Negligible (pure function)  
-**Constraints**: Constitution I–V; no PII; ±1 VND  
+**Performance Goals**: Negligible (pure function) 
+**Constraints**: Constitution I-V; no PII; ±1 VND  
 **Scale/Scope**: 1 helper module + Calculator UI + shared types
 
 ## Constitution Check
 
 | Principle | Status |
 |-----------|--------|
-| I Legal | Pass — no new rates; only base selection |
-| II Formula≠params | Pass — helper resolves base, engine unchanged |
-| III Breakdown | Pass — show resolved insurance base |
-| IV Hand-calc TC | Pass — SC-001 30tr vs 70% |
+| I Legal | Pass - no new rates; only base selection |
+| II Formula≠params | Pass - helper resolves base, engine unchanged |
+| III Breakdown | Pass - show resolved insurance base |
+| IV Hand-calc TC | Pass - SC-001 30tr vs 70% |
 | V Privacy | Pass |
 | VI Spec→code | Pass |
 

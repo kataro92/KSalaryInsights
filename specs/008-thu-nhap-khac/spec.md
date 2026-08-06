@@ -4,7 +4,7 @@
 
 **Input**: Ước thuế cho thuê nhà, hộ kinh doanh, chứng khoán, (sau) ESOP theo tỷ lệ ruleset.
 
-**Tham chiếu**: F016–F018; `thu-nhap-khac.md`
+**Tham chiếu**: F016-F018; `thu-nhap-khac.md`
 
 ## Locked decisions
 

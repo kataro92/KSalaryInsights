@@ -5,7 +5,7 @@ import { space } from "@/src/theme/tokens";
 
 type Props = ViewProps & {
   children: ReactNode;
-  /** Stretch children evenly across the row (good for 2–4 options). */
+  /** Stretch children evenly across the row (good for 2-4 options). */
   equal?: boolean;
 };
 

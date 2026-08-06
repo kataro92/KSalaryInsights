@@ -25,16 +25,16 @@ Sources: NN/g Glassmorphism, Axess Lab, Clay (2026), Orizon (2026), Fluent Acryl
 
 ### 1.1 What glassmorphism is
 
-- **Translucent fill** (opacity ~15–40%) + **background blur** (frost) + optional **light edge stroke** and soft highlight.
+- **Translucent fill** (opacity ~15-40%) + **background blur** (frost) + optional **light edge stroke** and soft highlight.
 - Creates hierarchy: background = context, glass = chrome/overlay, solid = content that must stay legible.
 
 ### 1.2 Best practices we adopt
 
-1. **Use sparingly**. max 2–3 blurred layers per screen. Prefer glass for chrome (tab bar, sticky CTA, modals, hub cards), not full-page skins.
+1. **Use sparingly**. max 2-3 blurred layers per screen. Prefer glass for chrome (tab bar, sticky CTA, modals, hub cards), not full-page skins.
 2. **Never put long body text on raw glass**. forms, salary breakdowns, money heroes stay **solid** (high opacity / opaque). Tip sheets use `glass.thick` (≥72% fill).
 3. **Tint + blur**. blur alone is not enough; always add a white/sky tint scrim so contrast is stable.
-4. **Blur budget**. intensity 12–20 (Expo BlurView). Avoid stacking many BlurViews.
-5. **Edge definition**. 1px light border `rgba(255,255,255,0.45–0.65)` so glass reads on soft pastel backgrounds.
+4. **Blur budget**. intensity 12-20 (Expo BlurView). Avoid stacking many BlurViews.
+5. **Edge definition**. 1px light border `rgba(255,255,255,0.45-0.65)` so glass reads on soft pastel backgrounds.
 6. **Solid fallback**. when blur unsupported, reduce transparency preference is on, or web: use high-opacity solid (`#FFFFFF` / `#F7FAFF`).
 7. **Controlled backdrop**. glass sits over soft gradient blobs (sky/mint), not busy photos.
 8. **Finance trust**. glass = modern chrome; numbers stay solid mint/cobalt posters (Constitution: transparent math, not decorative blur).
@@ -81,7 +81,7 @@ Radius for glass surfaces: `radii.glass` (16).
 
 ### 2.3 Ambient canvas
 
-Keep pastel sky background. Strengthen decorative blobs (primary/secondary/accent at 0.10–0.14 opacity) so frost has something to refract. Still abstract geometry. no photography.
+Keep pastel sky background. Strengthen decorative blobs (primary/secondary/accent at 0.10-0.14 opacity) so frost has something to refract. Still abstract geometry. no photography.
 
 ---
 

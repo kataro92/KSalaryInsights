@@ -1,6 +1,6 @@
-# Ngài Miu — mascot assets
+# Ngài Miu - mascot assets
 
-Cartoon raster illustrations (PNG + WebP). **Do not replace with SVG** — brand character must stay illustrated.
+Cartoon raster illustrations (PNG + WebP). **Do not replace with SVG** - brand character must stay illustrated.
 
 | File | Pose | Typical use |
 |------|------|-------------|

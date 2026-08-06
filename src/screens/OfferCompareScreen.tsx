@@ -102,7 +102,7 @@ export function OfferCompareScreen() {
       if (replacedOldest) {
         Alert.alert(
           "Đã lưu",
-          "Đã đạt giới hạn 20 kịch bản — kịch bản cũ nhất đã bị thay."
+          "Đã đạt giới hạn 20 kịch bản. Kịch bản cũ nhất đã bị thay."
         );
       }
     } catch (e) {
@@ -281,7 +281,7 @@ export function OfferCompareScreen() {
         ) : (
           <EmptyErrorState
             title="Chưa so sánh"
-            body="Nhập hai offer rồi bấm So sánh. Kết quả chỉ là ước tính — không khuyên chọn bên nào."
+            body="Nhập hai offer rồi bấm So sánh. Kết quả chỉ là ước tính, không khuyên chọn bên nào."
           />
         )}
       </ToolScreen>

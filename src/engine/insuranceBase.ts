@@ -34,7 +34,7 @@ export function validateInsurancePreset(
       percent < 1 ||
       percent > 100
     ) {
-      return { ok: false, message: "Tỷ lệ BH phải là số nguyên 1–100." };
+      return { ok: false, message: "Tỷ lệ BH phải là số nguyên 1-100." };
     }
     return { ok: true, preset: { mode: "percent", percent } };
   }

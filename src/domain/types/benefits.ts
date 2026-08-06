@@ -6,7 +6,7 @@ export type SeveranceInput = {
   mode: SeveranceMode;
   /** Tổng thời gian làm việc (năm nguyên). */
   totalYears: number;
-  /** Tháng lẻ kèm totalYears (0–11). */
+  /** Tháng lẻ kèm totalYears (0-11). */
   totalExtraMonths?: number;
   /** Thời gian đã đóng BHTN (năm). */
   bhtnYears: number;
@@ -40,7 +40,7 @@ export type UnemploymentInput = {
   /** Tháng cuối đóng BHTN. Chọn LTTV trần. */
   lastContributionDate: string;
   taxYear: number;
-  /** HĐ 1–<12 tháng → lookback 36 tháng thay vì 24 (chỉ checklist). */
+  /** HĐ 1-<12 tháng → lookback 36 tháng thay vì 24 (chỉ checklist). */
   shortTermContract?: boolean;
 };
 

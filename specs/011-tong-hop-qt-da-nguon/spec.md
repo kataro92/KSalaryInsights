@@ -2,9 +2,9 @@
 
 **Status**: Shipped  
 **F-ID**: F020  
-**Input**: Quyết định sản phẩm ADR 0009 (hướng 1c). Gộp các ước thu nhập đã có trong năm thành một bảng thuế năm — vẫn offline, không nộp tờ khai.
+**Input**: Quyết định sản phẩm ADR 0009 (hướng 1c). Gộp các ước thu nhập đã có trong năm thành một bảng thuế năm - vẫn offline, không nộp tờ khai.
 
-**Tham chiếu**: F007/F008 (QT lương ± vãng lai), F016–F018 (thu nhập khác), `docs/domain/thu-nhap-khac.md`, ADR 0009.
+**Tham chiếu**: F007/F008 (QT lương ± vãng lai), F016-F018 (thu nhập khác), `docs/domain/thu-nhap-khac.md`, ADR 0009.
 
 ## Locked decisions
 
@@ -13,7 +13,7 @@
 - Mỗi nguồn giữ **cơ chế thuế riêng** (lũy tiến lương vs tỷ lệ HKD/cho thuê vs 0,1% CK). Không gộp mọi thứ vào một biểu lũy tiến trừ khi luật bắt buộc (vd. ESOP phần TLTC → lương).
 - Kết quả năm = **bảng dòng theo nguồn** + **tổng thuế ước / đã nộp / chênh** (nơi áp dụng được). Disclaimer mạnh: không thay tờ khai 02/QTT-TNCN hay 02/CNKD.
 - Wizard ủy quyền hiện tại (F007b) vẫn gắn **lương HĐLĐ**; khi có HKD/cho thuê/CK, kết luận mặc định nghiêng **tự quyết toán** + checklist mở rộng.
-- **Entry UI** (research R1): route `multi-source` + CTA từ Quyết toán / Thu nhập khác — **không** thêm tab bar.
+- **Entry UI** (research R1): route `multi-source` + CTA từ Quyết toán / Thu nhập khác - **không** thêm tab bar.
 - **Totals** (R3): `Σ thuế dòng − Σ đã nộp`; nhãn ước; không suy ra một tờ khai duy nhất.
 - **ESOP TLTC** (R5): không auto-merge vào dòng lương; ghi chú + user chủ động nếu muốn.
 - **Data MVP** (R2): nhập tay bắt buộc; import từ scenario F014 là SHOULD.
