@@ -1,7 +1,13 @@
-import { Pressable, Switch, Text, TextInput, View } from "react-native";
+import { Pressable, Switch, Text, View } from "react-native";
 
+import { MoneyField } from "@/src/components/common/MoneyField";
 import { Section } from "@/src/components/common/Section";
+import { TextField } from "@/src/components/common/TextField";
 import type { ChildOrder } from "@/src/domain/types/benefits";
+import {
+  requiredIsoDate,
+  requiredPositiveMoney,
+} from "@/src/theme/fieldValidation";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
@@ -20,18 +26,6 @@ type Props = {
   onChange: (next: MaternityInputsValue) => void;
 };
 
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, "");
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return "";
-  return n.toLocaleString("vi-VN");
-}
-
 export function MaternityInputs({ value, onChange }: Props) {
   const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -44,17 +38,16 @@ export function MaternityInputs({ value, onChange }: Props) {
         title="Bình quân 6 tháng"
         subtitle="Tiền lương đóng bảo hiểm xã hội bình quân 6 tháng trước nghỉ."
       >
-        <TextInput
+        <MoneyField
           accessibilityLabel="Bình quân lương 6 tháng"
-          keyboardType="number-pad"
           value={value.avgText}
-          onChangeText={(t) => {
-            const n = parseMoney(t);
-            patch({
-              avgText: n == null ? t.replace(/[^\d.]/g, "") : formatInput(n),
-            });
+          error={requiredPositiveMoney(
+            value.avgText,
+            "Nhập bình quân lương lớn hơn 0."
+          )}
+          onValueChange={(formatted) => {
+            patch({ avgText: formatted });
           }}
-          style={styles.input}
         />
       </Section>
 
@@ -62,12 +55,12 @@ export function MaternityInputs({ value, onChange }: Props) {
         title="Ngày sinh dự kiến"
         subtitle="YYYY-MM-DD. Chọn mức tham chiếu và tháng nghỉ."
       >
-        <TextInput
+        <TextField
           accessibilityLabel="Ngày sinh YYYY-MM-DD"
           autoCapitalize="none"
           value={value.birthDate}
+          error={requiredIsoDate(value.birthDate)}
           onChangeText={(t) => patch({ birthDate: t.trim() })}
-          style={styles.input}
           placeholder="YYYY-MM-DD"
           placeholderTextColor={colors.border}
         />
@@ -171,18 +164,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     chipLabelSelected: { color: colors.white },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
     switchRow: {
       flexDirection: "row",
       alignItems: "center",

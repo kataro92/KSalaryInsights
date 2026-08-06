@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { View } from "react-native";
 
 import { Button } from "@/src/components/common/Button";
 import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
 import { ResultHero } from "@/src/components/common/ResultHero";
 import { Section } from "@/src/components/common/Section";
+import { TextField } from "@/src/components/common/TextField";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
@@ -12,21 +14,14 @@ import type { SecuritiesBreakdown } from "@/src/domain/types/otherIncome";
 import { calculateSecuritiesTransfer } from "@/src/engine/otherIncome/securities";
 import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
+import {
+  requiredIsoDate,
+  requiredNonNegativeMoney,
+} from "@/src/theme/fieldValidation";
+import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
-import { layout, radii, space, typography } from "@/src/theme/tokens";
+import { space } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, "");
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return "";
-  return n.toLocaleString("vi-VN");
-}
 
 type Props = { taxYear: number };
 
@@ -69,28 +64,26 @@ export function SecuritiesCalculator({ taxYear }: Props) {
         title="Chứng khoán"
         subtitle="Tỷ lệ chuyển nhượng theo ngày giao dịch."
       >
-        <Text style={styles.fieldLabel}>Giá chuyển nhượng</Text>
-        <TextInput
+        <MoneyField
+          label="Giá chuyển nhượng"
           accessibilityLabel="Giá bán chứng khoán"
-          keyboardType="number-pad"
           value={priceText}
-          onChangeText={(t) => {
-            const n = parseMoney(t);
-            setPriceText(n == null ? t.replace(/[^\d.]/g, "") : formatInput(n));
+          error={requiredNonNegativeMoney(priceText, "Nhập giá bán hợp lệ.")}
+          onValueChange={(formatted) => {
+            setPriceText(formatted);
             setResult(null);
           }}
-          style={styles.input}
         />
-        <Text style={styles.fieldLabel}>Ngày giao dịch (YYYY-MM-DD)</Text>
-        <TextInput
+        <TextField
+          label="Ngày giao dịch (YYYY-MM-DD)"
           accessibilityLabel="Ngày giao dịch"
           autoCapitalize="none"
           value={asOfDate}
+          error={requiredIsoDate(asOfDate)}
           onChangeText={(t) => {
             setAsOfDate(t.trim());
             setResult(null);
           }}
-          style={styles.input}
         />
       </Section>
       {error ? (
@@ -130,28 +123,8 @@ export function SecuritiesCalculator({ taxYear }: Props) {
   );
 }
 
-function makeStyles({ colors }: ThemeContextValue) {
+function makeStyles(_ctx: ThemeContextValue) {
   return {
     wrap: { gap: space[4] },
-    fieldLabel: {
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 12,
-      color: colors.foreground,
-      opacity: 0.7,
-      marginBottom: space[1],
-      marginTop: space[2],
-    },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
   } satisfies ThemedStyleSheet;
 }

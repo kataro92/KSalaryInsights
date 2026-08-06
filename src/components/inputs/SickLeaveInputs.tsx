@@ -1,7 +1,13 @@
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
+import { MoneyField } from "@/src/components/common/MoneyField";
 import { Section } from "@/src/components/common/Section";
+import { TextField } from "@/src/components/common/TextField";
 import type { SickLeaveHazard } from "@/src/domain/types/benefits";
+import {
+  requiredNonNegativeInt,
+  requiredPositiveMoney,
+} from "@/src/theme/fieldValidation";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
@@ -18,22 +24,17 @@ type Props = {
   onChange: (next: SickLeaveInputsValue) => void;
 };
 
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, "");
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return "";
-  return n.toLocaleString("vi-VN");
-}
-
 export function SickLeaveInputs({ value, onChange }: Props) {
   const styles = useThemedStyles(makeStyles);
   const patch = (partial: Partial<SickLeaveInputsValue>) =>
     onChange({ ...value, ...partial });
+
+  const daysError = (() => {
+    if (!value.daysText.trim()) return "Nhập số ngày nghỉ.";
+    const n = Number(value.daysText.replace(/[^\d]/g, ""));
+    if (!Number.isInteger(n) || n < 0) return "Số ngày nghỉ không hợp lệ.";
+    return null;
+  })();
 
   return (
     <View style={styles.wrap}>
@@ -41,17 +42,16 @@ export function SickLeaveInputs({ value, onChange }: Props) {
         title="Lương tháng liền kề"
         subtitle="Lương làm căn cứ đóng bảo hiểm xã hội tháng gần nhất trước tháng nghỉ."
       >
-        <TextInput
+        <MoneyField
           accessibilityLabel="Lương tháng liền kề"
-          keyboardType="number-pad"
           value={value.salaryText}
-          onChangeText={(t) => {
-            const n = parseMoney(t);
-            patch({
-              salaryText: n == null ? t.replace(/[^\d.]/g, "") : formatInput(n),
-            });
+          error={requiredPositiveMoney(
+            value.salaryText,
+            "Nhập lương tháng liền kề lớn hơn 0."
+          )}
+          onValueChange={(formatted) => {
+            patch({ salaryText: formatted });
           }}
-          style={styles.input}
         />
       </Section>
 
@@ -59,12 +59,12 @@ export function SickLeaveInputs({ value, onChange }: Props) {
         title="Số ngày nghỉ"
         subtitle="V1: ngày làm việc trong hạn trần năm."
       >
-        <TextInput
+        <TextField
           accessibilityLabel="Số ngày nghỉ ốm"
           keyboardType="number-pad"
           value={value.daysText}
+          error={daysError}
           onChangeText={(t) => patch({ daysText: t.replace(/[^\d]/g, "") })}
-          style={styles.input}
         />
       </Section>
 
@@ -72,12 +72,15 @@ export function SickLeaveInputs({ value, onChange }: Props) {
         title="Năm đóng bảo hiểm xã hội"
         subtitle="Chọn trần 30/40/60 (hoặc 40/50/70 nếu nặng nhọc)."
       >
-        <TextInput
+        <TextField
           accessibilityLabel="Số năm đóng bảo hiểm xã hội"
           keyboardType="number-pad"
           value={value.yearsText}
+          error={requiredNonNegativeInt(
+            value.yearsText,
+            "Nhập số năm đóng bảo hiểm xã hội (≥ 0)."
+          )}
           onChangeText={(t) => patch({ yearsText: t.replace(/[^\d]/g, "") })}
-          style={styles.input}
         />
       </Section>
 
@@ -136,17 +139,5 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     chipLabelSelected: { color: colors.white },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
   } satisfies ThemedStyleSheet;
 }

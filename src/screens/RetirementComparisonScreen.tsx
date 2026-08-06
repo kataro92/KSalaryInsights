@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { LumpSumEligibilityChecklist } from "@/src/components/checklist/LumpSumEligibilityChecklist";
 import { Button } from "@/src/components/common/Button";
 import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
 import { MoneyField } from "@/src/components/common/MoneyField";
 import { Section } from "@/src/components/common/Section";
+import { TextField } from "@/src/components/common/TextField";
 import { ToolScreen } from "@/src/components/common/ToolScreen";
 import { RetirementComparisonView } from "@/src/components/comparison/RetirementComparisonView";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
@@ -29,6 +30,12 @@ import {
 } from "@/src/engine/rulesetLoader";
 import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
+import {
+  requiredIntInRange,
+  requiredIsoDate,
+  requiredNonNegativeInt,
+  requiredPositiveMoney,
+} from "@/src/theme/fieldValidation";
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
@@ -171,6 +178,7 @@ export function RetirementComparisonScreen() {
             styles={styles}
             label="Trước 2014 (năm)"
             value={t1Years}
+            error={requiredNonNegativeInt(t1Years)}
             onChange={setT1Years}
             clear={() => {
               setLumpSum(null);
@@ -181,6 +189,7 @@ export function RetirementComparisonScreen() {
             styles={styles}
             label="Trước 2014 (tháng lẻ)"
             value={t1Months}
+            error={requiredIntInRange(t1Months, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
             onChange={setT1Months}
             clear={() => {
               setLumpSum(null);
@@ -193,6 +202,7 @@ export function RetirementComparisonScreen() {
             styles={styles}
             label="Từ 2014 (năm)"
             value={t2Years}
+            error={requiredNonNegativeInt(t2Years)}
             onChange={setT2Years}
             clear={() => {
               setLumpSum(null);
@@ -203,6 +213,7 @@ export function RetirementComparisonScreen() {
             styles={styles}
             label="Từ 2014 (tháng lẻ)"
             value={t2Months}
+            error={requiredIntInRange(t2Months, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
             onChange={setT2Months}
             clear={() => {
               setLumpSum(null);
@@ -220,6 +231,7 @@ export function RetirementComparisonScreen() {
           styles={styles}
           label="Tổng năm đóng"
           value={pensionYears}
+          error={requiredNonNegativeInt(pensionYears)}
           onChange={setPensionYears}
           clear={() => {
             setLumpSum(null);
@@ -235,6 +247,10 @@ export function RetirementComparisonScreen() {
         <MoneyField
           accessibilityLabel="Lương bình quân đã điều chỉnh"
           value={mbqtlText}
+          error={requiredPositiveMoney(
+            mbqtlText,
+            "Nhập lương bình quân đã điều chỉnh lớn hơn 0."
+          )}
           onValueChange={(formatted) => {
             setMbqtlText(formatted);
             setLumpSum(null);
@@ -275,16 +291,20 @@ export function RetirementComparisonScreen() {
         title="Ngày tham gia lần đầu"
         subtitle="Chỉ ảnh hưởng checklist điều kiện rút (không đổi số tiền)."
       >
-        <TextInput
+        <TextField
           accessibilityLabel="Ngày tham gia bảo hiểm xã hội YYYY-MM-DD"
           autoCapitalize="none"
           value={participationDate}
+          error={
+            participationDate.trim()
+              ? requiredIsoDate(participationDate)
+              : null
+          }
           onChangeText={(t) => {
             setParticipationDate(t.trim());
             setLumpSum(null);
             setPension(null);
           }}
-          style={styles.input}
           placeholder="YYYY-MM-DD"
           placeholderTextColor={colors.border}
         />
@@ -328,26 +348,28 @@ function Field({
   value,
   onChange,
   clear,
+  error,
   styles,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   clear: () => void;
+  error?: string | null;
   styles: ReturnType<typeof makeStyles>;
 }) {
   return (
     <View style={styles.field}>
-      <Text style={styles.fieldLabel}>{label}</Text>
-      <TextInput
+      <TextField
+        label={label}
         accessibilityLabel={label}
         keyboardType="number-pad"
         value={value}
+        error={error}
         onChangeText={(t) => {
           onChange(t.replace(/[^\d]/g, ""));
           clear();
         }}
-        style={styles.input}
       />
     </View>
   );
@@ -357,13 +379,7 @@ function makeStyles({ colors }: ThemeContextValue) {
   return {
     row: { flexDirection: "row", flexWrap: "wrap", gap: space[2] },
     pair: { flexDirection: "row", gap: space[3], marginBottom: space[3] },
-    field: { flex: 1, gap: space[1] },
-    fieldLabel: {
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 12,
-      color: colors.foreground,
-      opacity: 0.7,
-    },
+    field: { flex: 1 },
     chip: {
       minHeight: layout.minTouch,
       paddingHorizontal: space[4],
@@ -378,18 +394,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     chipLabelSelected: { color: colors.white },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
     hint: {
       fontFamily: typography.fontFamily.regular,
       fontSize: 12,

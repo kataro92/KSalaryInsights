@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { View } from "react-native";
 
 import { Button } from "@/src/components/common/Button";
 import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
 import { ResultHero } from "@/src/components/common/ResultHero";
 import { Section } from "@/src/components/common/Section";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
@@ -12,21 +13,11 @@ import type { CasualWithholdingBreakdown } from "@/src/domain/types/otherIncome"
 import { calculateCasualWithholding } from "@/src/engine/otherIncome/casualWithholding";
 import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
+import { requiredNonNegativeMoney } from "@/src/theme/fieldValidation";
+import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
-import { layout, radii, space, typography } from "@/src/theme/tokens";
+import { space } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, "");
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return "";
-  return n.toLocaleString("vi-VN");
-}
 
 type Props = { taxYear: number; asOfDate?: string };
 
@@ -67,18 +58,14 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
         title="Thu nhập vãng lai. Khấu trừ tại nguồn"
         subtitle="Ngưỡng 5 triệu (2026) / 2 triệu (đến 2025) theo năm thuế. Điều kiện miễn tự quyết toán xem ở mục Quyết toán."
       >
-        <TextInput
+        <MoneyField
           accessibilityLabel="Số tiền chi trả vãng lai"
-          keyboardType="number-pad"
           value={amountText}
-          onChangeText={(t) => {
-            const n = parseMoney(t);
-            setAmountText(
-              n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
-            );
+          error={requiredNonNegativeMoney(amountText, "Nhập số tiền hợp lệ.")}
+          onValueChange={(formatted) => {
+            setAmountText(formatted);
             setResult(null);
           }}
-          style={styles.input}
         />
       </Section>
       {error ? (
@@ -119,20 +106,8 @@ export function CasualWithholdingCalculator({ taxYear, asOfDate }: Props) {
   );
 }
 
-function makeStyles({ colors }: ThemeContextValue) {
+function makeStyles(_ctx: ThemeContextValue) {
   return {
     wrap: { gap: space[4] },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
   } satisfies ThemedStyleSheet;
 }

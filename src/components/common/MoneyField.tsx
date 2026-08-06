@@ -10,6 +10,7 @@ type Props = Omit<TextInputProps, "value" | "onChangeText" | "keyboardType"> & {
   value: string;
   onValueChange: (formatted: string, parsed: number | null) => void;
   accessibilityLabel?: string;
+  error?: string | null;
 };
 
 /**
@@ -19,6 +20,7 @@ export function MoneyField({
   label,
   value,
   onValueChange,
+  error,
   style,
   ...rest
 }: Props) {
@@ -26,6 +28,7 @@ export function MoneyField({
     <TextField
       {...rest}
       label={label}
+      error={error}
       keyboardType="number-pad"
       value={value}
       onChangeText={(raw) => {

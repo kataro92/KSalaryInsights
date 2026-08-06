@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, Switch, Text, TextInput, View } from "react-native";
+import { Pressable, Switch, Text, View } from "react-native";
 
 import { EligibilityChecklist } from "@/src/components/benefits/EligibilityChecklist";
 import { Button } from "@/src/components/common/Button";
@@ -9,6 +9,7 @@ import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
 import { MoneyField } from "@/src/components/common/MoneyField";
 import { ResultHero } from "@/src/components/common/ResultHero";
 import { Section } from "@/src/components/common/Section";
+import { TextField } from "@/src/components/common/TextField";
 import { ToolScreen } from "@/src/components/common/ToolScreen";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
@@ -23,6 +24,11 @@ import { calcUnemploymentBenefit } from "@/src/engine/unemploymentBenefit";
 import { usePreferences } from "@/src/hooks/usePreferences";
 import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
+import {
+  requiredIsoDate,
+  requiredNonNegativeInt,
+  requiredPositiveMoney,
+} from "@/src/theme/fieldValidation";
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
@@ -157,15 +163,18 @@ export function UnemploymentCalculatorScreen() {
         title="Tháng đã đóng bảo hiểm thất nghiệp"
         subtitle="Tối thiểu 12 tháng để đủ điều kiện."
       >
-        <TextInput
+        <TextField
           accessibilityLabel="Số tháng đã đóng bảo hiểm thất nghiệp"
           keyboardType="number-pad"
           value={monthsPaid}
+          error={requiredNonNegativeInt(
+            monthsPaid,
+            "Số tháng đóng bảo hiểm thất nghiệp không hợp lệ."
+          )}
           onChangeText={(t) => {
             setMonthsPaid(t.replace(/[^\d]/g, ""));
             setResult(null);
           }}
-          style={styles.input}
         />
       </Section>
 
@@ -176,6 +185,10 @@ export function UnemploymentCalculatorScreen() {
         <MoneyField
           accessibilityLabel="Lương bình quân đóng bảo hiểm thất nghiệp 6 tháng"
           value={salaryText}
+          error={requiredPositiveMoney(
+            salaryText,
+            "Nhập lương bình quân đóng bảo hiểm thất nghiệp 6 tháng lớn hơn 0."
+          )}
           onValueChange={(formatted) => {
             setSalaryText(formatted);
             setResult(null);
@@ -187,15 +200,15 @@ export function UnemploymentCalculatorScreen() {
         title="Ngày cuối đóng"
         subtitle="Chọn ngày để áp đúng lương tối thiểu vùng (ví dụ 15/03/2026 = nửa đầu năm)."
       >
-        <TextInput
+        <TextField
           accessibilityLabel="Ngày cuối đóng bảo hiểm thất nghiệp YYYY-MM-DD"
           autoCapitalize="none"
           value={lastDate}
+          error={requiredIsoDate(lastDate)}
           onChangeText={(t) => {
             setLastDate(t.trim());
             setResult(null);
           }}
-          style={styles.input}
           placeholder="YYYY-MM-DD"
           placeholderTextColor={colors.border}
         />
@@ -306,18 +319,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     chipLabelSelected: { color: colors.white },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
     switchRow: {
       flexDirection: "row",
       alignItems: "center",

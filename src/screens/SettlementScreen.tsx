@@ -52,6 +52,10 @@ import {
   type SettlementScenarioInputs,
 } from "@/src/store/scenarios";
 import { successHaptic } from "@/src/theme/haptics";
+import {
+  requiredIntInRange,
+  requiredPositiveMoney,
+} from "@/src/theme/fieldValidation";
 import { formatMoneyInput, parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
@@ -328,6 +332,10 @@ export function SettlementScreen() {
           <MoneyField
             accessibilityLabel="Lương gross tháng"
             value={monthlyText}
+            error={requiredPositiveMoney(
+              monthlyText,
+              "Nhập lương tháng lớn hơn 0."
+            )}
             onValueChange={(formatted) => {
               setMonthlyText(formatted);
               clearResult();
@@ -338,6 +346,12 @@ export function SettlementScreen() {
             accessibilityLabel="Số tháng làm việc"
             keyboardType="number-pad"
             value={monthsText}
+            error={requiredIntInRange(
+              monthsText,
+              1,
+              12,
+              "Số tháng làm việc phải từ 1 đến 12."
+            )}
             onChangeText={(t) => {
               setMonthsText(t.replace(/[^\d]/g, ""));
               clearResult();

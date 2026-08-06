@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { BenefitBreakdownCard } from "@/src/components/benefits/BenefitBreakdownCard";
 import { Button } from "@/src/components/common/Button";
@@ -7,6 +7,7 @@ import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
 import { MoneyField } from "@/src/components/common/MoneyField";
 import { ResultHero } from "@/src/components/common/ResultHero";
 import { Section } from "@/src/components/common/Section";
+import { TextField } from "@/src/components/common/TextField";
 import { ToolScreen } from "@/src/components/common/ToolScreen";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
@@ -20,6 +21,11 @@ import { calcSeverancePay } from "@/src/engine/severance";
 import { usePreferences } from "@/src/hooks/usePreferences";
 import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
+import {
+  requiredIntInRange,
+  requiredNonNegativeInt,
+  requiredPositiveMoney,
+} from "@/src/theme/fieldValidation";
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
@@ -177,6 +183,7 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Tổng (năm)"
             value={totalYears}
+            error={requiredNonNegativeInt(totalYears)}
             onChange={(v) => {
               setTotalYears(v);
               setResult(null);
@@ -186,6 +193,7 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Tháng lẻ"
             value={totalMonths}
+            error={requiredIntInRange(totalMonths, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
             onChange={(v) => {
               setTotalMonths(v);
               setResult(null);
@@ -197,6 +205,7 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Đã đóng thất nghiệp (năm)"
             value={bhtnYears}
+            error={requiredNonNegativeInt(bhtnYears)}
             onChange={(v) => {
               setBhtnYears(v);
               setResult(null);
@@ -206,6 +215,7 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Tháng lẻ đã đóng thất nghiệp"
             value={bhtnMonths}
+            error={requiredIntInRange(bhtnMonths, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
             onChange={(v) => {
               setBhtnMonths(v);
               setResult(null);
@@ -217,6 +227,7 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Đã chi trả (năm)"
             value={paidYears}
+            error={requiredNonNegativeInt(paidYears)}
             onChange={(v) => {
               setPaidYears(v);
               setResult(null);
@@ -226,6 +237,7 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Tháng lẻ đã trả"
             value={paidMonths}
+            error={requiredIntInRange(paidMonths, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
             onChange={(v) => {
               setPaidMonths(v);
               setResult(null);
@@ -241,6 +253,10 @@ export function SeveranceCalculatorScreen() {
         <MoneyField
           accessibilityLabel="Lương bình quân 6 tháng"
           value={salaryText}
+          error={requiredPositiveMoney(
+            salaryText,
+            "Nhập lương bình quân 6 tháng lớn hơn 0."
+          )}
           onValueChange={(formatted) => {
             setSalaryText(formatted);
             setResult(null);
@@ -284,22 +300,24 @@ function Field({
   label,
   value,
   onChange,
+  error,
   styles,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  error?: string | null;
   styles: ReturnType<typeof makeStyles>;
 }) {
   return (
     <View style={styles.field}>
-      <Text style={styles.fieldLabel}>{label}</Text>
-      <TextInput
+      <TextField
+        label={label}
         accessibilityLabel={label}
         keyboardType="number-pad"
         value={value}
-        onChangeText={onChange}
-        style={styles.input}
+        error={error}
+        onChangeText={(t) => onChange(t.replace(/[^\d]/g, ""))}
       />
     </View>
   );
@@ -309,13 +327,7 @@ function makeStyles({ colors }: ThemeContextValue) {
   return {
     row: { flexDirection: "row", flexWrap: "wrap", gap: space[2] },
     pair: { flexDirection: "row", gap: space[3], marginBottom: space[3] },
-    field: { flex: 1, gap: space[1] },
-    fieldLabel: {
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 12,
-      color: colors.foreground,
-      opacity: 0.7,
-    },
+    field: { flex: 1 },
     chip: {
       minHeight: layout.minTouch,
       paddingHorizontal: space[4],
@@ -330,17 +342,5 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     chipLabelSelected: { color: colors.white },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
   } satisfies ThemedStyleSheet;
 }

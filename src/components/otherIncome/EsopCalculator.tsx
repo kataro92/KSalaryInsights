@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Switch, Text, TextInput, View } from "react-native";
+import { Switch, Text, View } from "react-native";
 
 import { Button } from "@/src/components/common/Button";
 import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
 import { ResultHero } from "@/src/components/common/ResultHero";
 import { Section } from "@/src/components/common/Section";
+import { TextField } from "@/src/components/common/TextField";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
@@ -12,22 +14,17 @@ import type { EsopBreakdown } from "@/src/domain/types/otherIncome";
 import { calculateEsop } from "@/src/engine/otherIncome/esop";
 import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
+import {
+  optionalNonNegativeMoney,
+  requiredIsoDate,
+  requiredNonNegativeInt,
+  requiredNonNegativeMoney,
+} from "@/src/theme/fieldValidation";
+import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
-import { layout, radii, space, typography } from "@/src/theme/tokens";
+import { layout, space, typography } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, "");
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return "";
-  return n.toLocaleString("vi-VN");
-}
 
 type Props = { taxYear: number };
 
@@ -100,87 +97,71 @@ export function EsopCalculator({ taxYear }: Props) {
           />
         </View>
         {useBookCost ? (
-          <>
-            <Text style={styles.fieldLabel}>Chi phí ghi sổ tại trao</Text>
-            <TextInput
-              accessibilityLabel="Chi phí ghi sổ ESOP"
-              keyboardType="number-pad"
-              value={bookText}
-              onChangeText={(t) => {
-                const n = parseMoney(t);
-                setBookText(
-                  n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
-                );
-                setResult(null);
-              }}
-              style={styles.input}
-            />
-          </>
+          <MoneyField
+            label="Chi phí ghi sổ tại trao"
+            accessibilityLabel="Chi phí ghi sổ ESOP"
+            value={bookText}
+            error={optionalNonNegativeMoney(bookText)}
+            onValueChange={(formatted) => {
+              setBookText(formatted);
+              setResult(null);
+            }}
+          />
         ) : (
           <>
-            <Text style={styles.fieldLabel}>
-              Số cổ phiếu / Mệnh giá / Đã trả
-            </Text>
-            <TextInput
+            <TextField
+              label="Số cổ phiếu"
               accessibilityLabel="Số cổ phiếu"
               keyboardType="number-pad"
               value={sharesText}
+              error={requiredNonNegativeInt(sharesText, "Nhập số cổ phiếu.")}
               onChangeText={(t) => {
                 setSharesText(t.replace(/[^\d]/g, ""));
                 setResult(null);
               }}
-              style={styles.input}
             />
-            <TextInput
+            <MoneyField
+              label="Mệnh giá"
               accessibilityLabel="Mệnh giá"
-              keyboardType="number-pad"
               value={parText}
-              onChangeText={(t) => {
-                const n = parseMoney(t);
-                setParText(
-                  n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
-                );
+              error={optionalNonNegativeMoney(parText)}
+              onValueChange={(formatted) => {
+                setParText(formatted);
                 setResult(null);
               }}
-              style={styles.input}
             />
-            <TextInput
+            <MoneyField
+              label="Số đã trả"
               accessibilityLabel="Số đã trả"
-              keyboardType="number-pad"
               value={paidText}
-              onChangeText={(t) => {
-                const n = parseMoney(t);
-                setPaidText(
-                  n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
-                );
+              error={optionalNonNegativeMoney(paidText)}
+              onValueChange={(formatted) => {
+                setPaidText(formatted);
                 setResult(null);
               }}
-              style={styles.input}
             />
           </>
         )}
-        <Text style={styles.fieldLabel}>Giá bán</Text>
-        <TextInput
+        <MoneyField
+          label="Giá bán"
           accessibilityLabel="Giá bán ESOP"
-          keyboardType="number-pad"
           value={saleText}
-          onChangeText={(t) => {
-            const n = parseMoney(t);
-            setSaleText(n == null ? t.replace(/[^\d.]/g, "") : formatInput(n));
+          error={requiredNonNegativeMoney(saleText, "Nhập giá bán hợp lệ.")}
+          onValueChange={(formatted) => {
+            setSaleText(formatted);
             setResult(null);
           }}
-          style={styles.input}
         />
-        <Text style={styles.fieldLabel}>Ngày (YYYY-MM-DD)</Text>
-        <TextInput
+        <TextField
+          label="Ngày (YYYY-MM-DD)"
           accessibilityLabel="Ngày ESOP"
           autoCapitalize="none"
           value={asOfDate}
+          error={requiredIsoDate(asOfDate)}
           onChangeText={(t) => {
             setAsOfDate(t.trim());
             setResult(null);
           }}
-          style={styles.input}
         />
       </Section>
       {error ? (
@@ -245,27 +226,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 14,
       color: colors.foreground,
       paddingRight: space[2],
-    },
-    fieldLabel: {
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 12,
-      color: colors.foreground,
-      opacity: 0.7,
-      marginBottom: space[1],
-      marginTop: space[2],
-    },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-      marginBottom: space[2],
     },
   } satisfies ThemedStyleSheet;
 }

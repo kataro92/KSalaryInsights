@@ -7,7 +7,6 @@ import {
   Share,
   Switch,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -29,6 +28,7 @@ import { ScreenShell } from "@/src/components/common/ScreenShell";
 import { SeasonalBanner } from "@/src/components/common/SeasonalBanner";
 import { Section } from "@/src/components/common/Section";
 import { StickyActionBar } from "@/src/components/common/StickyActionBar";
+import { TextField } from "@/src/components/common/TextField";
 import { SalaryBreakdownCard } from "@/src/components/breakdown/SalaryBreakdownCard";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { DependentCountInput } from "@/src/components/inputs/DependentCountInput";
@@ -142,6 +142,12 @@ export function CalculatorScreen() {
     [taxYear, month]
   );
   const seasonalHint = month === 12 || month === 1;
+
+  const amountParsed = parseMoney(amountText);
+  const amountFieldError =
+    !amountText.trim() || amountParsed == null || amountParsed <= 0
+      ? "Nhập số tiền lớn hơn 0."
+      : null;
 
   const clearResult = () => {
     setBreakdown(null);
@@ -434,6 +440,7 @@ export function CalculatorScreen() {
                 : "Nhập net mong muốn"
             }
             value={amountText}
+            error={amountFieldError}
             onValueChange={(formatted) => {
               setAmountText(formatted);
               clearResult();
@@ -475,7 +482,7 @@ export function CalculatorScreen() {
                 accessibilityLabel="Nhập thưởng tháng"
                 value={bonusText}
                 onValueChange={(formatted) => {
-                  setBonusText(formatted || "0");
+                  setBonusText(formatted);
                   clearResult();
                 }}
               />
@@ -514,8 +521,8 @@ export function CalculatorScreen() {
                   trackColor={{ false: colors.border, true: colors.primary }}
                 />
               </View>
-              <Text style={styles.fieldLabel}>Số giờ làm thêm</Text>
-              <TextInput
+              <TextField
+                label="Số giờ làm thêm"
                 accessibilityLabel="Số giờ làm thêm"
                 keyboardType="decimal-pad"
                 value={otHoursText}
@@ -523,7 +530,6 @@ export function CalculatorScreen() {
                   setOtHoursText(t.replace(/[^\d.]/g, ""));
                   clearResult();
                 }}
-                style={styles.hoursInput}
               />
             </Section>
           </CollapseSection>
@@ -775,24 +781,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontFamily: typography.fontFamily.regular,
       fontSize: typography.scale.caption.fontSize,
       color: colors.foregroundMuted,
-    },
-    fieldLabel: {
-      fontFamily: typography.fontFamily.medium,
-      fontSize: typography.scale.caption.fontSize,
-      color: colors.foregroundMuted,
-      marginTop: space[3],
-      marginBottom: space[1],
-    },
-    hoursInput: {
-      minHeight: layout.minTouch,
-      borderWidth: 2,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      backgroundColor: colors.white,
     },
     switchRow: {
       flexDirection: "row",

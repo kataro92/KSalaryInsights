@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
 import { ChipRow } from "@/src/components/common/ChipRow";
@@ -7,7 +8,8 @@ import { MoneyField } from "@/src/components/common/MoneyField";
 import { InsuranceBasePresetPicker } from "@/src/components/inputs/InsuranceBasePresetPicker";
 import type { OfferSideInput, OfferSideResult } from "@/src/domain/types/offerCompare";
 import type { CalculationMode } from "@/src/domain/types/salary";
-import { formatMoneyInput, formatVnd, parseMoney } from "@/src/theme/money";
+import { requiredPositiveMoney } from "@/src/theme/fieldValidation";
+import { formatMoneyInput, formatVnd } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
@@ -21,10 +23,21 @@ type Props = {
 
 export function OfferColumn({ title, value, onChange, result }: Props) {
   const styles = useThemedStyles(makeStyles);
+  const [amountText, setAmountText] = useState(() =>
+    formatMoneyInput(value.amount > 0 ? value.amount : null)
+  );
+
+  useEffect(() => {
+    if (value.amount > 0) {
+      setAmountText(formatMoneyInput(value.amount));
+    }
+  }, [value.amount]);
 
   const setMode = (mode: CalculationMode) => {
     onChange({ ...value, mode });
   };
+
+  const fieldError = requiredPositiveMoney(amountText);
 
   return (
     <ColorBlock tone="muted" accessibilityLabel={title}>
@@ -48,11 +61,15 @@ export function OfferColumn({ title, value, onChange, result }: Props) {
       </Text>
       <MoneyField
         accessibilityLabel={`${title} số tiền`}
-        value={formatMoneyInput(value.amount)}
-        onValueChange={(formatted) => {
-          const n = parseMoney(formatted);
-          if (n == null || n <= 0) return;
-          onChange({ ...value, amount: n });
+        value={amountText}
+        error={fieldError}
+        onValueChange={(formatted, parsed) => {
+          setAmountText(formatted);
+          if (parsed == null || parsed <= 0) {
+            onChange({ ...value, amount: 0 });
+            return;
+          }
+          onChange({ ...value, amount: parsed });
         }}
       />
       <InsuranceBasePresetPicker

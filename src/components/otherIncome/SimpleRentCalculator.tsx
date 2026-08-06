@@ -15,6 +15,7 @@ import { calculateRent } from "@/src/engine/otherIncome/rent";
 import { annualFromMonthly } from "@/src/engine/otherIncome/simpleEstimate";
 import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
+import { requiredNonNegativeMoney } from "@/src/theme/fieldValidation";
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
@@ -63,8 +64,12 @@ export function SimpleRentCalculator({ taxYear }: Props) {
           label="Tiền thuê / tháng"
           accessibilityLabel="Tiền thuê mỗi tháng"
           value={monthlyText}
+          error={requiredNonNegativeMoney(
+            monthlyText,
+            "Nhập tiền thuê tháng hợp lệ."
+          )}
           onValueChange={(formatted) => {
-            setMonthlyText(formatted || "0");
+            setMonthlyText(formatted);
             clearResult();
           }}
         />

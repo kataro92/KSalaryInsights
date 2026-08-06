@@ -1,9 +1,11 @@
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
+import { MoneyField } from "@/src/components/common/MoneyField";
 import {
   getInflationAdjustment,
   listInflationAdjustmentYears,
 } from "@/src/engine/rulesetLoader";
+import { requiredPositiveMoney } from "@/src/theme/fieldValidation";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
@@ -14,18 +16,6 @@ type Props = {
   onMbqtlChange: (text: string) => void;
   onTableYearChange: (year: number) => void;
 };
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, "");
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return "";
-  return n.toLocaleString("vi-VN");
-}
 
 export function AdjustedSalaryInput({
   mbqtlText,
@@ -39,15 +29,16 @@ export function AdjustedSalaryInput({
 
   return (
     <View style={styles.wrap}>
-      <TextInput
+      <MoneyField
         accessibilityLabel="Lương bình quân đã điều chỉnh"
-        keyboardType="number-pad"
         value={mbqtlText}
-        onChangeText={(t) => {
-          const n = parseMoney(t);
-          onMbqtlChange(n == null ? t.replace(/[^\d.]/g, "") : formatInput(n));
+        error={requiredPositiveMoney(
+          mbqtlText,
+          "Nhập lương bình quân đã điều chỉnh lớn hơn 0."
+        )}
+        onValueChange={(formatted) => {
+          onMbqtlChange(formatted);
         }}
-        style={styles.input}
       />
       <Text style={styles.hint}>
         Tham chiếu bảng {inflation.table_year} ({inflation.legal_source}). Hệ số
@@ -95,18 +86,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     chipLabelSelected: { color: colors.white },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
     hint: {
       fontFamily: typography.fontFamily.regular,
       fontSize: 12,

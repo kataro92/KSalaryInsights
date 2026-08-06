@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { Button } from "@/src/components/common/Button";
 import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
 import { ResultHero } from "@/src/components/common/ResultHero";
 import { Section } from "@/src/components/common/Section";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
@@ -16,21 +17,14 @@ import { calculateHkd } from "@/src/engine/otherIncome/hkd";
 import { getRuleset } from "@/src/engine/rulesetLoader";
 import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
+import {
+  optionalNonNegativeMoney,
+  requiredNonNegativeMoney,
+} from "@/src/theme/fieldValidation";
+import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, "");
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return "";
-  return n.toLocaleString("vi-VN");
-}
 
 type Props = { taxYear: number };
 
@@ -101,33 +95,25 @@ export function HkdCalculator({ taxYear }: Props) {
             );
           })}
         </View>
-        <Text style={styles.fieldLabel}>Doanh thu năm</Text>
-        <TextInput
+        <MoneyField
+          label="Doanh thu năm"
           accessibilityLabel="Doanh thu hộ kinh doanh năm"
-          keyboardType="number-pad"
           value={revenueText}
-          onChangeText={(t) => {
-            const n = parseMoney(t);
-            setRevenueText(
-              n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
-            );
+          error={requiredNonNegativeMoney(revenueText, "Nhập doanh thu hợp lệ.")}
+          onValueChange={(formatted) => {
+            setRevenueText(formatted);
             setResult(null);
           }}
-          style={styles.input}
         />
-        <Text style={styles.fieldLabel}>
-          Chi phí (tuỳ chọn. Gợi ý PP thu nhập)
-        </Text>
-        <TextInput
+        <MoneyField
+          label="Chi phí (tuỳ chọn. Gợi ý PP thu nhập)"
           accessibilityLabel="Chi phí hộ kinh doanh"
-          keyboardType="number-pad"
           value={costText}
-          onChangeText={(t) => {
-            const n = parseMoney(t);
-            setCostText(n == null ? t.replace(/[^\d.]/g, "") : formatInput(n));
+          error={optionalNonNegativeMoney(costText)}
+          onValueChange={(formatted) => {
+            setCostText(formatted);
             setResult(null);
           }}
-          style={styles.input}
         />
       </Section>
       {error ? (
@@ -205,25 +191,5 @@ function makeStyles({ colors }: ThemeContextValue) {
       color: colors.foreground,
     },
     chipLabelSelected: { color: colors.white },
-    fieldLabel: {
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 12,
-      color: colors.foreground,
-      opacity: 0.7,
-      marginBottom: space[1],
-      marginTop: space[2],
-    },
-    input: {
-      minHeight: layout.minTouch,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radii.md,
-      paddingHorizontal: space[3],
-      fontFamily: typography.fontFamily.medium,
-      fontSize: 16,
-      color: colors.foreground,
-      fontVariant: ["tabular-nums"],
-      backgroundColor: colors.white,
-    },
   } satisfies ThemedStyleSheet;
 }

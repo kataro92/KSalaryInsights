@@ -3,9 +3,9 @@ import { Switch, Text, View } from "react-native";
 
 import { Button } from "@/src/components/common/Button";
 import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
+import { MoneyField } from "@/src/components/common/MoneyField";
 import { ResultHero } from "@/src/components/common/ResultHero";
 import { Section } from "@/src/components/common/Section";
-import { TextField } from "@/src/components/common/TextField";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { OtherIncomeBreakdownCard } from "@/src/components/otherIncome/OtherIncomeBreakdownCard";
@@ -14,22 +14,12 @@ import type { RentBreakdown } from "@/src/domain/types/otherIncome";
 import { calculateRent } from "@/src/engine/otherIncome/rent";
 import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
+import { requiredNonNegativeMoney } from "@/src/theme/fieldValidation";
+import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, space, typography } from "@/src/theme/tokens";
 import { useThemedStyles } from "@/src/theme/useThemedStyles";
-
-function parseMoney(raw: string): number | null {
-  const digits = raw.replace(/[^\d]/g, "");
-  if (!digits) return null;
-  const n = Number(digits);
-  return Number.isFinite(n) ? n : null;
-}
-
-function formatInput(n: number | null): string {
-  if (n == null || !Number.isFinite(n)) return "";
-  return n.toLocaleString("vi-VN");
-}
 
 type Props = { taxYear: number };
 
@@ -78,16 +68,13 @@ export function RentCalculator({ taxYear }: Props) {
             trackColor={{ false: colors.border, true: colors.secondary }}
           />
         </View>
-        <TextField
+        <MoneyField
           label={monthlyMode ? "Doanh thu tháng" : "Doanh thu năm"}
           accessibilityLabel="Doanh thu cho thuê"
-          keyboardType="number-pad"
           value={amountText}
-          onChangeText={(t) => {
-            const n = parseMoney(t);
-            setAmountText(
-              n == null ? t.replace(/[^\d.]/g, "") : formatInput(n)
-            );
+          error={requiredNonNegativeMoney(amountText, "Nhập doanh thu hợp lệ.")}
+          onValueChange={(formatted) => {
+            setAmountText(formatted);
             setResult(null);
           }}
         />
@@ -129,11 +116,6 @@ export function RentCalculator({ taxYear }: Props) {
           />
           <DisclaimerFooter legalSources={result.legalSources} />
         </View>
-      ) : !error ? (
-        <EmptyErrorState
-          title="Chưa có thuế cho thuê ước tính"
-          body="Nhập doanh thu, rồi bấm Tính cho thuê."
-        />
       ) : null}
     </View>
   );
@@ -146,16 +128,15 @@ function makeStyles({ colors }: ThemeContextValue) {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      marginBottom: space[2],
       minHeight: layout.minTouch,
+      marginBottom: space[2],
     },
     switchLabel: {
       flex: 1,
-      flexShrink: 1,
       fontFamily: typography.fontFamily.medium,
-      fontSize: 14,
+      fontSize: 15,
       color: colors.foreground,
-      paddingRight: space[2],
+      paddingRight: space[3],
     },
   } as const;
 }

@@ -20,7 +20,11 @@ import {
   mapSalaryLine,
   mapSecuritiesLine,
 } from "@/src/engine/multiSourceMappers";
-import { formatMoneyInput, parseMoney } from "@/src/theme/money";
+import {
+  optionalNonNegativeMoney,
+  requiredNonNegativeMoney,
+} from "@/src/theme/fieldValidation";
+import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
 import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
@@ -153,7 +157,8 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
       <MoneyField
         accessibilityLabel={amountHint}
         value={amountText}
-        onValueChange={setAmountText}
+        error={requiredNonNegativeMoney(amountText)}
+        onValueChange={(formatted) => setAmountText(formatted)}
       />
 
       {kind === "salary" ? (
@@ -162,7 +167,8 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
           <MoneyField
             accessibilityLabel="Thuế thu nhập cá nhân năm ước tính"
             value={taxText}
-            onValueChange={setTaxText}
+            error={optionalNonNegativeMoney(taxText)}
+            onValueChange={(formatted) => setTaxText(formatted)}
           />
         </>
       ) : null}
@@ -171,7 +177,8 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
       <MoneyField
         accessibilityLabel="Thuế đã nộp"
         value={withheldText}
-        onValueChange={setWithheldText}
+        error={optionalNonNegativeMoney(withheldText)}
+        onValueChange={(formatted) => setWithheldText(formatted)}
       />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
