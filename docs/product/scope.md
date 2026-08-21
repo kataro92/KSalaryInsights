@@ -54,6 +54,7 @@ Không thay thế VssID, cơ quan thuế, hay tư vấn chuyên nghiệp.
 | Lịch nghĩa vụ thuế | Nhắc hạn theo loại nguồn (P1) |
 | OT đêm | Shipped. toggle trên Calculator (Đ.98 / NĐ 145: 200/270/390%) |
 | F014 mở rộng | Shipped. Quyết toán lưu/tải/chia sẻ; banner mùa vụ phân loại kind |
+| First-run UX (aha + situation IA + habit) | Open. [issue-first-run-ux.md](./issue-first-run-ux.md). Do not restyle tokens. |
 | Store capture | Docs + listing copy sẵn; **6 PNG** chờ capture thiết bị → [`docs/store/`](./store/) |
 | Design QA sign-off | Checklist + `npm run qa:design`; phần visual còn chờ device |
 | Info tips trên số liệu | Shipped. icon info + modal nguồn pháp lý |
