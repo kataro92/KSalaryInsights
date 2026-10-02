@@ -60,5 +60,13 @@ Lan nhập thu nhập năm và thuế đã khấu trừ, xem chênh lệch.
 
 ## Assumptions
 
-- Không xử lý giảm trừ từ thiện/hưu trí tự nguyện ở bản đầu.
+- Từ 02/10/2026 hỗ trợ từ thiện đủ điều kiện, BH bổ sung/hưu trí/nhân thọ (3 triệu/tháng), y tế 23 triệu/năm, giáo dục 24 triệu/năm; tiền ăn 1,2 triệu chỉ từ 01/07/2026, và phụ cấp miễn thuế. NPT có khoảng tháng đăng ký. Trường cũ mặc định 0 / 12 tháng.
 - Không tính cá nhân không cư trú.
+
+## Extension 02/10/2026
+
+- FR-010: Khi tự quyết toán kỳ 2026, nhập chi y tế/giáo dục và giới hạn theo ruleset; không thu thập hồ sơ. Hiển thị điều kiện chứng từ NĐ 253 Đ.49 và breakdown số thực trừ.
+- FR-011: Bảo hiểm bổ sung giới hạn từng tháng × số tháng đóng (0–12); tiền ăn giới hạn tháng × số tháng đủ điều kiện từ tháng 7 (0–6 trong 2026). Không áp mức mới cho năm 2025.
+- FR-012: Mỗi NPT có startMonth/endMonth 1–12; GTGC NPT bằng tổng tháng hợp lệ, giữ trường cũ tương đương 1–12.
+- FR-013: Lưu/nạp các trường mới có kiểm tra; tổng hợp đa nguồn tính lại thuế lương với GTGC và y tế/giáo dục một lần nếu người dùng bật. Thuế các loại khác riêng biệt.
+- Acceptance: TC-RELIEF-2026-01/02 và TC-HKD-INCOME-01 trong domain; kiểm thử `improvementPlan.test.ts`. Các TC-QT cũ giữ nguyên khi khoản mới bằng 0.

@@ -34,6 +34,8 @@ App hữu ích khi bạn gặp các tình huống sau:
 
 ## Ảnh chụp màn hình
 
+Đợt cập nhật 02/10/2026 bổ sung giảm TNCN kinh doanh 2026–2027, các khoản miễn/giảm trừ mới, NPT theo tháng và cải tiến UI. Xem [báo cáo triển khai](docs/product/improvement-implementation-report.md), [QA web](docs/screenshots/2026-10-02/README.md) và [QA Android LDPlayer](docs/screenshots/2026-10-02/android/README.md). QA LDPlayer chạy qua Expo Go; bàn phím, thiết bị thật/iOS và APK release còn chờ.
+
 Gallery theo **câu chuyện sản phẩm** (có kết quả ước, không chỉ form trống). Chụp viewport iPhone + Simulator; overlay Dev Tools đã loại bỏ khi capture native.
 
 ### 1 · Lương Gross → Net (tách khoản trừ)

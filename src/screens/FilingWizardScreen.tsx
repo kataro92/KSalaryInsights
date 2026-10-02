@@ -15,7 +15,10 @@ import { evaluateFilingWizard } from "@/src/engine/filingWizard";
 import { successHaptic } from "@/src/theme/haptics";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 function paramString(v: string | string[] | undefined): string {
   if (Array.isArray(v)) return v[0] ?? "";
@@ -41,7 +44,7 @@ export function FilingWizardScreen() {
             forceSelfFile: forceSelfFile || answers.hasOtherIncome,
           })
         : null,
-    [submitted, answers, year, forceSelfFile]
+    [submitted, answers, year, forceSelfFile],
   );
 
   const toggle = (key: keyof FilingWizardAnswers) => {
@@ -73,7 +76,10 @@ export function FilingWizardScreen() {
         <Section title="Điều kiện">
           {(
             [
-              ["hasSingleEmployerFullYear", "Chỉ một công ty trả lương trong cả năm?"],
+              [
+                "hasSingleEmployerFullYear",
+                "Chỉ một công ty trả lương trong cả năm?",
+              ],
               ["hasOtherIncome", "Có thu nhập khác ngoài lương (vãng lai…)?"],
               [
                 "employerOffersAuthorization",
@@ -168,7 +174,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 14,
       color: colors.foreground,
     },
-    qTextOn: { color: colors.white },
+    qTextOn: { color: colors.onPrimary },
     conclusion: {
       fontFamily: typography.fontFamily.extraBold,
       fontSize: 20,

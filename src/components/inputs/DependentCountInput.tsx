@@ -8,7 +8,10 @@ import {
 } from "@/src/domain/constants/dependents";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Props = {
   value: number;
@@ -90,7 +93,7 @@ function makeStyles({ colors }: ThemeContextValue) {
     btnLabel: {
       fontFamily: typography.fontFamily.bold,
       fontSize: 22,
-      color: colors.white,
+      color: colors.onPrimary,
     },
     value: {
       minWidth: 48,

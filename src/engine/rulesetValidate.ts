@@ -101,12 +101,101 @@ export function validateRuleset(raw: unknown): Ruleset | null {
     if (!isRate(b.rate)) return null;
   }
 
-  // Accept extra optional sections as-is (maternity, etc.). Cast after core checks.
+  if (o.salary_deductions != null) {
+    if (typeof o.salary_deductions !== "object") return null;
+    const d = o.salary_deductions as Record<string, unknown>;
+    for (const key of [
+      "medical_annual_cap",
+      "education_annual_cap",
+      "voluntary_insurance_monthly_cap",
+      "meal_monthly_cap",
+    ]) {
+      if (!isFiniteNumber(d[key]) || d[key] < 0) return null;
+    }
+    if (!isDateLike(d.meal_effective_from) || o.tax_year < 2026) return null;
+  }
+  if (o.business_tax_reduction != null) {
+    if (typeof o.business_tax_reduction !== "object") return null;
+    const d = o.business_tax_reduction as Record<string, unknown>;
+    if (
+      !isRate(d.rate) ||
+      !isFiniteNumber(d.revenue_cap) ||
+      d.revenue_cap <= 0 ||
+      typeof d.includes_rent !== "boolean"
+    )
+      return null;
+    if (
+      !Array.isArray(d.tax_years) ||
+      d.tax_years.length === 0 ||
+      !d.tax_years.every((y) => Number.isInteger(y) && y >= 2026 && y <= 2100)
+    )
+      return null;
+    if (!d.tax_years.includes(o.tax_year)) return null;
+  }
+  if (o.other_income != null) {
+    if (typeof o.other_income !== "object") return null;
+    const other = o.other_income as Record<string, unknown>;
+    for (const key of ["rent", "hkd"]) {
+      if (!other[key] || typeof other[key] !== "object") return null;
+      const p = other[key] as Record<string, unknown>;
+      if (!isFiniteNumber(p.exemption_threshold) || p.exemption_threshold < 0)
+        return null;
+      if (
+        p.pit_on_full_revenue != null &&
+        typeof p.pit_on_full_revenue !== "boolean"
+      )
+        return null;
+    }
+    const rent = other.rent as Record<string, unknown>;
+    if (!isRate(rent.vat_rate) || !isRate(rent.pit_rate_on_excess)) return null;
+    const hkd = other.hkd as Record<string, unknown>;
+    if (
+      !isFiniteNumber(hkd.income_method_threshold) ||
+      hkd.income_method_threshold <= 0 ||
+      !isRate(hkd.income_method_rate)
+    )
+      return null;
+    for (const key of [
+      "income_method_middle_rate",
+      "income_method_upper_rate",
+    ]) {
+      if (hkd[key] != null && !isRate(hkd[key])) return null;
+    }
+    if (
+      hkd.income_method_upper_threshold != null &&
+      (!isFiniteNumber(hkd.income_method_upper_threshold) ||
+        hkd.income_method_upper_threshold <= hkd.income_method_threshold)
+    )
+      return null;
+    if (
+      o.tax_year >= 2026 &&
+      (!isRate(hkd.income_method_middle_rate) ||
+        !isRate(hkd.income_method_upper_rate) ||
+        !isFiniteNumber(hkd.income_method_upper_threshold))
+    )
+      return null;
+    if (!Array.isArray(hkd.industry_rates) || hkd.industry_rates.length === 0)
+      return null;
+    const ids = new Set<string>();
+    for (const raw of hkd.industry_rates) {
+      if (!raw || typeof raw !== "object") return null;
+      const row = raw as Record<string, unknown>;
+      if (
+        !isNonEmptyString(row.id) ||
+        ids.has(row.id) ||
+        !isNonEmptyString(row.label) ||
+        !isRate(row.vat_rate) ||
+        !isRate(row.pit_rate)
+      )
+        return null;
+      ids.add(row.id);
+    }
+  }
   return o as unknown as Ruleset;
 }
 
 export function validateInflationTable(
-  raw: unknown
+  raw: unknown,
 ): InflationAdjustmentTable | null {
   if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;

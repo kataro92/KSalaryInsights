@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { Pressable, Text, type PressableProps } from 'react-native';
+import { useState } from "react";
+import { Pressable, Text, type PressableProps } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import type { ThemeContextValue } from '@/src/theme/ThemeProvider';
-import { layout, motion, radii, space, typography } from '@/src/theme/tokens';
-import { useThemedStyles } from '@/src/theme/useThemedStyles';
+import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
+import { layout, motion, radii, space, typography } from "@/src/theme/tokens";
+import { useThemedStyles } from "@/src/theme/useThemedStyles";
 
-type Variant = 'primary' | 'secondary' | 'outline';
+type Variant = "primary" | "secondary" | "outline";
 
 type Props = PressableProps & {
   label: string;
@@ -19,7 +19,7 @@ type Props = PressableProps & {
 
 export function Button({
   label,
-  variant = 'primary',
+  variant = "primary",
   disabled,
   onPressIn,
   onPressOut,
@@ -49,18 +49,27 @@ export function Button({
         scale.value = withTiming(1, { duration: motion.interactionMs });
         onPressOut?.(e);
       }}
-      style={typeof style === 'function' ? undefined : style}
+      style={typeof style === "function" ? undefined : style}
       {...rest}
     >
       <Animated.View
         style={[
           styles.base,
-          variant === 'primary' && styles.primary,
-          variant === 'secondary' && styles.secondary,
-          variant === 'outline' && styles.outline,
-          pressed && !disabled && variant === 'primary' && styles.primaryPressed,
-          pressed && !disabled && variant === 'secondary' && styles.secondaryPressed,
-          pressed && !disabled && variant === 'outline' && styles.outlinePressed,
+          variant === "primary" && styles.primary,
+          variant === "secondary" && styles.secondary,
+          variant === "outline" && styles.outline,
+          pressed &&
+            !disabled &&
+            variant === "primary" &&
+            styles.primaryPressed,
+          pressed &&
+            !disabled &&
+            variant === "secondary" &&
+            styles.secondaryPressed,
+          pressed &&
+            !disabled &&
+            variant === "outline" &&
+            styles.outlinePressed,
           disabled && styles.disabled,
           animatedStyle,
         ]}
@@ -68,10 +77,13 @@ export function Button({
         <Text
           style={[
             styles.label,
-            variant === 'primary' && styles.labelOnPrimary,
-            variant === 'secondary' && styles.labelOnSecondary,
-            variant === 'outline' && styles.labelOutline,
-            pressed && !disabled && variant === 'outline' && styles.labelOnPrimary,
+            variant === "primary" && styles.labelOnPrimary,
+            variant === "secondary" && styles.labelOnSecondary,
+            variant === "outline" && styles.labelOutline,
+            pressed &&
+              !disabled &&
+              variant === "outline" &&
+              styles.labelOnPrimary,
           ]}
         >
           {label}
@@ -85,10 +97,11 @@ function makeStyles({ colors }: ThemeContextValue) {
   return {
     base: {
       minHeight: layout.minTouch + 12,
-      paddingHorizontal: space[6],
+      paddingHorizontal: space[4],
+      paddingVertical: space[3],
       borderRadius: radii.md,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     primary: {
       backgroundColor: colors.primary,
@@ -103,7 +116,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       backgroundColor: colors.mutedPressed,
     },
     outline: {
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       borderWidth: 4,
       borderColor: colors.primary,
     },
@@ -117,10 +130,10 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontFamily: typography.fontFamily.semiBold,
       fontSize: 16,
       letterSpacing: 0.6,
-      textTransform: 'uppercase',
+      textAlign: "center",
     },
     labelOnPrimary: {
-      color: colors.white,
+      color: colors.onPrimary,
     },
     labelOnSecondary: {
       color: colors.foreground,

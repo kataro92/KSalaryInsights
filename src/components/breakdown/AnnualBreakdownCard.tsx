@@ -7,7 +7,10 @@ import { useI18n } from "@/src/i18n/useI18n";
 import type { AnnualSettlementBreakdown } from "@/src/domain/types/settlement";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 function formatVnd(n: number): string {
   return `${n.toLocaleString("vi-VN")} ₫`;
@@ -72,6 +75,32 @@ export function AnnualBreakdownCard({ breakdown, title }: Props) {
         value={`− ${formatVnd(breakdown.dependentReliefYear)}`}
         tipId="salary.dependentRelief"
       />
+      {breakdown.exemptIncomeYear ? (
+        <Row
+          styles={styles}
+          label="Tiền ăn / phụ cấp miễn thuế"
+          value={`− ${formatVnd(breakdown.exemptIncomeYear)}`}
+        />
+      ) : null}
+      {breakdown.additionalReliefYear
+        ? Object.entries(breakdown.additionalReliefYear).map(([key, amount]) =>
+            amount > 0 ? (
+              <Row
+                key={key}
+                styles={styles}
+                label={
+                  {
+                    medical: "Giảm trừ y tế",
+                    education: "Giảm trừ giáo dục",
+                    charity: "Từ thiện / nhân đạo",
+                    voluntaryInsurance: "Bảo hiểm bổ sung",
+                  }[key] ?? key
+                }
+                value={`− ${formatVnd(amount)}`}
+              />
+            ) : null,
+          )
+        : null}
       <Row
         styles={styles}
         label={t("annual.reliefTotal")}

@@ -42,7 +42,11 @@ export function ChoiceChip({
   const selectedBg = tone === "secondary" ? colors.secondary : colors.primary;
   const scale = useSharedValue(1);
   const [pressed, setPressed] = useState(false);
-  const labelColor = selected ? colors.white : colors.foreground;
+  const labelColor = selected
+    ? tone === "secondary"
+      ? colors.onSecondary
+      : colors.onPrimary
+    : colors.foreground;
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -86,7 +90,10 @@ export function ChoiceChip({
           />
         ) : null}
         <Text
-          style={[styles.label, selected && styles.labelSelected]}
+          style={[
+            styles.label,
+            selected && [styles.labelSelected, { color: labelColor }],
+          ]}
           numberOfLines={1}
           adjustsFontSizeToFit
           minimumFontScale={0.8}
@@ -120,7 +127,7 @@ function makeStyles({ colors }: ThemeContextValue) {
     leading: {
       flexShrink: 0,
     },
-    pressedOpacity: { opacity: 0.92 },
+    pressedOpacity: { borderWidth: 1, borderColor: colors.foreground },
     disabled: { opacity: 0.5 },
     label: {
       // Do not flex-shrink the text: that truncated years to "20…".
@@ -131,7 +138,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       textAlign: "center",
     },
     labelSelected: {
-      color: colors.white,
+      color: colors.onPrimary,
       fontFamily: typography.fontFamily.semiBold,
     },
   } as const;

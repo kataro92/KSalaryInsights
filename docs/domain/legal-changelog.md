@@ -6,6 +6,10 @@ Ghi nhận thay đổi ảnh hưởng công thức/tham số. Mỗi dòng MUST c
 
 | Ngày hiệu lực | Thay đổi | Nguồn | Domain ảnh hưởng |
 |---------------|----------|-------|------------------|
+| 2026-08-24, áp kỳ 2026-2027 | Giảm 30% TNCN thu nhập kinh doanh cá nhân cư trú, tổng doanh thu năm ≤10 tỷ; gồm cho thuê BĐS; GTGT không giảm | NQ 43/2026/QH16 Đ.1 k1, Đ.2; Luật 109 Đ.7 k4; NĐ 68 Đ.4 k4 | thu-nhap-khac |
+| Kỳ thuế 2026 | Y tế tối đa 23 triệu/năm, giáo dục 24 triệu/năm khi tự quyết toán; bảo hiểm hưu trí/nhân thọ tổng 3 triệu/tháng | NĐ 253/2026 Đ.46, 49, 69 k1a | thue-tncn |
+| 2026-07-01 | Tiền ăn bằng tiền trong Gross được miễn tối đa 1,2 triệu/tháng | NĐ 253/2026 Đ.8 k2g, Đ.69 k1b | thue-tncn |
+| 2026-01-01 | NLĐ đóng BHTN 1%, chỉ bổ sung citation, không đổi tỷ lệ | NĐ 374/2025 Đ.4 k1 | bhxh-bhyt-bhtn |
 | 2026-01-01 | Kỳ tính thuế 2026: GTGC bản thân 15,5tr/tháng; NPT 6,2tr/tháng | NQ 110/2025/UBTVQH15; Luật 109/2025/QH15 | thue-tncn |
 | 2026-01-01 | Biểu thuế lương/công: 5 bậc (thay 7 bậc) cho kỳ 2026 | Luật 109/2025/QH15 | thue-tncn |
 | 2026-01-01 | Lương tối thiểu vùng mới (I-IV: 5,31 / 4,73 / 4,14 / 3,70 triệu) | NĐ 293/2025/NĐ-CP | bhxh-bhyt-bhtn |

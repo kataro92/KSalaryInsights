@@ -4,7 +4,10 @@ import { ColorBlock } from "@/src/components/common/ColorBlock";
 import { formatVnd } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Props = {
   deltaNet: number | null;
@@ -60,6 +63,11 @@ export function OfferDeltaBar({ deltaNet, deltaGross }: Props) {
           {signed(deltaGross)}
         </Text>
       </View>
+      <Text style={styles.title}>
+        {deltaNet === 0
+          ? "Net hai offer bằng nhau"
+          : `Net offer B ${deltaNet > 0 ? "cao hơn" : "thấp hơn"} A ${formatVnd(Math.abs(deltaNet))}`}
+      </Text>
       <Text style={styles.note}>
         Chỉ số liệu ước, không phải khuyến nghị chọn offer.
       </Text>

@@ -8,7 +8,10 @@ import { useI18n } from "@/src/i18n/useI18n";
 import type { OtherIncomeLine } from "@/src/domain/types/otherIncome";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type LineWithTip = OtherIncomeLine & { tipId?: TipId };
 
@@ -78,7 +81,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 12,
       letterSpacing: 0.8,
       textTransform: "uppercase",
-      color: colors.secondary,
+      color: colors.secondaryForeground,
       marginBottom: space[2],
     },
     totalLabel: {

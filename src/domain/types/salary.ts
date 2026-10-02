@@ -43,6 +43,19 @@ export type Ruleset = {
     unemployment_multiplier: number;
   };
   pit_brackets: PitBracket[];
+  salary_deductions?: {
+    medical_annual_cap: number;
+    education_annual_cap: number;
+    voluntary_insurance_monthly_cap: number;
+    meal_monthly_cap: number;
+    meal_effective_from: string;
+  };
+  business_tax_reduction?: {
+    rate: number;
+    revenue_cap: number;
+    tax_years: number[];
+    includes_rent: boolean;
+  };
   severance_pay?: {
     resignation_months_per_year: number;
     job_loss_months_per_year: number;
@@ -131,6 +144,7 @@ export type Ruleset = {
       exemption_threshold: number;
       vat_rate: number;
       pit_rate_on_excess: number;
+      pit_on_full_revenue?: boolean;
       reporting_form?: string;
       reporting_deadline_note?: string;
     };
@@ -138,6 +152,10 @@ export type Ruleset = {
       exemption_threshold: number;
       income_method_threshold: number;
       income_method_rate: number;
+      income_method_middle_rate?: number;
+      income_method_upper_rate?: number;
+      income_method_upper_threshold?: number;
+      pit_on_full_revenue?: boolean;
       industry_rates: Array<{
         id: string;
         label: string;
@@ -173,6 +191,9 @@ export type SalaryInput = {
   numDependents: number;
   /** Insurance contribution base; defaults to gross. */
   insuranceSalary?: number;
+  mealAllowance?: number;
+  exemptAllowances?: number;
+  voluntaryInsurance?: number;
 };
 
 /** Tách GTGC hiển thị riêng trong breakdown (spec 002). */
@@ -217,4 +238,9 @@ export type SalaryBreakdown = {
   reliefBreakdown: ReliefBreakdown;
   rulesetId: string;
   legalSources: string[];
+  deductions?: {
+    mealExempt: number;
+    exemptAllowances: number;
+    voluntaryInsurance: number;
+  };
 };

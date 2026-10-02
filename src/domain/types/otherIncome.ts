@@ -1,11 +1,7 @@
 /** Domain contracts for other income calculators (spec 008). */
 
 export type IncomeType =
-  | "rent"
-  | "hkd"
-  | "securities"
-  | "esop"
-  | "casual_withholding";
+  "rent" | "hkd" | "securities" | "esop" | "casual_withholding";
 
 export type HkdIndustryId =
   | "distribution"
@@ -15,6 +11,7 @@ export type HkdIndustryId =
   | "other";
 
 export type RentInput = {
+  totalBusinessRevenue?: number;
   /** Doanh thu năm (VND). Có thể = tháng × 12 từ UI. */
   annualRevenue: number;
   taxYear: number;
@@ -22,6 +19,8 @@ export type RentInput = {
 };
 
 export type RentBreakdown = {
+  pitBeforeReduction: number;
+  pitReduction: number;
   annualRevenue: number;
   threshold: number;
   exempt: boolean;
@@ -37,6 +36,7 @@ export type RentBreakdown = {
 };
 
 export type HkdInput = {
+  totalBusinessRevenue?: number;
   annualRevenue: number;
   industryId: HkdIndustryId;
   /** Chi phí (tuỳ chọn). Gợi ý PP thu nhập (DT−CP)×15%. */
@@ -46,6 +46,9 @@ export type HkdInput = {
 };
 
 export type HkdBreakdown = {
+  pitBeforeReduction: number;
+  pitReduction: number;
+  method: "revenue" | "income";
   annualRevenue: number;
   industryId: HkdIndustryId;
   industryLabel: string;

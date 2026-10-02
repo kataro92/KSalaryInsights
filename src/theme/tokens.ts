@@ -79,9 +79,11 @@ export const motion = {
 export const layout = {
   pagePaddingX: 16,
   maxContentWidth: 560,
+  calculatorContentWidth: 1040,
+  twoColumnBreakpoint: 900,
   minTouch: 44,
   /** Extra bottom inset so content clears the translucent tab bar. */
-  tabBarClearance: 56,
+  tabBarClearance: 68,
   /** Single primary sticky CTA (+ glass padding). */
   stickyBarHeight: 72,
   /** Two stacked sticky CTAs (e.g. Settlement primary + secondary). */

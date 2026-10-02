@@ -49,6 +49,8 @@ export function mapSalaryLine(args: {
 }
 
 export function mapHkdLine(args: {
+  totalBusinessRevenue?: number;
+  costs?: number;
   annualRevenue: number;
   industryId: HkdIndustryId;
   taxYear: number;
@@ -56,13 +58,17 @@ export function mapHkdLine(args: {
   label?: string;
 }): MultiSourceLine {
   const r = calculateHkd({
+    totalBusinessRevenue: args.totalBusinessRevenue,
+    costs: args.costs,
     annualRevenue: args.annualRevenue,
     industryId: args.industryId,
     taxYear: args.taxYear,
   });
   const notes = [...r.explanations];
   if (r.exempt) {
-    notes.push("Miễn thuế tỷ lệ; vẫn có thể phải kê khai / thông báo doanh thu.");
+    notes.push(
+      "Miễn thuế tỷ lệ; vẫn có thể phải kê khai / thông báo doanh thu.",
+    );
   }
   notes.push("Không gộp vào biểu lũy tiến của lương hợp đồng lao động.");
   return {
@@ -83,12 +89,14 @@ export function mapHkdLine(args: {
 }
 
 export function mapRentLine(args: {
+  totalBusinessRevenue?: number;
   annualRevenue: number;
   taxYear: number;
   withheld?: number;
   label?: string;
 }): MultiSourceLine {
   const r = calculateRent({
+    totalBusinessRevenue: args.totalBusinessRevenue,
     annualRevenue: args.annualRevenue,
     taxYear: args.taxYear,
   });
@@ -131,7 +139,7 @@ export function mapCasualLine(args: {
     notes.push("Gợi ý hai kịch bản: bắt buộc gộp khi thuộc diện.");
   } else {
     notes.push(
-      "Thu nhập vãng lai miễn / dưới ngưỡng: xem hai kịch bản trên Quyết toán lương."
+      "Thu nhập vãng lai miễn / dưới ngưỡng: xem hai kịch bản trên Quyết toán lương.",
     );
   }
   return {
@@ -201,7 +209,7 @@ export function mapEsopLine(args: {
   const notes = [...r.explanations];
   if (r.settlementNote) notes.push(r.settlementNote);
   notes.push(
-    "ESOP: phần thu nhập từ cổ phiếu không tự gộp vào dòng lương. Nhập tay nếu cần."
+    "ESOP: phần thu nhập từ cổ phiếu không tự gộp vào dòng lương. Nhập tay nếu cần.",
   );
   return {
     id: newLineId(),

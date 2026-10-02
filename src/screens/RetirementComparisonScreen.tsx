@@ -40,7 +40,10 @@ import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 function parseIntSafe(raw: string): number {
   const digits = raw.replace(/[^\d]/g, "");
@@ -50,7 +53,8 @@ function parseIntSafe(raw: string): number {
 
 export function RetirementComparisonScreen() {
   const { colors } = useTheme();
-  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } =
+    useScrollToAnchor();
   const styles = useThemedStyles(makeStyles);
   const [ack, setAck] = useState<DisclaimerAckState>({ acknowledged: false });
   const [sex, setSex] = useState<Sex>("female");
@@ -69,7 +73,7 @@ export function RetirementComparisonScreen() {
   const tableYears = useMemo(() => listInflationAdjustmentYears(), []);
   const inflation = useMemo(
     () => getInflationAdjustment(tableYear),
-    [tableYear]
+    [tableYear],
   );
 
   const showAmounts = canShowRetirementAmounts(ack.acknowledged);
@@ -134,7 +138,10 @@ export function RetirementComparisonScreen() {
         }
       />
 
-      <Section title="Giới tính" subtitle="Dùng để chọn tỷ lệ tính lương hưu theo luật hiện hành.">
+      <Section
+        title="Giới tính"
+        subtitle="Dùng để chọn tỷ lệ tính lương hưu theo luật hiện hành."
+      >
         <View style={styles.row}>
           {(
             [
@@ -189,7 +196,12 @@ export function RetirementComparisonScreen() {
             styles={styles}
             label="Trước 2014 (tháng lẻ)"
             value={t1Months}
-            error={requiredIntInRange(t1Months, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
+            error={requiredIntInRange(
+              t1Months,
+              0,
+              11,
+              "Tháng lẻ phải từ 0 đến 11.",
+            )}
             onChange={setT1Months}
             clear={() => {
               setLumpSum(null);
@@ -213,7 +225,12 @@ export function RetirementComparisonScreen() {
             styles={styles}
             label="Từ 2014 (tháng lẻ)"
             value={t2Months}
-            error={requiredIntInRange(t2Months, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
+            error={requiredIntInRange(
+              t2Months,
+              0,
+              11,
+              "Tháng lẻ phải từ 0 đến 11.",
+            )}
             onChange={setT2Months}
             clear={() => {
               setLumpSum(null);
@@ -249,7 +266,7 @@ export function RetirementComparisonScreen() {
           value={mbqtlText}
           error={requiredPositiveMoney(
             mbqtlText,
-            "Nhập lương bình quân đã điều chỉnh lớn hơn 0."
+            "Nhập lương bình quân đã điều chỉnh lớn hơn 0.",
           )}
           onValueChange={(formatted) => {
             setMbqtlText(formatted);
@@ -296,9 +313,7 @@ export function RetirementComparisonScreen() {
           autoCapitalize="none"
           value={participationDate}
           error={
-            participationDate.trim()
-              ? requiredIsoDate(participationDate)
-              : null
+            participationDate.trim() ? requiredIsoDate(participationDate) : null
           }
           onChangeText={(t) => {
             setParticipationDate(t.trim());
@@ -393,7 +408,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 14,
       color: colors.foreground,
     },
-    chipLabelSelected: { color: colors.white },
+    chipLabelSelected: { color: colors.onPrimary },
     hint: {
       fontFamily: typography.fontFamily.regular,
       fontSize: 12,

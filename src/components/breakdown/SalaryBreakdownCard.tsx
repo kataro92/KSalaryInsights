@@ -9,7 +9,10 @@ import { formatVnd } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 function Row({
   label,
@@ -131,11 +134,36 @@ export function SalaryBreakdownCard({
         <Row
           styles={styles}
           label={t("salary.labelAfterInsurance")}
-          value={formatVnd(pit.incomeAfterInsurance)}
+          value={formatVnd(breakdown.gross - insurance.totalEmployee)}
           tipId="salary.afterInsurance"
           emphasis="subtotal"
         />
 
+        {breakdown.deductions ? (
+          <>
+            {breakdown.deductions.mealExempt > 0 ? (
+              <Row
+                styles={styles}
+                label="Tiền ăn miễn thuế"
+                value={`− ${formatVnd(breakdown.deductions.mealExempt)}`}
+              />
+            ) : null}
+            {breakdown.deductions.exemptAllowances > 0 ? (
+              <Row
+                styles={styles}
+                label="Phụ cấp miễn thuế"
+                value={`− ${formatVnd(breakdown.deductions.exemptAllowances)}`}
+              />
+            ) : null}
+            {breakdown.deductions.voluntaryInsurance > 0 ? (
+              <Row
+                styles={styles}
+                label="Giảm trừ bảo hiểm bổ sung"
+                value={`− ${formatVnd(breakdown.deductions.voluntaryInsurance)}`}
+              />
+            ) : null}
+          </>
+        ) : null}
         <GroupDivider styles={styles} />
         <GroupTitle styles={styles}>{t("salary.groupRelief")}</GroupTitle>
         <Row
@@ -154,7 +182,11 @@ export function SalaryBreakdownCard({
         />
         <Row
           styles={styles}
-          label={t("salary.labelReliefTotal")}
+          label={
+            breakdown.deductions?.voluntaryInsurance
+              ? "Tổng giảm trừ"
+              : t("salary.labelReliefTotal")
+          }
           value={`− ${formatVnd(breakdown.reliefBreakdown.total)}`}
           tipId="salary.reliefTotal"
           emphasis="subtotal"
@@ -195,14 +227,14 @@ export function SalaryBreakdownCard({
         <ColorBlock tone="secondarySoft" style={styles.netBlock}>
           <View style={styles.netEyebrowRow}>
             <Text style={styles.netEyebrow}>{t("salary.eyebrowNet")}</Text>
-            <InfoTip tipId="salary.net" color={colors.white} size={16} />
+            <InfoTip tipId="salary.net" color={colors.onSecondary} size={16} />
           </View>
           <View style={styles.netRow}>
             <Text style={styles.netLabelWide}>{t("salary.labelNet")}</Text>
             <Text
               style={styles.netValueWide}
               accessibilityLabel={`${t("salary.labelNet")} ${formatVnd(
-                breakdown.net
+                breakdown.net,
               )}`}
             >
               {formatVnd(breakdown.net)}
@@ -299,8 +331,8 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: typography.scale.caption.fontSize,
       letterSpacing: typography.letterSpacingLabel,
       textTransform: "uppercase",
-      color: colors.white,
-      opacity: 0.85,
+      color: colors.onSecondary,
+      opacity: 1,
     },
     netRow: {
       flexDirection: "row",
@@ -310,12 +342,12 @@ function makeStyles({ colors }: ThemeContextValue) {
     },
     netLabelWide: {
       fontFamily: typography.fontFamily.bold,
-      color: colors.white,
+      color: colors.onSecondary,
       fontSize: typography.scale.subtitle.fontSize,
     },
     netValueWide: {
       fontFamily: typography.fontFamily.extraBold,
-      color: colors.white,
+      color: colors.onSecondary,
       fontSize: typography.scale.moneyLg.fontSize,
       fontVariant: ["tabular-nums"],
       flexShrink: 1,

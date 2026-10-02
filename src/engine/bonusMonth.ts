@@ -13,6 +13,9 @@ export type BonusMonthParams = {
   numDependents?: number;
   /** Mức đóng BH tùy chỉnh; nếu bỏ trống → BH theo lương căn cứ (không gồm thưởng/OT). */
   insuranceSalary?: number;
+  mealAllowance?: number;
+  exemptAllowances?: number;
+  voluntaryInsurance?: number;
 };
 
 export type BonusMonthResult = {
@@ -33,7 +36,7 @@ export type BonusMonthResult = {
  * PIT trên gross = base + bonus + ot; BH mặc định trên base (ước tính thực tế phổ biến).
  */
 export function calculateBonusMonth(
-  params: BonusMonthParams
+  params: BonusMonthParams,
 ): BonusMonthResult {
   const {
     baseGross,
@@ -60,6 +63,9 @@ export function calculateBonusMonth(
   const bhBase = insuranceSalary ?? baseGross;
 
   const base = grossToNet({
+    mealAllowance: params.mealAllowance,
+    exemptAllowances: params.exemptAllowances,
+    voluntaryInsurance: params.voluntaryInsurance,
     gross: baseGross,
     region,
     taxYear,
@@ -71,6 +77,9 @@ export function calculateBonusMonth(
   const withExtras =
     extrasTotal > 0
       ? grossToNet({
+          mealAllowance: params.mealAllowance,
+          exemptAllowances: params.exemptAllowances,
+          voluntaryInsurance: params.voluntaryInsurance,
           gross: baseGross + extrasTotal,
           region,
           taxYear,

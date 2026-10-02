@@ -12,6 +12,9 @@ export type NetToGrossParams = {
   /** When true, insurance base tracks candidate gross (default). */
   insuranceTracksGross?: boolean;
   insuranceSalary?: number;
+  mealAllowance?: number;
+  exemptAllowances?: number;
+  voluntaryInsurance?: number;
 };
 
 export type NetToGrossResult =
@@ -37,8 +40,14 @@ export function netToGross(params: NetToGrossParams): NetToGrossResult {
   }
 
   const ruleset = getRuleset(taxYear, asOfDate);
-  const minWage = ruleset.regional_minimum_wages[REGION_TO_KEY[region]];
+  const minWage = Math.max(
+    ruleset.regional_minimum_wages[REGION_TO_KEY[region]],
+    (params.mealAllowance ?? 0) + (params.exemptAllowances ?? 0),
+  );
   const minBreakdown = grossToNet({
+    mealAllowance: params.mealAllowance,
+    exemptAllowances: params.exemptAllowances,
+    voluntaryInsurance: params.voluntaryInsurance,
     gross: minWage,
     region,
     taxYear,
@@ -61,6 +70,9 @@ export function netToGross(params: NetToGrossParams): NetToGrossResult {
   // Expand upper bound until net(high) >= target
   for (let i = 0; i < 20; i++) {
     const hiNet = grossToNet({
+      mealAllowance: params.mealAllowance,
+      exemptAllowances: params.exemptAllowances,
+      voluntaryInsurance: params.voluntaryInsurance,
       gross: high,
       region,
       taxYear,
@@ -74,6 +86,9 @@ export function netToGross(params: NetToGrossParams): NetToGrossResult {
 
   let bestGross = high;
   let bestBreakdown = grossToNet({
+    mealAllowance: params.mealAllowance,
+    exemptAllowances: params.exemptAllowances,
+    voluntaryInsurance: params.voluntaryInsurance,
     gross: high,
     region,
     taxYear,
@@ -85,6 +100,9 @@ export function netToGross(params: NetToGrossParams): NetToGrossResult {
   while (low <= high) {
     const mid = Math.floor((low + high) / 2);
     const breakdown = grossToNet({
+      mealAllowance: params.mealAllowance,
+      exemptAllowances: params.exemptAllowances,
+      voluntaryInsurance: params.voluntaryInsurance,
       gross: mid,
       region,
       taxYear,
@@ -114,6 +132,9 @@ export function netToGross(params: NetToGrossParams): NetToGrossResult {
   for (const g of [bestGross - 1, bestGross, bestGross + 1, low, high]) {
     if (g < minWage) continue;
     const breakdown = grossToNet({
+      mealAllowance: params.mealAllowance,
+      exemptAllowances: params.exemptAllowances,
+      voluntaryInsurance: params.voluntaryInsurance,
       gross: g,
       region,
       taxYear,

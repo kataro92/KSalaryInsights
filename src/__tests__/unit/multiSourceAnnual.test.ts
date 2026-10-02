@@ -45,10 +45,10 @@ describe("multiSourceAnnual F020", () => {
     expect(totals.estimatedTax).toBe(
       salary.estimatedTaxTotal +
         rent.estimatedTaxTotal +
-        casual.estimatedTaxTotal
+        casual.estimatedTaxTotal,
     );
     expect(totals.withheld).toBe(
-      salary.withheld + rent.withheld + casual.withheld
+      salary.withheld + rent.withheld + casual.withheld,
     );
   });
 
@@ -78,8 +78,8 @@ describe("multiSourceAnnual F020", () => {
       taxYear: 2026,
     });
     expect(hkd.estimatedVat).toBe(15_000_000);
-    expect(hkd.estimatedPit).toBe(2_500_000);
-    expect(hkd.estimatedTaxTotal).toBe(17_500_000);
+    expect(hkd.estimatedPit).toBe(1_750_000);
+    expect(hkd.estimatedTaxTotal).toBe(16_750_000);
   });
 
   it("excluded lines omit from totals", () => {
@@ -97,7 +97,7 @@ describe("multiSourceAnnual F020", () => {
       excluded: true,
     };
     expect(summarizeMultiSource({ lines: [a, b] }).estimatedTax).toBe(
-      1_000_000
+      1_000_000,
     );
   });
 

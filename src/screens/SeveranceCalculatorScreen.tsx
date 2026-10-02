@@ -29,7 +29,10 @@ import {
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 function parseIntSafe(raw: string): number {
   const digits = raw.replace(/[^\d]/g, "");
@@ -39,13 +42,14 @@ function parseIntSafe(raw: string): number {
 
 export function SeveranceCalculatorScreen() {
   const { preferences } = usePreferences();
-  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } =
+    useScrollToAnchor();
   const styles = useThemedStyles(makeStyles);
   const [mode, setMode] = useState<SeveranceMode>("resignation");
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
       ? preferences.defaultTaxYear
-      : 2026
+      : 2026,
   );
   const [totalYears, setTotalYears] = useState("7");
   const [totalMonths, setTotalMonths] = useState("0");
@@ -193,7 +197,12 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Tháng lẻ"
             value={totalMonths}
-            error={requiredIntInRange(totalMonths, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
+            error={requiredIntInRange(
+              totalMonths,
+              0,
+              11,
+              "Tháng lẻ phải từ 0 đến 11.",
+            )}
             onChange={(v) => {
               setTotalMonths(v);
               setResult(null);
@@ -215,7 +224,12 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Tháng lẻ đã đóng thất nghiệp"
             value={bhtnMonths}
-            error={requiredIntInRange(bhtnMonths, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
+            error={requiredIntInRange(
+              bhtnMonths,
+              0,
+              11,
+              "Tháng lẻ phải từ 0 đến 11.",
+            )}
             onChange={(v) => {
               setBhtnMonths(v);
               setResult(null);
@@ -237,7 +251,12 @@ export function SeveranceCalculatorScreen() {
             styles={styles}
             label="Tháng lẻ đã trả"
             value={paidMonths}
-            error={requiredIntInRange(paidMonths, 0, 11, "Tháng lẻ phải từ 0 đến 11.")}
+            error={requiredIntInRange(
+              paidMonths,
+              0,
+              11,
+              "Tháng lẻ phải từ 0 đến 11.",
+            )}
             onChange={(v) => {
               setPaidMonths(v);
               setResult(null);
@@ -255,7 +274,7 @@ export function SeveranceCalculatorScreen() {
           value={salaryText}
           error={requiredPositiveMoney(
             salaryText,
-            "Nhập lương bình quân 6 tháng lớn hơn 0."
+            "Nhập lương bình quân 6 tháng lớn hơn 0.",
           )}
           onValueChange={(formatted) => {
             setSalaryText(formatted);
@@ -341,6 +360,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 14,
       color: colors.foreground,
     },
-    chipLabelSelected: { color: colors.white },
+    chipLabelSelected: { color: colors.onSecondary },
   } satisfies ThemedStyleSheet;
 }

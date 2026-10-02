@@ -1,9 +1,10 @@
 import { BlurView } from "expo-blur";
-import { Tabs } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import {
   Platform,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
   type ColorValue,
 } from "react-native";
@@ -15,19 +16,14 @@ import { useI18n } from "@/src/i18n/useI18n";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, typography } from "@/src/theme/tokens";
 
-function TabLabel({
-  label,
-  color,
-}: {
-  label: string;
-  color: ColorValue;
-}) {
+function TabLabel({ label, color }: { label: string; color: ColorValue }) {
+  const { width } = useWindowDimensions();
   return (
     <Text
       style={{
         fontFamily: typography.fontFamily.medium,
-        fontSize: 10,
-        lineHeight: 12,
+        fontSize: 12,
+        lineHeight: 16,
         color,
         textAlign: "center",
         marginBottom: 2,
@@ -35,7 +31,8 @@ function TabLabel({
       numberOfLines={1}
       adjustsFontSizeToFit
       minimumFontScale={0.8}
-      allowFontScaling={false}
+      allowFontScaling
+      maxFontSizeMultiplier={width < 360 ? 1.15 : 1.25}
     >
       {label}
     </Text>
@@ -44,10 +41,11 @@ function TabLabel({
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
+  const pathname = usePathname();
   const { t } = useI18n();
   const { colors, glass, isDark } = useTheme();
   const bottomInset = Math.max(insets.bottom, Platform.OS === "web" ? 10 : 8);
-  const tabBarHeight = 56 + bottomInset;
+  const tabBarHeight = 68 + bottomInset;
 
   return (
     <Tabs
@@ -55,9 +53,9 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.foregroundMuted,
-        tabBarAllowFontScaling: false,
+        tabBarAllowFontScaling: true,
         tabBarBackground: () =>
-          Platform.OS === "web" ? (
+          Platform.OS !== "ios" ? (
             <View
               style={[
                 StyleSheet.absoluteFill,
@@ -91,7 +89,10 @@ export default function TabsLayout() {
           height: tabBarHeight,
           paddingBottom: bottomInset,
           paddingTop: 6,
-          maxWidth: layout.maxContentWidth,
+          maxWidth:
+            pathname === "/"
+              ? layout.calculatorContentWidth
+              : layout.maxContentWidth,
           width: "100%",
           alignSelf: "center",
           elevation: 0,

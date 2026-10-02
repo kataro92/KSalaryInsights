@@ -100,3 +100,11 @@ Ruleset dùng cho quyết toán / thu nhập khác (004, 008) MUST khai đủ `c
 Calculation engine sử dụng hàm `getRuleset(taxYear: number, asOfDate?: string)`:
 1. Nếu `asOfDate` được truyền (ví dụ `"2026-08-15"`): Engine lọc các ruleset thỏa mãn `tax_year === taxYear` và `effective_from <= asOfDate <= effective_to`.
 2. Nếu chỉ có `taxYear`: Mặc định trả về ruleset có hiệu lực mới nhất trong năm đó (ví dụ năm 2026 trả về `2026-h2.json`).
+
+## 6. Bổ sung version 1.1.0 (02/10/2026)
+
+- `salary_deductions`: trần y tế/giáo dục 23/24 triệu năm, BH bổ sung 3 triệu tháng, tiền ăn 1,2 triệu tháng và `meal_effective_from=2026-07-01`. Vắng trên 2025.
+- `business_tax_reduction`: rate 0.30, revenue_cap 10 tỷ, tax_years [2026,2027], includes_rent true. `getBusinessRuleset(2027)` chỉ dùng trong kinh doanh, không đăng ký ruleset lương/BH 2027.
+- `other_income.hkd`: income_method_middle_rate 0.17, income_method_upper_rate 0.20, income_method_upper_threshold 50 tỷ. Trên 3 tỷ cần chi phí.
+- `pit_on_full_revenue=true` trên HKD/cho thuê 2025, ngưỡng 100 triệu; false/vắng trên 2026.
+- Validator engine kiểm tra thêm quan hệ ngưỡng, ngày và phạm vi năm ngoài JSON Schema. Nguồn ở sổ pháp lý.

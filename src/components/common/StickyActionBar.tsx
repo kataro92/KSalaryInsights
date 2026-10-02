@@ -11,12 +11,17 @@ type Props = {
   children: ReactNode;
   /** Extra offset when a tab bar is also present (default true for tab screens). */
   aboveTabBar?: boolean;
+  wide?: boolean;
 };
 
 /**
  * Bottom-pinned action region. Glass thin strip over content (spec 010).
  */
-export function StickyActionBar({ children, aboveTabBar = true }: Props) {
+export function StickyActionBar({
+  children,
+  aboveTabBar = true,
+  wide = false,
+}: Props) {
   const insets = useSafeAreaInsets();
   const styles = useThemedStyles(makeStyles);
   const bottomPad =
@@ -30,7 +35,16 @@ export function StickyActionBar({ children, aboveTabBar = true }: Props) {
         style={styles.glass}
         contentStyle={[styles.bar, { paddingBottom: bottomPad }]}
       >
-        <View style={styles.inner}>{children}</View>
+        <View
+          style={[
+            styles.inner,
+            wide && {
+              maxWidth: layout.calculatorContentWidth - layout.pagePaddingX * 2,
+            },
+          ]}
+        >
+          {children}
+        </View>
       </GlassSurface>
     </View>
   );

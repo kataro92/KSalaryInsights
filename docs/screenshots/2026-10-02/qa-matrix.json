@@ -1,0 +1,104 @@
+[
+  {
+    "screen": "salary",
+    "width": 320,
+    "theme": "light",
+    "errors": [],
+    "overflow": false,
+    "text": true
+  },
+  {
+    "screen": "offer",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "screen": "salary",
+    "width": 320,
+    "theme": "dark",
+    "errors": [],
+    "overflow": false,
+    "text": true
+  },
+  {
+    "screen": "offer",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "screen": "salary",
+    "width": 390,
+    "theme": "light",
+    "errors": [],
+    "overflow": false,
+    "text": true
+  },
+  {
+    "screen": "offer",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "screen": "settings",
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "screen": "salary",
+    "width": 390,
+    "theme": "dark",
+    "errors": [],
+    "overflow": false,
+    "text": true
+  },
+  {
+    "screen": "offer",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "screen": "settings",
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "screen": "salary",
+    "width": 1200,
+    "theme": "light",
+    "errors": [],
+    "overflow": false,
+    "text": true
+  },
+  {
+    "screen": "offer",
+    "width": 1200,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "screen": "salary",
+    "width": 1200,
+    "theme": "dark",
+    "errors": [],
+    "overflow": false,
+    "text": true
+  },
+  {
+    "screen": "offer",
+    "width": 1200,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  }
+]

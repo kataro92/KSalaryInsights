@@ -1,15 +1,26 @@
 import { roundVnd } from "@/src/domain/constants/salary";
 import type { HkdBreakdown, HkdInput } from "@/src/domain/types/otherIncome";
-import { getRuleset } from "@/src/engine/rulesetLoader";
+import {
+  getBusinessRuleset,
+  reduceBusinessPit,
+  totalBusinessRevenue,
+} from "./businessReduction";
 
 /**
  * Hộ kinh doanh. GTGT trên toàn bộ DT khi vượt ngưỡng; TNCN trên phần vượt.
  */
 export function calculateHkd(input: HkdInput): HkdBreakdown {
-  if (input.annualRevenue < 0) throw new Error("Doanh thu không hợp lệ");
+  if (!Number.isFinite(input.annualRevenue) || input.annualRevenue < 0)
+    throw new Error("Doanh thu không hợp lệ");
 
   const asOf = input.asOfDate ?? `${input.taxYear}-06-15`;
-  const ruleset = getRuleset(input.taxYear, asOf);
+  const ruleset = getBusinessRuleset(input.taxYear, asOf);
+  const annualTotal = totalBusinessRevenue(
+    input.annualRevenue,
+    input.totalBusinessRevenue,
+  );
+  if (input.costs != null && (!Number.isFinite(input.costs) || input.costs < 0))
+    throw new Error("Chi phí phải là số không âm");
   const params = ruleset.other_income?.hkd;
   if (!params) throw new Error("Thiếu tham số other_income.hkd");
 
@@ -23,42 +34,70 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
   const reportingRequired = true;
   const explanations: string[] = [];
 
+  const method =
+    !params.pit_on_full_revenue && annualTotal > params.income_method_threshold
+      ? "income"
+      : "revenue";
+  if (!exempt && method === "income" && input.costs == null)
+    throw new Error(
+      "Doanh thu trên 3 tỷ: cần chi phí hợp lệ. Chuyển sang Đầy đủ và nhập chi phí.",
+    );
   let vat = 0;
   let pit = 0;
 
   if (exempt) {
     explanations.push(
       `Doanh thu ${input.annualRevenue.toLocaleString(
-        "vi-VN"
+        "vi-VN",
       )} ≤ ngưỡng ${threshold.toLocaleString(
-        "vi-VN"
-      )}. Thuế tỷ lệ = 0; vẫn kê khai doanh thu.`
+        "vi-VN",
+      )}. Thuế tỷ lệ = 0; vẫn kê khai doanh thu.`,
     );
   } else {
     vat = roundVnd(industry.vat_rate * input.annualRevenue);
-    const excess = input.annualRevenue - threshold;
-    pit = roundVnd(industry.pit_rate * excess);
+    const excess = params.pit_on_full_revenue
+      ? input.annualRevenue
+      : input.annualRevenue - threshold;
+    const incomeRate =
+      annualTotal > (params.income_method_upper_threshold ?? Infinity)
+        ? params.income_method_upper_rate!
+        : params.income_method_middle_rate!;
+    pit =
+      method === "income"
+        ? roundVnd(Math.max(0, input.annualRevenue - input.costs!) * incomeRate)
+        : roundVnd(industry.pit_rate * excess);
+    if (method === "income")
+      explanations.push(
+        `Phương pháp thu nhập: (doanh thu − chi phí hợp lệ) × ${incomeRate * 100}%.`,
+      );
     explanations.push(
       `Nhóm «${industry.label}»: thuế giá trị gia tăng ${
         industry.vat_rate * 100
-      }% × toàn bộ = ${vat.toLocaleString("vi-VN")}.`
+      }% × toàn bộ = ${vat.toLocaleString("vi-VN")}.`,
     );
-    explanations.push(
-      `Thuế thu nhập cá nhân ${industry.pit_rate * 100}% × phần vượt (${excess.toLocaleString(
-        "vi-VN"
-      )}) = ${pit.toLocaleString("vi-VN")}.`
-    );
+    if (method === "revenue")
+      explanations.push(
+        `Thuế thu nhập cá nhân ${industry.pit_rate * 100}% × ${params.pit_on_full_revenue ? "toàn bộ doanh thu" : "phần vượt"} (${excess.toLocaleString(
+          "vi-VN",
+        )}) = ${pit.toLocaleString("vi-VN")}.`,
+      );
   }
 
   let incomeMethodHint: HkdBreakdown["incomeMethodHint"];
   if (
     !exempt &&
+    method === "revenue" &&
+    !params.pit_on_full_revenue &&
     input.costs != null &&
     Number.isFinite(input.costs) &&
     input.annualRevenue > 0
   ) {
     const taxableIncome = Math.max(0, input.annualRevenue - input.costs);
-    const estimatedTax = roundVnd(params.income_method_rate * taxableIncome);
+    const estimatedTax = reduceBusinessPit(
+      roundVnd(params.income_method_rate * taxableIncome),
+      annualTotal,
+      ruleset,
+    ).pit;
     incomeMethodHint = {
       taxableIncome,
       rate: params.income_method_rate,
@@ -68,23 +107,29 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
       }% = ${estimatedTax.toLocaleString("vi-VN")} (không thay thế tờ khai).`,
     };
     explanations.push(incomeMethodHint.note);
-  } else if (!exempt && input.annualRevenue >= params.income_method_threshold) {
+  } else if (!exempt && method === "revenue" && !params.pit_on_full_revenue) {
     explanations.push(
-      `Doanh thu ≥ ${params.income_method_threshold.toLocaleString(
-        "vi-VN"
+      `Doanh thu ≤ ${params.income_method_threshold.toLocaleString(
+        "vi-VN",
       )}. Cân nhắc so sánh với phương pháp (doanh thu − chi phí) × ${
         params.income_method_rate * 100
-      }%.`
+      }%.`,
     );
   }
 
+  const reduced = reduceBusinessPit(pit, annualTotal, ruleset);
+  pit = reduced.pit;
+  if (reduced.pitReduction > 0)
+    explanations.push(
+      `NQ 43/2026/QH16: giảm 30% TNCN (${reduced.pitReduction.toLocaleString("vi-VN")} ₫); GTGT không giảm. Cá nhân cư trú có tổng doanh thu kinh doanh năm ≤ 10 tỷ. Nếu doanh thu thực tế vượt 10 tỷ, phải điều chỉnh và nộp bổ sung phần đã giảm. Ước tính, không thay tờ khai.`,
+    );
   const totalTax = vat + pit;
   const formula = exempt
     ? "Thuế = 0 (≤ ngưỡng)"
     : `Thuế giá trị gia tăng ${vat.toLocaleString(
-        "vi-VN"
+        "vi-VN",
       )} + thuế thu nhập cá nhân ${pit.toLocaleString(
-        "vi-VN"
+        "vi-VN",
       )} = ${totalTax.toLocaleString("vi-VN")}`;
 
   return {
@@ -96,15 +141,14 @@ export function calculateHkd(input: HkdInput): HkdBreakdown {
     reportingRequired,
     vat,
     pit,
+    pitBeforeReduction: reduced.pitBeforeReduction,
+    pitReduction: reduced.pitReduction,
+    method,
     totalTax,
     incomeMethodHint,
     formula,
     explanations,
     rulesetId: ruleset.id,
-    legalSources: [
-      ...ruleset.legal_sources,
-      "Nghị định 68/2026: biểu tỷ lệ ngành hộ kinh doanh",
-      "Luật 109/2025 Đ.7: ngưỡng hộ kinh doanh",
-    ],
+    legalSources: ruleset.legal_sources,
   };
 }

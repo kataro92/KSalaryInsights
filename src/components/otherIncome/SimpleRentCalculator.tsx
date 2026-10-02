@@ -30,6 +30,7 @@ export function SimpleRentCalculator({ taxYear }: Props) {
   const styles = useThemedStyles(makeStyles);
   const scroll = useOptionalScrollToResult();
   const [monthlyText, setMonthlyText] = useState("20.000.000");
+  const [totalRevenueText, setTotalRevenueText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RentBreakdown | null>(null);
 
@@ -45,7 +46,13 @@ export function SimpleRentCalculator({ taxYear }: Props) {
     }
     try {
       const annualRevenue = annualFromMonthly(monthly);
-      setResult(calculateRent({ annualRevenue, taxYear }));
+      setResult(
+        calculateRent({
+          annualRevenue,
+          taxYear,
+          totalBusinessRevenue: parseMoney(totalRevenueText) ?? undefined,
+        }),
+      );
       void successHaptic();
       scroll?.scrollToAnchor();
     } catch (e) {
@@ -66,7 +73,7 @@ export function SimpleRentCalculator({ taxYear }: Props) {
           value={monthlyText}
           error={requiredNonNegativeMoney(
             monthlyText,
-            "Nhập tiền thuê tháng hợp lệ."
+            "Nhập tiền thuê tháng hợp lệ.",
           )}
           onValueChange={(formatted) => {
             setMonthlyText(formatted);
@@ -74,11 +81,19 @@ export function SimpleRentCalculator({ taxYear }: Props) {
           }}
         />
         <Text style={styles.hint}>
-          Không cần nhập chi phí. Bật «Đầy đủ» nếu muốn nhập doanh thu
-          năm.
+          Không cần nhập chi phí. Bật «Đầy đủ» nếu muốn nhập doanh thu năm.
         </Text>
       </Section>
 
+      <MoneyField
+        label="Tổng doanh thu kinh doanh năm (nếu có nguồn khác)"
+        accessibilityLabel="Tổng doanh thu kinh doanh năm để xét giảm 30%"
+        value={totalRevenueText}
+        onValueChange={(v) => {
+          setTotalRevenueText(v);
+          setResult(null);
+        }}
+      />
       <Button label="Tính nhanh" onPress={onCalculate} />
 
       {error ? (
@@ -94,7 +109,7 @@ export function SimpleRentCalculator({ taxYear }: Props) {
           <ResultHero
             tone="primary"
             eyebrow={`Doanh thu năm ước tính · ${result.annualRevenue.toLocaleString(
-              "vi-VN"
+              "vi-VN",
             )} ₫`}
             label="Tổng thuế"
             amount={result.totalTax}
@@ -112,8 +127,18 @@ export function SimpleRentCalculator({ taxYear }: Props) {
                 tipId: "other.vat",
               },
               {
+                id: "pit-before",
+                label: "TNCN trước giảm",
+                amount: result.pitBeforeReduction,
+              },
+              {
+                id: "pit-reduction",
+                label: "Giảm TNCN theo NQ 43",
+                amount: -result.pitReduction,
+              },
+              {
                 id: "pit",
-                label: "Thuế thu nhập cá nhân",
+                label: "TNCN phải nộp",
                 amount: result.pit,
                 tipId: "other.pit",
               },

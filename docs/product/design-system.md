@@ -1,6 +1,6 @@
 # Design System. KSalaryInsights
 
-**Cập nhật**: 2026-08-05 
+**Cập nhật**: 2026-10-02
 **Phạm vi**: Toàn bộ UI React Native / Expo. Mọi spec tính năng tham chiếu tài liệu này.
 
 ## 1. Triết lý thiết kế
@@ -26,11 +26,11 @@ Phù hợp app thuế: **rõ ràng, đáng tin**. kính chỉ cho chrome; breakd
 |-------|---------|---------|
 | `background` | `#F7FAFF` (soft sky) | Nền canvas pastel |
 | `foreground` | `#243B53` (soft navy ink) | Chữ, tương phản cao |
-| `foregroundMuted` | `#7B8FA6` | Chữ phụ |
-| `primary` | `#4F84E0` (soft cobalt) | Hành động chính (nút Tính, CTA) |
+| `foregroundMuted` | `#52667F` | Chữ phụ |
+| `primary` | `#3465B4` (soft cobalt) | Hành động chính (nút Tính, CTA) |
 | `primaryPressed` | `#3A6BC4` | Pressed CTA |
 | `secondary` | `#5AAE9B` (soft mint) | Kết quả net, số dương/hoàn thuế |
-| `accent` | `#E09B6A` (soft peach) | Highlight/badge (cảnh báo nhẹ, nhắc hạn) |
+| `accent` | `#995B2C` (soft peach) | Highlight/badge (cảnh báo nhẹ, nhắc hạn) |
 | `muted` | `#EEF3F9` | Nền khối phụ |
 | `white` | `#FFFFFF` | Khối nội dung nổi trên canvas |
 | `border` | `#D8E2EF` | Dùng tiết kiệm |
@@ -71,9 +71,9 @@ Xem `glass` trong `src/theme/tokens.ts` và bảng vật liệu trong spec 010.
 
 | Loại | Style | Trạng thái nhấn (mobile. thay cho hover) |
 |------|-------|--------------------------------------------|
-| Primary | Nền `primary`, chữ trắng, radius md, cao **56-64px** (touch target) | Pressed: nền đậm hơn (Blue 600) + scale 0.97 |
+| Primary | Nền `primary`, chữ `onPrimary`, radius md, cao **56-64px** (touch target) | Pressed: nền đậm hơn (Blue 600) + scale 0.97 |
 | Secondary | Nền `muted`, chữ đậm | Pressed: Gray 200 + scale 0.97 |
-| Outline | Viền solid **4px** màu chủ đạo, nền trong suốt, chữ cùng màu viền | Pressed: fill màu viền, chữ trắng |
+| Outline | Viền solid **4px** màu chủ đạo, nền trong suốt, chữ cùng màu viền | Pressed: fill màu viền, chữ `onPrimary` |
 
 Transition 200ms, dùng `Pressable` + Reanimated; không ripple Android mặc định (đè bằng pressed style riêng để nhất quán).
 
@@ -114,26 +114,21 @@ Transition 200ms, dùng `Pressable` + Reanimated; không ripple Android mặc đ
 - Touch target tối thiểu 44×44.
 - Số tiền: `moneyAccessibilityLabel` / `numberToVietnameseWords`. screen reader đọc dạng đầy đủ ("hai mươi sáu triệu… đồng").
 
-### 6.1. WCAG AA contrast matrix (palette v2 Ink · Cobalt · Mint)
+### 6.1. WCAG AA theo palette hiện tại
 
-Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal text, ≥3:1 large/bold UI text & icons.
+| Cặp token | Sáng | Tối |
+|---|---:|---:|
+| `foreground` / `background` | 11.00:1 | 15.41:1 |
+| `foregroundMuted` / `background` | 5.63:1 | 7.45:1 |
+| `foregroundMuted` / `muted` | 5.28:1 | 6.45:1 |
+| `onPrimary` / `primary` | 5.73:1 | 6.47:1 |
+| `onPrimary` / `primaryPressed` | 7.54:1 | 5.78:1 |
+| `onSecondary` / `secondary` | 5.51:1 | 8.69:1 |
+| `onResult` / `resultPositive` | 5.51:1 | 8.69:1 |
+| `primary` / `primarySoft` | 5.02:1 | 5.18:1 |
+| `danger` / `dangerSoft` | 5.16:1 | 5.04:1 |
 
-| Foreground | Background | Role | ≈ ratio | AA |
-|------------|------------|------|---------|----|
-| `#FFFFFF` | `#1D4ED8` primary | CTA label | ~5.9 | Pass |
-| `#FFFFFF` | `#1E3A8A` primaryPressed | CTA pressed | ~9.5 | Pass |
-| `#FFFFFF` | `#0F766E` secondary / resultPositive | Net hero | ~5.4 | Pass |
-| `#0F172A` | `#FFFFFF` background | Body | ~16.1 | Pass |
-| `#0F172A` | `#F1F5F9` muted | Body on muted | ~14.0 | Pass |
-| `#0F172A` | `#EFF6FF` primarySoft | Body on soft | ~14.8 | Pass |
-| `#0F172A` | `#F0FDFA` secondarySoft | Body on soft | ~15.2 | Pass |
-| `#0F172A` | `#FFFBEB` accentSoft | Body on soft | ~15.6 | Pass |
-| `#64748B` muted text | `#FFFFFF` | Secondary copy | ~4.6 | Pass |
-| `#B45309` accent | `#FFFBEB` accentSoft | Seasonal CTA | ~4.7 | Pass |
-| `#B91C1C` danger | `#FEF2F2` dangerSoft | Error title | ~5.9 | Pass |
-| `#B91C1C` danger | `#FFFFFF` | Error on white | ~6.5 | Pass |
-
-**Do not** put muted `#64748B` on soft tint fills for critical labels. keep critical labels on `foreground` / white on solid fills.
+Chữ thông thường ≥4,5:1; chữ lớn ≥3:1. Nút/chip/result dùng `onPrimary`, `onSecondary`, `onResult`; nhãn kết quả opacity 1. Pastel dùng cho nền, `secondaryForeground` cho chữ xanh mint. ChoiceChip pressed dùng viền và scale, không hạ opacity chữ. Nền đặc mặc định theo `glass.fallback` ở mỗi theme. Các tỷ lệ là màu đặc; blur, focus, pressed và nền thật cần QA trực quan trên thiết bị.
 
 ## 7. "The Bold Factor". chống generic
 
@@ -186,6 +181,16 @@ Ratios approximate relative luminance (WCAG 2.1). **Pass** = ≥4.5:1 normal tex
 
 ## 9. Ship checklist
 
-Trước submit store: [design-qa-checklist.md](./design-qa-checklist.md) + [store/README.md](./store/README.md).
+Trước submit store: [design-qa-checklist.md](./design-qa-checklist.md) + [store/README.md](../store/README.md).
 
 Token code: `src/theme/tokens.ts` · Copy voice: `src/copy/miu.ts` · Assets: `assets/mascot/`, `assets/images/`.
+
+## Bố cục bổ sung 02/10/2026
+
+- Container thường 560px; máy tính lương/offer có biến thể 1040px. Từ viewport 900px: form/kết quả hoặc A/B thành hai cột; mobile một cột. Sticky CTA dùng cùng biến thể rộng.
+- Tóm tắt tháng/năm, vùng, NPT, chế độ BH gần ô lương; Chỉnh sửa mở tùy chỉnh có trạng thái controlled. Tháng mặc định vẫn là 3.
+- Net và breakdown liền nhau; Ngài Miu ở sau bảng. ResultHero có nhãn/số trên hai hàng, fontScale tối thiểu 0,85.
+- Tab label 12px, font scaling tối đa 1,25 (1,15 dưới 360 dp); active tab có nền nhẹ và gạch dưới icon. Tab bar cao 68px cộng inset, nội dung/sticky có clearance tương ứng.
+- Android và web dùng nền đặc cho glass surface/tab bar; iOS dùng blur nếu không bật giảm trong suốt. Android dưới API 35 đặt nền status bar theo theme và tắt translucent; cuộn kết quả tính cả safe area.
+- Bảng offer dùng các cột Khoản/A/B khi đủ rộng, chuyển thành từng khoản với hai dòng A/B khi chiều rộng khả dụng theo font scale dưới 330 dp, tránh ngắt giữa các chữ số.
+- Cài đặt: giao diện, ngôn ngữ, vùng, năm thuế; cập nhật ruleset; giới thiệu/hướng dẫn phía cuối; khôi phục mặc định cuối màn.

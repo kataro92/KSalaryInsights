@@ -53,7 +53,7 @@ Cho thuê 20.000.000/tháng → 240.000.000/năm ≤ 1 tỷ → **thuế = 0**; 
 ### TC-RENT-02: vượt ngưỡng
 
 Doanh thu 1.500.000.000/năm: 
-GTGT = 1,5 tỷ × 5% = 75.000.000; TNCN = 0,5 tỷ × 5% = 25.000.000 → tổng **100.000.000**.
+GTGT = 1,5 tỷ × 5% = 75.000.000; TNCN trước giảm = 0,5 tỷ × 5% = 25.000.000; NQ 43 giảm 7.500.000 → TNCN phải nộp 17.500.000; tổng **92.500.000** cho kỳ 2026–2027, tổng DT kinh doanh ≤10 tỷ.
 
 ### TC-RENT-03: biên đúng 1 tỷ
 
@@ -100,7 +100,7 @@ Doanh thu 800.000.000/năm ≤ 1 tỷ → **thuế = 0**; UI nhắc nghĩa vụ 
 Nhóm phân phối hàng hóa, ngưỡng 1 tỷ: 
 GTGT = 1,5 tỷ × 1% = **15.000.000** 
 TNCN = (1,5 tỷ − 1 tỷ) × 0,5% = **2.500.000** (phần vượt. Đ.7 k3a Luật 109/2025 bản gốc) 
-→ tổng 17.500.000, breakdown tách hai dòng + gợi ý so sánh phương pháp (doanh thu − chi phí) × 15%.
+→ TNCN trước giảm 2.500.000; NQ 43 giảm 750.000, TNCN phải nộp 1.750.000; tổng 16.750.000. Breakdown tách GTGT, TNCN trước giảm, số giảm và phải nộp; gợi ý phương pháp thu nhập 15% chỉ trong nhánh 1–3 tỷ.
 
 ## 4. Chứng khoán (ĐÃ KHÓA. NĐ 253/2026, từ 01/07/2026)
 
@@ -156,3 +156,10 @@ Breakdown MUST tách rõ hai dòng và ghi chú phần TLTC còn quyết toán l
 | Hộ KD: ngưỡng 1 tỷ, biểu tỷ lệ ngành, TNCN trên **phần vượt ngưỡng**, lịch khai | **Khóa. Tầng 1** cho cơ chế (Đ.7 Luật 109/2025 bản gốc) | Luật 109/2025 Đ.7 k3a |
 | Chứng khoán 0,1%/lần | **Khóa. Tầng 1** (Đ.13 k2 Luật 109/2025 bản gốc) | Luật 109/2025 Đ.13 k2; NĐ 253/2026 (Đ.54) |
 | ESOP: TLTC (10% khấu trừ, quyết toán) + 0,1% khi bán | **Khóa** cơ chế | NĐ 253/2026 (Đ.50 k3a) |
+
+## Điều chỉnh engine ngày 02/10/2026
+
+- NQ 43/2026/QH16 Đ.1 k1, Đ.2: PIT phải nộp = PIT trước giảm − round(PIT trước giảm ×30%) với cá nhân cư trú, kỳ 2026 hoặc 2027, tổng doanh thu kinh doanh năm không quá 10 tỷ. Thuế 0 không sinh giảm; GTGT giữ nguyên. Cho thuê BĐS áp theo phạm vi kinh doanh tại Luật 109 Đ.7 k4, NĐ 68 Đ.4 k4. NĐ hướng dẫn còn là dự thảo, app không phát hành mẫu tờ khai.
+- Hộ KD >3 tỷ: phương pháp thu nhập bắt buộc, thiếu chi phí không trả kết quả; >3 đến 50 tỷ dùng 17%, >50 tỷ dùng 20%, không dùng tỷ lệ doanh thu làm kết quả chính. NQ 43 áp sau bước này. TC-HKD-INCOME-01: DT 4 tỷ, chi phí 3 tỷ → PIT trước giảm 170 triệu; giảm 51 triệu; phải nộp 119 triệu; GTGT phân phối 40 triệu.
+- Kỳ 2025: ngưỡng 100 triệu, vượt ngưỡng tính GTGT và TNCN trên toàn bộ doanh thu, không trừ ngưỡng và không giảm 30%; nguồn TT 40/2021 và TT 100/2021 (VBHN 24/VBHN-BTC 2022). TC-RENT-2025: 240 triệu → GTGT 12 triệu + TNCN 12 triệu = 24 triệu.
+- Năm 2027 chỉ mở module HKD/cho thuê theo quy định kinh doanh đã có; không suy biểu lương, trần BH hoặc thông số quyền lợi cho 2027. UI nhắc nhập tổng doanh thu kinh doanh nếu có nguồn khác. Nhiều hợp đồng/ngành cần phân bổ ngưỡng chung và chi phí hợp lệ trước khi nhập, không nhân ngưỡng miễn cho mỗi hợp đồng.

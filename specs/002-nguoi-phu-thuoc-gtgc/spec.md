@@ -61,3 +61,7 @@ Minh chọn 2 NPT khi tính lương 2026, thấy thuế về 0 theo TC-TNCN-2026
 ## Assumptions
 
 - Một người nộp thuế; không chia sẻ NPT giữa nhiều NNT trong app.
+
+## Extension 02/10/2026
+
+Quyết toán năm có một khoảng đăng ký cho từng NPT, từ tháng 1 đến 12, kết thúc không trước bắt đầu. Không lưu tên hoặc hồ sơ. Một NPT từ tháng 7/2026: 6 tháng ×6,2 triệu =37,2 triệu. Kịch bản cũ thiếu khoảng tháng mặc định 1–12. Nhắc điều kiện thu nhập NPT ≤3 triệu/tháng theo TT 87/2026.

@@ -14,7 +14,10 @@ import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { formatVnd, moneyAccessibilityLabel } from "@/src/theme/money";
 import { motion, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Tone = "positive" | "primary" | "muted";
 
@@ -42,18 +45,18 @@ function toneStylesFor(colors: ColorTokens): Record<
   return {
     positive: {
       root: { backgroundColor: colors.resultPositive },
-      text: { color: colors.white },
-      eyebrowOpacity: 0.88,
+      text: { color: colors.onResult },
+      eyebrowOpacity: 1,
     },
     primary: {
       root: { backgroundColor: colors.primary },
-      text: { color: colors.white },
-      eyebrowOpacity: 0.88,
+      text: { color: colors.onPrimary },
+      eyebrowOpacity: 1,
     },
     muted: {
       root: { backgroundColor: colors.muted },
       text: { color: colors.foreground },
-      eyebrowOpacity: 0.75,
+      eyebrowOpacity: 1,
     },
   };
 }
@@ -116,7 +119,12 @@ export function ResultHero({
     transform: [{ translateY: translateY.value }],
   }));
 
-  const iconColor = tone === "muted" ? colors.foregroundMuted : colors.white;
+  const iconColor =
+    tone === "muted"
+      ? colors.foregroundMuted
+      : tone === "primary"
+        ? colors.onPrimary
+        : colors.onResult;
 
   return (
     <Animated.View
@@ -142,9 +150,9 @@ export function ResultHero({
         <Text style={[styles.label, palette.text]}>{label}</Text>
         <Text
           style={[styles.amount, palette.text]}
-          numberOfLines={1}
+          numberOfLines={2}
           adjustsFontSizeToFit
-          minimumFontScale={0.55}
+          minimumFontScale={0.85}
         >
           {formatVnd(display)}
         </Text>
@@ -173,9 +181,9 @@ function makeStyles(_theme: ThemeContextValue) {
       textTransform: "uppercase",
     },
     row: {
-      flexDirection: "row",
+      flexDirection: "column",
       justifyContent: "space-between",
-      alignItems: "center",
+      alignItems: "stretch",
       gap: space[3],
     },
     label: {
@@ -191,7 +199,7 @@ function makeStyles(_theme: ThemeContextValue) {
       fontSize: typography.scale.moneyLg.fontSize,
       lineHeight: typography.scale.moneyLg.lineHeight,
       fontVariant: ["tabular-nums"],
-      textAlign: "right",
+      textAlign: "left",
     },
   } satisfies ThemedStyleSheet;
 }

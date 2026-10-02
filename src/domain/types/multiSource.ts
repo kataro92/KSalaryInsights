@@ -1,7 +1,10 @@
 /** Multi-source annual tax summary (F020). No crypto kinds. */
 
 import type { RegionCode } from "@/src/domain/types/salary";
-import type { SettlementOutcomeKind } from "@/src/domain/types/settlement";
+import type {
+  AnnualSettlementInput,
+  SettlementOutcomeKind,
+} from "@/src/domain/types/settlement";
 
 export const MULTI_SOURCE_KINDS = [
   "salary",
@@ -43,6 +46,13 @@ export type MultiSourceAnnualSummary = {
   createdAt?: string;
   updatedAt: string;
   lines: MultiSourceLine[];
+  salaryRelief?: Pick<
+    AnnualSettlementInput,
+    | "numDependents"
+    | "dependentPeriods"
+    | "medicalExpenses"
+    | "educationExpenses"
+  >;
 };
 
 export type MultiSourceTotals = {
@@ -50,6 +60,8 @@ export type MultiSourceTotals = {
   withheld: number;
   deltaSigned: number;
   deltaKind: SettlementOutcomeKind;
+  salaryReliefApplied?: number;
+  salaryAnnualTax?: number;
 };
 
 export type FilingWizardImpact = {

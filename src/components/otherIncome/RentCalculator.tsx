@@ -29,6 +29,7 @@ export function RentCalculator({ taxYear }: Props) {
   const scroll = useOptionalScrollToResult();
   const [monthlyMode, setMonthlyMode] = useState(true);
   const [amountText, setAmountText] = useState("20.000.000");
+  const [totalRevenueText, setTotalRevenueText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RentBreakdown | null>(null);
 
@@ -42,7 +43,13 @@ export function RentCalculator({ taxYear }: Props) {
     }
     const annualRevenue = monthlyMode ? amount * 12 : amount;
     try {
-      setResult(calculateRent({ annualRevenue, taxYear }));
+      setResult(
+        calculateRent({
+          annualRevenue,
+          taxYear,
+          totalBusinessRevenue: parseMoney(totalRevenueText) ?? undefined,
+        }),
+      );
       void successHaptic();
       scroll?.scrollToAnchor();
     } catch (e) {
@@ -82,6 +89,15 @@ export function RentCalculator({ taxYear }: Props) {
       {error ? (
         <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
+      <MoneyField
+        label="Tổng doanh thu kinh doanh năm (nếu có nguồn khác)"
+        accessibilityLabel="Tổng doanh thu kinh doanh năm để xét giảm 30%"
+        value={totalRevenueText}
+        onValueChange={(v) => {
+          setTotalRevenueText(v);
+          setResult(null);
+        }}
+      />
       <Button label="Tính cho thuê" onPress={onCalculate} />
       {result ? (
         <View ref={scroll?.anchorRef} collapsable={false}>
@@ -104,8 +120,18 @@ export function RentCalculator({ taxYear }: Props) {
                 tipId: "other.vat",
               },
               {
+                id: "pit-before",
+                label: "TNCN trước giảm",
+                amount: result.pitBeforeReduction,
+              },
+              {
+                id: "pit-reduction",
+                label: "Giảm TNCN theo NQ 43",
+                amount: -result.pitReduction,
+              },
+              {
                 id: "pit",
-                label: "Thuế thu nhập cá nhân",
+                label: "TNCN phải nộp",
                 amount: result.pit,
                 tipId: "other.pit",
               },

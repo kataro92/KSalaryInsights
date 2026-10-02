@@ -43,6 +43,7 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
   const scroll = useOptionalScrollToResult();
   const [industryId, setIndustryId] = useState<HkdIndustryId>("distribution");
   const [monthlyText, setMonthlyText] = useState("125.000.000");
+  const [totalRevenueText, setTotalRevenueText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<HkdBreakdown | null>(null);
 
@@ -63,7 +64,8 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
           annualRevenue,
           industryId,
           taxYear,
-        })
+          totalBusinessRevenue: parseMoney(totalRevenueText) ?? undefined,
+        }),
       );
       void successHaptic();
       scroll?.scrollToAnchor();
@@ -99,7 +101,7 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
           value={monthlyText}
           error={requiredNonNegativeMoney(
             monthlyText,
-            "Nhập doanh thu tháng hợp lệ."
+            "Nhập doanh thu tháng hợp lệ.",
           )}
           onValueChange={(formatted) => {
             setMonthlyText(formatted);
@@ -111,6 +113,15 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
         </Text>
       </Section>
 
+      <MoneyField
+        label="Tổng doanh thu kinh doanh năm (nếu có nguồn khác)"
+        accessibilityLabel="Tổng doanh thu kinh doanh năm để xét giảm 30%"
+        value={totalRevenueText}
+        onValueChange={(v) => {
+          setTotalRevenueText(v);
+          setResult(null);
+        }}
+      />
       <Button label="Tính nhanh" onPress={onCalculate} />
 
       {error ? (
@@ -142,8 +153,18 @@ export function SimpleHkdCalculator({ taxYear }: Props) {
                 tipId: "other.vat",
               },
               {
+                id: "pit-before",
+                label: "TNCN trước giảm",
+                amount: result.pitBeforeReduction,
+              },
+              {
+                id: "pit-reduction",
+                label: "Giảm TNCN theo NQ 43",
+                amount: -result.pitReduction,
+              },
+              {
                 id: "pit",
-                label: "Thuế thu nhập cá nhân",
+                label: "TNCN phải nộp",
                 amount: result.pit,
                 tipId: "other.pit",
               },

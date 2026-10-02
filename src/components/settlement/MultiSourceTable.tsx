@@ -1,11 +1,17 @@
 import { Pressable, Text, View } from "react-native";
 
 import { ColorBlock } from "@/src/components/common/ColorBlock";
-import type { MultiSourceLine, MultiSourceTotals } from "@/src/domain/types/multiSource";
+import type {
+  MultiSourceLine,
+  MultiSourceTotals,
+} from "@/src/domain/types/multiSource";
 import { formatVnd } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Props = {
   lines: MultiSourceLine[];
@@ -51,8 +57,8 @@ export function MultiSourceTable({
           </Text>
           {line.estimatedVat > 0 || line.estimatedPit > 0 ? (
             <Text style={styles.meta}>
-              Thuế giá trị gia tăng {formatVnd(line.estimatedVat)} · thuế thu nhập cá nhân{" "}
-              {formatVnd(line.estimatedPit)}
+              Thuế giá trị gia tăng {formatVnd(line.estimatedVat)} · thuế thu
+              nhập cá nhân {formatVnd(line.estimatedPit)}
               {line.estimatedOtherTax > 0
                 ? ` · khác ${formatVnd(line.estimatedOtherTax)}`
                 : ""}
@@ -61,9 +67,7 @@ export function MultiSourceTable({
           <Text style={styles.tax}>
             Thuế ước: {formatVnd(line.estimatedTaxTotal)}
           </Text>
-          <Text style={styles.meta}>
-            Đã nộp: {formatVnd(line.withheld)}
-          </Text>
+          <Text style={styles.meta}>Đã nộp: {formatVnd(line.withheld)}</Text>
           {line.notes.slice(0, 2).map((n, i) => (
             <Text key={i} style={styles.note}>
               {n}
@@ -95,6 +99,18 @@ export function MultiSourceTable({
       ))}
 
       <ColorBlock tone="primarySoft" accessibilityLabel="Tổng ước tính">
+        {totals.salaryAnnualTax !== undefined ? (
+          <>
+            <Text style={styles.totalsLine}>
+              Thuế lương tính lại cả năm: {formatVnd(totals.salaryAnnualTax)}
+            </Text>
+            <Text style={styles.note}>
+              Các dòng lương ở trên ghi thuế từng nguồn trước tổng hợp. Tổng
+              dùng thuế lương tính lại, giảm trừ y tế / giáo dục{" "}
+              {formatVnd(totals.salaryReliefApplied ?? 0)} chỉ một lần.
+            </Text>
+          </>
+        ) : null}
         <Text style={styles.totalsTitle}>Tổng (ước tính)</Text>
         <Text style={styles.totalsLine}>
           Thuế ước: {formatVnd(totals.estimatedTax)}
@@ -104,7 +120,10 @@ export function MultiSourceTable({
         </Text>
         <Text style={styles.totalsDelta}>{deltaLabel(totals)}</Text>
         <Text style={styles.note}>
-          Tổng = thuế từng dòng − số đã nộp. Không suy ra một tờ khai duy nhất.
+          {totals.salaryAnnualTax !== undefined
+            ? "Chênh lệch = thuế lương tính lại + thuế các nguồn khác − số đã nộp."
+            : "Chênh lệch = thuế từng dòng − số đã nộp."}{" "}
+          Không suy ra một tờ khai duy nhất.
         </Text>
       </ColorBlock>
     </View>

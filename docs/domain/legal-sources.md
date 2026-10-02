@@ -24,7 +24,10 @@ Ký hiệu: Tầng 1: đã có toàn văn/trích nguyên văn từ nguồn chín
 | **NQ 198/2025/QH15** | Đ.10 k6 | Bỏ thuế khoán hộ KD từ 01/01/2026 | Tầng 1 | `198_nq.pdf`|
 | **NĐ 68/2026/NĐ-CP** | Đ.3-5, 8-12, 17, 18 | Khung hộ KD; doanh thu từng ngành = Đ.5 | Tầng 1 | `68-ndcp.signed.pdf`|
 | **NĐ 141/2026/NĐ-CP** | Đ.1, Đ.3 | Ngưỡng miễn 500tr → 1 tỷ; hiệu lực 01/01/2026 | Tầng 1 | `141-ndcp.signed.pdf`|
-| **NĐ 253/2026/NĐ-CP** | Đ.50 k2-3a, 51 k1b, 54, **69, 70** | ESOP; CK 0,1%; vãng lai 5tr; miễn QT ≤15tr; **chuyển tiếp cả kỳ 2026** | Tầng 1 | `253-2026-ND-CP.pdf` (`253m-ndcp.signed.pdf`)|
+| **NĐ 253/2026/NĐ-CP** | Đ.8 k2g, Đ.46 k2a, Đ.49, Đ.50 k2-3a, 51 k1b, 54, **69, 70** | ESOP; CK 0,1%; vãng lai 5tr; miễn QT ≤15tr; **chuyển tiếp cả kỳ 2026** | Tầng 1 | `253-2026-ND-CP.pdf` (`253m-ndcp.signed.pdf`)|
+| **NQ 43/2026/QH16** | Đ.1 k1, Đ.2 | Giảm 30% TNCN kinh doanh 2026-2027, doanh thu năm ≤10 tỷ, cá nhân cư trú | Tầng 1 | `nq43vegiamthuetncntndn.signed.pdf`, [Cổng Chính phủ](https://chinhphu.vn/?classid=0&docid=219330&pageid=27160), đã đọc cả hai trang 02/10/2026 |
+| **NĐ 374/2025/NĐ-CP** | Đ.4 k1 | NLĐ đóng BHTN 1% | Tầng 1 | `374-1.signed.pdf`, [văn bản Chính phủ](https://vanban.chinhphu.vn/?classid=1&docid=216493&pageid=27160), đọc trang 2; tỷ lệ giữ nguyên |
+| **TT 40/2021/TT-BTC, TT 100/2021/TT-BTC** | Đ.4 k2, Đ.9, Đ.10; Phụ lục I | HKD/cho thuê kỳ 2025: ngưỡng 100 triệu, thuế trên toàn bộ doanh thu | Tầng 1 | `24-vbhn-btc-2022.pdf`, [VBHN Công báo](https://congbaocdn.chinhphu.vn/CongBaoCP/VanBan/2022/10/38129/42232-1-2022819-82024-vbhn-btc.pdf) |
 | **TT 87/2026/TT-BTC** | Đ.1, 3, 5, 6 | NPT thu nhập ≤3tr/tháng; CK phái sinh 0,1% | Tầng 1 | `87-btc.signed.pdf`|
 | **TT 50/2026/TT-BTC** | Đ.3, Đ.4 + mẫu 01/BĐS | Mẫu thông báo doanh thu cho thuê; công thức GTGT/TNCN | Tầng 1 | `50-btc.signed.pdf`|
 | **CV 340/BHXH-CSXH** | Bảng hệ số | Hệ số trượt giá 2026 | Tầng 1 | đợt 1 |
@@ -61,3 +64,10 @@ Theo dõi qua [legal-changelog.md](./legal-changelog.md). Khi có văn bản m�
 | 8 | TT 87 phạm vi = NPT + CK phái sinh (không phải vãng lai/ESOP) | `legal-sources.md` (đã sửa) |
 | 9 | TT 50 mốc 31/07/2026 = mẫu 01/BK-STK; hạn 01/BĐS = NĐ 68 Đ.8 | `thu-nhap-khac.md` |
 | 10 | Luật Việc làm 2025: trần hưởng BHTN chỉ còn 5×LTTV (bỏ nhánh 5× lương cơ sở khu vực NN); nhóm 12/36 áp HĐ từ đủ 1 tháng (bỏ "mùa vụ") | `quyen-loi-lao-dong.md` |
+
+## Đối chiếu bổ sung ngày 02/10/2026
+
+- NĐ 253: bản Công báo có lớp chữ lưu `253-2026-congbao.docx`, nguồn trang [Công báo 402](https://congbao.chinhphu.vn/van-ban-dang-cong-bao/chinh-phu-c1/trang-14.htm). Đ.46 k2a: tổng bảo hiểm hưu trí bổ sung/tự nguyện/nhân thọ, gồm công ty và NLĐ, tối đa 3 triệu/tháng. Đ.49 k2: y tế 23 triệu/năm, giáo dục 24 triệu/năm. Đ.49 k3-5: chứng từ đúng người, chi tự chịu, không trừ trùng, không chuyển sang năm sau.
+- Đ.69 k1a áp giảm trừ lương cho cả kỳ 2026; k1b riêng tiền ăn chỉ từ 01/07/2026. UI quyết toán yêu cầu số tháng nhận khoản tiền ăn kể từ tháng 7, tối đa 6.
+- Cho thuê BĐS là nhánh thu nhập kinh doanh: Luật 109 Đ.7 k4; NĐ 68 Đ.4 k4. Do đó áp phạm vi cá nhân cư trú trong NQ 43 Đ.1 k1. NĐ hướng dẫn NQ 43 còn ở dạng dự thảo khi rà soát; không lấy tham số hay mẫu tờ khai từ dự thảo. Đây là ước tính theo Nghị quyết đã có hiệu lực.
+- Doanh thu 10 tỷ là tổng doanh thu kinh doanh của cá nhân trong năm. Ô tổng doanh thu các nguồn dùng để xét giảm; không suy từ một hợp đồng riêng. Vượt ngưỡng thực tế cần điều chỉnh nghĩa vụ thuế với cơ quan thuế.

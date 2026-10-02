@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
 import { MaternityBreakdownCard } from "@/src/components/breakdown/MaternityBreakdownCard";
 import { Button } from "@/src/components/common/Button";
@@ -18,10 +18,14 @@ import type { MaternityBreakdown } from "@/src/domain/types/benefits";
 import { calculateMaternity } from "@/src/engine/maternity";
 import { useScrollToAnchor } from "@/src/hooks/useScrollToAnchor";
 import { successHaptic } from "@/src/theme/haptics";
+import { useTheme } from "@/src/theme/ThemeProvider";
+import { typography } from "@/src/theme/tokens";
 import { parseMoney } from "@/src/theme/money";
 
 export function MaternityCalculatorScreen() {
-  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
+  const { colors } = useTheme();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } =
+    useScrollToAnchor();
   const [inputs, setInputs] = useState<MaternityInputsValue>({
     avgText: "18.000.000",
     birthDate: "2026-08-15",
@@ -74,6 +78,18 @@ export function MaternityCalculatorScreen() {
           setResult(null);
         }}
       />
+      <Text
+        style={{
+          color: colors.foregroundMuted,
+          fontFamily: typography.fontFamily.regular,
+          fontSize: 12,
+          lineHeight: 18,
+        }}
+      >
+        NĐ 168/2026/NĐ-CP: chế độ sinh con thứ hai từ 01/07/2026 xét số con đẻ
+        còn sống. Kiểm tra điều kiện và hồ sơ với cơ quan BHXH; app chỉ ước
+        tính.
+      </Text>
       {error ? (
         <EmptyErrorState
           variant="error"

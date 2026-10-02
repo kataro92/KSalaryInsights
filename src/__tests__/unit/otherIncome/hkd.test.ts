@@ -12,7 +12,7 @@ describe("TC-HKD", () => {
     expect(r.reportingRequired).toBe(true);
   });
 
-  it("TC-HKD-02: tạp hóa 1,5 tỷ → GTGT 15tr + TNCN 2,5tr", () => {
+  it("TC-HKD-02: tạp hóa 1,5 tỷ → GTGT 15tr + TNCN 1,75tr sau giảm 30%", () => {
     const r = calculateHkd({
       annualRevenue: 1_500_000_000,
       industryId: "distribution",
@@ -20,8 +20,8 @@ describe("TC-HKD", () => {
       costs: 200_000_000,
     });
     expect(r.vat).toBe(15_000_000);
-    expect(r.pit).toBe(2_500_000);
-    expect(r.totalTax).toBe(17_500_000);
+    expect(r.pit).toBe(1_750_000);
+    expect(r.totalTax).toBe(16_750_000);
     expect(r.incomeMethodHint).toBeTruthy();
   });
 });

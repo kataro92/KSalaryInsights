@@ -4,113 +4,744 @@
  "description": "JSON Schema kiểm thử tính hợp lệ của bộ tham số luật versioned cho KSalaryInsights",
  "type": "object",
  "required": [
- "id",
- "version",
- "name",
- "tax_year",
- "effective_from",
- "effective_to",
- "legal_sources",
- "personal_relief",
- "dependent_relief",
- "reference_salary",
- "regional_minimum_wages",
- "insurance_rates",
- "insurance_caps",
- "pit_brackets"
+  "id",
+  "version",
+  "name",
+  "tax_year",
+  "effective_from",
+  "effective_to",
+  "legal_sources",
+  "personal_relief",
+  "dependent_relief",
+  "reference_salary",
+  "regional_minimum_wages",
+  "insurance_rates",
+  "insurance_caps",
+  "pit_brackets"
  ],
  "properties": {
- "id": { "type": "string", "minLength": 1 },
- "version": { "type": "string", "minLength": 1 },
- "name": { "type": "string", "minLength": 1 },
- "tax_year": { "type": "integer", "minimum": 2020, "maximum": 2030 },
- "effective_from": { "type": "string", "format": "date" },
- "effective_to": { "type": "string", "format": "date" },
- "legal_sources": {
- "type": "array",
- "items": { "type": "string", "minLength": 1 },
- "minItems": 1
- },
- "personal_relief": { "type": "number", "minimum": 0 },
- "dependent_relief": { "type": "number", "minimum": 0 },
- "reference_salary": { "type": "number", "minimum": 0 },
- "regional_minimum_wages": {
- "type": "object",
- "required": ["1", "2", "3", "4"],
- "properties": {
- "1": { "type": "number", "minimum": 0 },
- "2": { "type": "number", "minimum": 0 },
- "3": { "type": "number", "minimum": 0 },
- "4": { "type": "number", "minimum": 0 }
- },
- "additionalProperties": false
- },
- "insurance_rates": {
- "type": "object",
- "required": ["employee", "employer"],
- "properties": {
- "employee": {
- "type": "object",
- "required": ["social", "health", "unemployment"],
- "properties": {
- "social": { "type": "number", "minimum": 0, "maximum": 1 },
- "health": { "type": "number", "minimum": 0, "maximum": 1 },
- "unemployment": { "type": "number", "minimum": 0, "maximum": 1 }
- },
- "additionalProperties": false
- },
- "employer": {
- "type": "object",
- "required": ["social", "health", "unemployment"],
- "properties": {
- "social": { "type": "number", "minimum": 0, "maximum": 1 },
- "health": { "type": "number", "minimum": 0, "maximum": 1 },
- "unemployment": { "type": "number", "minimum": 0, "maximum": 1 },
- "occupational_accident": { "type": "number", "minimum": 0, "maximum": 1 }
- },
- "additionalProperties": false
- }
- },
- "additionalProperties": false
- },
- "insurance_caps": {
- "type": "object",
- "required": ["social_health_multiplier", "unemployment_multiplier"],
- "properties": {
- "social_health_multiplier": { "type": "number", "minimum": 1 },
- "unemployment_multiplier": { "type": "number", "minimum": 1 }
- },
- "additionalProperties": false
- },
- "pit_brackets": {
- "type": "array",
- "minItems": 1,
- "items": {
- "type": "object",
- "required": ["bracket", "rate"],
- "properties": {
- "bracket": { "type": "integer", "minimum": 1 },
- "max_taxable_income": { "type": ["number", "null"], "minimum": 0 },
- "rate": { "type": "number", "minimum": 0, "maximum": 1 }
- },
- "additionalProperties": false
- }
- },
- "casual_income": {
- "type": "object",
- "description": "Optional. chỉ bắt buộc khi ruleset dùng cho module vãng lai (spec 004/008). Ruleset MVP 001-003 có thể bỏ qua; engine fallback: withholding_threshold=2_000_000 (trước 2026-07) / 5_000_000 (từ kỳ 2026 theo NĐ 253), withholding_rate=0.10, exemption_settlement_monthly_avg=15_000_000.",
- "required": [
- "withholding_threshold",
- "withholding_rate",
- "exemption_settlement_monthly_avg"
- ],
- "properties": {
- "withholding_threshold": { "type": "number", "minimum": 0 },
- "withholding_rate": { "type": "number", "minimum": 0, "maximum": 1 },
- "exemption_settlement_monthly_avg": { "type": "number", "minimum": 0 }
- },
- "additionalProperties": false
- }
+  "id": {
+   "type": "string",
+   "minLength": 1
+  },
+  "version": {
+   "type": "string",
+   "minLength": 1
+  },
+  "name": {
+   "type": "string",
+   "minLength": 1
+  },
+  "tax_year": {
+   "type": "integer",
+   "minimum": 2020,
+   "maximum": 2030
+  },
+  "effective_from": {
+   "type": "string",
+   "format": "date"
+  },
+  "effective_to": {
+   "type": "string",
+   "format": "date"
+  },
+  "legal_sources": {
+   "type": "array",
+   "items": {
+    "type": "string",
+    "minLength": 1
+   },
+   "minItems": 1
+  },
+  "personal_relief": {
+   "type": "number",
+   "minimum": 0
+  },
+  "dependent_relief": {
+   "type": "number",
+   "minimum": 0
+  },
+  "reference_salary": {
+   "type": "number",
+   "minimum": 0
+  },
+  "regional_minimum_wages": {
+   "type": "object",
+   "required": [
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "properties": {
+    "1": {
+     "type": "number",
+     "minimum": 0
+    },
+    "2": {
+     "type": "number",
+     "minimum": 0
+    },
+    "3": {
+     "type": "number",
+     "minimum": 0
+    },
+    "4": {
+     "type": "number",
+     "minimum": 0
+    }
+   },
+   "additionalProperties": false
+  },
+  "insurance_rates": {
+   "type": "object",
+   "required": [
+    "employee",
+    "employer"
+   ],
+   "properties": {
+    "employee": {
+     "type": "object",
+     "required": [
+      "social",
+      "health",
+      "unemployment"
+     ],
+     "properties": {
+      "social": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "health": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "unemployment": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      }
+     },
+     "additionalProperties": false
+    },
+    "employer": {
+     "type": "object",
+     "required": [
+      "social",
+      "health",
+      "unemployment"
+     ],
+     "properties": {
+      "social": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "health": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "unemployment": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "occupational_accident": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      }
+     },
+     "additionalProperties": false
+    }
+   },
+   "additionalProperties": false
+  },
+  "insurance_caps": {
+   "type": "object",
+   "required": [
+    "social_health_multiplier",
+    "unemployment_multiplier"
+   ],
+   "properties": {
+    "social_health_multiplier": {
+     "type": "number",
+     "minimum": 1
+    },
+    "unemployment_multiplier": {
+     "type": "number",
+     "minimum": 1
+    }
+   },
+   "additionalProperties": false
+  },
+  "pit_brackets": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "type": "object",
+    "required": [
+     "bracket",
+     "rate"
+    ],
+    "properties": {
+     "bracket": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "max_taxable_income": {
+      "type": [
+       "number",
+       "null"
+      ],
+      "minimum": 0
+     },
+     "rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     }
+    },
+    "additionalProperties": false
+   }
+  },
+  "casual_income": {
+   "type": "object",
+   "description": "Optional. chỉ bắt buộc khi ruleset dùng cho module vãng lai (spec 004/008). Ruleset MVP 001-003 có thể bỏ qua; engine fallback: withholding_threshold=2_000_000 (trước 2026-07) / 5_000_000 (từ kỳ 2026 theo NĐ 253), withholding_rate=0.10, exemption_settlement_monthly_avg=15_000_000.",
+   "required": [
+    "withholding_threshold",
+    "withholding_rate",
+    "exemption_settlement_monthly_avg"
+   ],
+   "properties": {
+    "withholding_threshold": {
+     "type": "number",
+     "minimum": 0
+    },
+    "withholding_rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "exemption_settlement_monthly_avg": {
+     "type": "number",
+     "minimum": 0
+    }
+   },
+   "additionalProperties": false
+  },
+  "severance_pay": {
+   "type": "object",
+   "properties": {
+    "resignation_months_per_year": {
+     "type": "number",
+     "minimum": 0
+    },
+    "job_loss_months_per_year": {
+     "type": "number",
+     "minimum": 0
+    },
+    "job_loss_min_months": {
+     "type": "number",
+     "minimum": 0
+    }
+   },
+   "additionalProperties": false
+  },
+  "unemployment_benefit": {
+   "type": "object",
+   "properties": {
+    "monthly_rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "cap_lttv_multiplier": {
+     "type": "number",
+     "minimum": 0
+    },
+    "benefit_months_base": {
+     "type": "number",
+     "minimum": 0
+    },
+    "benefit_months_per_12_paid": {
+     "type": "number",
+     "minimum": 0
+    },
+    "benefit_months_max": {
+     "type": "number",
+     "minimum": 0
+    },
+    "min_paid_months": {
+     "type": "number",
+     "minimum": 0
+    },
+    "waiting_work_days": {
+     "type": "number",
+     "minimum": 0
+    },
+    "benefit_start_work_day": {
+     "type": "number",
+     "minimum": 0
+    },
+    "filing_deadline_months": {
+     "type": "number",
+     "minimum": 0
+    },
+    "lookback_months_standard": {
+     "type": "number",
+     "minimum": 0
+    },
+    "lookback_months_short_contract": {
+     "type": "number",
+     "minimum": 0
+    }
+   },
+   "additionalProperties": false
+  },
+  "maternity": {
+   "type": "object",
+   "properties": {
+    "rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "one_time_multiplier": {
+     "type": "number",
+     "minimum": 0
+    },
+    "first_child_months": {
+     "type": "number",
+     "minimum": 0
+    },
+    "second_child_months": {
+     "type": "number",
+     "minimum": 0
+    },
+    "second_child_extended_from": {
+     "type": "string",
+     "minLength": 1,
+     "format": "date"
+    },
+    "twin_bonus_from_child": {
+     "type": "number",
+     "minimum": 0
+    }
+   },
+   "additionalProperties": false
+  },
+  "paternity_leave": {
+   "type": "object",
+   "properties": {
+    "rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "divisor": {
+     "type": "number",
+     "minimum": 0
+    },
+    "normal_days": {
+     "type": "number",
+     "minimum": 0
+    },
+    "surgery_or_preterm_days": {
+     "type": "number",
+     "minimum": 0
+    },
+    "twins_days": {
+     "type": "number",
+     "minimum": 0
+    },
+    "twins_surgery_days": {
+     "type": "number",
+     "minimum": 0
+    },
+    "extra_days_per_child_from": {
+     "type": "number",
+     "minimum": 0
+    },
+    "extra_days_per_child": {
+     "type": "number",
+     "minimum": 0
+    },
+    "second_child_extended_from": {
+     "type": "string",
+     "minLength": 1,
+     "format": "date"
+    },
+    "second_child_min_days": {
+     "type": "number",
+     "minimum": 0
+    }
+   },
+   "additionalProperties": false
+  },
+  "sick_leave": {
+   "type": "object",
+   "properties": {
+    "rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "divisor": {
+     "type": "number",
+     "minimum": 0
+    },
+    "annual_day_caps_normal": {
+     "type": "array",
+     "items": {
+      "type": "number",
+      "minimum": 0
+     }
+    },
+    "annual_day_caps_hazardous": {
+     "type": "array",
+     "items": {
+      "type": "number",
+      "minimum": 0
+     }
+    },
+    "years_thresholds": {
+     "type": "array",
+     "items": {
+      "type": "number",
+      "minimum": 0
+     }
+    }
+   },
+   "additionalProperties": false
+  },
+  "lump_sum_withdrawal": {
+   "type": "object",
+   "properties": {
+    "pre_2014_coefficient": {
+     "type": "number",
+     "minimum": 0
+    },
+    "from_2014_coefficient": {
+     "type": "number",
+     "minimum": 0
+    },
+    "participation_cutoff": {
+     "type": "string",
+     "minLength": 1
+    },
+    "under_one_year_max_months": {
+     "type": "number",
+     "minimum": 0
+    },
+    "conditions_before_cutoff": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "conditions_from_cutoff": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    }
+   },
+   "additionalProperties": false
+  },
+  "pension_rates": {
+   "type": "object",
+   "properties": {
+    "female_base_years": {
+     "type": "number",
+     "minimum": 0
+    },
+    "female_base_rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "female_increment_per_year": {
+     "type": "number",
+     "minimum": 0
+    },
+    "female_max_rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "female_max_years": {
+     "type": "number",
+     "minimum": 0
+    },
+    "male_long_base_years": {
+     "type": "number",
+     "minimum": 0
+    },
+    "male_long_base_rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "male_long_increment_per_year": {
+     "type": "number",
+     "minimum": 0
+    },
+    "male_long_max_rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "male_long_max_years": {
+     "type": "number",
+     "minimum": 0
+    },
+    "male_short_base_years": {
+     "type": "number",
+     "minimum": 0
+    },
+    "male_short_base_rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "male_short_increment_per_year": {
+     "type": "number",
+     "minimum": 0
+    },
+    "male_short_max_years": {
+     "type": "number",
+     "minimum": 0
+    },
+    "min_years": {
+     "type": "number",
+     "minimum": 0
+    }
+   },
+   "additionalProperties": false
+  },
+  "inflation_adjustment": {
+   "type": "object",
+   "properties": {
+    "table_year": {
+     "type": "number",
+     "minimum": 0
+    },
+    "note": {
+     "type": "string",
+     "minLength": 1
+    }
+   },
+   "additionalProperties": false
+  },
+  "other_income": {
+   "type": "object",
+   "properties": {
+    "rent": {
+     "type": "object",
+     "properties": {
+      "exemption_threshold": {
+       "type": "number",
+       "minimum": 0
+      },
+      "vat_rate": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "pit_rate_on_excess": {
+       "type": "number",
+       "minimum": 0
+      },
+      "reporting_form": {
+       "type": "string",
+       "minLength": 1
+      },
+      "reporting_deadline_note": {
+       "type": "string",
+       "minLength": 1
+      },
+      "pit_on_full_revenue": {
+       "type": "boolean"
+      }
+     },
+     "additionalProperties": false
+    },
+    "hkd": {
+     "type": "object",
+     "properties": {
+      "exemption_threshold": {
+       "type": "number",
+       "minimum": 0
+      },
+      "income_method_threshold": {
+       "type": "number",
+       "minimum": 0
+      },
+      "income_method_rate": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "industry_rates": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "minLength": 1
+         },
+         "label": {
+          "type": "string",
+          "minLength": 1
+         },
+         "vat_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         },
+         "pit_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+         }
+        },
+        "additionalProperties": false
+       }
+      },
+      "income_method_middle_rate": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "income_method_upper_rate": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "income_method_upper_threshold": {
+       "type": "number",
+       "minimum": 0
+      },
+      "pit_on_full_revenue": {
+       "type": "boolean"
+      }
+     },
+     "additionalProperties": false
+    },
+    "securities": {
+     "type": "object",
+     "properties": {
+      "transfer_rate": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "effective_from": {
+       "type": "string",
+       "minLength": 1,
+       "format": "date"
+      }
+     },
+     "additionalProperties": false
+    },
+    "esop": {
+     "type": "object",
+     "properties": {
+      "tlcc_withholding_rate": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "transfer_rate": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "effective_from": {
+       "type": "string",
+       "minLength": 1,
+       "format": "date"
+      }
+     },
+     "additionalProperties": false
+    }
+   },
+   "additionalProperties": false
+  },
+  "salary_deductions": {
+   "type": "object",
+   "properties": {
+    "medical_annual_cap": {
+     "type": "number",
+     "minimum": 0
+    },
+    "education_annual_cap": {
+     "type": "number",
+     "minimum": 0
+    },
+    "voluntary_insurance_monthly_cap": {
+     "type": "number",
+     "minimum": 0
+    },
+    "meal_monthly_cap": {
+     "type": "number",
+     "minimum": 0
+    },
+    "meal_effective_from": {
+     "type": "string",
+     "minLength": 1,
+     "format": "date"
+    }
+   },
+   "additionalProperties": false,
+   "required": [
+    "medical_annual_cap",
+    "education_annual_cap",
+    "voluntary_insurance_monthly_cap",
+    "meal_monthly_cap",
+    "meal_effective_from"
+   ]
+  },
+  "business_tax_reduction": {
+   "type": "object",
+   "properties": {
+    "rate": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "revenue_cap": {
+     "type": "number",
+     "minimum": 0
+    },
+    "tax_years": {
+     "type": "array",
+     "minItems": 1,
+     "uniqueItems": true,
+     "items": {
+      "type": "integer",
+      "minimum": 2026
+     }
+    },
+    "includes_rent": {
+     "type": "boolean"
+    }
+   },
+   "additionalProperties": false,
+   "required": [
+    "rate",
+    "revenue_cap",
+    "tax_years",
+    "includes_rent"
+   ]
+  }
  },
  "additionalProperties": false
 }

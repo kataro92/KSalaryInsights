@@ -11,7 +11,10 @@ import {
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 export type PaternityLeaveInputsValue = {
   avgText: string;
@@ -43,7 +46,7 @@ export function PaternityLeaveInputs({ value, onChange }: Props) {
           value={value.avgText}
           error={requiredPositiveMoney(
             value.avgText,
-            "Nhập bình quân lương lớn hơn 0."
+            "Nhập bình quân lương lớn hơn 0.",
           )}
           onValueChange={(formatted) => patch({ avgText: formatted })}
         />
@@ -169,7 +172,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 14,
       color: colors.foreground,
     },
-    chipLabelSelected: { color: colors.white },
+    chipLabelSelected: { color: colors.onSecondary },
     switchRow: {
       flexDirection: "row",
       alignItems: "center",

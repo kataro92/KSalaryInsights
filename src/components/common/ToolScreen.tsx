@@ -21,6 +21,7 @@ type Props = {
   showBrand?: boolean;
   /** Stack screens already have a header. Skip PageHero to avoid duplicate titles. */
   nested?: boolean;
+  wide?: boolean;
   accessibilityLabel?: string;
   decorated?: boolean;
   children: ReactNode;
@@ -42,6 +43,7 @@ export function ToolScreen({
   subtitle,
   showBrand = true,
   nested = false,
+  wide = false,
   accessibilityLabel,
   decorated = true,
   children,
@@ -60,6 +62,7 @@ export function ToolScreen({
     >
       <ScreenShell
         ref={scrollRef}
+        wide={wide}
         accessibilityLabel={accessibilityLabel ?? title}
         decorated={decorated}
         padTopInset={!nested}
@@ -77,7 +80,9 @@ export function ToolScreen({
         {children}
       </ScreenShell>
       {sticky ? (
-        <StickyActionBar aboveTabBar={aboveTabBar}>{sticky}</StickyActionBar>
+        <StickyActionBar wide={wide} aboveTabBar={aboveTabBar}>
+          {sticky}
+        </StickyActionBar>
       ) : null}
     </KeyboardAvoidingView>
   );
@@ -87,7 +92,8 @@ function makeStyles({ colors }: ThemeContextValue) {
   return {
     root: { flex: 1, backgroundColor: colors.background },
     scrollWithSticky: {
-      paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
+      paddingBottom:
+        space[12] + layout.stickyBarHeight + layout.tabBarClearance,
     },
     nestedSubtitle: {
       fontFamily: typography.fontFamily.regular,

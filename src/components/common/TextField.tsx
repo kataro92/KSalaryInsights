@@ -33,6 +33,7 @@ export function TextField({
       {label ? <Text style={styles.label}>{label}</Text> : null}
       <TextInput
         {...rest}
+        accessibilityLabel={rest.accessibilityLabel ?? label}
         onFocus={(e) => {
           setFocused(true);
           onFocus?.(e);
@@ -60,8 +61,7 @@ function makeStyles({ colors, isDark }: ThemeContextValue) {
     label: {
       fontFamily: typography.fontFamily.medium,
       fontSize: 12,
-      color: colors.foreground,
-      opacity: 0.7,
+      color: colors.foregroundMuted,
     },
     input: {
       minHeight: layout.minTouch,

@@ -33,17 +33,21 @@ import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 export function UnemploymentCalculatorScreen() {
   const { preferences } = usePreferences();
-  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } =
+    useScrollToAnchor();
   const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
       ? preferences.defaultTaxYear
-      : 2026
+      : 2026,
   );
   const [region, setRegion] = useState<RegionCode>(preferences.defaultRegion);
   const [monthsPaid, setMonthsPaid] = useState("72");
@@ -58,7 +62,9 @@ export function UnemploymentCalculatorScreen() {
     const avg = parseMoney(salaryText);
     const paid = Number(monthsPaid.replace(/[^\d]/g, ""));
     if (avg == null || avg <= 0) {
-      setError("Nhập lương bình quân đóng bảo hiểm thất nghiệp 6 tháng hợp lệ.");
+      setError(
+        "Nhập lương bình quân đóng bảo hiểm thất nghiệp 6 tháng hợp lệ.",
+      );
       setResult(null);
       return;
     }
@@ -169,7 +175,7 @@ export function UnemploymentCalculatorScreen() {
           value={monthsPaid}
           error={requiredNonNegativeInt(
             monthsPaid,
-            "Số tháng đóng bảo hiểm thất nghiệp không hợp lệ."
+            "Số tháng đóng bảo hiểm thất nghiệp không hợp lệ.",
           )}
           onChangeText={(t) => {
             setMonthsPaid(t.replace(/[^\d]/g, ""));
@@ -187,7 +193,7 @@ export function UnemploymentCalculatorScreen() {
           value={salaryText}
           error={requiredPositiveMoney(
             salaryText,
-            "Nhập lương bình quân đóng bảo hiểm thất nghiệp 6 tháng lớn hơn 0."
+            "Nhập lương bình quân đóng bảo hiểm thất nghiệp 6 tháng lớn hơn 0.",
           )}
           onValueChange={(formatted) => {
             setSalaryText(formatted);
@@ -318,7 +324,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 14,
       color: colors.foreground,
     },
-    chipLabelSelected: { color: colors.white },
+    chipLabelSelected: { color: colors.onSecondary },
     switchRow: {
       flexDirection: "row",
       alignItems: "center",
@@ -340,7 +346,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 12,
       letterSpacing: 0.8,
       textTransform: "uppercase",
-      color: colors.secondary,
+      color: colors.secondaryForeground,
       marginBottom: space[2],
     },
     amount: {

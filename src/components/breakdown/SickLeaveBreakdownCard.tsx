@@ -5,7 +5,10 @@ import { ColorBlock } from "@/src/components/common/ColorBlock";
 import type { SickLeaveBreakdown } from "@/src/domain/types/benefits";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Props = {
   result: SickLeaveBreakdown;
@@ -50,7 +53,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 12,
       letterSpacing: 0.8,
       textTransform: "uppercase",
-      color: colors.secondary,
+      color: colors.secondaryForeground,
       marginBottom: space[2],
     },
     amount: {

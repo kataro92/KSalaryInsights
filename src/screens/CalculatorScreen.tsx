@@ -8,6 +8,7 @@ import {
   Switch,
   Text,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -78,7 +79,10 @@ import { formatMoneyInput, formatVnd, parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 function asOfFromMonth(taxYear: number, month: number): string {
   const m = String(month).padStart(2, "0");
@@ -94,12 +98,14 @@ const OT_TYPES: OtDayType[] = ["weekday", "weekend", "holiday"];
 
 export function CalculatorScreen() {
   const router = useRouter();
+  const wide = useWindowDimensions().width >= layout.twoColumnBreakpoint;
   const { t } = useI18n();
   const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const { preferences } = usePreferences();
   const { scenarios, save, remove } = useScenarios("calculator");
-  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } =
+    useScrollToAnchor();
 
   const [mode, setMode] = useState<CalculationMode>("gross-to-net");
   const [amountText, setAmountText] = useState("30.000.000");
@@ -107,15 +113,19 @@ export function CalculatorScreen() {
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
       ? preferences.defaultTaxYear
-      : 2026
+      : 2026,
   );
   const [month, setMonth] = useState(3);
+  const [customOpen, setCustomOpen] = useState(false);
+  const [mealText, setMealText] = useState("0");
+  const [exemptText, setExemptText] = useState("0");
+  const [voluntaryText, setVoluntaryText] = useState("0");
   const [numDependents, setNumDependents] = useState(0);
   const [insurance, setInsurance] = useState<InsuranceBasePreset>(
-    DEFAULT_INSURANCE_PRESET
+    DEFAULT_INSURANCE_PRESET,
   );
   const [insuranceBaseLabel, setInsuranceBaseLabel] = useState<string | null>(
-    null
+    null,
   );
   const [bonusText, setBonusText] = useState("0");
   const [otHoursText, setOtHoursText] = useState("0");
@@ -139,7 +149,7 @@ export function CalculatorScreen() {
 
   const asOfDate = useMemo(
     () => asOfFromMonth(taxYear, month),
-    [taxYear, month]
+    [taxYear, month],
   );
   const seasonalHint = month === 12 || month === 1;
 
@@ -176,6 +186,9 @@ export function CalculatorScreen() {
       otHours: Number(otHoursText.replace(/[^\d.]/g, "") || "0") || 0,
       otDayType,
       otNight,
+      mealAllowance: parseMoney(mealText) ?? 0,
+      exemptAllowances: parseMoney(exemptText) ?? 0,
+      voluntaryInsurance: parseMoney(voluntaryText) ?? 0,
     };
   };
 
@@ -193,6 +206,9 @@ export function CalculatorScreen() {
     setOtHoursText(i.otHours > 0 ? String(i.otHours) : "0");
     setOtDayType(i.otDayType);
     setOtNight(i.otNight);
+    setMealText(formatMoneyInput(i.mealAllowance ?? 0));
+    setExemptText(formatMoneyInput(i.exemptAllowances ?? 0));
+    setVoluntaryText(formatMoneyInput(i.voluntaryInsurance ?? 0));
     clearResult();
     void successHaptic();
   };
@@ -264,7 +280,7 @@ export function CalculatorScreen() {
         const resolved = resolveForGrossToNet(amount, preset);
         const insuranceSalary = resolved.insuranceSalary;
         setInsuranceBaseLabel(
-          `${resolved.labelVi} · ${resolved.displayBase.toLocaleString("vi-VN")} ₫`
+          `${resolved.labelVi} · ${resolved.displayBase.toLocaleString("vi-VN")} ₫`,
         );
         const bonus = parseMoney(bonusText) ?? 0;
         const otHours = Number(otHoursText.replace(/[^\d.]/g, "") || "0");
@@ -288,6 +304,9 @@ export function CalculatorScreen() {
             asOfDate,
             numDependents,
             insuranceSalary,
+            mealAllowance: parseMoney(mealText) ?? 0,
+            exemptAllowances: parseMoney(exemptText) ?? 0,
+            voluntaryInsurance: parseMoney(voluntaryText) ?? 0,
           });
           setBonusMonth(monthResult);
           setBreakdown(monthResult.withExtras);
@@ -301,7 +320,10 @@ export function CalculatorScreen() {
               asOfDate,
               numDependents,
               insuranceSalary,
-            })
+              mealAllowance: parseMoney(mealText) ?? 0,
+              exemptAllowances: parseMoney(exemptText) ?? 0,
+              voluntaryInsurance: parseMoney(voluntaryText) ?? 0,
+            }),
           );
         }
         void successHaptic();
@@ -315,19 +337,22 @@ export function CalculatorScreen() {
           asOfDate,
           numDependents,
           preset,
+          mealAllowance: parseMoney(mealText) ?? 0,
+          exemptAllowances: parseMoney(exemptText) ?? 0,
+          voluntaryInsurance: parseMoney(voluntaryText) ?? 0,
         });
         if (!result.ok) {
           setBreakdown(null);
           setError(
             `Không khả thi với vùng/tham số hiện tại. Net tối thiểu tham khảo: ${result.minFeasibleNet.toLocaleString(
-              "vi-VN"
-            )} ₫`
+              "vi-VN",
+            )} ₫`,
           );
           return;
         }
         const resolved = resolveForGrossToNet(result.gross, preset);
         setInsuranceBaseLabel(
-          `${resolved.labelVi} · ${resolved.displayBase.toLocaleString("vi-VN")} ₫`
+          `${resolved.labelVi} · ${resolved.displayBase.toLocaleString("vi-VN")} ₫`,
         );
         setBreakdown(result.breakdown);
         void successHaptic();
@@ -372,6 +397,7 @@ export function CalculatorScreen() {
     >
       <ScreenShell
         ref={scrollRef}
+        wide
         accessibilityLabel="Máy tính lương gross net"
         decorated
         contentContainerStyle={styles.scrollContent}
@@ -407,351 +433,429 @@ export function CalculatorScreen() {
           <NgaiMiuTip tip={miuTips.scenarios} />
         </CollapseSection>
 
-        <Section title="Chế độ tính">
-          <ChipRow equal>
-            {(
-              [
-                ["gross-to-net", "Từ Gross sang Net"],
-                ["net-to-gross", "Từ Net sang Gross"],
-              ] as const
-            ).map(([id, label]) => (
-              <ChoiceChip
-                key={id}
-                flex
-                label={label}
-                selected={mode === id}
-                onPress={() => {
-                  setMode(id);
-                  clearResult();
-                }}
-              />
-            ))}
-          </ChipRow>
-        </Section>
-
-        <Section
-          title={mode === "gross-to-net" ? "Lương Gross" : "Net muốn nhận"}
-          subtitle="Nhập số nguyên VNĐ"
-        >
-          <MoneyField
-            accessibilityLabel={
-              mode === "gross-to-net"
-                ? "Nhập lương gross"
-                : "Nhập net mong muốn"
-            }
-            value={amountText}
-            error={amountFieldError}
-            onValueChange={(formatted) => {
-              setAmountText(formatted);
-              clearResult();
-            }}
-          />
-        </Section>
-
-        <Section title="Năm thuế">
-          <ChipRow equal>
-            {TAX_YEAR_OPTIONS.map((y) => (
-              <ChoiceChip
-                key={y}
-                flex
-                label={String(y)}
-                selected={taxYear === y}
-                onPress={() => {
-                  setTaxYear(y);
-                  clearResult();
-                }}
-              />
-            ))}
-          </ChipRow>
-        </Section>
-
-        {mode === "gross-to-net" ? (
-          <CollapseSection
-            title="Thưởng tháng · làm thêm"
-            defaultOpen={seasonalHint}
-          >
-            <Section
-              title="Thưởng / tháng 13"
-              subtitle={
-                seasonalHint
-                  ? "Gợi ý mùa Tết (tháng 12-1). Mô phỏng thuế tháng nhận thưởng."
-                  : "Cộng vào lương Gross tháng này để ước thuế thu nhập cá nhân."
-              }
-            >
-              <MoneyField
-                accessibilityLabel="Nhập thưởng tháng"
-                value={bonusText}
-                onValueChange={(formatted) => {
-                  setBonusText(formatted);
-                  clearResult();
-                }}
-              />
-            </Section>
-
-            <Section
-              title="Làm thêm giờ"
-              subtitle="Ngày 150/200/300%; đêm tối thiểu 200/270/390% (Bộ luật Lao động Đ.98)."
-            >
-              <ChipRow>
-                {OT_TYPES.map((t) => (
+        <View style={[styles.mobileColumns, wide && styles.desktopColumns]}>
+          <View style={[styles.formColumn, wide && styles.desktopColumn]}>
+            <Section title="Chế độ tính">
+              <ChipRow equal>
+                {(
+                  [
+                    ["gross-to-net", "Từ Gross sang Net"],
+                    ["net-to-gross", "Từ Net sang Gross"],
+                  ] as const
+                ).map(([id, label]) => (
                   <ChoiceChip
-                    key={t}
-                    label={OT_DAY_LABELS[t]}
-                    selected={otDayType === t}
+                    key={id}
+                    flex
+                    label={label}
+                    selected={mode === id}
                     onPress={() => {
-                      setOtDayType(t);
+                      setMode(id);
                       clearResult();
                     }}
                   />
                 ))}
               </ChipRow>
-              <View style={styles.switchRow}>
-                <View style={styles.switchText}>
-                  <Text style={styles.switchLabel}>
-                    Làm thêm ban đêm (22h-6h)
-                  </Text>
-                </View>
-                <Switch
-                  accessibilityLabel="Bật làm thêm ban đêm"
-                  value={otNight}
-                  onValueChange={(v) => {
-                    setOtNight(v);
-                    clearResult();
-                  }}
-                  trackColor={{ false: colors.border, true: colors.primary }}
-                />
-              </View>
-              <TextField
-                label="Số giờ làm thêm"
-                accessibilityLabel="Số giờ làm thêm"
-                keyboardType="decimal-pad"
-                value={otHoursText}
-                onChangeText={(t) => {
-                  setOtHoursText(t.replace(/[^\d.]/g, ""));
+            </Section>
+
+            <Section
+              title={mode === "gross-to-net" ? "Lương Gross" : "Net muốn nhận"}
+              subtitle="Nhập số nguyên VNĐ"
+            >
+              <MoneyField
+                accessibilityLabel={
+                  mode === "gross-to-net"
+                    ? "Nhập lương gross"
+                    : "Nhập net mong muốn"
+                }
+                value={amountText}
+                error={amountFieldError}
+                onValueChange={(formatted) => {
+                  setAmountText(formatted);
                   clearResult();
                 }}
               />
             </Section>
-          </CollapseSection>
-        ) : null}
 
-        <CollapseSection title="Tùy chỉnh vùng, tháng, người phụ thuộc, bảo hiểm">
-          <Section title="Vùng lương tối thiểu">
-            <ChipRow equal>
-              {REGION_OPTIONS.map(({ code, label }) => (
-                <ChoiceChip
-                  key={code}
-                  flex
-                  label={label}
-                  selected={region === code}
-                  onPress={() => {
-                    setRegion(code);
+            <ColorBlock tone="primarySoft">
+              <Text
+                style={styles.contextSummary}
+              >{`Tháng ${String(month).padStart(2, "0")}/${taxYear} · Vùng ${region} · ${numDependents} người phụ thuộc · ${insurance.mode === "full" ? "BH toàn bộ Gross" : insurance.mode === "percent" ? `BH ${insurance.percent}% Gross` : `BH ${formatVnd(insurance.absoluteAmount)}`}`}</Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Chỉnh sửa tham số tính lương"
+                onPress={() => setCustomOpen(true)}
+                style={styles.compareLink}
+              >
+                <Text style={styles.compareLinkText}>Chỉnh sửa</Text>
+              </Pressable>
+            </ColorBlock>
+            <Section title="Năm thuế">
+              <ChipRow equal>
+                {TAX_YEAR_OPTIONS.map((y) => (
+                  <ChoiceChip
+                    key={y}
+                    flex
+                    label={String(y)}
+                    selected={taxYear === y}
+                    onPress={() => {
+                      setTaxYear(y);
+                      clearResult();
+                    }}
+                  />
+                ))}
+              </ChipRow>
+            </Section>
+
+            {mode === "gross-to-net" ? (
+              <CollapseSection
+                title="Thưởng tháng · làm thêm"
+                defaultOpen={seasonalHint}
+              >
+                <Section
+                  title="Thưởng / tháng 13"
+                  subtitle={
+                    seasonalHint
+                      ? "Gợi ý mùa Tết (tháng 12-1). Mô phỏng thuế tháng nhận thưởng."
+                      : "Cộng vào lương Gross tháng này để ước thuế thu nhập cá nhân."
+                  }
+                >
+                  <MoneyField
+                    accessibilityLabel="Nhập thưởng tháng"
+                    value={bonusText}
+                    onValueChange={(formatted) => {
+                      setBonusText(formatted);
+                      clearResult();
+                    }}
+                  />
+                </Section>
+
+                <Section
+                  title="Làm thêm giờ"
+                  subtitle="Ngày 150/200/300%; đêm tối thiểu 200/270/390% (Bộ luật Lao động Đ.98)."
+                >
+                  <ChipRow>
+                    {OT_TYPES.map((t) => (
+                      <ChoiceChip
+                        key={t}
+                        label={OT_DAY_LABELS[t]}
+                        selected={otDayType === t}
+                        onPress={() => {
+                          setOtDayType(t);
+                          clearResult();
+                        }}
+                      />
+                    ))}
+                  </ChipRow>
+                  <View style={styles.switchRow}>
+                    <View style={styles.switchText}>
+                      <Text style={styles.switchLabel}>
+                        Làm thêm ban đêm (22h-6h)
+                      </Text>
+                    </View>
+                    <Switch
+                      accessibilityLabel="Bật làm thêm ban đêm"
+                      value={otNight}
+                      onValueChange={(v) => {
+                        setOtNight(v);
+                        clearResult();
+                      }}
+                      trackColor={{
+                        false: colors.border,
+                        true: colors.primary,
+                      }}
+                    />
+                  </View>
+                  <TextField
+                    label="Số giờ làm thêm"
+                    accessibilityLabel="Số giờ làm thêm"
+                    keyboardType="decimal-pad"
+                    value={otHoursText}
+                    onChangeText={(t) => {
+                      setOtHoursText(t.replace(/[^\d.]/g, ""));
+                      clearResult();
+                    }}
+                  />
+                </Section>
+              </CollapseSection>
+            ) : null}
+
+            <CollapseSection
+              title="Tùy chỉnh tính lương"
+              open={customOpen}
+              onOpenChange={setCustomOpen}
+            >
+              <Section title="Vùng lương tối thiểu">
+                <ChipRow equal>
+                  {REGION_OPTIONS.map(({ code, label }) => (
+                    <ChoiceChip
+                      key={code}
+                      flex
+                      label={label}
+                      selected={region === code}
+                      onPress={() => {
+                        setRegion(code);
+                        clearResult();
+                      }}
+                    />
+                  ))}
+                </ChipRow>
+              </Section>
+
+              <Section
+                title="Tháng tính lương"
+                subtitle="Chọn đúng tháng để áp trần bảo hiểm (2026 đổi từ 01/07)."
+                titleAccessory={<InfoTip tipId="salary.asOfMonth" size={18} />}
+              >
+                <MonthPicker
+                  value={month}
+                  onChange={(m) => {
+                    setMonth(m);
                     clearResult();
                   }}
                 />
-              ))}
-            </ChipRow>
-          </Section>
+                <Text style={styles.meta}>
+                  Ngày áp dụng: {formatAsOfVi(asOfDate)}
+                </Text>
+              </Section>
 
-          <Section
-            title="Tháng tính lương"
-            subtitle="Chọn đúng tháng để áp trần bảo hiểm (2026 đổi từ 01/07)."
-            titleAccessory={<InfoTip tipId="salary.asOfMonth" size={18} />}
-          >
-            <MonthPicker
-              value={month}
-              onChange={(m) => {
-                setMonth(m);
-                clearResult();
-              }}
-            />
-            <Text style={styles.meta}>
-              Ngày áp dụng: {formatAsOfVi(asOfDate)}
-            </Text>
-          </Section>
-
-          <Section
-            title="Người phụ thuộc"
-            subtitle="Chỉ nhập số lượng đã đăng ký."
-          >
-            <DependentCountInput
-              value={numDependents}
-              onChange={(n) => {
-                setNumDependents(n);
-                clearResult();
-              }}
-            />
-          </Section>
-
-          <Section
-            title="Mức đóng bảo hiểm"
-            subtitle="Có thể chọn đóng theo toàn bộ Gross, theo % hợp đồng, hoặc một số cố định."
-          >
-            <InsuranceBasePresetPicker
-              value={insurance}
-              netToGrossHint={mode === "net-to-gross"}
-              onChange={(next) => {
-                setInsurance(next);
-                clearResult();
-              }}
-            />
-          </Section>
-        </CollapseSection>
-
-        {error ? (
-          <EmptyErrorState
-            variant="error"
-            title={emptyCopy.calculateError.title}
-            body={error}
-          />
-        ) : null}
-
-        {breakdown ? (
-          <View ref={anchorRef} collapsable={false} style={styles.resultBlock}>
-            <ResultHero
-              amount={
-                mode === "net-to-gross" ? breakdown.gross : breakdown.net
-              }
-              eyebrow={
-                mode === "net-to-gross"
-                  ? "Lương Gross cần đạt"
-                  : bonusMonth && bonusMonth.extrasTotal > 0
-                    ? "Net tháng có thưởng/làm thêm"
-                    : undefined
-              }
-              label={mode === "net-to-gross" ? "Gross" : "Net"}
-              tipId={
-                mode === "net-to-gross"
-                  ? "salary.gross"
-                  : bonusMonth && bonusMonth.extrasTotal > 0
-                    ? "bonus.month"
-                    : "salary.net"
-              }
-              tone={mode === "net-to-gross" ? "primary" : "positive"}
-            />
-            {bonusMonth && bonusMonth.extrasTotal > 0 ? (
-              <ColorBlock
-                tone="primarySoft"
-                accessibilityLabel="So sánh tháng thường và tháng thưởng"
+              <Section
+                title="Người phụ thuộc"
+                subtitle="Chỉ nhập số lượng đã đăng ký."
               >
-                <Text style={styles.compareTitle}>
-                  So với tháng lương thường
-                </Text>
-                <Text style={styles.compareLine}>
-                  Net tháng thường: {formatVnd(bonusMonth.base.net)}
-                </Text>
-                <Text style={styles.compareLine}>
-                  Thưởng + làm thêm: {formatVnd(bonusMonth.extrasTotal)}
-                  {bonusMonth.otPay > 0
-                    ? ` (làm thêm ${formatVnd(bonusMonth.otPay)})`
-                    : ""}
-                </Text>
-                <Text style={styles.compareLine}>
-                  Thuế tăng: {formatVnd(bonusMonth.deltaTax)}
-                </Text>
-                <Text style={styles.compareLine}>
-                  Net tăng: {formatVnd(bonusMonth.deltaNet)}
-                </Text>
-              </ColorBlock>
-            ) : null}
-            <NgaiMiuTip
-              tip={
-                bonusMonth && bonusMonth.extrasTotal > 0
-                  ? miuTips.bonusMonth
-                  : miuTips.calculatorResult
-              }
-            />
-            {insuranceBaseLabel ? (
-              <Text style={styles.meta} accessibilityLabel="Căn cứ bảo hiểm">
-                Lương làm căn cứ đóng bảo hiểm: {insuranceBaseLabel}
-              </Text>
-            ) : null}
-            <SalaryBreakdownCard
-              breakdown={breakdown}
-              hideNet={mode === "gross-to-net"}
-              hideGross={mode === "net-to-gross"}
-            />
-            <View style={styles.resultActions}>
-              <View style={styles.resultActionBtn}>
-                <Button
-                  label="Lưu kịch bản"
-                  variant="secondary"
-                  onPress={beginSave}
-                />
-              </View>
-              <View style={styles.resultActionBtn}>
-                <Button
-                  label="Chia sẻ"
-                  variant="outline"
-                  onPress={() => {
-                    void onShare();
+                <DependentCountInput
+                  value={numDependents}
+                  onChange={(n) => {
+                    setNumDependents(n);
+                    clearResult();
                   }}
                 />
-              </View>
-            </View>
-            <DisclaimerFooter
-              legalSources={breakdown.legalSources}
-              collapseSources
-            />
-            {mode === "gross-to-net" ? (
-              <>
-                <Pressable
-                  accessibilityRole="link"
-                  accessibilityLabel="So sánh hai offer lương"
-                  onPress={() => router.push("/offer-compare")}
-                  style={styles.compareLink}
-                >
-                  <View style={styles.compareLinkRow}>
-                    <Text style={styles.compareLinkText}>So 2 offer</Text>
-                    <AppIcon
-                      name="chevron-right"
-                      color={colors.primary}
-                      size={16}
-                    />
-                  </View>
-                </Pressable>
-                <Pressable
-                  accessibilityRole="link"
-                  accessibilityLabel="So sánh biểu thuế 2025 và 2026"
-                  onPress={openComparison}
-                  style={styles.compareLink}
-                >
-                  <View style={styles.compareLinkRow}>
-                    <Text style={styles.compareLinkText}>
-                      So sánh 2025 vs 2026
-                    </Text>
-                    <AppIcon
-                      name="chevron-right"
-                      color={colors.primary}
-                      size={16}
-                    />
-                  </View>
-                </Pressable>
-              </>
-            ) : (
-              <Pressable
-                accessibilityRole="link"
-                accessibilityLabel="So sánh hai offer lương"
-                onPress={() => router.push("/offer-compare")}
-                style={styles.compareLink}
+              </Section>
+
+              <Section
+                title="Mức đóng bảo hiểm"
+                subtitle="Có thể chọn đóng theo toàn bộ Gross, theo % hợp đồng, hoặc một số cố định."
               >
-                <View style={styles.compareLinkRow}>
-                  <Text style={styles.compareLinkText}>So 2 offer</Text>
-                  <AppIcon
-                    name="chevron-right"
-                    color={colors.primary}
-                    size={16}
-                  />
-                </View>
-              </Pressable>
-            )}
+                <InsuranceBasePresetPicker
+                  value={insurance}
+                  netToGrossHint={mode === "net-to-gross"}
+                  onChange={(next) => {
+                    setInsurance(next);
+                    clearResult();
+                  }}
+                />
+              </Section>
+            </CollapseSection>
+
+            <CollapseSection title="Khoản miễn thuế và giảm trừ">
+              <Section
+                title="Phụ cấp / trợ cấp miễn thuế trong Gross"
+                subtitle="Chỉ nhập khoản đủ điều kiện pháp luật; không gồm tiền ăn bên dưới."
+              >
+                <MoneyField
+                  label="Phụ cấp miễn thuế / tháng"
+                  value={exemptText}
+                  onValueChange={(v) => {
+                    setExemptText(v);
+                    clearResult();
+                  }}
+                />
+              </Section>
+              {taxYear === 2026 ? (
+                <>
+                  <Section
+                    title="Tiền ăn giữa ca trong Gross"
+                    subtitle="Miễn tối đa 1,2 triệu/tháng từ 01/07/2026. Trước mốc này ô mới không áp mức miễn."
+                  >
+                    <MoneyField
+                      label="Tiền ăn / tháng"
+                      value={mealText}
+                      onValueChange={(v) => {
+                        setMealText(v);
+                        clearResult();
+                      }}
+                    />
+                  </Section>
+                  <Section
+                    title="Bảo hiểm bổ sung / hưu trí / nhân thọ"
+                    subtitle="Tổng phần cá nhân và công ty đóng đủ điều kiện, tối đa 3 triệu/tháng (NĐ 253 Đ.46). Đây là giảm trừ thuế; Net chưa trừ phí tự đóng riêng."
+                  >
+                    <MoneyField
+                      label="Tổng đóng bảo hiểm bổ sung / tháng"
+                      value={voluntaryText}
+                      onValueChange={(v) => {
+                        setVoluntaryText(v);
+                        clearResult();
+                      }}
+                    />
+                  </Section>
+                </>
+              ) : null}
+            </CollapseSection>
           </View>
-        ) : !error ? (
-          <EmptyErrorState
-            title={emptyCopy.calculator.title}
-            body={emptyCopy.calculator.body}
-          />
-        ) : null}
+          <View style={[styles.formColumn, wide && styles.desktopColumn]}>
+            {error ? (
+              <EmptyErrorState
+                variant="error"
+                title={emptyCopy.calculateError.title}
+                body={error}
+              />
+            ) : null}
+
+            {breakdown ? (
+              <View
+                ref={anchorRef}
+                collapsable={false}
+                style={styles.resultBlock}
+              >
+                <ResultHero
+                  amount={
+                    mode === "net-to-gross" ? breakdown.gross : breakdown.net
+                  }
+                  eyebrow={
+                    mode === "net-to-gross"
+                      ? "Lương Gross cần đạt"
+                      : bonusMonth && bonusMonth.extrasTotal > 0
+                        ? "Net tháng có thưởng/làm thêm"
+                        : undefined
+                  }
+                  label={mode === "net-to-gross" ? "Gross" : "Net"}
+                  tipId={
+                    mode === "net-to-gross"
+                      ? "salary.gross"
+                      : bonusMonth && bonusMonth.extrasTotal > 0
+                        ? "bonus.month"
+                        : "salary.net"
+                  }
+                  tone={mode === "net-to-gross" ? "primary" : "positive"}
+                />
+                {bonusMonth && bonusMonth.extrasTotal > 0 ? (
+                  <ColorBlock
+                    tone="primarySoft"
+                    accessibilityLabel="So sánh tháng thường và tháng thưởng"
+                  >
+                    <Text style={styles.compareTitle}>
+                      So với tháng lương thường
+                    </Text>
+                    <Text style={styles.compareLine}>
+                      Net tháng thường: {formatVnd(bonusMonth.base.net)}
+                    </Text>
+                    <Text style={styles.compareLine}>
+                      Thưởng + làm thêm: {formatVnd(bonusMonth.extrasTotal)}
+                      {bonusMonth.otPay > 0
+                        ? ` (làm thêm ${formatVnd(bonusMonth.otPay)})`
+                        : ""}
+                    </Text>
+                    <Text style={styles.compareLine}>
+                      Thuế tăng: {formatVnd(bonusMonth.deltaTax)}
+                    </Text>
+                    <Text style={styles.compareLine}>
+                      Net tăng: {formatVnd(bonusMonth.deltaNet)}
+                    </Text>
+                  </ColorBlock>
+                ) : null}
+                {insuranceBaseLabel ? (
+                  <Text
+                    style={styles.meta}
+                    accessibilityLabel="Căn cứ bảo hiểm"
+                  >
+                    Lương làm căn cứ đóng bảo hiểm: {insuranceBaseLabel}
+                  </Text>
+                ) : null}
+                <SalaryBreakdownCard
+                  breakdown={breakdown}
+                  hideNet={mode === "gross-to-net"}
+                  hideGross={mode === "net-to-gross"}
+                />
+                <NgaiMiuTip
+                  tip={
+                    bonusMonth && bonusMonth.extrasTotal > 0
+                      ? miuTips.bonusMonth
+                      : miuTips.calculatorResult
+                  }
+                />
+                <View style={styles.resultActions}>
+                  <View style={styles.resultActionBtn}>
+                    <Button
+                      label="Lưu kịch bản"
+                      variant="secondary"
+                      onPress={beginSave}
+                    />
+                  </View>
+                  <View style={styles.resultActionBtn}>
+                    <Button
+                      label="Chia sẻ"
+                      variant="outline"
+                      onPress={() => {
+                        void onShare();
+                      }}
+                    />
+                  </View>
+                </View>
+                <DisclaimerFooter
+                  legalSources={breakdown.legalSources}
+                  collapseSources
+                />
+                {mode === "gross-to-net" ? (
+                  <>
+                    <Pressable
+                      accessibilityRole="link"
+                      accessibilityLabel="So sánh hai offer lương"
+                      onPress={() => router.push("/offer-compare")}
+                      style={styles.compareLink}
+                    >
+                      <View style={styles.compareLinkRow}>
+                        <Text style={styles.compareLinkText}>So 2 offer</Text>
+                        <AppIcon
+                          name="chevron-right"
+                          color={colors.primary}
+                          size={16}
+                        />
+                      </View>
+                    </Pressable>
+                    <Pressable
+                      accessibilityRole="link"
+                      accessibilityLabel="So sánh biểu thuế 2025 và 2026"
+                      onPress={openComparison}
+                      style={styles.compareLink}
+                    >
+                      <View style={styles.compareLinkRow}>
+                        <Text style={styles.compareLinkText}>
+                          So sánh 2025 vs 2026
+                        </Text>
+                        <AppIcon
+                          name="chevron-right"
+                          color={colors.primary}
+                          size={16}
+                        />
+                      </View>
+                    </Pressable>
+                  </>
+                ) : (
+                  <Pressable
+                    accessibilityRole="link"
+                    accessibilityLabel="So sánh hai offer lương"
+                    onPress={() => router.push("/offer-compare")}
+                    style={styles.compareLink}
+                  >
+                    <View style={styles.compareLinkRow}>
+                      <Text style={styles.compareLinkText}>So 2 offer</Text>
+                      <AppIcon
+                        name="chevron-right"
+                        color={colors.primary}
+                        size={16}
+                      />
+                    </View>
+                  </Pressable>
+                )}
+              </View>
+            ) : !error ? (
+              <EmptyErrorState
+                title={emptyCopy.calculator.title}
+                body={emptyCopy.calculator.body}
+              />
+            ) : null}
+          </View>
+        </View>
       </ScreenShell>
 
       <SaveScenarioModal
@@ -764,7 +868,7 @@ export function CalculatorScreen() {
         onCancel={() => setSaving(false)}
       />
 
-      <StickyActionBar>
+      <StickyActionBar wide>
         <Button label={t("common.calculate")} onPress={onCalculate} />
       </StickyActionBar>
     </KeyboardAvoidingView>
@@ -774,8 +878,23 @@ export function CalculatorScreen() {
 function makeStyles({ colors }: ThemeContextValue) {
   return {
     root: { flex: 1, backgroundColor: colors.background },
+    mobileColumns: { gap: space[5] },
+    desktopColumns: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: space[6],
+    },
+    desktopColumn: { flex: 1, minWidth: 0 },
+    formColumn: { gap: space[5] },
+    contextSummary: {
+      color: colors.foreground,
+      fontFamily: typography.fontFamily.medium,
+      fontSize: 14,
+      lineHeight: 22,
+    },
     scrollContent: {
-      paddingBottom: space[12] + layout.stickyBarHeight + layout.tabBarClearance,
+      paddingBottom:
+        space[12] + layout.stickyBarHeight + layout.tabBarClearance,
     },
     meta: {
       fontFamily: typography.fontFamily.regular,

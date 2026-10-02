@@ -8,10 +8,14 @@ export type ColorTokens = {
   background: string;
   foreground: string;
   foregroundMuted: string;
+  onPrimary: string;
+  onSecondary: string;
+  onResult: string;
   primary: string;
   primaryPressed: string;
   primarySoft: string;
   secondary: string;
+  secondaryForeground: string;
   secondarySoft: string;
   accent: string;
   accentSoft: string;
@@ -46,21 +50,25 @@ export type GlassTokens = {
 export const lightColors: ColorTokens = {
   background: "#F7FAFF",
   foreground: "#243B53",
-  foregroundMuted: "#7B8FA6",
-  primary: "#4F84E0",
-  primaryPressed: "#3A6BC4",
+  foregroundMuted: "#52667F",
+  onPrimary: "#FFFFFF",
+  onSecondary: "#102E29",
+  onResult: "#102E29",
+  primary: "#3465B4",
+  primaryPressed: "#295493",
   primarySoft: "#E8F1FC",
   secondary: "#5AAE9B",
+  secondaryForeground: "#246354",
   secondarySoft: "#E6F6F1",
-  accent: "#E09B6A",
+  accent: "#995B2C",
   accentSoft: "#FFF3EA",
   muted: "#EEF3F9",
   mutedPressed: "#E0E8F2",
   border: "#D8E2EF",
   white: "#FFFFFF",
-  danger: "#D45B5B",
+  danger: "#B33939",
   dangerSoft: "#FDECEC",
-  cta: "#4F84E0",
+  cta: "#3465B4",
   resultPositive: "#5AAE9B",
   deduction: "#243B53",
 };
@@ -70,10 +78,14 @@ export const darkColors: ColorTokens = {
   background: "#0F1724",
   foreground: "#E8EEF7",
   foregroundMuted: "#9AA8BC",
+  onPrimary: "#0F1724",
+  onSecondary: "#0F1724",
+  onResult: "#0F1724",
   primary: "#6B9BEF",
-  primaryPressed: "#4F84E0",
+  primaryPressed: "#6192E5",
   primarySoft: "#1A2A44",
   secondary: "#6BC4B0",
+  secondaryForeground: "#6BC4B0",
   secondarySoft: "#16352F",
   accent: "#E5A97A",
   accentSoft: "#3A2A1E",

@@ -1,6 +1,6 @@
 # Phạm vi sản phẩm
 
-**Cập nhật**: 2026-08-06  
+**Cập nhật**: 2026-10-02
 **Tham chiếu**: [domain docs](../domain/), [specs](../../specs/README.md), [ADR 0009](../decisions/0009-product-direction-multisource-qt-no-crypto.md)
 
 ## Tuyên bố sản phẩm
@@ -55,13 +55,15 @@ Không thay thế VssID, cơ quan thuế, hay tư vấn chuyên nghiệp.
 | OT đêm | Shipped. toggle trên Calculator (Đ.98 / NĐ 145: 200/270/390%) |
 | F014 mở rộng | Shipped. Quyết toán lưu/tải/chia sẻ; banner mùa vụ phân loại kind |
 | Store capture | Docs + listing copy sẵn; **6 PNG** chờ capture thiết bị → [`docs/store/`](./store/) |
-| Design QA sign-off | Checklist + `npm run qa:design`; phần visual còn chờ device |
+| Design QA sign-off | QA web + LDPlayer đã thực hiện; thiết bị thật/iOS, bàn phím và APK release còn chờ |
 | Info tips trên số liệu | Shipped. icon info + modal nguồn pháp lý |
 | Đa ngôn ngữ (7 locale) | Shipped. mặc định vi; Cài đặt |
 | Góp ý tác giả | Shipped. Phạm Huy Đức · kataro92@gmail.com |
 | Thuế coin / TSMH | Ngoài phạm vi (ADR 0009) |
 
 ## Ánh xạ spec ↔ F-ID
+
+Đợt 02/10/2026 bổ sung giảm 30% TNCN kinh doanh 2026–2027 (cá nhân cư trú, tổng doanh thu năm ≤10 tỷ), phương pháp thu nhập HKD trên 3 tỷ, giảm trừ y tế/giáo dục, BH bổ sung, tiền ăn từ tháng 7/2026, phụ cấp miễn thuế và NPT theo tháng. Tổng hợp năm có chế độ tính lại thuế lương và áp giảm trừ một lần. UI bổ sung tóm tắt đầu vào, kết quả nhóm, bảng offer thích ứng, bố cục hai cột và sửa lỗi phát hiện trên LDPlayer. Xem [báo cáo triển khai](./improvement-implementation-report.md) để biết nguồn, kiểm thử và giới hạn; sàn BH LTTV tùy chọn chưa triển khai.
 
 | Spec | F-ID | Spec file |
 |------|------|-----------|

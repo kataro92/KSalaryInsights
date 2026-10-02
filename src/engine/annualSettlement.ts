@@ -9,6 +9,12 @@ import { grossToNet } from "@/src/engine/grossToNet";
 import { evaluateCasualExemption } from "@/src/engine/casualExemption";
 import { calculateAnnualPit } from "@/src/engine/pit";
 import { getRuleset } from "@/src/engine/rulesetLoader";
+import {
+  annualAdditionalRelief,
+  dependentReliefYear as calculateDependentRelief,
+  monthCount,
+  nonNegative,
+} from "@/src/engine/deductions";
 
 function defaultAsOf(taxYear: number): string {
   return `${taxYear}-06-15`;
@@ -66,7 +72,7 @@ function buildBreakdown(
   opts: {
     includeCasual: boolean;
     withheldMissingWarning: boolean;
-  }
+  },
 ): AnnualSettlementBreakdown {
   const ruleset = getRuleset(input.taxYear);
   const salaryIncome = salaryIncomeAfterInsuranceYear(input);
@@ -75,18 +81,42 @@ function buildBreakdown(
   const casualWithheld =
     opts.includeCasual && input.casual ? input.casual.withheld : 0;
 
+  const mealMonthly = nonNegative(input.mealAllowanceMonthly, "Tiền ăn tháng");
+  const mealMonths = monthCount(
+    input.mealAllowanceMonths ?? 0,
+    "Số tháng nhận tiền ăn từ tháng 7",
+  );
+  // The new cash meal exemption starts in July, not at the start of tax year 2026.
+  const caps = ruleset.salary_deductions;
+  if (caps && input.taxYear === 2026 && mealMonths > 6)
+    throw new Error("Năm 2026 chỉ có tối đa 6 tháng nhận tiền ăn từ tháng 7");
+  const eligibleMealMonths = caps
+    ? Math.min(mealMonths, input.taxYear === 2026 ? 6 : 12)
+    : 0;
+  const exemptIncomeYear =
+    nonNegative(input.exemptAllowancesYear, "Phụ cấp miễn thuế năm") +
+    (caps
+      ? Math.min(mealMonthly, caps.meal_monthly_cap) * eligibleMealMonths
+      : 0);
+  if (exemptIncomeYear > salaryIncome)
+    throw new Error(
+      "Khoản miễn thuế không được vượt thu nhập lương sau bảo hiểm",
+    );
   const incomeAfterInsuranceYear = salaryIncome + casualGross;
   const personalReliefYear = ruleset.personal_relief * 12;
-  const dependentReliefYear =
-    input.numDependents * ruleset.dependent_relief * 12;
-  const reliefTotalYear = personalReliefYear + dependentReliefYear;
+  const dependentReliefYear = calculateDependentRelief(input, ruleset);
+  const additionalReliefYear = annualAdditionalRelief(input, ruleset);
+  const reliefTotalYear =
+    personalReliefYear +
+    dependentReliefYear +
+    Object.values(additionalReliefYear).reduce((a, b) => a + b, 0);
   const taxableIncomeAfterRelief = Math.max(
     0,
-    incomeAfterInsuranceYear - reliefTotalYear
+    incomeAfterInsuranceYear - exemptIncomeYear - reliefTotalYear,
   );
   const { brackets, totalTax } = calculateAnnualPit(
     taxableIncomeAfterRelief,
-    ruleset
+    ruleset,
   );
   const salaryWithheld = input.salaryWithheld || 0;
   const totalWithheld = salaryWithheld + casualWithheld;
@@ -94,7 +124,7 @@ function buildBreakdown(
   return {
     incomeAfterInsuranceYear,
     casualGrossIncluded: casualGross,
-    taxableIncomeYear: incomeAfterInsuranceYear,
+    taxableIncomeYear: incomeAfterInsuranceYear - exemptIncomeYear,
     personalReliefYear,
     dependentReliefYear,
     reliefTotalYear,
@@ -108,6 +138,8 @@ function buildBreakdown(
     rulesetId: ruleset.id,
     legalSources: ruleset.legal_sources,
     withheldMissingWarning: opts.withheldMissingWarning,
+    additionalReliefYear,
+    exemptIncomeYear,
   };
 }
 
@@ -115,8 +147,16 @@ function buildBreakdown(
  * Ước tính quyết toán TNCN năm. Offline, ruleset theo tax_year.
  */
 export function calculateAnnualSettlement(
-  input: AnnualSettlementInput
+  input: AnnualSettlementInput,
 ): AnnualSettlementResult {
+  if (input.monthlyGrosses && input.monthlyGrosses.length !== 12)
+    throw new Error("Lưới lương phải có đủ 12 tháng");
+  if (
+    input.monthlyGrosses?.some(
+      (g) => g != null && (!Number.isFinite(g) || g < 0),
+    )
+  )
+    throw new Error("Lương tháng không hợp lệ");
   if (!Number.isFinite(input.salaryWithheld) || input.salaryWithheld < 0) {
     throw new Error("Thuế đã khấu trừ không hợp lệ");
   }

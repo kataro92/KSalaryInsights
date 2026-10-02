@@ -240,7 +240,7 @@ const vi: Dict = {
   "annual.afterInsurance": "Thu nhập sau bảo hiểm (năm)",
   "annual.casual": "Trong đó vãng lai",
   "annual.personalRelief": "Giảm trừ bản thân ×12",
-  "annual.dependentRelief": "Giảm trừ người phụ thuộc ×12",
+  "annual.dependentRelief": "Giảm trừ người phụ thuộc theo tháng đăng ký",
   "annual.reliefTotal": "Tổng giảm trừ năm",
   "annual.taxable": "Thu nhập tính thuế (năm)",
   "annual.pitTotal": "Thuế thu nhập cá nhân năm",
@@ -374,8 +374,8 @@ const en: Dict = {
   "annual.afterInsurance": "Income after SI (year)",
   "annual.casual": "Of which casual",
   "annual.personalRelief": "Personal relief ×12",
-  "annual.dependentRelief": "Dependent relief ×12",
-  "annual.reliefTotal": "Total family relief (year)",
+  "annual.dependentRelief": "Dependent relief by registered months",
+  "annual.reliefTotal": "Total relief (year)",
   "annual.taxable": "Taxable income (year)",
   "annual.pitTotal": "Annual PIT",
   "annual.withheld": "Withheld",
@@ -531,13 +531,13 @@ export const MESSAGES: Record<LocaleCode, Dict> = {
 export function translate(
   locale: LocaleCode,
   key: MessageKey,
-  vars?: Record<string, string | number>
+  vars?: Record<string, string | number>,
 ): string {
   const raw =
     MESSAGES[locale][key] ?? MESSAGES.vi[key] ?? MESSAGES.en[key] ?? key;
   if (!vars) return raw;
   return Object.entries(vars).reduce(
     (s, [k, v]) => s.replaceAll(`{${k}}`, String(v)),
-    raw
+    raw,
   );
 }

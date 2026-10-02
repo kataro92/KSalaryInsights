@@ -14,7 +14,7 @@ import type {
   HkdIndustryId,
 } from "@/src/domain/types/otherIncome";
 import { calculateHkd } from "@/src/engine/otherIncome/hkd";
-import { getRuleset } from "@/src/engine/rulesetLoader";
+import { getBusinessRuleset } from "@/src/engine/otherIncome/businessReduction";
 import { useOptionalScrollToResult } from "@/src/context/ScrollToResultContext";
 import { successHaptic } from "@/src/theme/haptics";
 import {
@@ -24,17 +24,22 @@ import {
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Props = { taxYear: number };
 
 export function HkdCalculator({ taxYear }: Props) {
   const styles = useThemedStyles(makeStyles);
   const scroll = useOptionalScrollToResult();
-  const industries = getRuleset(taxYear).other_income?.hkd.industry_rates ?? [];
+  const industries =
+    getBusinessRuleset(taxYear).other_income?.hkd.industry_rates ?? [];
   const [industryId, setIndustryId] = useState<HkdIndustryId>("distribution");
   const [revenueText, setRevenueText] = useState("1.500.000.000");
   const [costText, setCostText] = useState("");
+  const [totalRevenueText, setTotalRevenueText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<HkdBreakdown | null>(null);
 
@@ -53,7 +58,8 @@ export function HkdCalculator({ taxYear }: Props) {
           industryId,
           costs: parseMoney(costText) ?? undefined,
           taxYear,
-        })
+          totalBusinessRevenue: parseMoney(totalRevenueText) ?? undefined,
+        }),
       );
       void successHaptic();
       scroll?.scrollToAnchor();
@@ -99,14 +105,17 @@ export function HkdCalculator({ taxYear }: Props) {
           label="Doanh thu năm"
           accessibilityLabel="Doanh thu hộ kinh doanh năm"
           value={revenueText}
-          error={requiredNonNegativeMoney(revenueText, "Nhập doanh thu hợp lệ.")}
+          error={requiredNonNegativeMoney(
+            revenueText,
+            "Nhập doanh thu hợp lệ.",
+          )}
           onValueChange={(formatted) => {
             setRevenueText(formatted);
             setResult(null);
           }}
         />
         <MoneyField
-          label="Chi phí (tuỳ chọn. Gợi ý PP thu nhập)"
+          label="Chi phí hợp lệ (bắt buộc khi doanh thu trên 3 tỷ)"
           accessibilityLabel="Chi phí hộ kinh doanh"
           value={costText}
           error={optionalNonNegativeMoney(costText)}
@@ -119,6 +128,15 @@ export function HkdCalculator({ taxYear }: Props) {
       {error ? (
         <EmptyErrorState variant="error" title="Chưa tính được" body={error} />
       ) : null}
+      <MoneyField
+        label="Tổng doanh thu kinh doanh năm (nếu có nguồn khác)"
+        accessibilityLabel="Tổng doanh thu kinh doanh năm để xét giảm 30%"
+        value={totalRevenueText}
+        onValueChange={(v) => {
+          setTotalRevenueText(v);
+          setResult(null);
+        }}
+      />
       <Button label="Tính hộ kinh doanh" onPress={onCalculate} />
       {result ? (
         <View ref={scroll?.anchorRef} collapsable={false}>
@@ -141,8 +159,18 @@ export function HkdCalculator({ taxYear }: Props) {
                 tipId: "other.vat",
               },
               {
+                id: "pit-before",
+                label: "TNCN trước giảm",
+                amount: result.pitBeforeReduction,
+              },
+              {
+                id: "pit-reduction",
+                label: "Giảm TNCN theo NQ 43",
+                amount: -result.pitReduction,
+              },
+              {
                 id: "pit",
-                label: "Thuế thu nhập cá nhân",
+                label: "TNCN phải nộp",
                 amount: result.pit,
                 tipId: "other.pit",
               },
@@ -190,6 +218,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 12,
       color: colors.foreground,
     },
-    chipLabelSelected: { color: colors.white },
+    chipLabelSelected: { color: colors.onSecondary },
   } satisfies ThemedStyleSheet;
 }

@@ -207,7 +207,7 @@ function makeStyles({ colors }: ThemeContextValue) {
     closeLabel: {
       fontFamily: typography.fontFamily.semiBold,
       fontSize: 15,
-      color: colors.white,
+      color: colors.onPrimary,
     },
   } as const;
 }

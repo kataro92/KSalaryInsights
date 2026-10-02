@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   ScrollView,
   View,
@@ -18,18 +19,16 @@ type Options = {
  * Tracks contentOffset so measureInWindow can map to scrollY.
  */
 export function useScrollToAnchor(options: Options = {}) {
+  const insets = useSafeAreaInsets();
   const topOffset = options.topOffset ?? 12;
   const delayMs = options.delayMs ?? 80;
   const scrollRef = useRef<ScrollView>(null);
   const anchorRef = useRef<View>(null);
   const scrollYRef = useRef(0);
 
-  const onScroll = useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      scrollYRef.current = e.nativeEvent.contentOffset.y;
-    },
-    []
-  );
+  const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    scrollYRef.current = e.nativeEvent.contentOffset.y;
+  }, []);
 
   const scrollToAnchor = useCallback(() => {
     const run = () => {
@@ -46,7 +45,7 @@ export function useScrollToAnchor(options: Options = {}) {
         scrollView.measureInWindow((_sx: number, sy: number) => {
           const targetY = Math.max(
             0,
-            scrollYRef.current + (ay - sy) - topOffset
+            scrollYRef.current + (ay - Math.max(sy, insets.top)) - topOffset,
           );
           scroll.scrollTo({ y: targetY, animated: true });
         });
@@ -59,7 +58,7 @@ export function useScrollToAnchor(options: Options = {}) {
         setTimeout(run, delayMs);
       });
     });
-  }, [delayMs, topOffset]);
+  }, [delayMs, topOffset, insets.top]);
 
   return { scrollRef, anchorRef, onScroll, scrollToAnchor };
 }

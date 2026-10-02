@@ -6,6 +6,13 @@ import type {
   MultiSourceTotals,
 } from "@/src/domain/types/multiSource";
 import { MULTI_SOURCE_KINDS } from "@/src/domain/types/multiSource";
+import {
+  annualAdditionalRelief,
+  dependentReliefYear,
+  nonNegative,
+} from "@/src/engine/deductions";
+import { getRuleset } from "@/src/engine/rulesetLoader";
+import { calculateAnnualPit } from "@/src/engine/pit";
 
 const KIND_SET = new Set<string>(MULTI_SOURCE_KINDS);
 
@@ -17,7 +24,7 @@ export function isMultiSourceKind(v: unknown): v is MultiSourceKind {
 export function assertAllowedKind(kind: unknown): MultiSourceKind {
   if (kind === "crypto" || kind === "digital_asset" || kind === "coin") {
     throw new Error(
-      "Loại nguồn không hỗ trợ: thuế tài sản mã hóa / coin ngoài phạm vi."
+      "Loại nguồn không hỗ trợ: thuế tài sản mã hóa / coin ngoài phạm vi.",
     );
   }
   if (!isMultiSourceKind(kind)) {
@@ -28,7 +35,7 @@ export function assertAllowedKind(kind: unknown): MultiSourceKind {
 
 function makeDelta(
   estimatedTax: number,
-  withheld: number
+  withheld: number,
 ): Pick<MultiSourceTotals, "deltaSigned" | "deltaKind"> {
   const deltaSigned = estimatedTax - withheld;
   if (deltaSigned > 0) return { deltaSigned, deltaKind: "pay" };
@@ -37,23 +44,54 @@ function makeDelta(
 }
 
 /**
- * Sum active lines. Does not recompute tax rates - engines already filled line amounts.
+ * Sum active lines; optionally reassess consolidated salary PIT with annual relief once.
  */
 export function summarizeMultiSource(
-  summary: Pick<MultiSourceAnnualSummary, "lines">
+  summary: Pick<MultiSourceAnnualSummary, "lines"> &
+    Partial<Pick<MultiSourceAnnualSummary, "taxYear" | "salaryRelief">>,
 ): MultiSourceTotals {
   let estimatedTax = 0;
   let withheld = 0;
+  let salaryIncome = 0;
+  let salaryPreviousTax = 0;
   for (const line of summary.lines) {
     assertAllowedKind(line.kind);
     if (line.excluded) continue;
     estimatedTax += line.estimatedTaxTotal;
     withheld += line.withheld;
+    if (line.kind === "salary") {
+      salaryIncome += nonNegative(
+        line.revenueOrIncome,
+        "Thu nhập lương sau bảo hiểm",
+      );
+      salaryPreviousTax += line.estimatedPit;
+    }
+  }
+  let salaryReliefApplied: number | undefined;
+  let salaryAnnualTax: number | undefined;
+  if (summary.salaryRelief) {
+    if (!summary.taxYear)
+      throw new Error("Cần năm thuế để tính giảm trừ lương");
+    const ruleset = getRuleset(summary.taxYear);
+    const additional = annualAdditionalRelief(summary.salaryRelief, ruleset);
+    salaryReliefApplied = additional.medical + additional.education;
+    const taxable = Math.max(
+      0,
+      salaryIncome -
+        ruleset.personal_relief * 12 -
+        dependentReliefYear(summary.salaryRelief, ruleset) -
+        salaryReliefApplied,
+    );
+    salaryAnnualTax = calculateAnnualPit(taxable, ruleset).totalTax;
+    estimatedTax = estimatedTax - salaryPreviousTax + salaryAnnualTax;
   }
   return {
     estimatedTax,
     withheld,
     ...makeDelta(estimatedTax, withheld),
+    ...(salaryAnnualTax !== undefined
+      ? { salaryAnnualTax, salaryReliefApplied }
+      : {}),
   };
 }
 
@@ -71,14 +109,14 @@ const NON_SALARY_FORCE: ReadonlySet<MultiSourceKind> = new Set([
  * other income for wizard tilt; forceSelfFile when HKD/rent/CK/ESOP present.
  */
 export function filingWizardImpactFromLines(
-  lines: readonly MultiSourceLine[]
+  lines: readonly MultiSourceLine[],
 ): FilingWizardImpact {
   const active = lines.filter((l) => !l.excluded);
   const hasNonSalarySources = active.some(
     (l) =>
       NON_SALARY_FORCE.has(l.kind) ||
       (l.kind === "casual" &&
-        l.notes.some((n) => /bắt buộc gộp|mandatory/i.test(n)))
+        l.notes.some((n) => /bắt buộc gộp|mandatory/i.test(n))),
   );
   return {
     hasNonSalarySources,
@@ -87,7 +125,7 @@ export function filingWizardImpactFromLines(
 }
 
 export function activeLegalSources(
-  lines: readonly MultiSourceLine[]
+  lines: readonly MultiSourceLine[],
 ): string[] {
   const set = new Set<string>();
   for (const line of lines) {

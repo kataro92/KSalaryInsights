@@ -18,6 +18,7 @@ type Props = ScrollViewProps & {
   accessibilityLabel?: string;
   /** Soft geometric poster decoration behind content. */
   decorated?: boolean;
+  wide?: boolean;
   contentStyle?: StyleProp<ViewStyle>;
   /**
    * Apply status-bar / notch inset as paddingTop.
@@ -34,13 +35,14 @@ export const ScreenShell = forwardRef(function ScreenShell(
     children,
     accessibilityLabel,
     decorated = false,
+    wide = false,
     style,
     contentContainerStyle,
     contentStyle,
     padTopInset = true,
     ...rest
   }: Props,
-  ref: Ref<ScrollView>
+  ref: Ref<ScrollView>,
 ) {
   const insets = useSafeAreaInsets();
   const topPad = padTopInset ? Math.max(insets.top, space[3]) : space[3];
@@ -60,7 +62,14 @@ export const ScreenShell = forwardRef(function ScreenShell(
       accessibilityLabel={accessibilityLabel}
       {...rest}
     >
-      <View style={[styles.inner, contentStyle, style]}>
+      <View
+        style={[
+          styles.inner,
+          wide && { maxWidth: layout.calculatorContentWidth },
+          contentStyle,
+          style,
+        ]}
+      >
         {decorated ? (
           <View style={styles.decorLayer} pointerEvents="none">
             <View style={styles.blobPrimary} />

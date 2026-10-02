@@ -24,7 +24,7 @@ export function SplashView({ visible }: Props) {
     >
       <Image
         source={require("../../../assets/images/splash-full.png")}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         resizeMode="cover"
         accessibilityIgnoresInvertColors
       />

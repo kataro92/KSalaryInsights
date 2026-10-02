@@ -10,7 +10,10 @@ import {
 } from "@/src/theme/fieldValidation";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 export type SickLeaveInputsValue = {
   salaryText: string;
@@ -47,7 +50,7 @@ export function SickLeaveInputs({ value, onChange }: Props) {
           value={value.salaryText}
           error={requiredPositiveMoney(
             value.salaryText,
-            "Nhập lương tháng liền kề lớn hơn 0."
+            "Nhập lương tháng liền kề lớn hơn 0.",
           )}
           onValueChange={(formatted) => {
             patch({ salaryText: formatted });
@@ -78,7 +81,7 @@ export function SickLeaveInputs({ value, onChange }: Props) {
           value={value.yearsText}
           error={requiredNonNegativeInt(
             value.yearsText,
-            "Nhập số năm đóng bảo hiểm xã hội (≥ 0)."
+            "Nhập số năm đóng bảo hiểm xã hội (≥ 0).",
           )}
           onChangeText={(t) => patch({ yearsText: t.replace(/[^\d]/g, "") })}
         />
@@ -138,6 +141,6 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 14,
       color: colors.foreground,
     },
-    chipLabelSelected: { color: colors.white },
+    chipLabelSelected: { color: colors.onSecondary },
   } satisfies ThemedStyleSheet;
 }

@@ -28,7 +28,7 @@ export function ColorBlock({
   const styles = useThemedStyles(makeStyles);
 
   const toneBg: Record<Tone, string> = {
-    default: colors.white,
+    default: glass.fallback,
     primarySoft: colors.primarySoft,
     secondarySoft: colors.secondarySoft,
     muted: colors.muted,

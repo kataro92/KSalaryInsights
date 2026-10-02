@@ -13,11 +13,10 @@ import {
 import { getRuleset } from "@/src/engine/rulesetLoader";
 
 export type InsurancePresetValidation =
-  | { ok: true; preset: InsuranceBasePreset }
-  | { ok: false; message: string };
+  { ok: true; preset: InsuranceBasePreset } | { ok: false; message: string };
 
 export function validateInsurancePreset(
-  raw: unknown
+  raw: unknown,
 ): InsurancePresetValidation {
   if (!raw || typeof raw !== "object") {
     return { ok: false, message: "Thiết lập mức đóng bảo hiểm không hợp lệ." };
@@ -34,7 +33,10 @@ export function validateInsurancePreset(
       percent < 1 ||
       percent > 100
     ) {
-      return { ok: false, message: "Tỷ lệ đóng bảo hiểm phải là số nguyên 1-100." };
+      return {
+        ok: false,
+        message: "Tỷ lệ đóng bảo hiểm phải là số nguyên 1-100.",
+      };
     }
     return { ok: true, preset: { mode: "percent", percent } };
   }
@@ -60,7 +62,7 @@ export function parseInsurancePreset(raw: unknown): InsuranceBasePreset | null {
 /** Map legacy calculator fields → preset. */
 export function insurancePresetFromLegacy(
   customBh: boolean,
-  bhAmount: number | null | undefined
+  bhAmount: number | null | undefined,
 ): InsuranceBasePreset {
   if (!customBh) return { mode: "full" };
   if (bhAmount != null && Number.isInteger(bhAmount) && bhAmount > 0) {
@@ -85,7 +87,7 @@ export function legacyFromInsurancePreset(preset: InsuranceBasePreset): {
 
 export function resolveForGrossToNet(
   gross: number,
-  preset: InsuranceBasePreset = DEFAULT_INSURANCE_PRESET
+  preset: InsuranceBasePreset = DEFAULT_INSURANCE_PRESET,
 ): ResolvedGrossToNetInsurance {
   if (!Number.isFinite(gross) || gross <= 0) {
     throw new Error("Gross phải là số dương");
@@ -130,7 +132,7 @@ type NetToGrossWithPresetParams = Omit<
  * Net→Gross with F022 presets. Percent mode: BH base = percent × candidate gross each step.
  */
 export function netToGrossWithPreset(
-  params: NetToGrossWithPresetParams
+  params: NetToGrossWithPresetParams,
 ): NetToGrossResult {
   const { preset: rawPreset = DEFAULT_INSURANCE_PRESET, ...rest } = params;
   const checked = validateInsurancePreset(rawPreset);
@@ -156,27 +158,25 @@ export function netToGrossWithPreset(
 function netToGrossWithPercent(
   params: Omit<NetToGrossParams, "insuranceTracksGross" | "insuranceSalary"> & {
     percent: number;
-  }
+  },
 ): NetToGrossResult {
-  const {
-    net,
-    region,
-    taxYear,
-    asOfDate,
-    numDependents = 0,
-    percent,
-  } = params;
+  const { net, region, taxYear, asOfDate, numDependents = 0, percent } = params;
 
   if (!Number.isFinite(net) || net <= 0) {
     throw new Error("Net phải là số dương");
   }
 
-  const salaryFor = (gross: number) =>
-    roundVnd((gross * percent) / 100);
+  const salaryFor = (gross: number) => roundVnd((gross * percent) / 100);
 
   const ruleset = getRuleset(taxYear, asOfDate);
-  const minWage = ruleset.regional_minimum_wages[REGION_TO_KEY[region]];
+  const minWage = Math.max(
+    ruleset.regional_minimum_wages[REGION_TO_KEY[region]],
+    (params.mealAllowance ?? 0) + (params.exemptAllowances ?? 0),
+  );
   const minBreakdown = grossToNet({
+    mealAllowance: params.mealAllowance,
+    exemptAllowances: params.exemptAllowances,
+    voluntaryInsurance: params.voluntaryInsurance,
     gross: minWage,
     region,
     taxYear,
@@ -198,6 +198,9 @@ function netToGrossWithPercent(
 
   for (let i = 0; i < 20; i++) {
     const hiNet = grossToNet({
+      mealAllowance: params.mealAllowance,
+      exemptAllowances: params.exemptAllowances,
+      voluntaryInsurance: params.voluntaryInsurance,
       gross: high,
       region,
       taxYear,
@@ -211,6 +214,9 @@ function netToGrossWithPercent(
 
   let bestGross = high;
   let bestBreakdown = grossToNet({
+    mealAllowance: params.mealAllowance,
+    exemptAllowances: params.exemptAllowances,
+    voluntaryInsurance: params.voluntaryInsurance,
     gross: high,
     region,
     taxYear,
@@ -222,6 +228,9 @@ function netToGrossWithPercent(
   while (low <= high) {
     const mid = Math.floor((low + high) / 2);
     const breakdown = grossToNet({
+      mealAllowance: params.mealAllowance,
+      exemptAllowances: params.exemptAllowances,
+      voluntaryInsurance: params.voluntaryInsurance,
       gross: mid,
       region,
       taxYear,
@@ -249,6 +258,9 @@ function netToGrossWithPercent(
   for (const g of [bestGross - 1, bestGross, bestGross + 1, low, high]) {
     if (g < minWage) continue;
     const breakdown = grossToNet({
+      mealAllowance: params.mealAllowance,
+      exemptAllowances: params.exemptAllowances,
+      voluntaryInsurance: params.voluntaryInsurance,
       gross: g,
       region,
       taxYear,

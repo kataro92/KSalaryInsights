@@ -23,6 +23,16 @@ export type AnnualSettlementInput = {
   casual?: CasualIncomeInput;
   /** Ngày dùng cho trần BH khi suy từ tháng; mặc định giữa năm. */
   asOfDate?: string;
+  medicalExpenses?: number;
+  educationExpenses?: number;
+  charitableContributions?: number;
+  voluntaryInsuranceMonthly?: number;
+  voluntaryInsuranceMonths?: number;
+  mealAllowanceMonthly?: number;
+  mealAllowanceMonths?: number;
+  exemptAllowancesYear?: number;
+  /** One anonymous registration period per dependent; no personal data. */
+  dependentPeriods?: { startMonth: number; endMonth: number }[];
 };
 
 export type SettlementOutcomeKind = "refund" | "pay" | "even";
@@ -52,13 +62,17 @@ export type AnnualSettlementBreakdown = {
   rulesetId: string;
   legalSources: string[];
   withheldMissingWarning: boolean;
+  additionalReliefYear?: {
+    medical: number;
+    education: number;
+    charity: number;
+    voluntaryInsurance: number;
+  };
+  exemptIncomeYear?: number;
 };
 
 export type CasualMergeMode =
-  | "none"
-  | "mandatory_merge"
-  | "exempt_no_merge"
-  | "voluntary_merge";
+  "none" | "mandatory_merge" | "exempt_no_merge" | "voluntary_merge";
 
 export type SettlementScenario = {
   id: CasualMergeMode;

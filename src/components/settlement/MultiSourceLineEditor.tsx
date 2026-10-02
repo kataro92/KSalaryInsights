@@ -27,7 +27,10 @@ import {
 import { parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 const HKD_INDUSTRIES: { id: HkdIndustryId; label: string }[] = [
   { id: "services", label: "Dịch vụ" },
@@ -53,6 +56,8 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
   const [taxText, setTaxText] = useState("0");
   const [withheldText, setWithheldText] = useState("0");
   const [industryId, setIndustryId] = useState<HkdIndustryId>("services");
+  const [totalBusinessText, setTotalBusinessText] = useState("");
+  const [costText, setCostText] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const amountHint =
@@ -81,12 +86,15 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
         });
       } else if (kind === "rent") {
         line = mapRentLine({
+          totalBusinessRevenue: parseMoney(totalBusinessText) ?? undefined,
           annualRevenue: amount,
           taxYear,
           withheld,
         });
       } else if (kind === "hkd") {
         line = mapHkdLine({
+          totalBusinessRevenue: parseMoney(totalBusinessText) ?? undefined,
+          costs: parseMoney(costText) ?? undefined,
           annualRevenue: amount,
           industryId,
           taxYear,
@@ -153,6 +161,20 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
         </>
       ) : null}
 
+      {kind === "hkd" || kind === "rent" ? (
+        <MoneyField
+          label="Tổng doanh thu kinh doanh năm (tất cả nguồn, để xét giảm 30%)"
+          value={totalBusinessText}
+          onValueChange={setTotalBusinessText}
+        />
+      ) : null}
+      {kind === "hkd" ? (
+        <MoneyField
+          label="Chi phí hợp lệ (bắt buộc trên 3 tỷ)"
+          value={costText}
+          onValueChange={setCostText}
+        />
+      ) : null}
       <Text style={styles.label}>{amountHint}</Text>
       <MoneyField
         accessibilityLabel={amountHint}
@@ -163,7 +185,9 @@ export function MultiSourceLineEditor({ taxYear, disabled, onAdd }: Props) {
 
       {kind === "salary" ? (
         <>
-          <Text style={styles.label}>Thuế thu nhập cá nhân năm ước tính (từ quyết toán lương)</Text>
+          <Text style={styles.label}>
+            Thuế thu nhập cá nhân năm ước tính (từ quyết toán lương)
+          </Text>
           <MoneyField
             accessibilityLabel="Thuế thu nhập cá nhân năm ước tính"
             value={taxText}

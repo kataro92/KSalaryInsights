@@ -1,15 +1,24 @@
 import { roundVnd } from "@/src/domain/constants/salary";
 import type { RentBreakdown, RentInput } from "@/src/domain/types/otherIncome";
-import { getRuleset } from "@/src/engine/rulesetLoader";
+import {
+  getBusinessRuleset,
+  reduceBusinessPit,
+  totalBusinessRevenue,
+} from "./businessReduction";
 
 /**
  * Cho thuê BĐS. GTGT trên toàn bộ DT khi vượt ngưỡng; TNCN trên phần vượt.
  */
 export function calculateRent(input: RentInput): RentBreakdown {
-  if (input.annualRevenue < 0) throw new Error("Doanh thu không hợp lệ");
+  if (!Number.isFinite(input.annualRevenue) || input.annualRevenue < 0)
+    throw new Error("Doanh thu không hợp lệ");
 
   const asOf = input.asOfDate ?? `${input.taxYear}-06-15`;
-  const ruleset = getRuleset(input.taxYear, asOf);
+  const ruleset = getBusinessRuleset(input.taxYear, asOf);
+  const annualTotal = totalBusinessRevenue(
+    input.annualRevenue,
+    input.totalBusinessRevenue,
+  );
   const params = ruleset.other_income?.rent;
   if (!params) throw new Error("Thiếu tham số other_income.rent");
 
@@ -24,44 +33,55 @@ export function calculateRent(input: RentInput): RentBreakdown {
   if (exempt) {
     explanations.push(
       `Doanh thu ${input.annualRevenue.toLocaleString(
-        "vi-VN"
+        "vi-VN",
       )} ≤ ngưỡng ${threshold.toLocaleString(
-        "vi-VN"
-      )}. Không phát sinh thuế giá trị gia tăng / thuế thu nhập cá nhân theo tỷ lệ.`
+        "vi-VN",
+      )}. Không phát sinh thuế giá trị gia tăng / thuế thu nhập cá nhân theo tỷ lệ.`,
     );
   } else {
     vat = roundVnd(params.vat_rate * input.annualRevenue);
-    const excess = input.annualRevenue - threshold;
+    const excess = params.pit_on_full_revenue
+      ? input.annualRevenue
+      : input.annualRevenue - threshold;
     pit = roundVnd(params.pit_rate_on_excess * excess);
     explanations.push(
       `Thuế giá trị gia tăng = ${params.vat_rate * 100}% × toàn bộ doanh thu = ${vat.toLocaleString(
-        "vi-VN"
-      )}.`
+        "vi-VN",
+      )}.`,
     );
     explanations.push(
       `Thuế thu nhập cá nhân = ${
         params.pit_rate_on_excess * 100
-      }% × phần vượt ngưỡng (${excess.toLocaleString(
-        "vi-VN"
-      )}) = ${pit.toLocaleString("vi-VN")}.`
+      }% × ${params.pit_on_full_revenue ? "toàn bộ doanh thu" : "phần vượt ngưỡng"} (${excess.toLocaleString(
+        "vi-VN",
+      )}) = ${pit.toLocaleString("vi-VN")}.`,
     );
   }
 
+  const reduced = reduceBusinessPit(pit, annualTotal, ruleset, true);
+  pit = reduced.pit;
+  if (reduced.pitReduction > 0)
+    explanations.push(
+      `NQ 43/2026/QH16: giảm 30% TNCN (${reduced.pitReduction.toLocaleString("vi-VN")} ₫); GTGT không giảm. Cho thuê thuộc thu nhập kinh doanh (Luật 109 Đ.7 khoản 4, NĐ 68 Đ.4 khoản 4). Cá nhân cư trú có tổng doanh thu kinh doanh năm ≤ 10 tỷ. Vượt 10 tỷ thực tế phải điều chỉnh, nộp bổ sung; không thay tờ khai.`,
+    );
   const totalTax = vat + pit;
-  const reportingNote = exempt
-    ? `Vẫn phải thông báo doanh thu (${params.reporting_form ?? "01/BĐS"}). ${
-        params.reporting_deadline_note ?? ""
-      }`.trim()
-    : undefined;
+  const reportingNote =
+    input.taxYear === 2025
+      ? params.reporting_deadline_note
+      : exempt
+        ? `Vẫn phải thông báo doanh thu (${params.reporting_form ?? "01/BĐS"}). ${
+            params.reporting_deadline_note ?? ""
+          }`.trim()
+        : undefined;
 
   if (reportingNote) explanations.push(reportingNote);
 
   const formula = exempt
     ? "Thuế = 0 (≤ ngưỡng)"
     : `Thuế giá trị gia tăng ${vat.toLocaleString(
-        "vi-VN"
+        "vi-VN",
       )} + thuế thu nhập cá nhân ${pit.toLocaleString(
-        "vi-VN"
+        "vi-VN",
       )} = ${totalTax.toLocaleString("vi-VN")}`;
 
   return {
@@ -71,15 +91,13 @@ export function calculateRent(input: RentInput): RentBreakdown {
     reportingRequired,
     vat,
     pit,
+    pitBeforeReduction: reduced.pitBeforeReduction,
+    pitReduction: reduced.pitReduction,
     totalTax,
     formula,
     explanations,
     reportingNote,
     rulesetId: ruleset.id,
-    legalSources: [
-      ...ruleset.legal_sources,
-      "Luật 109/2025 Đ.7: ngưỡng cho thuê",
-      "Nghị định liên quan thuế giá trị gia tăng / thuế thu nhập cá nhân cho thuê bất động sản",
-    ],
+    legalSources: ruleset.legal_sources,
   };
 }

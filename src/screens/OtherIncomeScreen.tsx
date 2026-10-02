@@ -60,7 +60,7 @@ export function OtherIncomeScreen() {
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
       ? preferences.defaultTaxYear
-      : 2026
+      : 2026,
   );
   const [depth, setDepth] = useState<Depth>("simple");
   const [simpleMode, setSimpleMode] = useState<SimpleMode>("rent");
@@ -81,114 +81,127 @@ export function OtherIncomeScreen() {
           onScroll={scroll.onScroll}
           scrollEventThrottle={16}
         >
-        <PageHero
-          title="Thu nhập khác"
-          subtitle={
-            depth === "simple"
-              ? "Tính nhanh thuế cho thuê hoặc hộ kinh doanh từ doanh thu tháng. Không gộp vào tính lương."
-              : "Chứng khoán, ESOP, thu nhập vãng lai và tuỳ chọn nâng cao. Không gộp vào tính lương. Không tính thuế coin."
-          }
-          showBrand={false}
-        />
+          <PageHero
+            title="Thu nhập khác"
+            subtitle={
+              depth === "simple"
+                ? "Tính nhanh thuế cho thuê hoặc hộ kinh doanh từ doanh thu tháng. Không gộp vào tính lương."
+                : "Chứng khoán, ESOP, thu nhập vãng lai và tuỳ chọn nâng cao. Không gộp vào tính lương. Không tính thuế coin."
+            }
+            showBrand={false}
+          />
 
-        <OtherIncomeDisclaimer />
+          <OtherIncomeDisclaimer />
 
-        <Pressable
-          accessibilityRole="link"
-          accessibilityLabel="Mở tổng hợp quyết toán đa nguồn"
-          onPress={() => router.push("/multi-source")}
-          style={styles.compareLink}
-        >
-          <View style={styles.compareLinkRow}>
-            <Text style={[styles.compareLinkText, { color: colors.primary }]}>
-              Tổng hợp năm · đa nguồn
-            </Text>
-            <AppIcon name="chevron-right" color={colors.primary} size={16} />
-          </View>
-        </Pressable>
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel="Mở tổng hợp quyết toán đa nguồn"
+            onPress={() => router.push("/multi-source")}
+            style={styles.compareLink}
+          >
+            <View style={styles.compareLinkRow}>
+              <Text style={[styles.compareLinkText, { color: colors.primary }]}>
+                Tổng hợp năm · đa nguồn
+              </Text>
+              <AppIcon name="chevron-right" color={colors.primary} size={16} />
+            </View>
+          </Pressable>
 
-        <Section
-          title="Chế độ"
-          subtitle="Tính nhanh: lấy doanh thu tháng ×12. Đầy đủ: nhập chi tiết hơn cho từng loại thu nhập."
-        >
-          <ChipRow equal>
-            {DEPTHS.map((d) => (
-              <ChoiceChip
-                key={d.id}
-                flex
-                label={d.label}
-                selected={depth === d.id}
-                onPress={() => setDepth(d.id)}
-              />
-            ))}
-          </ChipRow>
-        </Section>
+          <Section
+            title="Chế độ"
+            subtitle="Tính nhanh: lấy doanh thu tháng ×12. Đầy đủ: nhập chi tiết hơn cho từng loại thu nhập."
+          >
+            <ChipRow equal>
+              {DEPTHS.map((d) => (
+                <ChoiceChip
+                  key={d.id}
+                  flex
+                  label={d.label}
+                  selected={depth === d.id}
+                  onPress={() => setDepth(d.id)}
+                />
+              ))}
+            </ChipRow>
+          </Section>
 
-        <Section title="Năm thuế">
-          <ChipRow equal>
-            {TAX_YEAR_OPTIONS.map((y) => (
-              <ChoiceChip
-                key={y}
-                flex
-                label={String(y)}
-                selected={taxYear === y}
-                onPress={() => setTaxYear(y)}
-              />
-            ))}
-          </ChipRow>
-        </Section>
+          <Section title="Năm thuế">
+            <ChipRow equal>
+              {[...TAX_YEAR_OPTIONS, 2027].map((y) => (
+                <ChoiceChip
+                  key={y}
+                  flex
+                  label={String(y)}
+                  selected={taxYear === y}
+                  onPress={() => {
+                    setTaxYear(y);
+                    if (y === 2027) setFullMode("rent");
+                  }}
+                />
+              ))}
+            </ChipRow>
+          </Section>
 
-        {depth === "simple" ? (
-          <>
-            <Section title="Loại thu nhập">
-              <View style={styles.row}>
-                {SIMPLE_MODES.map((m) => (
-                  <ChoiceChip
-                    key={m.id}
-                    label={m.label}
-                    selected={simpleMode === m.id}
-                    tone="secondary"
-                    onPress={() => setSimpleMode(m.id)}
-                  />
-                ))}
-              </View>
-            </Section>
-            {simpleMode === "rent" ? (
-              <SimpleRentCalculator taxYear={taxYear} />
-            ) : null}
-            {simpleMode === "hkd" ? (
-              <SimpleHkdCalculator taxYear={taxYear} />
-            ) : null}
-          </>
-        ) : (
-          <>
-            <Section title="Loại thu nhập">
-              <View style={styles.row}>
-                {FULL_MODES.map((m) => (
-                  <ChoiceChip
-                    key={m.id}
-                    label={m.label}
-                    selected={fullMode === m.id}
-                    tone="secondary"
-                    onPress={() => setFullMode(m.id)}
-                  />
-                ))}
-              </View>
-            </Section>
-            {fullMode === "rent" ? <RentCalculator taxYear={taxYear} /> : null}
-            {fullMode === "hkd" ? <HkdCalculator taxYear={taxYear} /> : null}
-            {fullMode === "securities" ? (
-              <SecuritiesCalculator taxYear={taxYear} />
-            ) : null}
-            {fullMode === "esop" ? <EsopCalculator taxYear={taxYear} /> : null}
-            {fullMode === "casual" ? (
-              <CasualWithholdingCalculator
-                taxYear={taxYear}
-                asOfDate={`${taxYear}-08-15`}
-              />
-            ) : null}
-          </>
-        )}
+          {depth === "simple" ? (
+            <>
+              <Section title="Loại thu nhập">
+                <View style={styles.row}>
+                  {SIMPLE_MODES.map((m) => (
+                    <ChoiceChip
+                      key={m.id}
+                      label={m.label}
+                      selected={simpleMode === m.id}
+                      tone="secondary"
+                      onPress={() => setSimpleMode(m.id)}
+                    />
+                  ))}
+                </View>
+              </Section>
+              {simpleMode === "rent" ? (
+                <SimpleRentCalculator key={taxYear} taxYear={taxYear} />
+              ) : null}
+              {simpleMode === "hkd" ? (
+                <SimpleHkdCalculator key={taxYear} taxYear={taxYear} />
+              ) : null}
+            </>
+          ) : (
+            <>
+              <Section title="Loại thu nhập">
+                <View style={styles.row}>
+                  {FULL_MODES.filter(
+                    (m) =>
+                      taxYear !== 2027 || m.id === "rent" || m.id === "hkd",
+                  ).map((m) => (
+                    <ChoiceChip
+                      key={m.id}
+                      label={m.label}
+                      selected={fullMode === m.id}
+                      tone="secondary"
+                      onPress={() => setFullMode(m.id)}
+                    />
+                  ))}
+                </View>
+              </Section>
+              {fullMode === "rent" ? (
+                <RentCalculator key={taxYear} taxYear={taxYear} />
+              ) : null}
+              {fullMode === "hkd" ? (
+                <HkdCalculator key={taxYear} taxYear={taxYear} />
+              ) : null}
+              {fullMode === "securities" ? (
+                <SecuritiesCalculator key={taxYear} taxYear={taxYear} />
+              ) : null}
+              {fullMode === "esop" ? (
+                <EsopCalculator key={taxYear} taxYear={taxYear} />
+              ) : null}
+              {fullMode === "casual" ? (
+                <CasualWithholdingCalculator
+                  key={taxYear}
+                  taxYear={taxYear}
+                  asOfDate={`${taxYear}-08-15`}
+                />
+              ) : null}
+            </>
+          )}
         </ScreenShell>
       </KeyboardAvoidingView>
     </ScrollToResultProvider>

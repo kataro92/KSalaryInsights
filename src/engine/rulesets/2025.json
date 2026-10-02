@@ -1,6 +1,6 @@
 {
  "id": "ruleset-2025",
- "version": "1.0.0",
+ "version": "1.1.0",
  "name": "Kỳ tính thuế 2025",
  "tax_year": 2025,
  "effective_from": "2025-01-01",
@@ -10,7 +10,8 @@
   "NQ 954/2020/UBTVQH14: GTGC 11/4,4",
   "NĐ 73/2024/NĐ-CP. lương cơ sở 2,34tr",
   "NĐ 74/2024/NĐ-CP. LTTV 2025",
-  "Luật BHXH 41/2024/QH15: tỷ lệ/trần đóng"
+  "Luật BHXH 41/2024/QH15: tỷ lệ/trần đóng",
+  "TT 40/2021/TT-BTC Đ.4, 9, 10; TT 100/2021/TT-BTC (VBHN 24/VBHN-BTC 2022): ngưỡng 100 triệu; thuế trên toàn bộ doanh thu kỳ 2025"
  ],
  "personal_relief": 11000000,
  "dependent_relief": 4400000,
@@ -171,14 +172,14 @@
  },
  "other_income": {
   "rent": {
-   "exemption_threshold": 1000000000,
+   "exemption_threshold": 100000000,
    "vat_rate": 0.05,
    "pit_rate_on_excess": 0.05,
-   "reporting_form": "01/BĐS",
-   "reporting_deadline_note": "Thông báo doanh thu mẫu 01/BĐS hạn 31/01 năm sau; kỳ 2026 thêm mốc kê khai theo hướng dẫn cục thuế."
+   "reporting_deadline_note": "Kỳ 2025: kê khai theo TT 40/2021/TT-BTC và TT 100/2021/TT-BTC; không dùng mẫu 01/BĐS của 2026.",
+   "pit_on_full_revenue": true
   },
   "hkd": {
-   "exemption_threshold": 1000000000,
+   "exemption_threshold": 100000000,
    "income_method_threshold": 3000000000,
    "income_method_rate": 0.15,
    "industry_rates": [
@@ -212,7 +213,8 @@
      "vat_rate": 0.02,
      "pit_rate": 0.01
     }
-   ]
+   ],
+   "pit_on_full_revenue": true
   },
   "securities": {
    "transfer_rate": 0.001,

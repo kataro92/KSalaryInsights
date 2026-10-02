@@ -15,3 +15,5 @@ Story-ordered captures showing what KSalaryInsights does (results, not empty for
 | `09-settings.png` | Cài đặt · giới thiệu tính năng |
 
 Re-capture: run Expo (`npm run start:release` or web), drive flows with results visible, then place files here.
+
+Ảnh cập nhật hai kế hoạch: [QA 02/10/2026](./2026-10-02/README.md).

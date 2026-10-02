@@ -5,7 +5,10 @@ import { ColorBlock } from "@/src/components/common/ColorBlock";
 import type { MaternityBreakdown } from "@/src/domain/types/benefits";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Props = {
   result: MaternityBreakdown;
@@ -30,8 +33,16 @@ export function MaternityBreakdownCard({ result, hideTotal = false }: Props) {
       <Text style={styles.formula}>{result.formula}</Text>
 
       <View style={styles.rows}>
-        <Row styles={styles} label="Tiền chế độ" value={result.monthlyBenefitTotal} />
-        <Row styles={styles} label="Trợ cấp 1 lần" value={result.oneTimeAllowance} />
+        <Row
+          styles={styles}
+          label="Tiền chế độ"
+          value={result.monthlyBenefitTotal}
+        />
+        <Row
+          styles={styles}
+          label="Trợ cấp 1 lần"
+          value={result.oneTimeAllowance}
+        />
         <Text style={styles.meta}>
           {result.leaveMonths} tháng nghỉ · tham chiếu{" "}
           {result.referenceSalary.toLocaleString("vi-VN")} ₫
@@ -78,7 +89,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 12,
       letterSpacing: 0.8,
       textTransform: "uppercase",
-      color: colors.secondary,
+      color: colors.secondaryForeground,
       marginBottom: space[2],
     },
     amount: {

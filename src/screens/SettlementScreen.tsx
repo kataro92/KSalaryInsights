@@ -29,6 +29,10 @@ import { StickyActionBar } from "@/src/components/common/StickyActionBar";
 import { TextField } from "@/src/components/common/TextField";
 import { AnnualBreakdownCard } from "@/src/components/breakdown/AnnualBreakdownCard";
 import { SettlementDisclaimer } from "@/src/components/disclaimer/SettlementDisclaimer";
+import {
+  DependentPeriodsInput,
+  type DependentPeriod,
+} from "@/src/components/inputs/DependentPeriodsInput";
 import { DependentCountInput } from "@/src/components/inputs/DependentCountInput";
 import { NgaiMiuTip } from "@/src/components/mascot/NgaiMiuTip";
 import { DualScenarioCard } from "@/src/components/settlement/DualScenarioCard";
@@ -60,7 +64,10 @@ import { formatMoneyInput, parseMoney } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { useTheme } from "@/src/theme/ThemeProvider";
 import { layout, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 export function SettlementScreen() {
   const router = useRouter();
@@ -69,15 +76,27 @@ export function SettlementScreen() {
   const styles = useThemedStyles(makeStyles);
   const { preferences } = usePreferences();
   const { scenarios, save, remove } = useScenarios("settlement");
-  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } =
+    useScrollToAnchor();
 
   const [taxYear, setTaxYear] = useState(() =>
     (TAX_YEAR_OPTIONS as readonly number[]).includes(preferences.defaultTaxYear)
       ? preferences.defaultTaxYear
-      : 2025
+      : 2025,
   );
   const [region, setRegion] = useState<RegionCode>(preferences.defaultRegion);
   const [numDependents, setNumDependents] = useState(0);
+  const [dependentPeriods, setDependentPeriods] = useState<DependentPeriod[]>(
+    [],
+  );
+  const [medicalText, setMedicalText] = useState("0");
+  const [educationText, setEducationText] = useState("0");
+  const [charityText, setCharityText] = useState("0");
+  const [voluntaryText, setVoluntaryText] = useState("0");
+  const [voluntaryMonthsText, setVoluntaryMonthsText] = useState("12");
+  const [mealText, setMealText] = useState("0");
+  const [mealMonthsText, setMealMonthsText] = useState("0");
+  const [exemptText, setExemptText] = useState("0");
   const [monthlyText, setMonthlyText] = useState("30.000.000");
   const [monthsText, setMonthsText] = useState("10");
   const [withheldText, setWithheldText] = useState("16.275.000");
@@ -119,9 +138,18 @@ export function SettlementScreen() {
       monthlyGross,
       monthsWorked,
       salaryWithheld,
+      dependentPeriods,
+      medicalExpenses: parseMoney(medicalText) ?? 0,
+      educationExpenses: parseMoney(educationText) ?? 0,
+      charitableContributions: parseMoney(charityText) ?? 0,
+      voluntaryInsuranceMonthly: parseMoney(voluntaryText) ?? 0,
+      voluntaryInsuranceMonths: Number(voluntaryMonthsText),
+      mealAllowanceMonthly: parseMoney(mealText) ?? 0,
+      mealAllowanceMonths: Number(mealMonthsText),
+      exemptAllowancesYear: parseMoney(exemptText) ?? 0,
       includeCasual,
-      casualGross: includeCasual ? parseMoney(casualGrossText) ?? 0 : 0,
-      casualWithheld: includeCasual ? parseMoney(casualWithheldText) ?? 0 : 0,
+      casualGross: includeCasual ? (parseMoney(casualGrossText) ?? 0) : 0,
+      casualWithheld: includeCasual ? (parseMoney(casualWithheldText) ?? 0) : 0,
     };
   };
 
@@ -131,6 +159,21 @@ export function SettlementScreen() {
     setTaxYear(i.taxYear);
     setRegion(i.region);
     setNumDependents(i.numDependents);
+    setDependentPeriods(
+      i.dependentPeriods ??
+        Array.from({ length: i.numDependents }, () => ({
+          startMonth: 1,
+          endMonth: 12,
+        })),
+    );
+    setMedicalText(formatMoneyInput(i.medicalExpenses ?? 0));
+    setEducationText(formatMoneyInput(i.educationExpenses ?? 0));
+    setCharityText(formatMoneyInput(i.charitableContributions ?? 0));
+    setVoluntaryText(formatMoneyInput(i.voluntaryInsuranceMonthly ?? 0));
+    setVoluntaryMonthsText(String(i.voluntaryInsuranceMonths ?? 12));
+    setMealText(formatMoneyInput(i.mealAllowanceMonthly ?? 0));
+    setMealMonthsText(String(i.mealAllowanceMonths ?? 0));
+    setExemptText(formatMoneyInput(i.exemptAllowancesYear ?? 0));
     setMonthlyText(formatMoneyInput(i.monthlyGross));
     setMonthsText(String(i.monthsWorked));
     setWithheldText(formatMoneyInput(i.salaryWithheld));
@@ -201,6 +244,7 @@ export function SettlementScreen() {
 
     try {
       const next = calculateAnnualSettlement({
+        ...inputs,
         taxYear: inputs.taxYear,
         region: inputs.region,
         numDependents: inputs.numDependents,
@@ -251,9 +295,7 @@ export function SettlementScreen() {
           style={styles.compareLink}
         >
           <View style={styles.compareLinkRow}>
-            <Text style={styles.compareLinkText}>
-              Tổng hợp thu nhập cả năm
-            </Text>
+            <Text style={styles.compareLinkText}>Tổng hợp thu nhập cả năm</Text>
             <AppIcon name="chevron-right" color={colors.primary} size={16} />
           </View>
         </Pressable>
@@ -320,11 +362,113 @@ export function SettlementScreen() {
             value={numDependents}
             onChange={(n) => {
               setNumDependents(n);
+              setDependentPeriods((prev) =>
+                Array.from(
+                  { length: n },
+                  (_, i) => prev[i] ?? { startMonth: 1, endMonth: 12 },
+                ),
+              );
               clearResult();
             }}
           />
         </Section>
 
+        {numDependents > 0 ? (
+          <CollapseSection title="Tháng đăng ký người phụ thuộc" defaultOpen>
+            <DependentPeriodsInput
+              value={dependentPeriods}
+              onChange={(v) => {
+                setDependentPeriods(v);
+                clearResult();
+              }}
+            />
+          </CollapseSection>
+        ) : null}
+        <CollapseSection title="Khoản miễn thuế và giảm trừ khi tự quyết toán">
+          <MoneyField
+            label="Phụ cấp / trợ cấp miễn thuế trong Gross cả năm"
+            value={exemptText}
+            onValueChange={(v) => {
+              setExemptText(v);
+              clearResult();
+            }}
+          />
+          <MoneyField
+            label="Từ thiện / nhân đạo đủ điều kiện cả năm"
+            value={charityText}
+            onValueChange={(v) => {
+              setCharityText(v);
+              clearResult();
+            }}
+          />
+          {taxYear === 2026 ? (
+            <>
+              <Text style={styles.switchHint}>
+                NĐ 253 Đ.49: chi tự chịu cho bản thân/người phụ thuộc tại cơ sở
+                trong nước, hóa đơn/chứng từ đúng người; y tế cần bảng kê khám
+                chữa bệnh thuộc danh mục BHYT. Không nhập khoản được bảo hiểm,
+                công ty hoặc nguồn khác chi trả; không tính trùng khoản đã dùng
+                để giảm thuế. Chỉ dùng khi tự quyết toán, không tải chứng từ lên
+                app.
+              </Text>
+              <MoneyField
+                label="Chi y tế đủ điều kiện / năm (trần 23 triệu)"
+                value={medicalText}
+                onValueChange={(v) => {
+                  setMedicalText(v);
+                  clearResult();
+                }}
+              />
+              <MoneyField
+                label="Chi giáo dục đủ điều kiện / năm (trần 24 triệu)"
+                value={educationText}
+                onValueChange={(v) => {
+                  setEducationText(v);
+                  clearResult();
+                }}
+              />
+              <MoneyField
+                label="Bảo hiểm bổ sung / hưu trí / nhân thọ / tháng (trần 3 triệu)"
+                value={voluntaryText}
+                onValueChange={(v) => {
+                  setVoluntaryText(v);
+                  clearResult();
+                }}
+              />
+              <Text style={styles.switchHint}>
+                Gồm cả phần công ty và cá nhân đóng, có chứng từ. Nhập mức đóng
+                đều mỗi tháng; nếu thay đổi, tính tổng các mức đã giới hạn 3
+                triệu/tháng rồi chia cho số tháng.
+              </Text>
+              <TextField
+                label="Số tháng đóng bảo hiểm bổ sung (0–12)"
+                keyboardType="number-pad"
+                value={voluntaryMonthsText}
+                onChangeText={(v) => {
+                  setVoluntaryMonthsText(v.replace(/\D/g, ""));
+                  clearResult();
+                }}
+              />
+              <MoneyField
+                label="Tiền ăn trong Gross / tháng (trần miễn 1,2 triệu)"
+                value={mealText}
+                onValueChange={(v) => {
+                  setMealText(v);
+                  clearResult();
+                }}
+              />
+              <TextField
+                label="Số tháng nhận tiền ăn từ tháng 7 (0–6)"
+                keyboardType="number-pad"
+                value={mealMonthsText}
+                onChangeText={(v) => {
+                  setMealMonthsText(v.replace(/\D/g, ""));
+                  clearResult();
+                }}
+              />
+            </>
+          ) : null}
+        </CollapseSection>
         <Section
           title="Lương tháng (trung bình)"
           subtitle="× số tháng có lương trong năm."
@@ -334,7 +478,7 @@ export function SettlementScreen() {
             value={monthlyText}
             error={requiredPositiveMoney(
               monthlyText,
-              "Nhập lương tháng lớn hơn 0."
+              "Nhập lương tháng lớn hơn 0.",
             )}
             onValueChange={(formatted) => {
               setMonthlyText(formatted);
@@ -350,7 +494,7 @@ export function SettlementScreen() {
               monthsText,
               1,
               12,
-              "Số tháng làm việc phải từ 1 đến 12."
+              "Số tháng làm việc phải từ 1 đến 12.",
             )}
             onChangeText={(t) => {
               setMonthsText(t.replace(/[^\d]/g, ""));
@@ -494,7 +638,8 @@ function makeStyles({ colors }: ThemeContextValue) {
   return {
     root: { flex: 1, backgroundColor: colors.background },
     scrollContent: {
-      paddingBottom: space[12] + layout.stickyBarHeightDual + layout.tabBarClearance,
+      paddingBottom:
+        space[12] + layout.stickyBarHeightDual + layout.tabBarClearance,
     },
     switchRow: {
       flexDirection: "row",

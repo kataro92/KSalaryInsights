@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Alert, Share, Text, View } from "react-native";
+import { Alert, Share, Text, View, useWindowDimensions } from "react-native";
 import { Stack } from "expo-router";
 
 import { ScenarioPanel } from "@/src/components/calculator/ScenarioPanel";
@@ -12,6 +12,7 @@ import { EmptyErrorState } from "@/src/components/common/EmptyErrorState";
 import { Section } from "@/src/components/common/Section";
 import { ToolScreen } from "@/src/components/common/ToolScreen";
 import { OfferColumn } from "@/src/components/comparison/OfferColumn";
+import { OfferResultsTable } from "@/src/components/comparison/OfferResultsTable";
 import { OfferDeltaBar } from "@/src/components/comparison/OfferDeltaBar";
 import { DisclaimerFooter } from "@/src/components/disclaimer/DisclaimerFooter";
 import { DependentCountInput } from "@/src/components/inputs/DependentCountInput";
@@ -38,8 +39,11 @@ import {
 } from "@/src/store/scenarios";
 import { successHaptic } from "@/src/theme/haptics";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
-import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import { layout, space, typography } from "@/src/theme/tokens";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 const DEFAULT_A: OfferSideInput = {
   mode: "net-to-gross",
@@ -55,8 +59,10 @@ const DEFAULT_B: OfferSideInput = {
 
 export function OfferCompareScreen() {
   const styles = useThemedStyles(makeStyles);
+  const wide = useWindowDimensions().width >= layout.twoColumnBreakpoint;
   const { scenarios, save, remove } = useScenarios("offer_compare");
-  const { scrollRef, anchorRef, onScroll, scrollToAnchor } = useScrollToAnchor();
+  const { scrollRef, anchorRef, onScroll, scrollToAnchor } =
+    useScrollToAnchor();
 
   const [taxYear, setTaxYear] = useState(2026);
   const [month, setMonth] = useState(3);
@@ -74,7 +80,7 @@ export function OfferCompareScreen() {
       offerA,
       offerB,
     }),
-    [taxYear, month, region, numDependents, offerA, offerB]
+    [taxYear, month, region, numDependents, offerA, offerB],
   );
 
   const clearResult = () => setResult(null);
@@ -105,13 +111,13 @@ export function OfferCompareScreen() {
       if (replacedOldest) {
         Alert.alert(
           "Đã lưu",
-          "Đã đạt giới hạn 20 kịch bản. Kịch bản cũ nhất đã bị thay."
+          "Đã đạt giới hạn 20 kịch bản. Kịch bản cũ nhất đã bị thay.",
         );
       }
     } catch (e) {
       Alert.alert(
         "Không lưu được",
-        e instanceof Error ? e.message : "Lỗi không xác định."
+        e instanceof Error ? e.message : "Lỗi không xác định.",
       );
     }
   };
@@ -155,10 +161,9 @@ export function OfferCompareScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{ title: "So 2 offer", headerShown: true }}
-      />
+      <Stack.Screen options={{ title: "So 2 offer", headerShown: true }} />
       <ToolScreen
+        wide
         nested
         title="So sánh hai offer"
         subtitle="Dùng cùng năm thuế, vùng và số người phụ thuộc. Mỗi offer có thể chọn Gross hoặc Net và mức đóng bảo hiểm riêng. Không gồm thưởng/làm thêm."
@@ -234,29 +239,39 @@ export function OfferCompareScreen() {
           />
         </Section>
 
-        <View style={styles.columns}>
-          <OfferColumn
-            title="Offer A"
-            value={offerA}
-            onChange={(next) => {
-              setOfferA(next);
-              clearResult();
-            }}
-            result={result?.a ?? null}
-          />
-          <OfferColumn
-            title="Offer B"
-            value={offerB}
-            onChange={(next) => {
-              setOfferB(next);
-              clearResult();
-            }}
-            result={result?.b ?? null}
-          />
+        <View
+          style={[
+            styles.columns,
+            wide && { flexDirection: "row", alignItems: "flex-start" },
+          ]}
+        >
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <OfferColumn
+              title="Offer A"
+              value={offerA}
+              onChange={(next) => {
+                setOfferA(next);
+                clearResult();
+              }}
+              result={null}
+            />
+          </View>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <OfferColumn
+              title="Offer B"
+              value={offerB}
+              onChange={(next) => {
+                setOfferB(next);
+                clearResult();
+              }}
+              result={null}
+            />
+          </View>
         </View>
 
         {result ? (
           <View ref={anchorRef} collapsable={false} style={styles.resultBlock}>
+            <OfferResultsTable result={result} />
             <OfferDeltaBar
               deltaNet={result.deltaNet}
               deltaGross={result.deltaGross}

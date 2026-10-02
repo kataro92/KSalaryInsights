@@ -24,7 +24,7 @@ describe("F016′ simple monthly ×12", () => {
       taxYear: 2026,
     });
     expect(result.vat).toBe(15_000_000);
-    expect(result.pit).toBe(2_500_000);
-    expect(result.totalTax).toBe(17_500_000);
+    expect(result.pit).toBe(1_750_000);
+    expect(result.totalTax).toBe(16_750_000);
   });
 });

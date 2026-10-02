@@ -26,10 +26,7 @@ export const SCENARIOS_STORAGE_KEY = "kv.scenarios.v1";
 export const MAX_SCENARIOS = 20;
 
 export type ScenarioKind =
-  | "calculator"
-  | "settlement"
-  | "offer_compare"
-  | "multi_source";
+  "calculator" | "settlement" | "offer_compare" | "multi_source";
 
 export type CalculatorScenarioInputs = {
   mode: CalculationMode;
@@ -52,6 +49,9 @@ export type CalculatorScenarioInputs = {
   otDayType: OtDayType;
   /** OT trong khung 22h-6h (Đ.106). Missing on older saves → false. */
   otNight: boolean;
+  mealAllowance?: number;
+  exemptAllowances?: number;
+  voluntaryInsurance?: number;
 };
 
 export type SettlementScenarioInputs = {
@@ -64,6 +64,15 @@ export type SettlementScenarioInputs = {
   includeCasual: boolean;
   casualGross: number;
   casualWithheld: number;
+  medicalExpenses?: number;
+  educationExpenses?: number;
+  charitableContributions?: number;
+  voluntaryInsuranceMonthly?: number;
+  voluntaryInsuranceMonths?: number;
+  mealAllowanceMonthly?: number;
+  mealAllowanceMonths?: number;
+  exemptAllowancesYear?: number;
+  dependentPeriods?: { startMonth: number; endMonth: number }[];
 };
 
 export type OfferCompareScenarioInputs = OfferCompareInputs;
@@ -154,7 +163,7 @@ function compactMoneyLabel(amount: number): string {
 }
 
 export function parseCalculatorInputs(
-  raw: unknown
+  raw: unknown,
 ): CalculatorScenarioInputs | null {
   if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
@@ -180,7 +189,7 @@ export function parseCalculatorInputs(
     if (o.bhAmount != null && !isNonNegInt(o.bhAmount)) return null;
     insurance = insurancePresetFromLegacy(
       o.customBh,
-      o.bhAmount == null ? null : o.bhAmount
+      o.bhAmount == null ? null : o.bhAmount,
     );
   }
   const legacy = legacyFromInsurancePreset(insurance);
@@ -194,6 +203,14 @@ export function parseCalculatorInputs(
     return null;
   }
   if (!isOtDay(o.otDayType)) return null;
+  if (
+    !validOptionalDeductions(o, [
+      "mealAllowance",
+      "exemptAllowances",
+      "voluntaryInsurance",
+    ])
+  )
+    return null;
   // Backward compatible: older v1 saves omit otNight.
   if (o.otNight != null && typeof o.otNight !== "boolean") return null;
   return {
@@ -210,11 +227,42 @@ export function parseCalculatorInputs(
     otHours: o.otHours,
     otDayType: o.otDayType,
     otNight: o.otNight === true,
+    ...optionalDeductions(o, [
+      "mealAllowance",
+      "exemptAllowances",
+      "voluntaryInsurance",
+    ]),
   };
 }
 
+const SETTLEMENT_DEDUCTIONS = [
+  "medicalExpenses",
+  "educationExpenses",
+  "charitableContributions",
+  "voluntaryInsuranceMonthly",
+  "voluntaryInsuranceMonths",
+  "mealAllowanceMonthly",
+  "mealAllowanceMonths",
+  "exemptAllowancesYear",
+] as const;
+
+function validOptionalDeductions(
+  o: Record<string, unknown>,
+  keys: readonly string[],
+): boolean {
+  return keys.every((k) => o[k] == null || isNonNegInt(o[k]));
+}
+function optionalDeductions(
+  o: Record<string, unknown>,
+  keys: readonly string[],
+): Record<string, number> {
+  return Object.fromEntries(
+    keys.filter((k) => o[k] != null).map((k) => [k, o[k] as number]),
+  );
+}
+
 export function parseSettlementInputs(
-  raw: unknown
+  raw: unknown,
 ): SettlementScenarioInputs | null {
   if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
@@ -236,6 +284,31 @@ export function parseSettlementInputs(
   if (typeof o.includeCasual !== "boolean") return null;
   if (!isNonNegInt(o.casualGross)) return null;
   if (!isNonNegInt(o.casualWithheld)) return null;
+  if (!validOptionalDeductions(o, SETTLEMENT_DEDUCTIONS)) return null;
+  if (
+    o.voluntaryInsuranceMonths != null &&
+    (o.voluntaryInsuranceMonths as number) > 12
+  )
+    return null;
+  if (o.mealAllowanceMonths != null && (o.mealAllowanceMonths as number) > 12)
+    return null;
+  if (o.dependentPeriods != null) {
+    if (
+      !Array.isArray(o.dependentPeriods) ||
+      o.dependentPeriods.length !== o.numDependents
+    )
+      return null;
+    for (const p of o.dependentPeriods) {
+      if (
+        !p ||
+        !isPositiveInt(p.startMonth) ||
+        !isPositiveInt(p.endMonth) ||
+        p.startMonth > p.endMonth ||
+        p.endMonth > 12
+      )
+        return null;
+    }
+  }
   return {
     taxYear: o.taxYear,
     region: o.region,
@@ -246,6 +319,9 @@ export function parseSettlementInputs(
     includeCasual: o.includeCasual,
     casualGross: o.casualGross,
     casualWithheld: o.casualWithheld,
+    ...optionalDeductions(o, SETTLEMENT_DEDUCTIONS),
+    dependentPeriods:
+      o.dependentPeriods as SettlementScenarioInputs["dependentPeriods"],
   };
 }
 
@@ -260,7 +336,7 @@ function parseOfferSideInput(raw: unknown): OfferSideInput | null {
 }
 
 export function parseOfferCompareInputs(
-  raw: unknown
+  raw: unknown,
 ): OfferCompareScenarioInputs | null {
   if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
@@ -327,10 +403,8 @@ function parseMultiSourceLine(raw: unknown): MultiSourceLine | null {
     if (sr.scenarioId != null && typeof sr.scenarioId !== "string") return null;
     if (sr.calculator != null && typeof sr.calculator !== "string") return null;
     sourceRef = {
-      scenarioId:
-        typeof sr.scenarioId === "string" ? sr.scenarioId : undefined,
-      calculator:
-        typeof sr.calculator === "string" ? sr.calculator : undefined,
+      scenarioId: typeof sr.scenarioId === "string" ? sr.scenarioId : undefined,
+      calculator: typeof sr.calculator === "string" ? sr.calculator : undefined,
     };
   }
   return {
@@ -350,8 +424,33 @@ function parseMultiSourceLine(raw: unknown): MultiSourceLine | null {
   };
 }
 
+function parseSalaryRelief(
+  raw: unknown,
+): MultiSourceScenarioInputs["salaryRelief"] | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const checked = parseSettlementInputs({
+    ...o,
+    taxYear: 2026,
+    region: "I",
+    monthlyGross: 1,
+    monthsWorked: 12,
+    salaryWithheld: 0,
+    includeCasual: false,
+    casualGross: 0,
+    casualWithheld: 0,
+  });
+  if (!checked) return null;
+  return {
+    numDependents: checked.numDependents,
+    dependentPeriods: checked.dependentPeriods,
+    medicalExpenses: checked.medicalExpenses,
+    educationExpenses: checked.educationExpenses,
+  };
+}
+
 export function parseMultiSourceInputs(
-  raw: unknown
+  raw: unknown,
 ): MultiSourceScenarioInputs | null {
   if (!raw || typeof raw !== "object") return null;
   const o = raw as Record<string, unknown>;
@@ -363,6 +462,7 @@ export function parseMultiSourceInputs(
   if (o.name != null && typeof o.name !== "string") return null;
   if (typeof o.updatedAt !== "string" || !o.updatedAt) return null;
   if (o.createdAt != null && typeof o.createdAt !== "string") return null;
+  if (o.salaryRelief != null && !parseSalaryRelief(o.salaryRelief)) return null;
   if (!Array.isArray(o.lines) || o.lines.length > MAX_MULTI_SOURCE_LINES)
     return null;
   const lines: MultiSourceLine[] = [];
@@ -379,6 +479,9 @@ export function parseMultiSourceInputs(
     createdAt: typeof o.createdAt === "string" ? o.createdAt : undefined,
     updatedAt: o.updatedAt,
     lines,
+    ...(o.salaryRelief != null
+      ? { salaryRelief: parseSalaryRelief(o.salaryRelief)! }
+      : {}),
   };
 }
 
@@ -404,8 +507,8 @@ export function parseSavedScenario(raw: unknown): SavedScenario | null {
       o.lastNet == null
         ? undefined
         : isFiniteNumber(o.lastNet)
-        ? o.lastNet
-        : undefined;
+          ? o.lastNet
+          : undefined;
     return { ...base, kind: "calculator", inputs, lastNet };
   }
 
@@ -416,8 +519,8 @@ export function parseSavedScenario(raw: unknown): SavedScenario | null {
       o.lastDelta == null
         ? undefined
         : isFiniteNumber(o.lastDelta)
-        ? o.lastDelta
-        : undefined;
+          ? o.lastDelta
+          : undefined;
     return { ...base, kind: "settlement", inputs, lastDelta };
   }
 
@@ -428,8 +531,8 @@ export function parseSavedScenario(raw: unknown): SavedScenario | null {
       o.lastDeltaNet == null
         ? undefined
         : isFiniteNumber(o.lastDeltaNet)
-        ? o.lastDeltaNet
-        : undefined;
+          ? o.lastDeltaNet
+          : undefined;
     return { ...base, kind: "offer_compare", inputs, lastDeltaNet };
   }
 
@@ -440,8 +543,8 @@ export function parseSavedScenario(raw: unknown): SavedScenario | null {
       o.lastDelta == null
         ? undefined
         : isFiniteNumber(o.lastDelta)
-        ? o.lastDelta
-        : undefined;
+          ? o.lastDelta
+          : undefined;
     return { ...base, kind: "multi_source", inputs, lastDelta };
   }
 
@@ -467,10 +570,10 @@ export function emptyScenarioStore(): ScenarioStore {
 
 export function scenariosOfKind<K extends ScenarioKind>(
   scenarios: readonly SavedScenario[],
-  kind: K
+  kind: K,
 ): Extract<SavedScenario, { kind: K }>[] {
   return scenarios.filter(
-    (s): s is Extract<SavedScenario, { kind: K }> => s.kind === kind
+    (s): s is Extract<SavedScenario, { kind: K }> => s.kind === kind,
   );
 }
 
@@ -478,15 +581,15 @@ export function scenariosOfKind<K extends ScenarioKind>(
 export function defaultScenarioName(inputs: CalculatorScenarioInputs): string;
 export function defaultScenarioName(
   inputs: SettlementScenarioInputs,
-  kind: "settlement"
+  kind: "settlement",
 ): string;
 export function defaultScenarioName(
   inputs: OfferCompareScenarioInputs,
-  kind: "offer_compare"
+  kind: "offer_compare",
 ): string;
 export function defaultScenarioName(
   inputs: MultiSourceScenarioInputs,
-  kind: "multi_source"
+  kind: "multi_source",
 ): string;
 export function defaultScenarioName(
   inputs:
@@ -494,7 +597,7 @@ export function defaultScenarioName(
     | SettlementScenarioInputs
     | OfferCompareScenarioInputs
     | MultiSourceScenarioInputs,
-  kind: ScenarioKind = "calculator"
+  kind: ScenarioKind = "calculator",
 ): string {
   if (kind === "settlement") {
     const i = inputs as SettlementScenarioInputs;
@@ -507,7 +610,7 @@ export function defaultScenarioName(
     const i = inputs as OfferCompareScenarioInputs;
     const label = (side: OfferSideInput) =>
       `${side.mode === "gross-to-net" ? "G" : "N"}${compactMoneyLabel(
-        side.amount
+        side.amount,
       )}`;
     return `Offer ${label(i.offerA)} vs ${label(i.offerB)} · T${i.shared.month}/${
       i.shared.taxYear
@@ -591,9 +694,7 @@ export type SaveScenarioInput =
       now?: Date;
     };
 
-export async function saveScenario(
-  input: SaveScenarioInput
-): Promise<{
+export async function saveScenario(input: SaveScenarioInput): Promise<{
   store: ScenarioStore;
   scenario: SavedScenario;
   replacedOldest: boolean;
@@ -716,7 +817,7 @@ export async function saveScenario(
     const inputs = calculatorInputsSafe(calcInput.inputs);
     const name = (calcInput.name?.trim() || defaultScenarioName(inputs)).slice(
       0,
-      80
+      80,
     );
     if (calcInput.id) {
       const idx = store.scenarios.findIndex((s) => s.id === calcInput.id);
@@ -758,7 +859,7 @@ export async function saveScenario(
 }
 
 function calculatorInputsSafe(
-  inputs: CalculatorScenarioInputs
+  inputs: CalculatorScenarioInputs,
 ): CalculatorScenarioInputs {
   const parsed = parseCalculatorInputs(inputs);
   if (!parsed) throw new Error("Invalid scenario inputs");
@@ -766,7 +867,7 @@ function calculatorInputsSafe(
 }
 
 function settlementInputsSafe(
-  inputs: SettlementScenarioInputs
+  inputs: SettlementScenarioInputs,
 ): SettlementScenarioInputs {
   const parsed = parseSettlementInputs(inputs);
   if (!parsed) throw new Error("Invalid settlement scenario inputs");
@@ -774,7 +875,7 @@ function settlementInputsSafe(
 }
 
 function offerCompareInputsSafe(
-  inputs: OfferCompareScenarioInputs
+  inputs: OfferCompareScenarioInputs,
 ): OfferCompareScenarioInputs {
   const parsed = parseOfferCompareInputs(inputs);
   if (!parsed) throw new Error("Invalid offer compare scenario inputs");
@@ -782,7 +883,7 @@ function offerCompareInputsSafe(
 }
 
 function multiSourceInputsSafe(
-  inputs: MultiSourceScenarioInputs
+  inputs: MultiSourceScenarioInputs,
 ): MultiSourceScenarioInputs {
   const parsed = parseMultiSourceInputs(inputs);
   if (!parsed) throw new Error("Invalid multi-source scenario inputs");
@@ -872,7 +973,7 @@ export function formatScenarioShareText(
         withheld?: number;
         delta?: number;
         brand?: string;
-      }
+      },
 ): string {
   const brand = args.brand ?? "KSalaryInsights";
   if (args.kind === "settlement") {
@@ -888,8 +989,8 @@ export function formatScenarioShareText(
     if (i.includeCasual) {
       lines.push(
         `Vãng lai: ${i.casualGross.toLocaleString(
-          "vi-VN"
-        )} ₫ (đã trừ ${i.casualWithheld.toLocaleString("vi-VN")} ₫)`
+          "vi-VN",
+        )} ₫ (đã trừ ${i.casualWithheld.toLocaleString("vi-VN")} ₫)`,
       );
     }
     if (args.delta != null)
@@ -912,7 +1013,7 @@ export function formatScenarioShareText(
     ];
     if (args.deltaNet != null) {
       lines.push(
-        `Chênh Net (B so với A): ${args.deltaNet.toLocaleString("vi-VN")} ₫ (ước tính)`
+        `Chênh Net (B so với A): ${args.deltaNet.toLocaleString("vi-VN")} ₫ (ước tính)`,
       );
     }
     lines.push(` - ước tính offline · không tư vấn chọn · ${brand}`);
@@ -929,13 +1030,13 @@ export function formatScenarioShareText(
     for (const line of active.slice(0, 6)) {
       lines.push(
         `· ${line.label}: thuế ${line.estimatedTaxTotal.toLocaleString(
-          "vi-VN"
-        )} ₫`
+          "vi-VN",
+        )} ₫`,
       );
     }
     if (args.estimatedTax != null) {
       lines.push(
-        `Tổng thuế ước tính: ${args.estimatedTax.toLocaleString("vi-VN")} ₫`
+        `Tổng thuế ước tính: ${args.estimatedTax.toLocaleString("vi-VN")} ₫`,
       );
     }
     if (args.withheld != null) {
@@ -945,7 +1046,7 @@ export function formatScenarioShareText(
       lines.push(`Chênh (ước): ${formatDeltaPreview(args.delta)}`);
     }
     lines.push(
-      ` - ước tính offline · không thay tờ khai · không tính thuế coin · ${brand}`
+      ` - ước tính offline · không thay tờ khai · không tính thuế coin · ${brand}`,
     );
     return lines.join("\n");
   }
@@ -981,7 +1082,7 @@ export function scenarioRowMeta(scenario: SavedScenario): string {
   if (scenario.kind === "offer_compare") {
     const i = scenario.inputs;
     const base = `A ${formatVndCompact(i.offerA.amount)} vs B ${formatVndCompact(
-      i.offerB.amount
+      i.offerB.amount,
     )}`;
     if (scenario.lastDeltaNet == null) return base;
     const d = scenario.lastDeltaNet;

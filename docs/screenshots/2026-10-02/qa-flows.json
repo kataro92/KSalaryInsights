@@ -1,0 +1,64 @@
+[
+  {
+    "flow": "salary caps March + save",
+    "saved": {
+      "id": "sc_1790943530138_816nzd",
+      "name": "Gross 30tr · T3/2026",
+      "createdAt": "2026-10-02T12:18:50.138Z",
+      "updatedAt": "2026-10-02T12:18:50.138Z",
+      "kind": "calculator",
+      "inputs": {
+        "mode": "gross-to-net",
+        "amount": 30000000,
+        "region": "I",
+        "taxYear": 2026,
+        "month": 3,
+        "numDependents": 0,
+        "insurance": {
+          "mode": "full"
+        },
+        "customBh": false,
+        "bhAmount": null,
+        "bonus": 0,
+        "otHours": 0,
+        "otDayType": "weekday",
+        "otNight": false,
+        "mealAllowance": 2000000,
+        "exemptAllowances": 0,
+        "voluntaryInsurance": 5000000
+      },
+      "lastNet": 26432500
+    }
+  },
+  {
+    "flow": "salary input invalidates result",
+    "pass": true
+  },
+  {
+    "flow": "reload salary scenario with new fields",
+    "pass": true
+  },
+  {
+    "flow": "settlement annual caps and save",
+    "pass": true
+  },
+  {
+    "flow": "import settlement + consolidated salary relief once",
+    "pass": true
+  },
+  {
+    "flow": "HKD mandatory costs 17% and 30% reduction",
+    "pass": true
+  },
+  {
+    "flow": "equal offers + one side invalid",
+    "pass": true
+  },
+  {
+    "flow": "benefits",
+    "overflow": false
+  },
+  {
+    "errors": []
+  }
+]

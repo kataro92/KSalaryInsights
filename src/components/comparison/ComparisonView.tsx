@@ -8,7 +8,10 @@ import type { ComparisonResult } from "@/src/domain/types/comparison";
 import { moneyAccessibilityLabel } from "@/src/theme/money";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 function formatVndSigned(n: number): string {
   const sign = n > 0 ? "+" : n < 0 ? "−" : "";
@@ -35,7 +38,7 @@ export function ComparisonView({ result }: Props) {
         amount={heroAmount}
         accessibilityLabel={moneyAccessibilityLabel(
           heroAmount,
-          netGain >= 0 ? "Net năm mới cao hơn" : "Net năm mới thấp hơn"
+          netGain >= 0 ? "Net năm mới cao hơn" : "Net năm mới thấp hơn",
         )}
       />
       <NgaiMiuTip tip={miuTips.comparison} />
@@ -100,7 +103,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       overflow: "hidden",
     },
     year2026: {
-      color: colors.white,
+      color: colors.onPrimary,
       backgroundColor: colors.primary,
       alignSelf: "flex-start",
       paddingHorizontal: space[3],

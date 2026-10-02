@@ -3,6 +3,7 @@ import type { SalaryBreakdown, SalaryInput } from "@/src/domain/types/salary";
 import { calculateInsurance } from "@/src/engine/insurance";
 import { calculatePit } from "@/src/engine/pit";
 import { getRuleset } from "@/src/engine/rulesetLoader";
+import { nonNegative } from "@/src/engine/deductions";
 
 export type GrossToNetParams = {
   gross: number;
@@ -11,6 +12,9 @@ export type GrossToNetParams = {
   asOfDate: string;
   numDependents?: number;
   insuranceSalary?: number;
+  mealAllowance?: number;
+  exemptAllowances?: number;
+  voluntaryInsurance?: number;
 };
 
 export function grossToNet(params: GrossToNetParams): SalaryBreakdown {
@@ -39,13 +43,33 @@ export function grossToNet(params: GrossToNetParams): SalaryBreakdown {
   }
 
   const insurance = calculateInsurance(bhBase, region, ruleset);
-  const incomeAfterInsurance = gross - insurance.totalEmployee;
+  const caps = ruleset.salary_deductions;
+  const meal = nonNegative(params.mealAllowance, "Tiền ăn trong Gross");
+  const exemptAllowances = nonNegative(
+    params.exemptAllowances,
+    "Phụ cấp miễn thuế trong Gross",
+  );
+  if (meal + exemptAllowances > gross)
+    throw new Error("Tiền ăn và phụ cấp trong Gross không được vượt Gross");
+  const voluntary = nonNegative(params.voluntaryInsurance, "Bảo hiểm bổ sung");
+  const mealExempt =
+    caps && asOfDate >= caps.meal_effective_from
+      ? Math.min(meal, caps.meal_monthly_cap)
+      : 0;
+  const voluntaryInsurance = caps
+    ? Math.min(voluntary, caps.voluntary_insurance_monthly_cap)
+    : 0;
+  const incomeAfterInsurance = Math.max(
+    0,
+    gross - insurance.totalEmployee - mealExempt - exemptAllowances,
+  );
   const pit = calculatePit(
-    incomeAfterInsurance,
+    Math.max(0, incomeAfterInsurance - voluntaryInsurance),
     dependentsCheck.value,
-    ruleset
+    ruleset,
   );
   const net = gross - insurance.totalEmployee - pit.totalTax;
+  pit.incomeAfterInsurance = incomeAfterInsurance;
 
   return {
     gross,
@@ -55,9 +79,10 @@ export function grossToNet(params: GrossToNetParams): SalaryBreakdown {
     reliefBreakdown: {
       personal: pit.personalRelief,
       dependent: pit.dependentReliefTotal,
-      total: pit.personalRelief + pit.dependentReliefTotal,
+      total: pit.personalRelief + pit.dependentReliefTotal + voluntaryInsurance,
     },
     rulesetId: ruleset.id,
     legalSources: ruleset.legal_sources,
+    deductions: { mealExempt, exemptAllowances, voluntaryInsurance },
   };
 }

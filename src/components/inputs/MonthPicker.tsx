@@ -2,7 +2,10 @@ import { Pressable, Text, View } from "react-native";
 
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Props = {
   value: number;
@@ -75,7 +78,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontVariant: ["tabular-nums"],
     },
     labelSelected: {
-      color: colors.white,
+      color: colors.onPrimary,
       fontFamily: typography.fontFamily.bold,
     },
   } satisfies ThemedStyleSheet;

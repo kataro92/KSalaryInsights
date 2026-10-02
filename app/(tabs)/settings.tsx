@@ -33,7 +33,10 @@ import { loadRemoteRulesetCache } from "@/src/store/remoteRulesets";
 import { successHaptic } from "@/src/theme/haptics";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 const REGIONS: RegionCode[] = ["I", "II", "III", "IV"];
 const TAX_YEARS = [2025, 2026, 2027];
@@ -111,7 +114,7 @@ export default function SettingsScreen() {
   const onSendFeedback = async () => {
     const subject = encodeURIComponent(`[KSalaryInsights] Feedback`);
     const body = encodeURIComponent(
-      `\n\n---\nApp: ${brand.name}\nLocale: ${preferences.locale}\n`
+      `\n\n---\nApp: ${brand.name}\nLocale: ${preferences.locale}\n`,
     );
     const url = `mailto:${AUTHOR_EMAIL}?subject=${subject}&body=${body}`;
     try {
@@ -148,203 +151,210 @@ export default function SettingsScreen() {
           subtitle={t("settings.subtitle")}
         />
 
-      {recoveredFromCorrupt ? (
-        <ColorBlock tone="primarySoft">
-          <Text style={styles.softWarn}>{t("settings.corruptPrefs")}</Text>
-        </ColorBlock>
-      ) : null}
+        {recoveredFromCorrupt ? (
+          <ColorBlock tone="primarySoft">
+            <Text style={styles.softWarn}>{t("settings.corruptPrefs")}</Text>
+          </ColorBlock>
+        ) : null}
 
-      <Section title={t("settings.about")}>
-        <View
-          style={styles.about}
-          accessibilityLabel={`${brand.name} · ${t("about.role")}`}
+        <Section
+          title={t("settings.appearance")}
+          subtitle={t("settings.appearanceHint")}
         >
-          <NgaiMiuPlaceholder
-            size={88}
-            pose="bow"
-            accessibilityLabel="Ngài Miu"
-          />
-          <View style={styles.aboutCopy}>
-            <Text style={styles.aboutName}>Ngài Miu</Text>
-            <Text style={styles.aboutRole}>{t("about.role")}</Text>
-            <Text style={styles.aboutBody}>{t("about.body")}</Text>
+          <ChipRow equal>
+            <ChoiceChip
+              flex
+              icon="sun"
+              label={t("settings.appearanceLight")}
+              selected={preferences.themePreference === "light"}
+              onPress={() => void setThemePreference("light")}
+            />
+            <ChoiceChip
+              flex
+              icon="moon"
+              label={t("settings.appearanceDark")}
+              selected={preferences.themePreference === "dark"}
+              onPress={() => void setThemePreference("dark")}
+            />
+            <ChoiceChip
+              flex
+              icon="monitor"
+              label={t("settings.appearanceSystem")}
+              selected={preferences.themePreference === "system"}
+              onPress={() => void setThemePreference("system")}
+            />
+          </ChipRow>
+        </Section>
+
+        <Section
+          title={t("settings.language")}
+          subtitle={t("settings.languageHint")}
+        >
+          <View style={styles.langWrap}>
+            {LOCALE_OPTIONS.map((opt) => (
+              <ChoiceChip
+                key={opt.code}
+                label={opt.label}
+                leading={<Text style={styles.flag}>{opt.flag}</Text>}
+                selected={preferences.locale === opt.code}
+                onPress={() => void setLocale(opt.code)}
+              />
+            ))}
           </View>
-        </View>
-      </Section>
+        </Section>
 
-      <Section
-        title={t("settings.features")}
-        subtitle={t("settings.featuresHint")}
-      >
-        <FeaturesGuide />
-      </Section>
+        <Section
+          title={t("settings.region")}
+          subtitle={t("settings.regionHint")}
+        >
+          <ChipRow equal>
+            {REGIONS.map((region) => (
+              <ChoiceChip
+                key={region}
+                flex
+                label={`Vùng ${region}`}
+                selected={preferences.defaultRegion === region}
+                onPress={() => void setDefaultRegion(region)}
+              />
+            ))}
+          </ChipRow>
+        </Section>
 
-      <Section
-        title={t("settings.language")}
-        subtitle={t("settings.languageHint")}
-      >
-        <View style={styles.langWrap}>
-          {LOCALE_OPTIONS.map((opt) => (
-            <ChoiceChip
-              key={opt.code}
-              label={opt.label}
-              leading={<Text style={styles.flag}>{opt.flag}</Text>}
-              selected={preferences.locale === opt.code}
-              onPress={() => void setLocale(opt.code)}
-            />
-          ))}
-        </View>
-      </Section>
+        <Section title={t("settings.taxYear")}>
+          <ChipRow equal>
+            {TAX_YEARS.map((year) => (
+              <ChoiceChip
+                key={year}
+                flex
+                label={String(year)}
+                selected={preferences.defaultTaxYear === year}
+                onPress={() => void setDefaultTaxYear(year)}
+              />
+            ))}
+          </ChipRow>
+        </Section>
 
-      <Section
-        title={t("settings.appearance")}
-        subtitle={t("settings.appearanceHint")}
-      >
-        <ChipRow equal>
-          <ChoiceChip
-            flex
-            icon="sun"
-            label={t("settings.appearanceLight")}
-            selected={preferences.themePreference === "light"}
-            onPress={() => void setThemePreference("light")}
-          />
-          <ChoiceChip
-            flex
-            icon="moon"
-            label={t("settings.appearanceDark")}
-            selected={preferences.themePreference === "dark"}
-            onPress={() => void setThemePreference("dark")}
-          />
-          <ChoiceChip
-            flex
-            icon="monitor"
-            label={t("settings.appearanceSystem")}
-            selected={preferences.themePreference === "system"}
-            onPress={() => void setThemePreference("system")}
-          />
-        </ChipRow>
-      </Section>
-
-      <Section title={t("settings.region")} subtitle={t("settings.regionHint")}>
-        <ChipRow equal>
-          {REGIONS.map((region) => (
-            <ChoiceChip
-              key={region}
-              flex
-              label={`Vùng ${region}`}
-              selected={preferences.defaultRegion === region}
-              onPress={() => void setDefaultRegion(region)}
-            />
-          ))}
-        </ChipRow>
-      </Section>
-
-      <Section title={t("settings.taxYear")}>
-        <ChipRow equal>
-          {TAX_YEARS.map((year) => (
-            <ChoiceChip
-              key={year}
-              flex
-              label={String(year)}
-              selected={preferences.defaultTaxYear === year}
-              onPress={() => void setDefaultTaxYear(year)}
-            />
-          ))}
-        </ChipRow>
-      </Section>
-
-      <Section
-        title={t("settings.feedback")}
-        subtitle={t("settings.feedbackHint")}
-      >
-        <ColorBlock tone="secondarySoft">
-          <Text style={styles.feedbackAuthor}>
-            {t("settings.author")}: {t("settings.authorName")}
+        <Section
+          title={t("settings.ruleset")}
+          subtitle={t("settings.rulesetHint")}
+        >
+          <Text style={styles.metaLine}>
+            {t("settings.rulesetMeta", {
+              count: rulesetCount,
+              when: formatCheckTime(lastCheckAt, "chưa kiểm tra"),
+            })}
           </Text>
-          <Text style={styles.feedbackEmail}>{AUTHOR_EMAIL}</Text>
-        </ColorBlock>
-        <Button
-          label={t("common.sendEmail")}
-          onPress={() => void onSendFeedback()}
-        />
-        <Button
-          label={t("common.copy")}
-          variant="outline"
-          onPress={() => void onCopyEmail()}
-        />
-      </Section>
-
-      <Section
-        title={t("settings.ruleset")}
-        subtitle={t("settings.rulesetHint")}
-      >
-        <Text style={styles.metaLine}>
-          {t("settings.rulesetMeta", {
-            count: rulesetCount,
-            when: formatCheckTime(lastCheckAt, "chưa kiểm tra"),
-          })}
-        </Text>
-        {lastError ? (
-          <ColorBlock tone="muted">
-            <Text style={styles.softWarn}>{lastError}</Text>
-          </ColorBlock>
-        ) : null}
-        {rulesetStatus ? (
-          <Text style={styles.statusLine} accessibilityLiveRegion="polite">
-            {rulesetStatus}
-          </Text>
-        ) : null}
-        <Button
-          label={
-            rulesetBusy
-              ? t("settings.checkingRuleset")
-              : t("settings.checkRuleset")
-          }
-          onPress={() => void onCheckRulesets()}
-          disabled={rulesetBusy}
-        />
-        <Button
-          label={t("settings.clearRulesetCache")}
-          variant="outline"
-          onPress={() => void onClearRemote()}
-          disabled={rulesetBusy}
-        />
-      </Section>
-
-      <Section title={t("settings.privacy")}>
-        <Button
-          label={
-            privacyOpen ? t("settings.hidePrivacy") : t("settings.showPrivacy")
-          }
-          variant="secondary"
-          onPress={() => setPrivacyOpen((v) => !v)}
-        />
-        {privacyOpen ? (
-          <ColorBlock tone="muted">
-            <Text style={styles.privacyTitle}>{t("settings.privacy")}</Text>
-            <Text style={styles.privacyBody}>{t("settings.privacyBody")}</Text>
-            <Text style={[styles.privacyTitle, { marginTop: space[4] }]}>
-              {t("settings.disclaimer")}
+          {lastError ? (
+            <ColorBlock tone="muted">
+              <Text style={styles.softWarn}>{lastError}</Text>
+            </ColorBlock>
+          ) : null}
+          {rulesetStatus ? (
+            <Text style={styles.statusLine} accessibilityLiveRegion="polite">
+              {rulesetStatus}
             </Text>
-            <Text style={styles.privacyBody}>
-              {t("settings.disclaimerBody")}
-            </Text>
-          </ColorBlock>
-        ) : null}
-      </Section>
+          ) : null}
+          <Button
+            label={
+              rulesetBusy
+                ? t("settings.checkingRuleset")
+                : t("settings.checkRuleset")
+            }
+            onPress={() => void onCheckRulesets()}
+            disabled={rulesetBusy}
+          />
+        </Section>
 
-      <Section title={t("settings.reset")}>
-        <Button
-          label={t("settings.resetDefaults")}
-          variant="outline"
-          onPress={() => void resetToDefaults()}
-        />
-        <Button
-          label={t("settings.replayOnboarding")}
-          variant="secondary"
-          onPress={() => void requestOnboardingReplay()}
-        />
-      </Section>
+        <Section title={t("settings.privacy")}>
+          <Button
+            label={
+              privacyOpen
+                ? t("settings.hidePrivacy")
+                : t("settings.showPrivacy")
+            }
+            variant="secondary"
+            onPress={() => setPrivacyOpen((v) => !v)}
+          />
+          {privacyOpen ? (
+            <ColorBlock tone="muted">
+              <Text style={styles.privacyTitle}>{t("settings.privacy")}</Text>
+              <Text style={styles.privacyBody}>
+                {t("settings.privacyBody")}
+              </Text>
+              <Text style={[styles.privacyTitle, { marginTop: space[4] }]}>
+                {t("settings.disclaimer")}
+              </Text>
+              <Text style={styles.privacyBody}>
+                {t("settings.disclaimerBody")}
+              </Text>
+            </ColorBlock>
+          ) : null}
+        </Section>
+
+        <Section title={t("settings.about")}>
+          <View
+            style={styles.about}
+            accessibilityLabel={`${brand.name} · ${t("about.role")}`}
+          >
+            <NgaiMiuPlaceholder
+              size={88}
+              pose="bow"
+              accessibilityLabel="Ngài Miu"
+            />
+            <View style={styles.aboutCopy}>
+              <Text style={styles.aboutName}>Ngài Miu</Text>
+              <Text style={styles.aboutRole}>{t("about.role")}</Text>
+              <Text style={styles.aboutBody}>{t("about.body")}</Text>
+            </View>
+          </View>
+        </Section>
+
+        <Section
+          title={t("settings.features")}
+          subtitle={t("settings.featuresHint")}
+        >
+          <FeaturesGuide />
+        </Section>
+
+        <Section
+          title={t("settings.feedback")}
+          subtitle={t("settings.feedbackHint")}
+        >
+          <ColorBlock tone="secondarySoft">
+            <Text style={styles.feedbackAuthor}>
+              {t("settings.author")}: {t("settings.authorName")}
+            </Text>
+            <Text style={styles.feedbackEmail}>{AUTHOR_EMAIL}</Text>
+          </ColorBlock>
+          <Button
+            label={t("common.sendEmail")}
+            onPress={() => void onSendFeedback()}
+          />
+          <Button
+            label={t("common.copy")}
+            variant="outline"
+            onPress={() => void onCopyEmail()}
+          />
+        </Section>
+
+        <Section title={t("settings.reset")}>
+          <Button
+            label={t("settings.clearRulesetCache")}
+            variant="outline"
+            onPress={() => void onClearRemote()}
+            disabled={rulesetBusy}
+          />
+          <Button
+            label={t("settings.resetDefaults")}
+            variant="outline"
+            onPress={() => void resetToDefaults()}
+          />
+          <Button
+            label={t("settings.replayOnboarding")}
+            variant="secondary"
+            onPress={() => void requestOnboardingReplay()}
+          />
+        </Section>
       </ScreenShell>
     </KeyboardAvoidingView>
   );

@@ -8,7 +8,10 @@ import {
 import { requiredPositiveMoney } from "@/src/theme/fieldValidation";
 import type { ThemeContextValue } from "@/src/theme/ThemeProvider";
 import { layout, radii, space, typography } from "@/src/theme/tokens";
-import { useThemedStyles, type ThemedStyleSheet } from "@/src/theme/useThemedStyles";
+import {
+  useThemedStyles,
+  type ThemedStyleSheet,
+} from "@/src/theme/useThemedStyles";
 
 type Props = {
   mbqtlText: string;
@@ -34,7 +37,7 @@ export function AdjustedSalaryInput({
         value={mbqtlText}
         error={requiredPositiveMoney(
           mbqtlText,
-          "Nhập lương bình quân đã điều chỉnh lớn hơn 0."
+          "Nhập lương bình quân đã điều chỉnh lớn hơn 0.",
         )}
         onValueChange={(formatted) => {
           onMbqtlChange(formatted);
@@ -85,7 +88,7 @@ function makeStyles({ colors }: ThemeContextValue) {
       fontSize: 14,
       color: colors.foreground,
     },
-    chipLabelSelected: { color: colors.white },
+    chipLabelSelected: { color: colors.onPrimary },
     hint: {
       fontFamily: typography.fontFamily.regular,
       fontSize: 12,

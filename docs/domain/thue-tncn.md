@@ -93,8 +93,8 @@ for i in bậc:
 
 ```
 TN chịu thuế năm = Σ (gross tháng − BH NLĐ tháng, các tháng có lương) + thu nhập vãng lai gộp (nếu quyết toán)
-GTGC năm = personal_relief × 12 + NPT × dependent_relief × 12 # đủ 12 tháng kể cả năm làm không trọn
-TNTT năm = TN chịu thuế năm − GTGC năm − giảm trừ khác (từ thiện…. ngoài phạm vi bản đầu)
+GTGC năm = personal_relief × 12 + dependent_relief × Σ số tháng đủ điều kiện của từng NPT
+TNTT năm = max(0, TN chịu thuế năm − tiền ăn/phụ cấp miễn thuế − GTGC năm − từ thiện đủ điều kiện − bảo hiểm bổ sung − chi y tế/giáo dục đã giới hạn)
 Thuế năm = lũy tiến từng phần trên biểu NĂM (ngưỡng = ngưỡng tháng × 12, cùng thuế suất)
 Chênh lệch = Thuế năm − tổng thuế đã khấu trừ (>0 nộp thêm; <0 ước hoàn)
 ```
@@ -107,9 +107,9 @@ Chênh lệch = Thuế năm − tổng thuế đã khấu trừ (>0 nộp thêm;
 
 - TNTT ≤ 0 → thuế = 0.
 - Người phụ thuộc: mỗi NPT chỉ giảm trừ một lần cho một NNT (Đ.10 k3 Luật 109/2025: nguyên văn xác nhận).
-- **Giảm trừ mới trong Luật 109/2025 (phát hiện khi đối chiếu bản gốc, chưa mô hình hóa)**:
- - Đ.8 k2: được trừ cả bảo hiểm trách nhiệm nghề nghiệp bắt buộc, **hưu trí bổ sung/hưu trí tự nguyện, bảo hiểm nhân thọ** (không vượt mức Chính phủ quy định).
- - Đ.11 k2: **chi y tế, giáo dục - đào tạo** của người nộp thuế và người phụ thuộc được giảm trừ theo mức Chính phủ quy định. hoàn toàn mới so với luật cũ, chờ nghị định hướng dẫn mức trần → ghi nợ backlog (ảnh hưởng spec 002 khi có NĐ).
+- **Giảm trừ kỳ 2026, đã triển khai theo NĐ 253**:
+ - Đ.8 k2: được trừ cả bảo hiểm trách nhiệm nghề nghiệp bắt buộc, **hưu trí bổ sung/hưu trí tự nguyện, bảo hiểm nhân thọ** (NĐ 253 Đ.46 k2a: tổng tối đa 3 triệu/tháng, gồm cả công ty và NLĐ đóng).
+ - Đ.11 k2: **chi y tế, giáo dục - đào tạo** của người nộp thuế và người phụ thuộc được giảm trừ tối đa 23 triệu/năm cho y tế và 24 triệu/năm cho giáo dục theo NĐ 253 Đ.49, áp kỳ 2026 (Đ.69 k1a), khi tự quyết toán. Chi tự chịu, cơ sở trong nước, chứng từ đúng người; y tế cần bảng kê và thuộc danh mục BHYT. Không trừ phần được nguồn khác trả hoặc đã dùng giảm thuế; không chuyển sang năm sau.
  - Đ.11 k1: giảm trừ từ thiện, nhân đạo (như luật cũ).
 - Cá nhân không cư trú: ngoài phạm vi MVP (thuế suất khác).
 
@@ -212,3 +212,11 @@ Khấu trừ lương hằng tháng: TNTT tháng = 20e6 − 2,1e6 − 15,5e6 = 2.
 ---
 
 **Liên kết**: [bhxh-bhyt-bhtn.md](./bhxh-bhyt-bhtn.md), [legal-changelog.md](./legal-changelog.md)
+
+## Bổ sung nghiệm thu 02/10/2026
+
+- Tiền ăn bằng tiền nằm trong Gross: trừ min(tiền ăn, 1.200.000) khỏi TN chịu thuế, chỉ từ 01/07/2026 (Đ.8 k2g, Đ.69 k1b). Bản mới không suy mức miễn cũ trước mốc này. Bảo hiểm vẫn tính trên căn cứ đóng được chọn, không tự giảm theo khoản miễn thuế.
+- Khoản bảo hiểm bổ sung là giảm trừ thuế; Net trên máy tính vẫn là Gross trừ BH bắt buộc và TNCN, chưa trừ phí cá nhân tự đóng ngoài bảng lương. Bảo hiểm bổ sung không phải khoản miễn thuế trong Gross.
+- TC-RELIEF-2026-01: Gross 30 triệu, BH 3,15 triệu, phụ cấp miễn 0,5 triệu, tiền ăn 2 triệu, bảo hiểm bổ sung 5 triệu, tháng 7: miễn ăn 1,2 triệu, giảm trừ BH 3 triệu, TNTT 6,65 triệu, TNCN 332.500, Net 26.517.500.
+- TC-RELIEF-2026-02: Gross 30 triệu ×12; 1 NPT tháng 7–12; y tế/giáo dục mỗi khoản 30 triệu; BH bổ sung 5 triệu ×6 tháng; từ thiện 1 triệu. Sau BH 322,2 triệu; GTGC bản thân 186 triệu, NPT 37,2 triệu; y tế 23 triệu, giáo dục 24 triệu, BH 18 triệu, từ thiện 1 triệu: TNTT 33 triệu, thuế năm 1,65 triệu.
+- Kịch bản cũ không có trường mới: mặc định khoản giảm trừ 0 và NPT tháng 1–12. Tổng hợp đa nguồn có chế độ tính lại lương để trừ GTGC/y tế/giáo dục một lần; không áp các giảm trừ lương lên GTGT, HKD, cho thuê hay CK. Dòng vãng lai cần gộp phải xử lý trong Quyết toán trước khi nhập, không nhập trùng.

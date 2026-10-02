@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -15,7 +10,7 @@ import {
   PlusJakartaSans_800ExtraBold,
   useFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
-import { View } from "react-native";
+import { Platform, StatusBar as NativeStatusBar, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { LoadingOverlay } from "@/src/components/loading/LoadingOverlay";
@@ -58,7 +53,7 @@ function RootGate({ children }: { children: ReactNode }) {
   const showBrandedSplash = !coldStartSplashConsumed;
   const [splashVisible, setSplashVisible] = useState(showBrandedSplash);
   const [onboarding, setOnboarding] = useState<"loading" | "show" | "done">(
-    "loading"
+    "loading",
   );
   const startedAt = useRef(Date.now());
   const finished = useRef(false);
@@ -101,7 +96,7 @@ function RootGate({ children }: { children: ReactNode }) {
     if (assetsReady) {
       const t = setTimeout(
         () => void finish(),
-        Math.min(remainingMin, hardCapLeft)
+        Math.min(remainingMin, hardCapLeft),
       );
       return () => clearTimeout(t);
     }
@@ -116,7 +111,15 @@ function RootGate({ children }: { children: ReactNode }) {
   return (
     <FontsReadyContext.Provider value={fontsLoaded}>
       <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <StatusBar style={isDark ? "light" : "dark"} />
+        {Platform.OS === "android" && Number(Platform.Version) < 35 ? (
+          <NativeStatusBar
+            barStyle={isDark ? "light-content" : "dark-content"}
+            backgroundColor={colors.background}
+            translucent={false}
+          />
+        ) : (
+          <StatusBar style={isDark ? "light" : "dark"} />
+        )}
         {/* Mount tabs only after ExtraBold is available so tab 1 matches other tabs. */}
         {fontsLoaded ? (
           <View key="app-fonts-ready" style={{ flex: 1 }}>
